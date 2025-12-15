@@ -137,8 +137,8 @@ img, svg {
 
 /* Hero */
 .hero-slideshow {
-  height: 80vh; /* Adjust for creatives */
-  min-height: 600px;
+  height: 90vh; /* Increased height */
+  min-height: 700px;
   background: #000;
 }
 .hero-slideshow img, 
@@ -146,6 +146,38 @@ img, svg {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center; /* Fixes "top cutting" issue */
+}
+
+/* Navbar Gap Fix */
+.gap-6 { gap: 1.5rem; }
+.gap-8 { gap: 3rem; } /* Increased gap for decluttering */
+
+/* Typewriter Animation */
+.typewriter-container {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.typewriter-text {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid rgba(255,255,255,0.75); /* Cursor */
+  animation: 
+    typing 3.5s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+  max-width: fit-content;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: rgba(255,255,255,0.75); }
 }
 
 /* Buttons */

@@ -31,15 +31,17 @@
 {% endschema %}
 
 <div class="announcement-bar" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
-  <div class="container text-center py-2">
-    <p class="text-sm font-medium" style="margin: 0; padding: 10px 0;">
-      {% assign text = section.settings.text %}
-      {% assign highlight = section.settings.highlight_text %}
-      {% if text contains highlight %}
-        {{ text | replace: highlight, ' <span class="highlight">' | append: highlight | append: '</span>' | replace: '<span class="highlight">', '<span class="highlight" style="font-weight: 800; text-decoration: underline;">' }}
-      {% else %}
-        {{ text }}
-      {% endif %}
-    </p>
+  <div class="container text-center py-2 flex justify-center items-center h-full">
+    <div class="typewriter-container">
+       <p class="text-sm font-medium typewriter-text" style="margin: 0; display: inline-block;">
+        {% assign text = section.settings.text %}
+        {% assign highlight = section.settings.highlight_text %}
+        {% if text contains highlight %}
+          {{ text | replace: highlight, ' <span class="highlight">' | append: highlight | append: '</span>' | replace: '<span class="highlight">', '<span class="highlight" style="font-weight: 800; text-decoration: underline;">' }}
+        {% else %}
+          {{ text }}
+        {% endif %}
+      </p>
+    </div>
   </div>
 </div>

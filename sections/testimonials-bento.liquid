@@ -103,7 +103,7 @@
               {% if block.settings.image %}
                 <img src="{{ block.settings.image | image_url: width: 600 }}" alt="Testimonial" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
               {% else %}
-                {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover' }}
               {% endif %}
             </div>
         {% endcase %}

@@ -38,7 +38,7 @@
         {% if section.settings.image_1 %}
             <img src="{{ section.settings.image_1 | image_url: width: 800 }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Customise">
         {% else %}
-             {{ 'collection-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+             {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover' }}
         {% endif %}
         <div class="absolute inset-0 bg-black bg-opacity-30 transition-opacity group-hover:bg-opacity-20"></div>
         <div class="absolute inset-0 flex items-center justify-center">
@@ -51,7 +51,7 @@
         {% if section.settings.image_2 %}
             <img src="{{ section.settings.image_2 | image_url: width: 800 }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Shop Now">
         {% else %}
-             {{ 'collection-2' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+             {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover' }}
         {% endif %}
         <div class="absolute inset-0 bg-black bg-opacity-30 transition-opacity group-hover:bg-opacity-20"></div>
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center">

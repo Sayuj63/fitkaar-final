@@ -49,7 +49,7 @@
       {% if block.settings.image %}
         <img src="{{ block.settings.image | image_url: width: 2000 }}" alt="{{ block.settings.heading }}" class="w-full h-full object-cover">
       {% else %}
-        {{ 'lifestyle-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover' }}
       {% endif %}
       
       <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">

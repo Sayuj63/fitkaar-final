@@ -36,7 +36,7 @@
       {% assign text = section.settings.text %}
       {% assign highlight = section.settings.highlight_text %}
       {% if text contains highlight %}
-        {{ text | replace: highlight, '<span class="highlight">' | append: highlight | append: '</span>' | replace: '<span class="highlight">', '<span style="font-weight: 800; text-decoration: underline;">' }}
+        {{ text | replace: highlight, ' <span class="highlight">' | append: highlight | append: '</span>' | replace: '<span class="highlight">', '<span class="highlight" style="font-weight: 800; text-decoration: underline;">' }}
       {% else %}
         {{ text }}
       {% endif %}

@@ -215,42 +215,40 @@
     </div>
 
     <!-- MIDDLE COLUMN: Links Grid (Span 5) -->
-    <div class="footer-col md:col-span-5">
-       <div class="grid grid-cols-2 gap-y-10 gap-x-4">
-          <!-- Row 1, Col 1 -->
+    <div class="footer-col md:col-span-5 h-full flex flex-col justify-between">
+       <!-- Top Row -->
+       <div class="grid grid-cols-2 gap-x-4 mb-10">
           <div>
             <h3 class="text-sm font-bold uppercase mb-4 opacity-70">{{ section.settings.menu_1_heading }}</h3>
-            <ul class="space-y-2 text-sm">
+            <ul class="space-y-2 text-sm pl-0 list-none">
               {% for link in linklists[section.settings.menu_1].links %}
                  <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
               {% endfor %}
             </ul>
           </div>
-          
-          <!-- Row 1, Col 2 -->
           <div>
             <h3 class="text-sm font-bold uppercase mb-4 opacity-70">{{ section.settings.menu_2_heading }}</h3>
-             <ul class="space-y-2 text-sm">
+             <ul class="space-y-2 text-sm pl-0 list-none">
               {% for link in linklists[section.settings.menu_2].links %}
                  <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
               {% endfor %}
             </ul>
           </div>
+       </div>
 
-          <!-- Row 2, Col 1 -->
+       <!-- Bottom Row -->
+       <div class="grid grid-cols-2 gap-x-4">
           <div>
             <h3 class="text-sm font-bold uppercase mb-4 opacity-70">{{ section.settings.menu_3_heading }}</h3>
-            <ul class="space-y-2 text-sm">
+            <ul class="space-y-2 text-sm pl-0 list-none">
               {% for link in linklists[section.settings.menu_3].links %}
                  <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
               {% endfor %}
             </ul>
           </div>
-
-           <!-- Row 2, Col 2 -->
           <div>
             <h3 class="text-sm font-bold uppercase mb-4 opacity-70">{{ section.settings.menu_4_heading }}</h3>
-             <ul class="space-y-2 text-sm">
+             <ul class="space-y-2 text-sm pl-0 list-none">
               {% for link in linklists[section.settings.menu_4].links %}
                  <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
               {% endfor %}
@@ -260,22 +258,21 @@
     </div>
 
     <!-- RIGHT COLUMN: Newsletter (Span 4) -->
-    <div class="footer-col md:col-span-4 flex flex-col">
+    <div class="footer-col md:col-span-4 flex flex-col items-start justify-start">
         <h3 class="text-sm font-bold uppercase mb-4">{{ section.settings.newsletter_heading }}</h3>
         <p class="text-sm mb-6 opacity-80" style="max-width: 300px;">{{ section.settings.newsletter_text }}</p>
         
-        <form action="/contact#contact_form" method="post" class="flex w-full mb-auto" style="max-width: 350px;">
+        <form action="/contact#contact_form" method="post" class="flex w-full mb-8 relative" style="max-width: 350px;">
             <input type="email" placeholder="your email here" class="newsletter-input w-full px-4 py-3 rounded-l-lg focus:outline-none">
-            <button type="submit" class="newsletter-btn px-6 py-3 rounded-r-lg hover:bg-white hover:bg-opacity-80 transition-colors">
+            <button type="submit" class="newsletter-btn px-6 py-3 rounded-r-lg hover:bg-white hover:bg-opacity-80 transition-colors flex items-center justify-center">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-black"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </form>
 
-        <!-- Tagline (Bottom Right aligned) -->
-        <div class="text-center md:text-right mt-12 md:mt-24">
+        <!-- Tagline (Bottom Right aligned relative to container, now pushes down properly) -->
+        <div class="mt-auto w-full text-left md:text-right">
            {% assign tagline = section.settings.tagline_main %}
-           <!-- Heuristic parsing for "ka" in Hindi if user enters English "ka" to replicate exact design, otherwise just output text -->
-           <h2 class="text-3xl md:text-5xl font-black uppercase" style="font-family: var(--font-heading); color: #71b6c8;">
+           <h2 class="text-3xl md:text-5xl font-black uppercase" style="font-family: var(--font-heading); color: #71b6c8; line-height: 1;">
              {{ tagline | replace: 'ka', '<span class="text-white text-2xl md:text-4xl lowercase" style="font-family: devanagari-font, sans-serif;">का</span>' }}
            </h2>
         </div>

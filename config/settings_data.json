@@ -1,0 +1,56 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "sections": {
+      "announcement-bar": {
+        "type": "announcement-bar",
+        "settings": {
+          "text": "Free shipping on orders over ₹999",
+          "highlight_text": "Free shipping",
+          "bg_color": "#000c5b",
+          "text_color": "#ffffff"
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "bg": "#000c5b",
+          "text": "#ffffff",
+          "accent": "#71b6c8",
+          "logo": "shopify://shop_images/IMG_9100.png",
+          "logo_width": 260,
+          "m1h": "",
+          "m1": "main-menu",
+          "m2h": "NEED HELP",
+          "m2": "",
+          "m3h": "COMPANY",
+          "m3": "",
+          "m4h": "COMPANY",
+          "m4": "",
+          "nh": "WE'VE GOT YOU COVERED:",
+          "nt": "Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops.",
+          "np": "your email here",
+          "na": "",
+          "ig": "https://www.instagram.com/glade.loft/",
+          "fb": "",
+          "yt": "",
+          "in": "",
+          "tag": "KAPDO ka KALAKAR"
+        }
+      }
+    },
+    "content_for_index": []
+  }
+}

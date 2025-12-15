@@ -1,127 +1,165 @@
 {% schema %}
 {
-  "name": "Footer",
+  "name": "Pixel Footer",
   "settings": [
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#000c5b"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent Color",
-      "default": "#71b6c8"
-    },
+    { "type": "color", "id": "bg", "label": "Background", "default": "#000c5b" },
+    { "type": "color", "id": "text", "label": "Text", "default": "#ffffff" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#71b6c8" },
 
-    {
-      "type": "header",
-      "content": "Logo"
-    },
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Footer Logo"
-    },
-    {
-      "type": "range",
-      "id": "logo_width",
-      "min": 80,
-      "max": 300,
-      "step": 10,
-      "label": "Logo Width",
-      "default": 180
-    },
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "range", "id": "logo_width", "min": 120, "max": 260, "step": 10, "default": 180 },
 
-    {
-      "type": "header",
-      "content": "Menus"
-    },
-    { "type": "text", "id": "menu_1_heading", "label": "Menu 1 Heading", "default": "NEED HELP" },
-    { "type": "link_list", "id": "menu_1", "label": "Menu 1" },
+    { "type": "text", "id": "m1h", "label": "Menu 1 Heading", "default": "NEED HELP" },
+    { "type": "link_list", "id": "m1", "label": "Menu 1" },
 
-    { "type": "text", "id": "menu_2_heading", "label": "Menu 2 Heading", "default": "NEED HELP" },
-    { "type": "link_list", "id": "menu_2", "label": "Menu 2" },
+    { "type": "text", "id": "m2h", "label": "Menu 2 Heading", "default": "NEED HELP" },
+    { "type": "link_list", "id": "m2", "label": "Menu 2" },
 
-    { "type": "text", "id": "menu_3_heading", "label": "Menu 3 Heading", "default": "COMPANY" },
-    { "type": "link_list", "id": "menu_3", "label": "Menu 3" },
+    { "type": "text", "id": "m3h", "label": "Menu 3 Heading", "default": "COMPANY" },
+    { "type": "link_list", "id": "m3", "label": "Menu 3" },
 
-    { "type": "text", "id": "menu_4_heading", "label": "Menu 4 Heading", "default": "COMPANY" },
-    { "type": "link_list", "id": "menu_4", "label": "Menu 4" },
+    { "type": "text", "id": "m4h", "label": "Menu 4 Heading", "default": "COMPANY" },
+    { "type": "link_list", "id": "m4", "label": "Menu 4" },
 
-    {
-      "type": "header",
-      "content": "Newsletter"
-    },
-    {
-      "type": "text",
-      "id": "newsletter_heading",
-      "label": "Heading",
-      "default": "We've Got You Covered:"
-    },
-    {
-      "type": "textarea",
-      "id": "newsletter_text",
-      "label": "Description",
-      "default": "Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops."
-    },
-    {
-      "type": "text",
-      "id": "newsletter_placeholder",
-      "label": "Input Placeholder",
-      "default": "your email here"
-    },
-    {
-      "type": "url",
-      "id": "newsletter_action",
-      "label": "Form Action URL",
-      "default": "/contact#contact_form"
-    },
+    { "type": "text", "id": "nh", "label": "Newsletter Heading", "default": "WE'VE GOT YOU COVERED:" },
+    { "type": "textarea", "id": "nt", "label": "Newsletter Text", "default": "Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops." },
+    { "type": "text", "id": "np", "label": "Input Placeholder", "default": "your email here" },
+    { "type": "url", "id": "na", "label": "Form Action URL" },
 
-    {
-      "type": "header",
-      "content": "Social Links"
-    },
-    { "type": "url", "id": "instagram", "label": "Instagram" },
-    { "type": "url", "id": "facebook", "label": "Facebook" },
-    { "type": "url", "id": "youtube", "label": "YouTube" },
-    { "type": "url", "id": "linkedin", "label": "LinkedIn" },
-    {
-      "type": "range",
-      "id": "social_size",
-      "label": "Social Icon Size",
-      "min": 18,
-      "max": 40,
-      "step": 2,
-      "default": 28
-    },
+    { "type": "url", "id": "ig", "label": "Instagram" },
+    { "type": "url", "id": "fb", "label": "Facebook" },
+    { "type": "url", "id": "yt", "label": "YouTube" },
+    { "type": "url", "id": "in", "label": "LinkedIn" },
 
-    {
-      "type": "header",
-      "content": "Tagline"
-    },
-    {
-      "type": "text",
-      "id": "tagline_text",
-      "label": "Tagline Text",
-      "default": "KAPDO ka KALAKAR"
-    },
-    {
-      "type": "range",
-      "id": "tagline_size",
-      "label": "Tagline Font Size",
-      "min": 24,
-      "max": 64,
-      "step": 2,
-      "default": 48
-    }
+    { "type": "text", "id": "tag", "label": "Tagline", "default": "KAPDO ka KALAKAR" }
   ]
 }
 {% endschema %}
+<style>
+.footer {
+  background: {{ section.settings.bg }};
+  color: {{ section.settings.text }};
+  height: 520px;
+  padding: 64px 80px;
+  display: grid;
+  grid-template-columns: 260px 1fr 360px;
+  gap: 80px;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.footer h4 {
+  font-size: 13px;
+  letter-spacing: .08em;
+  margin-bottom: 18px;
+  opacity: .7;
+}
+
+.footer a {
+  color: inherit;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 28px;
+}
+
+.footer-logo img {
+  width: {{ section.settings.logo_width }}px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 18px;
+}
+
+.footer-newsletter p {
+  font-size: 14px;
+  max-width: 280px;
+  margin-bottom: 24px;
+  opacity: .8;
+}
+
+.footer-form {
+  display: flex;
+  width: 100%;
+}
+
+.footer-form input {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 999px 0 0 999px;
+  border: none;
+  background: {{ section.settings.accent }};
+  color: #000;
+  width: 100%;
+}
+
+.footer-form button {
+  height: 44px;
+  width: 52px;
+  background: {{ section.settings.accent }};
+  border-radius: 0 999px 999px 0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-tagline {
+  margin-top: auto;
+  text-align: right;
+  font-size: 48px;
+  font-weight: 900;
+  color: {{ section.settings.accent }};
+}
+</style>
+<footer class="footer">
+
+  <!-- LEFT -->
+  <div class="footer-logo">
+    {% if section.settings.logo %}
+      <img src="{{ section.settings.logo | image_url }}">
+    {% endif %}
+
+    <div class="footer-socials" style="margin-top: auto;">
+      {% if section.settings.ig %}<a href="{{ section.settings.ig }}">IG</a>{% endif %}
+      {% if section.settings.fb %}<a href="{{ section.settings.fb }}">FB</a>{% endif %}
+      {% if section.settings.yt %}<a href="{{ section.settings.yt }}">YT</a>{% endif %}
+      {% if section.settings.in %}<a href="{{ section.settings.in }}">IN</a>{% endif %}
+    </div>
+  </div>
+
+  <!-- MIDDLE -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px 80px;">
+    <div>
+      <h4>{{ section.settings.m1h }}</h4>
+      {% for l in linklists[section.settings.m1].links %}<a href="{{ l.url }}">{{ l.title }}</a><br>{% endfor %}
+    </div>
+    <div>
+      <h4>{{ section.settings.m2h }}</h4>
+      {% for l in linklists[section.settings.m2].links %}<a href="{{ l.url }}">{{ l.title }}</a><br>{% endfor %}
+    </div>
+    <div>
+      <h4>{{ section.settings.m3h }}</h4>
+      {% for l in linklists[section.settings.m3].links %}<a href="{{ l.url }}">{{ l.title }}</a><br>{% endfor %}
+    </div>
+    <div>
+      <h4>{{ section.settings.m4h }}</h4>
+      {% for l in linklists[section.settings.m4].links %}<a href="{{ l.url }}">{{ l.title }}</a><br>{% endfor %}
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="footer-newsletter">
+    <h4>{{ section.settings.nh }}</h4>
+    <p>{{ section.settings.nt }}</p>
+
+    <form class="footer-form" action="{{ section.settings.na | default: '/contact#contact_form' }}" method="post">
+      <input type="email" placeholder="{{ section.settings.np }}">
+      <button>→</button>
+    </form>
+
+    <div class="footer-tagline">
+      {{ section.settings.tag | replace: 'ka', '<span style="color:#fff;font-size:.7em">का</span>' }}
+    </div>
+  </div>
+
+</footer>

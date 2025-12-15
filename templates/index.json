@@ -44,6 +44,8 @@
     "cta_double": {
       "type": "cta-double",
       "settings": {
+        "image_1": "shopify://shop_images/IMG_4354.png",
+        "image_2": "shopify://shop_images/IMG_4354.png",
         "link_1": "",
         "link_2": ""
       }

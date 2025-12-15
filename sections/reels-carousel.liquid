@@ -88,14 +88,17 @@
 
   <div class="marquee-container w-full">
     <div class="marquee-content gap-4">
-      <!-- We duplicate blocks to create the seamless loop effect for desktop -->
-      {% for i in (1..2) %}
+      <!-- We duplicate blocks 4 times to ensure seamless loop with 3 visible items -->
+      {% for i in (1..4) %}
         {% for block in section.blocks %}
-          <a href="{{ block.settings.link | default: '#' }}" class="reel-item block relative overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition-shadow" style="width: 200px; height: 350px;">
+          <!-- Width calculated for 3 items: ~33vw minus gap -->
+          <a href="{{ block.settings.link | default: '#' }}" 
+             class="reel-item block relative overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition-shadow" 
+             style="width: 30vw; max-width: 300px; height: 50vh; flex-shrink: 0;">
              {% if block.settings.image %}
                <img src="{{ block.settings.image | image_url: width: 400 }}" alt="Reel" class="w-full h-full object-cover">
              {% else %}
-               {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover opacity-50' }}
+               {{ 'image' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover opacity-50' }}
              {% endif %}
              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-20 transition-all">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="#fff" class="opacity-0 hover:opacity-100 transition-opacity"><path d="M8 5v14l11-7z"/></svg>
@@ -104,10 +107,10 @@
         {% endfor %}
       {% endfor %}
       
-      <!-- Placeholder blocks if empty for preview -->
+      <!-- Placeholder if empty -->
       {% if section.blocks.size == 0 %}
-         {% for i in (1..10) %}
-            <div class="reel-item block bg-gray-100 rounded-xl" style="width: 200px; height: 350px;"></div>
+         {% for i in (1..6) %}
+            <div class="reel-item block bg-gray-100 rounded-xl" style="width: 30vw; max-width: 300px; height: 50vh; flex-shrink: 0;"></div>
          {% endfor %}
       {% endif %}
     </div>

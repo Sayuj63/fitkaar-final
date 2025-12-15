@@ -165,14 +165,16 @@ img, svg {
   overflow: hidden;
   border-right: 2px solid rgba(255,255,255,0.75); /* Cursor */
   animation: 
-    typing 3.5s steps(40, end),
+    typing 5s steps(40, end) infinite, /* Infinite loop */
     blink-caret 0.75s step-end infinite;
   max-width: fit-content;
 }
 
 @keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+  0% { width: 0; }
+  35% { width: 100%; } /* Finish typing */
+  85% { width: 100%; } /* Wait/Read */
+  100% { width: 0; } /* Reset */
 }
 
 @keyframes blink-caret {

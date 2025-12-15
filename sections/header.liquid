@@ -11,8 +11,16 @@
 }
 {% endschema %}
 
-<header class="site-header" style="background: #fff; padding: 15px 0; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 50;">
+<header class="site-header" style="background: #fff; padding: 15px 0; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 50;" x-data="{ mobileMenuOpen: false }">
   <div class="container flex justify-between items-center">
+    
+    <!-- Mobile Hamburger Button -->
+    <button type="button" class="md:hidden p-2 -ml-2" @click="mobileMenuOpen = !mobileMenuOpen">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
     <!-- Logo -->
     <div class="logo">
       <a href="/" class="flex items-center">
@@ -46,6 +54,42 @@
           </div>
         {% endif %}
       </a>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Drawer -->
+  <div class="fixed inset-0 z-50 flex" x-show="mobileMenuOpen" style="display: none;" 
+       x-transition:enter="transition-opacity ease-linear duration-300" 
+       x-transition:enter-start="opacity-0" 
+       x-transition:enter-end="opacity-100" 
+       x-transition:leave="transition-opacity ease-linear duration-300" 
+       x-transition:leave-start="opacity-100" 
+       x-transition:leave-end="opacity-0">
+    
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black bg-opacity-50" @click="mobileMenuOpen = false"></div>
+
+    <!-- Panel -->
+    <div class="relative bg-white w-3/4 max-w-sm h-full shadow-xl flex flex-col p-6"
+         x-transition:enter="transition ease-in-out duration-300 transform" 
+         x-transition:enter-start="-translate-x-full" 
+         x-transition:enter-end="translate-x-0" 
+         x-transition:leave="transition ease-in-out duration-300 transform" 
+         x-transition:leave-start="translate-x-0" 
+         x-transition:leave-end="-translate-x-full">
+         
+         <div class="flex justify-between items-center mb-8">
+            <span class="font-bold text-xl uppercase">Menu</span>
+            <button @click="mobileMenuOpen = false">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+         </div>
+
+         <nav class="flex flex-col gap-4">
+            {% for link in linklists.main-menu.links %}
+              <a href="{{ link.url }}" class="text-lg font-bold uppercase border-b border-gray-100 pb-2">{{ link.title }}</a>
+            {% endfor %}
+         </nav>
     </div>
   </div>
 </header>

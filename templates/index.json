@@ -1,105 +1,138 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-    "sections": {
-        "slideshow": {
-            "type": "hero-slideshow",
-            "blocks": {
-                "slide_1": {
-                    "type": "slide",
-                    "settings": {
-                        "heading": "NEW ARRIVALS"
-                    }
-                },
-                "slide_2": {
-                    "type": "slide",
-                    "settings": {
-                        "heading": "SUMMER COLLECTION"
-                    }
-                },
-                "slide_3": {
-                    "type": "slide",
-                    "settings": {
-                        "heading": "BEST SELLERS"
-                    }
-                }
-            },
-            "block_order": [
-                "slide_1",
-                "slide_2",
-                "slide_3"
-            ],
-            "settings": {}
+  "sections": {
+    "slideshow": {
+      "type": "hero-slideshow",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_8039.png",
+            "heading": "NEW ARRIVALS"
+          }
         },
-        "cta_double": {
-            "type": "cta-double",
-            "settings": {}
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_8040.png",
+            "heading": "SUMMER COLLECTION"
+          }
         },
-        "best_sellers": {
-            "type": "featured-products",
-            "settings": {
-                "title": "BESTSELLERS"
-            }
-        },
-        "testimonials": {
-            "type": "testimonials-bento",
-            "blocks": {
-                "text_1": {
-                    "type": "review_text",
-                    "settings": {
-                        "text": "the tshirt i got from you is my most fav tshirt, no kidding. the quality is soooo good.",
-                        "author": "hiii",
-                        "card_size": "medium"
-                    }
-                },
-                "image_1": {
-                    "type": "review_image",
-                    "settings": {
-                        "card_size": "small"
-                    }
-                },
-                "image_2": {
-                    "type": "review_image",
-                    "settings": {
-                        "card_size": "small"
-                    }
-                }
-            },
-            "block_order": [
-                "text_1",
-                "image_1",
-                "image_2"
-            ],
-            "settings": {}
-        },
-        "reels": {
-            "type": "reels-carousel",
-            "blocks": {
-                "reel_1": {
-                    "type": "reel"
-                },
-                "reel_2": {
-                    "type": "reel"
-                },
-                "reel_3": {
-                    "type": "reel"
-                },
-                "reel_4": {
-                    "type": "reel"
-                }
-            },
-            "block_order": [
-                "reel_1",
-                "reel_2",
-                "reel_3",
-                "reel_4"
-            ],
-            "settings": {}
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_8041.png",
+            "heading": "BEST SELLERS"
+          }
         }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3"
+      ],
+      "settings": {}
     },
-    "order": [
-        "slideshow",
-        "cta_double",
-        "best_sellers",
-        "testimonials",
-        "reels"
-    ]
+    "cta_double": {
+      "type": "cta-double",
+      "settings": {
+        "link_1": "",
+        "link_2": ""
+      }
+    },
+    "best_sellers": {
+      "type": "featured-products",
+      "settings": {
+        "title": "BESTSELLERS",
+        "collection": ""
+      }
+    },
+    "testimonials": {
+      "type": "testimonials-bento",
+      "blocks": {
+        "text_1": {
+          "type": "review_text",
+          "settings": {
+            "text": "the tshirt i got from you is my most fav tshirt, no kidding. the quality is soooo good.",
+            "author": "hiii",
+            "card_size": "medium"
+          }
+        },
+        "image_1": {
+          "type": "review_image",
+          "settings": {
+            "card_size": "small"
+          }
+        },
+        "image_2": {
+          "type": "review_image",
+          "settings": {
+            "card_size": "small"
+          }
+        }
+      },
+      "block_order": [
+        "text_1",
+        "image_1",
+        "image_2"
+      ],
+      "settings": {
+        "title": "TESTIMONIALS",
+        "bg_color": "#bfdbe3"
+      }
+    },
+    "reels": {
+      "type": "reels-carousel",
+      "blocks": {
+        "reel_1": {
+          "type": "reel",
+          "settings": {
+            "link": ""
+          }
+        },
+        "reel_2": {
+          "type": "reel",
+          "settings": {
+            "link": ""
+          }
+        },
+        "reel_3": {
+          "type": "reel",
+          "settings": {
+            "link": ""
+          }
+        },
+        "reel_4": {
+          "type": "reel",
+          "settings": {
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "reel_1",
+        "reel_2",
+        "reel_3",
+        "reel_4"
+      ],
+      "settings": {
+        "title": "AS SEEN ON REELS"
+      }
+    }
+  },
+  "order": [
+    "slideshow",
+    "cta_double",
+    "best_sellers",
+    "testimonials",
+    "reels"
+  ]
 }

@@ -15,6 +15,13 @@
       "default": "#ffffff"
     },
     {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#71b6c8"
+    },
+
+    {
       "type": "header",
       "content": "Logo"
     },
@@ -26,65 +33,29 @@
     {
       "type": "range",
       "id": "logo_width",
-      "min": 50,
+      "min": 80,
       "max": 300,
       "step": 10,
-      "unit": "px",
       "label": "Logo Width",
       "default": 180
     },
+
     {
       "type": "header",
       "content": "Menus"
     },
-    {
-      "type": "link_list",
-      "id": "menu_1",
-      "label": "Menu 1 (Top Left)",
-      "default": "footer"
-    },
-     {
-      "type": "text",
-      "id": "menu_1_heading",
-      "label": "Menu 1 Heading",
-      "default": "NEED HELP"
-    },
-    {
-      "type": "link_list",
-      "id": "menu_2",
-      "label": "Menu 2 (Top Right)",
-      "default": "footer"
-    },
-    {
-      "type": "text",
-      "id": "menu_2_heading",
-      "label": "Menu 2 Heading",
-      "default": "NEED HELP"
-    },
-    {
-      "type": "link_list",
-      "id": "menu_3",
-      "label": "Menu 3 (Bottom Left)",
-      "default": "footer"
-    },
-    {
-      "type": "text",
-      "id": "menu_3_heading",
-      "label": "Menu 3 Heading",
-      "default": "COMPANY"
-    },
-    {
-      "type": "link_list",
-      "id": "menu_4",
-      "label": "Menu 4 (Bottom Right)",
-      "default": "footer"
-    },
-    {
-      "type": "text",
-      "id": "menu_4_heading",
-      "label": "Menu 4 Heading",
-      "default": "COMPANY"
-    },
+    { "type": "text", "id": "menu_1_heading", "label": "Menu 1 Heading", "default": "NEED HELP" },
+    { "type": "link_list", "id": "menu_1", "label": "Menu 1" },
+
+    { "type": "text", "id": "menu_2_heading", "label": "Menu 2 Heading", "default": "NEED HELP" },
+    { "type": "link_list", "id": "menu_2", "label": "Menu 2" },
+
+    { "type": "text", "id": "menu_3_heading", "label": "Menu 3 Heading", "default": "COMPANY" },
+    { "type": "link_list", "id": "menu_3", "label": "Menu 3" },
+
+    { "type": "text", "id": "menu_4_heading", "label": "Menu 4 Heading", "default": "COMPANY" },
+    { "type": "link_list", "id": "menu_4", "label": "Menu 4" },
+
     {
       "type": "header",
       "content": "Newsletter"
@@ -98,185 +69,59 @@
     {
       "type": "textarea",
       "id": "newsletter_text",
-      "label": "Subtext",
+      "label": "Description",
       "default": "Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops."
     },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Input Placeholder",
+      "default": "your email here"
+    },
+    {
+      "type": "url",
+      "id": "newsletter_action",
+      "label": "Form Action URL",
+      "default": "/contact#contact_form"
+    },
+
     {
       "type": "header",
       "content": "Social Links"
     },
+    { "type": "url", "id": "instagram", "label": "Instagram" },
+    { "type": "url", "id": "facebook", "label": "Facebook" },
+    { "type": "url", "id": "youtube", "label": "YouTube" },
+    { "type": "url", "id": "linkedin", "label": "LinkedIn" },
     {
-      "type": "url",
-      "id": "social_instagram_link",
-      "label": "Instagram Link"
+      "type": "range",
+      "id": "social_size",
+      "label": "Social Icon Size",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "default": 28
+    },
+
+    {
+      "type": "header",
+      "content": "Tagline"
     },
     {
-      "type": "url",
-      "id": "social_facebook_link",
-      "label": "Facebook Link"
+      "type": "text",
+      "id": "tagline_text",
+      "label": "Tagline Text",
+      "default": "KAPDO ka KALAKAR"
     },
     {
-      "type": "url",
-      "id": "social_youtube_link",
-      "label": "YouTube Link"
-    },
-    {
-      "type": "url",
-      "id": "social_linkedin_link",
-      "label": "LinkedIn Link"
-    },
-    {
-        "type": "header",
-        "content": "Tagline"
-    },
-    {
-        "type": "text",
-        "id": "tagline_main",
-        "label": "Main Tagline",
-        "default": "KAPDO ka KALAKAR"
+      "type": "range",
+      "id": "tagline_size",
+      "label": "Tagline Font Size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "default": 48
     }
   ]
 }
 {% endschema %}
-
-<style>
-  .site-footer {
-    background-color: {{ section.settings.bg_color }}; 
-    color: {{ section.settings.text_color }}; 
-    min-height: 500px; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center;
-  }
-  .footer-link {
-    color: {{ section.settings.text_color }} !important;
-    text-decoration: none !important;
-    transition: opacity 0.3s;
-  }
-  .footer-link:hover {
-    opacity: 0.8;
-  }
-  .social-icon-group svg {
-    width: 32px;
-    height: 32px;
-    fill: {{ section.settings.text_color }};
-  }
-  .newsletter-input {
-    background-color: #71b6c8; /* Teal */
-    border: none;
-    color: #000;
-  }
-  .newsletter-input::placeholder {
-    color: #000;
-    opacity: 0.7;
-  }
-  .newsletter-btn {
-    background-color: #71b6c8;
-  }
-</style>
-
-<footer class="site-footer py-16">
-  <div class="container grid grid-cols-1 md:grid-cols-12 gap-8 h-full">
-    
-    <!-- LEFT COLUMN: Logo & Socials (Span 3) -->
-    <div class="footer-col md:col-span-3 flex flex-col justify-between h-full">
-      <div class="mb-8">
-        {% if section.settings.logo %}
-             <img src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}" 
-                  width="{{ section.settings.logo_width }}" 
-                  alt="{{ shop.name }}" 
-                  class="mb-4">
-        {% else %}
-            <!-- Giant Logo Fallback (SVG) -->
-            <svg width="{{ section.settings.logo_width }}" height="{{ section.settings.logo_width }}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="5" width="90" height="90" fill="white" fill-opacity="0.0"/>
-                <path d="M20 20 L30 10 L70 10 L80 20 L80 30 L70 20 L70 80 L30 80 L30 20 L20 30 Z" fill="white" stroke="white" stroke-width="2"/>
-                <rect x="25" y="70" width="50" height="20" fill="#71b6c8"/>
-                <path d="M30 75h10v10h-10z M50 75h10v10h-10z" fill="#000c5b"/>
-            </svg>
-        {% endif %}
-      </div>
-      
-      <!-- Social Icons -->
-      <div class="social-icon-group flex gap-4 mt-auto">
-        {% if section.settings.social_instagram_link %}
-            <a href="{{ section.settings.social_instagram_link }}"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-        {% endif %}
-        {% if section.settings.social_facebook_link %}
-            <a href="{{ section.settings.social_facebook_link }}"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-        {% endif %}
-        {% if section.settings.social_youtube_link %}
-            <a href="{{ section.settings.social_youtube_link }}"><svg viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg></a>
-        {% endif %}
-        {% if section.settings.social_linkedin_link %}
-             <a href="{{ section.settings.social_linkedin_link }}"><svg viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h5v-8.371c0-2.457 1.956-2.597 2.298-1.373v9.744h4.975v-10.456c0-4.909-3.32-6.533-5.266-5.464v-3.08h-2.039v3z"/></svg></a>
-        {% endif %}
-      </div>
-    </div>
-
-    <!-- MIDDLE COLUMN: Links Grid (Span 5) -->
-    <div class="footer-col md:col-span-5 h-full flex flex-col justify-between">
-       <!-- Top Row -->
-       <div class="grid grid-cols-2 gap-x-4 mb-10">
-          <div>
-            <h3 class="text-sm font-bold uppercase mb-4 opacity-70">{{ section.settings.menu_1_heading }}</h3>
-            <ul class="space-y-2 text-sm pl-0 list-none">
-              {% for link in linklists[section.settings.menu_1].links %}
-                 <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-sm font-bold uppercase mb-4 opacity-70">{{ section.settings.menu_2_heading }}</h3>
-             <ul class="space-y-2 text-sm pl-0 list-none">
-              {% for link in linklists[section.settings.menu_2].links %}
-                 <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
-       </div>
-
-       <!-- Bottom Row -->
-       <div class="grid grid-cols-2 gap-x-4">
-          <div>
-            <h3 class="text-sm font-bold uppercase mb-4 opacity-70">{{ section.settings.menu_3_heading }}</h3>
-            <ul class="space-y-2 text-sm pl-0 list-none">
-              {% for link in linklists[section.settings.menu_3].links %}
-                 <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-sm font-bold uppercase mb-4 opacity-70">{{ section.settings.menu_4_heading }}</h3>
-             <ul class="space-y-2 text-sm pl-0 list-none">
-              {% for link in linklists[section.settings.menu_4].links %}
-                 <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
-       </div>
-    </div>
-
-    <!-- RIGHT COLUMN: Newsletter (Span 4) -->
-    <div class="footer-col md:col-span-4 flex flex-col items-start justify-start">
-        <h3 class="text-sm font-bold uppercase mb-4">{{ section.settings.newsletter_heading }}</h3>
-        <p class="text-sm mb-6 opacity-80" style="max-width: 300px;">{{ section.settings.newsletter_text }}</p>
-        
-        <form action="/contact#contact_form" method="post" class="flex w-full mb-8 relative" style="max-width: 350px;">
-            <input type="email" placeholder="your email here" class="newsletter-input w-full px-4 py-3 rounded-l-lg focus:outline-none">
-            <button type="submit" class="newsletter-btn px-6 py-3 rounded-r-lg hover:bg-white hover:bg-opacity-80 transition-colors flex items-center justify-center">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-black"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-        </form>
-
-        <!-- Tagline (Bottom Right aligned relative to container, now pushes down properly) -->
-        <div class="mt-auto w-full text-left md:text-right">
-           {% assign tagline = section.settings.tagline_main %}
-           <h2 class="text-3xl md:text-5xl font-black uppercase" style="font-family: var(--font-heading); color: #71b6c8; line-height: 1;">
-             {{ tagline | replace: 'ka', '<span class="text-white text-2xl md:text-4xl lowercase" style="font-family: devanagari-font, sans-serif;">का</span>' }}
-           </h2>
-        </div>
-    </div>
-
-  </div>
-</footer>

@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700;800&family=Raleway:wght@400;600&display=swap');
+
+:root {
+  --color-primary: {{ settings.color_primary | default: '#000c5b' }};
+  --color-secondary: {{ settings.color_secondary | default: '#71b6c8' }};
+  --color-accent: {{ settings.color_accent | default: '#bfdbe3' }};
+  --color-text: {{ settings.color_text | default: '#000000' }};
+  --color-background: {{ settings.color_background | default: '#ffffff' }};
+
+  --font-heading: 'League Spartan', sans-serif;
+  --font-body: 'Helvetica', 'Arial', sans-serif; /* Fallback for Helvetica Now if not loaded via font_picker or customized */
+  --font-secondary: 'Raleway', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Utilities */
+.text-center { text-align: center; }
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.grid { display: grid; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.object-cover { object-fit: cover; }
+.uppercase { text-transform: uppercase; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.hidden { display: none; }
+
+/* Mobile Responsive Helper */
+@media (max-width: 768px) {
+  .md\:hidden { display: none; }
+  .md\:flex { display: flex; }
+  .mobile-scroll-snap {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  .mobile-scroll-item {
+    scroll-snap-align: start;
+    flex: 0 0 85%; /* Shows part of the next item */
+  }
+}

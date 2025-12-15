@@ -1,0 +1,115 @@
+{% schema %}
+{
+  "name": "Reels Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "AS SEEN ON REELS"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "reel",
+      "name": "Reel Thumbnail",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Thumbnail Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Reel Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reels Carousel"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.marquee-content {
+  display: inline-flex;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Mobile specific override to disable marquee and use scroll if preferred, 
+   but user asked for infinite carousel. 
+   However, user ALSO said "in the phone... rest will be in a horizontal carousel".
+   Usually horizontal swipe is better for UX on mobile than auto-scroll.
+*/
+@media (max-width: 768px) {
+  .marquee-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .marquee-content {
+    animation: none;
+    display: flex;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  .reel-item {
+    scroll-snap-align: start;
+    flex: 0 0 150px; /* Fixed width for mobile items */
+  }
+}
+</style>
+
+<section class="py-12 bg-white overflow-hidden">
+  {% if section.settings.title != blank %}
+    <h2 class="text-center text-3xl font-bold mb-8 uppercase" style="font-family: var(--font-heading);">{{ section.settings.title }}</h2>
+  {% endif %}
+
+  <div class="marquee-container w-full">
+    <div class="marquee-content gap-4">
+      <!-- We duplicate blocks to create the seamless loop effect for desktop -->
+      {% for i in (1..2) %}
+        {% for block in section.blocks %}
+          <a href="{{ block.settings.link | default: '#' }}" class="reel-item block relative overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition-shadow" style="width: 200px; height: 350px;">
+             {% if block.settings.image %}
+               <img src="{{ block.settings.image | image_url: width: 400 }}" alt="Reel" class="w-full h-full object-cover">
+             {% else %}
+               {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover opacity-50' }}
+             {% endif %}
+             <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-20 transition-all">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="#fff" class="opacity-0 hover:opacity-100 transition-opacity"><path d="M8 5v14l11-7z"/></svg>
+             </div>
+          </a>
+        {% endfor %}
+      {% endfor %}
+      
+      <!-- Placeholder blocks if empty for preview -->
+      {% if section.blocks.size == 0 %}
+         {% for i in (1..10) %}
+            <div class="reel-item block bg-gray-100 rounded-xl" style="width: 200px; height: 350px;"></div>
+         {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>

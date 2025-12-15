@@ -1,0 +1,105 @@
+{
+    "sections": {
+        "slideshow": {
+            "type": "hero-slideshow",
+            "blocks": {
+                "slide_1": {
+                    "type": "slide",
+                    "settings": {
+                        "heading": "NEW ARRIVALS"
+                    }
+                },
+                "slide_2": {
+                    "type": "slide",
+                    "settings": {
+                        "heading": "SUMMER COLLECTION"
+                    }
+                },
+                "slide_3": {
+                    "type": "slide",
+                    "settings": {
+                        "heading": "BEST SELLERS"
+                    }
+                }
+            },
+            "block_order": [
+                "slide_1",
+                "slide_2",
+                "slide_3"
+            ],
+            "settings": {}
+        },
+        "cta_double": {
+            "type": "cta-double",
+            "settings": {}
+        },
+        "best_sellers": {
+            "type": "featured-products",
+            "settings": {
+                "title": "BESTSELLERS"
+            }
+        },
+        "testimonials": {
+            "type": "testimonials-bento",
+            "blocks": {
+                "text_1": {
+                    "type": "review_text",
+                    "settings": {
+                        "text": "the tshirt i got from you is my most fav tshirt, no kidding. the quality is soooo good.",
+                        "author": "hiii",
+                        "card_size": "medium"
+                    }
+                },
+                "image_1": {
+                    "type": "review_image",
+                    "settings": {
+                        "card_size": "small"
+                    }
+                },
+                "image_2": {
+                    "type": "review_image",
+                    "settings": {
+                        "card_size": "small"
+                    }
+                }
+            },
+            "block_order": [
+                "text_1",
+                "image_1",
+                "image_2"
+            ],
+            "settings": {}
+        },
+        "reels": {
+            "type": "reels-carousel",
+            "blocks": {
+                "reel_1": {
+                    "type": "reel"
+                },
+                "reel_2": {
+                    "type": "reel"
+                },
+                "reel_3": {
+                    "type": "reel"
+                },
+                "reel_4": {
+                    "type": "reel"
+                }
+            },
+            "block_order": [
+                "reel_1",
+                "reel_2",
+                "reel_3",
+                "reel_4"
+            ],
+            "settings": {}
+        }
+    },
+    "order": [
+        "slideshow",
+        "cta_double",
+        "best_sellers",
+        "testimonials",
+        "reels"
+    ]
+}

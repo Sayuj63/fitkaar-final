@@ -1,0 +1,82 @@
+{% schema %}
+{
+  "name": "Hero Slideshow",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "New Arrivals"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Slideshow",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<div class="hero-slideshow relative w-full" style="height: 600px; overflow: hidden;" x-data="{ activeSlide: 0, total: {{ section.blocks.size }} }">
+  {% for block in section.blocks %}
+    <div class="slide absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out" 
+         x-show="activeSlide === {{ forloop.index0 }}"
+         x-transition:enter="transition ease-out duration-1000"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-1000"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         style="display: none;" 
+         :style="activeSlide === {{ forloop.index0 }} ? 'display: block' : 'display: none'">
+      {% if block.settings.image %}
+        <img src="{{ block.settings.image | image_url: width: 2000 }}" alt="{{ block.settings.heading }}" class="w-full h-full object-cover">
+      {% else %}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+      {% endif %}
+      
+      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
+         <h2 class="text-white text-4xl md:text-6xl uppercase" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">{{ block.settings.heading }}</h2>
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Navigation Dots -->
+  <div class="absolute bottom-5 left-0 right-0 flex justify-center gap-2">
+    {% for block in section.blocks %}
+      <button @click="activeSlide = {{ forloop.index0 }}" 
+              class="w-3 h-3 rounded-full transition-colors"
+              :class="activeSlide === {{ forloop.index0 }} ? 'bg-white' : 'bg-white bg-opacity-50'"></button>
+    {% endfor %}
+  </div>
+
+  <!-- Auto Slide Script -->
+  <script>
+    document.addEventListener('alpine:init', () => {
+        setInterval(() => {
+            const root = document.querySelector('.hero-slideshow');
+            if(root && root.__x) {
+               // Simple auto advance simulation if simpler logic needed
+            }
+        }, 5000);
+    });
+  </script>
+   <div x-init="setInterval(() => activeSlide = (activeSlide + 1) % total, 5000)"></div>
+</div>

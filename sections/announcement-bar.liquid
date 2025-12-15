@@ -1,0 +1,45 @@
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement Text",
+      "default": "Free shipping on orders over ₹999"
+    },
+    {
+      "type": "text",
+      "id": "highlight_text",
+      "label": "Highlight Text",
+      "default": "Free shipping"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#000c5b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="announcement-bar" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
+  <div class="container text-center py-2">
+    <p class="text-sm font-medium" style="margin: 0; padding: 10px 0;">
+      {% assign text = section.settings.text %}
+      {% assign highlight = section.settings.highlight_text %}
+      {% if text contains highlight %}
+        {{ text | replace: highlight, '<span class="highlight">' | append: highlight | append: '</span>' | replace: '<span class="highlight">', '<span style="font-weight: 800; text-decoration: underline;">' }}
+      {% else %}
+        {{ text }}
+      {% endif %}
+    </p>
+  </div>
+</div>

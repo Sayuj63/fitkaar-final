@@ -1,0 +1,114 @@
+{% schema %}
+{
+  "name": "Testimonials Bento",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "TESTIMONIALS"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#bfdbe3"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review_text",
+      "name": "Text Review",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Review Text"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author/Title"
+        },
+        {
+           "type": "select",
+           "id": "card_size",
+           "label": "Card Size",
+           "options": [
+             { "value": "small", "label": "Small" },
+             { "value": "medium", "label": "Medium" },
+             { "value": "large", "label": "Large" }
+           ],
+           "default": "medium"
+        }
+      ]
+    },
+    {
+      "type": "review_image",
+      "name": "Image Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+         {
+           "type": "select",
+           "id": "card_size",
+           "label": "Card Size",
+           "options": [
+             { "value": "small", "label": "Small" },
+             { "value": "medium", "label": "Medium" },
+             { "value": "large", "label": "Large" }
+           ],
+           "default": "small"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials Bento"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-16" style="background-color: {{ section.settings.bg_color }};">
+  <div class="container">
+    <h2 class="text-center text-5xl font-black uppercase mb-12 tracking-tight" style="color: var(--color-primary); font-family: var(--font-heading);">{{ section.settings.title }}</h2>
+
+    <!-- Bento Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-4 auto-rows-[200px] gap-4">
+      
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'review_text' %}
+            <div class="bg-gray-900 text-white p-6 rounded-lg flex flex-col justify-center relative overflow-hidden group
+                        {% if block.settings.card_size == 'large' %}md:col-span-2 md:row-span-2{% elsif block.settings.card_size == 'medium' %}md:col-span-2 md:row-span-1{% else %}md:col-span-1 md:row-span-1{% endif %}">
+              <div class="relative z-10">
+                {% if block.settings.author != blank %}
+                  <h4 class="font-bold mb-2 text-gray-300 text-sm">{{ block.settings.author }}</h4>
+                {% endif %}
+                <p class="text-sm md:text-base leading-relaxed">{{ block.settings.text }}</p>
+                <div class="mt-2 text-pink-500">
+                    <svg class="inline-block w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
+                </div>
+              </div>
+            </div>
+
+          {% when 'review_image' %}
+            <div class="rounded-lg overflow-hidden relative
+                        {% if block.settings.card_size == 'large' %}md:col-span-2 md:row-span-2{% elsif block.settings.card_size == 'medium' %}md:col-span-2 md:row-span-1{% else %}md:col-span-1 md:row-span-1{% endif %}">
+              {% if block.settings.image %}
+                <img src="{{ block.settings.image | image_url: width: 600 }}" alt="Testimonial" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+
+    </div>
+  </div>
+</section>

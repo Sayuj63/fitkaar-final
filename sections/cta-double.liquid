@@ -1,0 +1,62 @@
+{% schema %}
+{
+  "name": "Double CTA",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Customise Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Shop Now Image"
+    },
+    {
+        "type": "url",
+        "id": "link_1",
+        "label": "Customise Link"
+    },
+    {
+        "type": "url",
+        "id": "link_2",
+        "label": "Shop Now Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Double CTA"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="container py-10">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Customize Card -->
+    <a href="{{ section.settings.link_1 | default: '#' }}" class="group relative block overflow-hidden rounded-2xl" style="height: 400px;">
+        {% if section.settings.image_1 %}
+            <img src="{{ section.settings.image_1 | image_url: width: 800 }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Customise">
+        {% else %}
+             {{ 'collection-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+        {% endif %}
+        <div class="absolute inset-0 bg-black bg-opacity-30 transition-opacity group-hover:bg-opacity-20"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+            <h2 class="text-white text-4xl md:text-5xl font-black uppercase tracking-tighter" style="font-family: var(--font-heading);">Customise</h2>
+        </div>
+    </a>
+
+    <!-- Shop Now Card -->
+    <a href="{{ section.settings.link_2 | default: '/collections/all' }}" class="group relative block overflow-hidden rounded-2xl" style="height: 400px;">
+        {% if section.settings.image_2 %}
+            <img src="{{ section.settings.image_2 | image_url: width: 800 }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Shop Now">
+        {% else %}
+             {{ 'collection-2' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+        {% endif %}
+        <div class="absolute inset-0 bg-black bg-opacity-30 transition-opacity group-hover:bg-opacity-20"></div>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+             <h2 class="text-white text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none" style="font-family: var(--font-heading);">Shop<br>Now</h2>
+        </div>
+    </a>
+  </div>
+</div>

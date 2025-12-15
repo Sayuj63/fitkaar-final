@@ -39,12 +39,21 @@
 .footer {
   background: {{ section.settings.bg }};
   color: {{ section.settings.text }};
-  height: 520px;
+  height: auto;
+  min-height: 520px;
   padding: 64px 80px;
   display: grid;
   grid-template-columns: 260px 1fr 360px;
   gap: 80px;
   font-family: Inter, system-ui, sans-serif;
+}
+@media (max-width: 1024px) {
+  .footer {
+    padding: 40px 20px;
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 40px;
+  }
 }
 
 .footer h4 {

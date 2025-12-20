@@ -1,174 +1,452 @@
+{% comment %}
+  Footer Section - FitKaar
+  Layout: 2 rows with flexbox
+  Row 1: Logo | Menus (NEED HELP + COMPANY) | Newsletter
+  Row 2: Social Icons | Tagline
+
+  Color Psychology:
+  - Background: Dark Navy (#000c5b) - Trust, professionalism
+  - Headings: Teal (#71b6c8) - Attention, brand accent
+  - Body/Links: Light Blue (#bfdbe3) - Soft, readable
+  - Tagline: Teal (#71b6c8) - Brand emphasis
+{% endcomment %}
+
+<style>
+  .fk-footer {
+    background: var(--color-primary, #000c5b);
+    color: var(--color-white, #ffffff);
+    font-family: var(--font-secondary, 'Raleway', sans-serif);
+    padding: 60px 80px 50px;
+  }
+
+  /* Row 1 - Main Content: 3 columns with space-between */
+  .fk-footer__row-1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 60px;
+  }
+
+  /* Column 1 - Logo */
+  .fk-footer__logo-col {
+    flex: 0 0 auto;
+  }
+
+  .fk-footer__logo img {
+    width: 180px;
+    height: auto;
+  }
+
+  /* Column 2 - Menus (grouped together) */
+  .fk-footer__menu-col {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 60px;
+  }
+
+  .fk-footer__menu-group {
+    min-width: 150px;
+  }
+
+  /* Headings - Teal for attention */
+  .fk-footer__menu-group h4 {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin: 0 0 20px 0;
+    color: var(--color-secondary, #71b6c8);
+    font-family: var(--font-secondary, 'Raleway', sans-serif);
+    text-transform: uppercase;
+  }
+
+  .fk-footer__menu-group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .fk-footer__menu-group li {
+    margin-bottom: 8px;
+  }
+
+  /* Links - Light Blue for readability */
+  .fk-footer__menu-group a {
+    color: var(--color-accent, #bfdbe3);
+    text-decoration: none;
+    font-size: 15px;
+    line-height: 1.8;
+    transition: color 0.2s, opacity 0.2s;
+    font-family: var(--font-secondary, 'Raleway', sans-serif);
+  }
+
+  .fk-footer__menu-group a:hover {
+    color: var(--color-white, #ffffff);
+  }
+
+  /* Column 3 - Newsletter */
+  .fk-footer__newsletter-col {
+    flex: 0 0 auto;
+    max-width: 280px;
+  }
+
+  /* Newsletter Heading - Teal */
+  .fk-footer__newsletter-heading {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin: 0 0 16px 0;
+    color: var(--color-secondary, #71b6c8);
+    font-family: var(--font-secondary, 'Raleway', sans-serif);
+    text-transform: uppercase;
+  }
+
+  /* Newsletter Text - Light Blue */
+  .fk-footer__newsletter-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-accent, #bfdbe3);
+    margin: 0 0 20px 0;
+    max-width: 260px;
+    font-family: var(--font-secondary, 'Raleway', sans-serif);
+  }
+
+  /* Form - Teal background for prominence */
+  .fk-footer__form {
+    display: flex;
+    align-items: center;
+    background: var(--color-secondary, #71b6c8);
+    border-radius: 50px;
+    overflow: hidden;
+    max-width: 260px;
+  }
+
+  .fk-footer__form input[type="email"] {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--color-primary, #000c5b);
+    outline: none;
+    font-family: var(--font-secondary, 'Raleway', sans-serif);
+  }
+
+  .fk-footer__form input[type="email"]::placeholder {
+    color: var(--color-primary, #000c5b);
+    opacity: 0.8;
+  }
+
+  .fk-footer__form button {
+    background: transparent;
+    border: none;
+    padding: 14px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fk-footer__form button svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--color-primary, #000c5b);
+  }
+
+  /* Row 2 - Bottom: Both items bottom-aligned */
+  .fk-footer__row-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  /* Social Icons - Minimalistic with micro-interactions */
+  .fk-footer__socials {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+  }
+
+  .fk-footer__socials a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Micro-interaction: Scale up smoothly */
+  .fk-footer__socials a:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Micro-interaction: Subtle press effect */
+  .fk-footer__socials a:active {
+    transform: translateY(-2px) scale(0.95);
+  }
+
+  .fk-footer__socials svg {
+    width: 28px;
+    height: 28px;
+    transition: all 0.3s ease;
+  }
+
+  .fk-footer__socials svg.icon-stroke {
+    fill: none;
+    stroke: var(--color-secondary, #71b6c8);
+    stroke-width: 1.5;
+  }
+
+  .fk-footer__socials svg.icon-fill {
+    fill: var(--color-secondary, #71b6c8);
+  }
+
+  /* Hover: Change to white with glow */
+  .fk-footer__socials a:hover svg.icon-stroke {
+    stroke: var(--color-white, #ffffff);
+    filter: drop-shadow(0 0 6px rgba(113, 182, 200, 0.5));
+  }
+
+  .fk-footer__socials a:hover svg.icon-fill {
+    fill: var(--color-white, #ffffff);
+    filter: drop-shadow(0 0 6px rgba(113, 182, 200, 0.5));
+  }
+
+  /* Tagline - Bottom aligned */
+  .fk-footer__tagline {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--color-secondary, #71b6c8);
+    letter-spacing: 0.02em;
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+  }
+
+  .fk-footer__tagline .hindi {
+    color: var(--color-accent, #bfdbe3);
+    font-size: 0.55em;
+    vertical-align: middle;
+    margin: 0 2px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .fk-footer {
+      padding: 50px 40px;
+    }
+    .fk-footer__row-1 {
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+    .fk-footer__menu-col {
+      gap: 40px;
+    }
+    .fk-footer__tagline {
+      font-size: 36px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .fk-footer {
+      padding: 40px 24px;
+    }
+    .fk-footer__row-1 {
+      flex-direction: column;
+      gap: 32px;
+    }
+    .fk-footer__logo img {
+      width: 140px;
+    }
+    .fk-footer__menu-col {
+      gap: 32px;
+    }
+    .fk-footer__row-2 {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .fk-footer__tagline {
+      font-size: 24px;
+    }
+    .fk-footer__socials svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+</style>
+
+<footer class="fk-footer">
+  <!-- Row 1: Logo, Menus, Newsletter -->
+  <div class="fk-footer__row-1">
+
+    <!-- Column 1: Logo -->
+    <div class="fk-footer__logo-col">
+      <div class="fk-footer__logo">
+        <img src="{{ 'FitKaar.png' | asset_url }}" alt="{{ shop.name }}" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Column 2: Menus -->
+    <div class="fk-footer__menu-col">
+      <!-- NEED HELP -->
+      <div class="fk-footer__menu-group">
+        <h4>NEED HELP</h4>
+        <ul>
+          {% if linklists[section.settings.m1].links.size > 0 %}
+            {% for link in linklists[section.settings.m1].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Track Order</a></li>
+            <li><a href="#">Returns & Refunds</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">My Account</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- COMPANY -->
+      <div class="fk-footer__menu-group">
+        <h4>COMPANY</h4>
+        <ul>
+          {% if linklists[section.settings.m2].links.size > 0 %}
+            {% for link in linklists[section.settings.m2].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Investor Relation</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Gift Vouchers</a></li>
+            <li><a href="#">Community Initiatives</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Column 3: Newsletter -->
+    <div class="fk-footer__newsletter-col">
+      <h4 class="fk-footer__newsletter-heading">WE'VE GOT YOU COVERED:</h4>
+      <p class="fk-footer__newsletter-text">Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops.</p>
+
+      <form class="fk-footer__form" action="{{ routes.root_url }}" method="post" id="footer-newsletter">
+        <input type="hidden" name="form_type" value="customer">
+        <input type="hidden" name="utf8" value="✓">
+        <input
+          type="email"
+          name="contact[email]"
+          placeholder="your email here"
+          required
+          autocomplete="email"
+        >
+        <button type="submit" aria-label="Subscribe">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Row 2: Social Icons & Tagline -->
+  <div class="fk-footer__row-2">
+
+    <!-- Social Icons -->
+    <div class="fk-footer__socials">
+      <!-- Instagram -->
+      <a href="{{ section.settings.ig | default: '#' }}" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg class="icon-stroke" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
+
+      <!-- Facebook -->
+      <a href="{{ section.settings.fb | default: '#' }}" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg class="icon-fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </a>
+
+      <!-- YouTube -->
+      <a href="{{ section.settings.yt | default: '#' }}" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg class="icon-fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </a>
+
+      <!-- LinkedIn -->
+      <a href="{{ section.settings.in | default: '#' }}" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg class="icon-fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Tagline -->
+    <div class="fk-footer__tagline">
+      KAPDO <span class="hindi">का</span> KALAKAR
+    </div>
+
+  </div>
+</footer>
+
 {% schema %}
 {
-  "name": "Pixel Footer",
+  "name": "Footer",
   "settings": [
-    { "type": "color", "id": "bg", "label": "Background", "default": "#000c5b" },
-    { "type": "color", "id": "text", "label": "Text", "default": "#ffffff" },
-    { "type": "color", "id": "accent", "label": "Accent", "default": "#71b6c8" },
-
-    { "type": "image_picker", "id": "logo", "label": "Logo" },
-    { "type": "range", "id": "logo_width", "label": "Logo Width", "min": 120, "max": 260, "step": 10, "default": 180 },
-
-    { "type": "text", "id": "m1h", "label": "Menu 1 Heading", "default": "NEED HELP" },
-    { "type": "link_list", "id": "m1", "label": "Menu 1" },
-
-    { "type": "text", "id": "m2h", "label": "Menu 2 Heading", "default": "NEED HELP" },
-    { "type": "link_list", "id": "m2", "label": "Menu 2" },
-
-    { "type": "text", "id": "m3h", "label": "Menu 3 Heading", "default": "COMPANY" },
-    { "type": "link_list", "id": "m3", "label": "Menu 3" },
-
-    { "type": "text", "id": "m4h", "label": "Menu 4 Heading", "default": "COMPANY" },
-    { "type": "link_list", "id": "m4", "label": "Menu 4" },
-
-    { "type": "text", "id": "nh", "label": "Newsletter Heading", "default": "WE'VE GOT YOU COVERED:" },
-    { "type": "textarea", "id": "nt", "label": "Newsletter Text", "default": "Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops." },
-    { "type": "text", "id": "np", "label": "Input Placeholder", "default": "your email here" },
-    { "type": "url", "id": "na", "label": "Form Action URL" },
-
-    { "type": "url", "id": "ig", "label": "Instagram" },
-    { "type": "url", "id": "fb", "label": "Facebook" },
-    { "type": "url", "id": "yt", "label": "YouTube" },
-    { "type": "url", "id": "in", "label": "LinkedIn" },
-
-    { "type": "text", "id": "tag", "label": "Tagline", "default": "KAPDO ka KALAKAR" }
+    {
+      "type": "header",
+      "content": "Menus"
+    },
+    {
+      "type": "link_list",
+      "id": "m1",
+      "label": "Need Help Menu",
+      "info": "Leave blank to show default items"
+    },
+    {
+      "type": "link_list",
+      "id": "m2",
+      "label": "Company Menu",
+      "info": "Leave blank to show default items"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "url",
+      "id": "ig",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "fb",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "yt",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "url",
+      "id": "in",
+      "label": "LinkedIn URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer"
+    }
   ]
 }
 {% endschema %}
-<style>
-.footer {
-  background: {{ section.settings.bg }};
-  color: {{ section.settings.text }};
-  height: auto;
-  min-height: 520px;
-  padding: 64px 80px;
-  display: grid;
-  grid-template-columns: 260px 1fr 360px;
-  gap: 80px;
-  font-family: Inter, system-ui, sans-serif;
-}
-@media (max-width: 1024px) {
-  .footer {
-    padding: 40px 20px;
-    grid-template-columns: 1fr;
-    height: auto;
-    gap: 40px;
-  }
-}
-
-.footer h4 {
-  font-size: 13px;
-  letter-spacing: .08em;
-  margin-bottom: 18px;
-  opacity: .7;
-}
-
-.footer a {
-  color: inherit;
-  text-decoration: none;
-  font-size: 14px;
-  line-height: 28px;
-}
-
-.footer-logo img {
-  width: {{ section.settings.logo_width }}px;
-}
-
-.footer-socials {
-  display: flex;
-  gap: 18px;
-}
-
-.footer-newsletter p {
-  font-size: 14px;
-  max-width: 280px;
-  margin-bottom: 24px;
-  opacity: .8;
-}
-
-.footer-form {
-  display: flex;
-  width: 100%;
-}
-
-.footer-form input {
-  height: 44px;
-  padding: 0 16px;
-  border-radius: 999px 0 0 999px;
-  border: none;
-  background: {{ section.settings.accent }};
-  color: #000;
-  width: 100%;
-}
-
-.footer-form button {
-  height: 44px;
-  width: 52px;
-  background: {{ section.settings.accent }};
-  border-radius: 0 999px 999px 0;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.footer-tagline {
-  margin-top: auto;
-  text-align: right;
-  font-size: 48px;
-  font-weight: 900;
-  color: {{ section.settings.accent }};
-}
-</style>
-<footer class="footer">
-
-  <!-- LEFT -->
-  <div class="footer-logo">
-    {% if section.settings.logo %}
-      <img src="{{ section.settings.logo | image_url }}">
-    {% endif %}
-
-    <div class="footer-socials" style="margin-top: auto;">
-      {% if section.settings.ig %}<a href="{{ section.settings.ig }}">IG</a>{% endif %}
-      {% if section.settings.fb %}<a href="{{ section.settings.fb }}">FB</a>{% endif %}
-      {% if section.settings.yt %}<a href="{{ section.settings.yt }}">YT</a>{% endif %}
-      {% if section.settings.in %}<a href="{{ section.settings.in }}">IN</a>{% endif %}
-    </div>
-  </div>
-
-  <!-- MIDDLE -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px 80px;">
-    <div>
-      <h4>{{ section.settings.m1h }}</h4>
-      {% for l in linklists[section.settings.m1].links %}<a href="{{ l.url }}">{{ l.title }}</a><br>{% endfor %}
-    </div>
-    <div>
-      <h4>{{ section.settings.m2h }}</h4>
-      {% for l in linklists[section.settings.m2].links %}<a href="{{ l.url }}">{{ l.title }}</a><br>{% endfor %}
-    </div>
-    <div>
-      <h4>{{ section.settings.m3h }}</h4>
-      {% for l in linklists[section.settings.m3].links %}<a href="{{ l.url }}">{{ l.title }}</a><br>{% endfor %}
-    </div>
-    <div>
-      <h4>{{ section.settings.m4h }}</h4>
-      {% for l in linklists[section.settings.m4].links %}<a href="{{ l.url }}">{{ l.title }}</a><br>{% endfor %}
-    </div>
-  </div>
-
-  <!-- RIGHT -->
-  <div class="footer-newsletter">
-    <h4>{{ section.settings.nh }}</h4>
-    <p>{{ section.settings.nt }}</p>
-
-    <form class="footer-form" action="{{ section.settings.na | default: '/contact#contact_form' }}" method="post">
-      <input type="email" placeholder="{{ section.settings.np }}">
-      <button>→</button>
-    </form>
-
-    <div class="footer-tagline">
-      {{ section.settings.tag | replace: 'ka', '<span style="color:#fff;font-size:.7em">का</span>' }}
-    </div>
-  </div>
-
-</footer>

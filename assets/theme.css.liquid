@@ -1,14 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700;800&family=Raleway:wght@400;600&display=swap');
+/* ==============================================
+   FITKAAR BRAND PALETTE
+   ==============================================
+   Colors:
+   - Primary (Dark Navy):    #000c5b
+   - Secondary (Teal):       #71b6c8
+   - Accent (Light Blue):    #bfdbe3
+   - Black:                  #000000
+   - White:                  #ffffff
+
+   Fonts:
+   - Headings: League Spartan (bold, uppercase)
+   - Body: Helvetica Now / Helvetica / Arial
+   - Secondary: Raleway
+   ============================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800;900&family=Raleway:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --color-primary: {{ settings.color_primary | default: '#000c5b' }};
-  --color-secondary: {{ settings.color_secondary | default: '#71b6c8' }};
-  --color-accent: {{ settings.color_accent | default: '#bfdbe3' }};
-  --color-text: {{ settings.color_text | default: '#000000' }};
-  --color-background: {{ settings.color_background | default: '#ffffff' }};
+  /* Brand Colors */
+  --color-primary: #000c5b;       /* Dark Navy Blue */
+  --color-secondary: #71b6c8;     /* Teal/Cyan */
+  --color-accent: #bfdbe3;        /* Light Blue */
+  --color-black: #000000;         /* Black */
+  --color-white: #ffffff;         /* White */
 
+  /* Semantic Colors */
+  --color-text: #000000;
+  --color-text-light: #ffffff;
+  --color-background: #ffffff;
+  --color-background-dark: #000c5b;
+
+  /* Brand Fonts */
   --font-heading: 'League Spartan', sans-serif;
-  --font-body: 'Helvetica', 'Arial', sans-serif;
+  --font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   --font-secondary: 'Raleway', sans-serif;
 }
 

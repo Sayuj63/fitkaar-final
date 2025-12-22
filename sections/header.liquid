@@ -35,8 +35,12 @@
     <!-- Navigation (Desktop) -->
     <nav class="hidden md:flex gap-8">
       {% for link in linklists.main-menu.links %}
-        <a href="{{ link.url }}" class="text-base hover:text-primary uppercase font-bold" style="color: #000; text-decoration: none;">{{ link.title }}</a>
+        {% assign link_title_lower = link.title | downcase %}
+        {% unless link_title_lower contains 'about' %}
+          <a href="{{ link.url }}" class="text-base hover:text-primary uppercase font-bold" style="color: #000; text-decoration: none;">{{ link.title }}</a>
+        {% endunless %}
       {% endfor %}
+      <a href="/pages/about-us" class="text-base hover:text-primary uppercase font-bold" style="color: #000; text-decoration: none;">About Us</a>
     </nav>
 
     <!-- Icons -->
@@ -87,8 +91,12 @@
 
          <nav class="flex flex-col gap-4">
             {% for link in linklists.main-menu.links %}
-              <a href="{{ link.url }}" class="text-lg font-bold uppercase border-b border-gray-100 pb-2">{{ link.title }}</a>
+              {% assign link_title_lower = link.title | downcase %}
+              {% unless link_title_lower contains 'about' %}
+                <a href="{{ link.url }}" class="text-lg font-bold uppercase border-b border-gray-100 pb-2">{{ link.title }}</a>
+              {% endunless %}
             {% endfor %}
+            <a href="/pages/about-us" class="text-lg font-bold uppercase border-b border-gray-100 pb-2">About Us</a>
          </nav>
     </div>
   </div>

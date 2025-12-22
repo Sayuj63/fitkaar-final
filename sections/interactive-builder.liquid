@@ -1,0 +1,658 @@
+{% schema %}
+{
+  "name": "Interactive Builder",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Build Your Vibe"
+    },
+    {
+      "type": "text",
+      "id": "male_model",
+      "label": "Male Model Image URL"
+    },
+    {
+      "type": "text",
+      "id": "female_model",
+      "label": "Female Model Image URL"
+    },
+    {
+      "type": "text",
+      "id": "sticker_1",
+      "label": "Sticker 1 (Football)"
+    },
+    {
+      "type": "text",
+      "id": "sticker_2",
+      "label": "Sticker 2 (Chai)"
+    },
+    {
+      "type": "text",
+      "id": "sticker_3",
+      "label": "Sticker 3 (Mountain)"
+    },
+    {
+      "type": "text",
+      "id": "sticker_4",
+      "label": "Sticker 4 (Ticket)"
+    },
+    {
+      "type": "text",
+      "id": "sticker_5",
+      "label": "Sticker 5 (Quote)"
+    },
+    {
+      "type": "text",
+      "id": "sticker_6",
+      "label": "Sticker 6 (Camera)"
+    },
+    {
+      "type": "text",
+      "id": "sticker_7",
+      "label": "Sticker 7 (Guitar)"
+    },
+    {
+      "type": "text",
+      "id": "sticker_8",
+      "label": "Sticker 8 (Pasta)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Interactive Builder"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+/* Interactive Builder Section Styles */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Permanent+Marker&display=swap');
+
+.interactive-builder {
+  background: #000c5b;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* Floating Background Particles */
+.ib-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  z-index: 0;
+  animation: ibFloatUp linear infinite;
+}
+
+@keyframes ibFloatUp {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100px) scale(1);
+    opacity: 0;
+  }
+}
+
+.ib-title {
+  font-size: 2.5rem;
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  text-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  text-align: center;
+  width: 100%;
+  pointer-events: none;
+}
+
+.ib-main-area {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Model Slider */
+.ib-model-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 70vh;
+  gap: 20px;
+}
+
+.ib-slider-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  z-index: 100;
+}
+
+.ib-slider-btn:hover {
+  background: white;
+  color: #000c5b;
+  transform: scale(1.1);
+}
+
+/* T-shirt Center Stage */
+.ib-tshirt-stage {
+  position: relative;
+  width: 600px;
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  margin: 0 auto;
+}
+
+.ib-tshirt-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.4));
+}
+
+.ib-image-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.ib-image-loading img {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ib-image-loaded img {
+  opacity: 1;
+}
+
+.ib-image-loaded .ib-skeleton {
+  display: none;
+}
+
+.ib-tshirt-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ib-skeleton {
+  background: linear-gradient(90deg, #1a1a5b 25%, #2a2a7b 50%, #1a1a5b 75%);
+  background-size: 200% 100%;
+  animation: ibLoading 1.5s infinite;
+  border-radius: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+@keyframes ibLoading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Design Area */
+.ib-design-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 15;
+}
+
+/* Scattered Stickers */
+.ib-sticker {
+  position: absolute;
+  width: 180px;
+  height: auto;
+  background: transparent !important;
+  border-radius: 0;
+  box-shadow: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: ibFloatBob 4s ease-in-out infinite;
+  z-index: 20;
+}
+
+.ib-sticker img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+  pointer-events: none;
+}
+
+.ib-sticker:hover {
+  transform: scale(1.15) rotate(5deg);
+  z-index: 30;
+  animation-play-state: paused;
+}
+
+/* Active state - dim and grayscale when placed on shirt */
+.ib-sticker.active {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+@keyframes ibFloatBob {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+}
+
+.ib-sticker:nth-child(2n) { animation-delay: 0.5s; }
+.ib-sticker:nth-child(3n) { animation-delay: 1s; }
+.ib-sticker:nth-child(4n) { animation-delay: 1.5s; }
+
+/* Placed Elements on Shirt */
+.ib-placed-element {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.ib-placed-element img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ib-tshirt-stage {
+    width: 400px;
+  }
+  .ib-sticker {
+    width: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ib-title {
+    font-size: 1.5rem;
+    top: 15px;
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ib-main-area {
+    padding-top: 60px;
+  }
+
+  .ib-model-slider {
+    height: 60vh;
+  }
+
+  .ib-tshirt-stage {
+    width: 100%;
+    height: 60vh;
+    margin-top: 40px;
+  }
+
+  .ib-sticker {
+    width: 70px;
+  }
+
+  .ib-slider-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .ib-prev-btn { left: 10px; }
+  .ib-next-btn { right: 10px; }
+
+  /* Mobile sticker positions - matching original */
+  .ib-sticker[data-name="football"] { top: 12% !important; left: 5% !important; }
+  .ib-sticker[data-name="chai"] { top: 12% !important; right: 5% !important; left: auto !important; }
+  .ib-sticker[data-name="mountain"] { top: 25% !important; right: 2% !important; left: auto !important; }
+  .ib-sticker[data-name="ticket"] { top: 30% !important; left: 2% !important; }
+  .ib-sticker[data-name="quote"] { top: 70% !important; left: 5% !important; }
+  .ib-sticker[data-name="camera"] { top: 85% !important; left: 10% !important; }
+  .ib-sticker[data-name="guitar"] { top: 45% !important; right: 2% !important; left: auto !important; }
+  .ib-sticker[data-name="pasta"] { top: 85% !important; right: 10% !important; left: auto !important; }
+}
+
+@media (max-width: 480px) {
+  .ib-sticker {
+    width: 55px;
+  }
+  .ib-tshirt-stage {
+    width: 220px;
+  }
+}
+</style>
+
+<section class="interactive-builder" id="interactiveBuilder">
+  <!-- Background Particles -->
+  <div class="ib-particle" style="width: 20px; height: 20px; left: 10%; animation-duration: 15s;"></div>
+  <div class="ib-particle" style="width: 50px; height: 50px; left: 20%; animation-duration: 25s; animation-delay: 2s;"></div>
+  <div class="ib-particle" style="width: 10px; height: 10px; left: 50%; animation-duration: 10s; animation-delay: 5s;"></div>
+  <div class="ib-particle" style="width: 30px; height: 30px; left: 80%; animation-duration: 20s; animation-delay: 1s;"></div>
+  <div class="ib-particle" style="width: 15px; height: 15px; left: 90%; animation-duration: 12s; animation-delay: 3s;"></div>
+
+  <div class="ib-main-area">
+    <h2 class="ib-title">{{ section.settings.title | default: "Build Your Vibe" }}</h2>
+
+    <!-- Model Slider -->
+    <div class="ib-model-slider">
+      <button class="ib-slider-btn ib-prev-btn" id="ibPrevBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="ib-tshirt-stage">
+        <div class="ib-tshirt-wrapper">
+          <div class="ib-image-loading" id="ibImageLoading">
+            <div class="ib-skeleton"></div>
+            <img src="{{ section.settings.male_model }}" alt="Model" class="ib-tshirt-bg" id="ibModelImage">
+          </div>
+          <div class="ib-design-area" id="ibDesignArea"></div>
+        </div>
+      </div>
+
+      <button class="ib-slider-btn ib-next-btn" id="ibNextBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scattered Stickers -->
+    {% if section.settings.sticker_1 %}
+    <div class="ib-sticker" data-name="football" data-src="{{ section.settings.sticker_1 }}" style="top: 15%; left: 25%;">
+      <img src="{{ section.settings.sticker_1 }}" alt="Football">
+    </div>
+    {% endif %}
+
+    {% if section.settings.sticker_2 %}
+    <div class="ib-sticker" data-name="chai" data-src="{{ section.settings.sticker_2 }}" style="top: 15%; right: 25%; left: auto;">
+      <img src="{{ section.settings.sticker_2 }}" alt="Chai">
+    </div>
+    {% endif %}
+
+    {% if section.settings.sticker_3 %}
+    <div class="ib-sticker" data-name="mountain" data-src="{{ section.settings.sticker_3 }}" style="top: 35%; right: 20%; left: auto;">
+      <img src="{{ section.settings.sticker_3 }}" alt="Mountain">
+    </div>
+    {% endif %}
+
+    {% if section.settings.sticker_4 %}
+    <div class="ib-sticker" data-name="ticket" data-src="{{ section.settings.sticker_4 }}" style="top: 40%; left: 20%;">
+      <img src="{{ section.settings.sticker_4 }}" alt="Ticket">
+    </div>
+    {% endif %}
+
+    {% if section.settings.sticker_5 %}
+    <div class="ib-sticker" data-name="quote" data-src="{{ section.settings.sticker_5 }}" style="top: 65%; left: 22%;">
+      <img src="{{ section.settings.sticker_5 }}" alt="Quote">
+    </div>
+    {% endif %}
+
+    {% if section.settings.sticker_6 %}
+    <div class="ib-sticker" data-name="camera" data-src="{{ section.settings.sticker_6 }}" style="top: 80%; left: 30%;">
+      <img src="{{ section.settings.sticker_6 }}" alt="Camera">
+    </div>
+    {% endif %}
+
+    {% if section.settings.sticker_7 %}
+    <div class="ib-sticker" data-name="guitar" data-src="{{ section.settings.sticker_7 }}" style="top: 55%; right: 20%; left: auto;">
+      <img src="{{ section.settings.sticker_7 }}" alt="Guitar">
+    </div>
+    {% endif %}
+
+    {% if section.settings.sticker_8 %}
+    <div class="ib-sticker" data-name="pasta" data-src="{{ section.settings.sticker_8 }}" style="top: 80%; right: 30%; left: auto;">
+      <img src="{{ section.settings.sticker_8 }}" alt="Pasta">
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const builderSection = document.getElementById('interactiveBuilder');
+  if (!builderSection) return;
+
+  const models = [
+    '{{ section.settings.male_model }}',
+    '{{ section.settings.female_model }}'
+  ].filter(url => url && url.length > 0);
+
+  if (models.length === 0) return;
+
+  let currentModelIndex = 0;
+
+  const placedStickers = {};
+  models.forEach(m => placedStickers[m] = new Set());
+
+  // Sticker placement config (positions on the t-shirt)
+  const stickerConfig = {
+    'camera': { top: '70%', left: '46%', width: '18%' },
+    'chai': { top: '54%', left: '60%', width: '18%' },
+    'football': { top: '52%', left: '46%', width: '25%' },
+    'guitar': { top: '60%', left: '66%', width: '40%' },
+    'mountain': { top: '70%', left: '58%', width: '15%' },
+    'pasta': { top: '64%', left: '58%', width: '15%' },
+    'quote': { top: '62%', left: '49%', width: '12%' },
+    'ticket': { top: '55%', left: '52%', width: '12%' }
+  };
+
+  const modelImage = document.getElementById('ibModelImage');
+  const designArea = document.getElementById('ibDesignArea');
+  const imageLoading = document.getElementById('ibImageLoading');
+  const prevBtn = document.getElementById('ibPrevBtn');
+  const nextBtn = document.getElementById('ibNextBtn');
+  const stickerItems = document.querySelectorAll('.ib-sticker');
+
+  // Image loaded handler
+  modelImage.onload = () => {
+    imageLoading.classList.add('ib-image-loaded');
+  };
+
+  if (modelImage.complete) {
+    imageLoading.classList.add('ib-image-loaded');
+  }
+
+  function updateModel() {
+    if (models.length === 0) return;
+    const modelUrl = models[currentModelIndex];
+    imageLoading.classList.remove('ib-image-loaded');
+
+    setTimeout(() => {
+      modelImage.src = modelUrl;
+      modelImage.onload = () => {
+        imageLoading.classList.add('ib-image-loaded');
+      };
+      renderStickers();
+    }, 200);
+  }
+
+  function renderStickers() {
+    designArea.innerHTML = '';
+    const modelUrl = models[currentModelIndex];
+    const activeStickers = placedStickers[modelUrl] || new Set();
+
+    activeStickers.forEach(stickerName => {
+      const config = stickerConfig[stickerName];
+      const stickerEl = document.querySelector(`.ib-sticker[data-name="${stickerName}"]`);
+      if (!config || !stickerEl) return;
+
+      const el = document.createElement('div');
+      el.className = 'ib-placed-element';
+      el.style.position = 'absolute';
+      el.style.top = config.top;
+      el.style.left = config.left;
+      el.style.width = config.width;
+      el.style.transform = 'translate(-50%, -50%)';
+
+      const img = document.createElement('img');
+      img.src = stickerEl.dataset.src;
+      el.appendChild(img);
+
+      // Pop animation
+      el.animate([
+        { transform: 'translate(-50%, -50%) scale(0)' },
+        { transform: 'translate(-50%, -50%) scale(1.15)' },
+        { transform: 'translate(-50%, -50%) scale(1)' }
+      ], { duration: 400, easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' });
+
+      designArea.appendChild(el);
+    });
+
+    // Update active state in scatter zones
+    stickerItems.forEach(item => {
+      const name = item.dataset.name;
+      if (activeStickers.has(name)) {
+        item.style.border = '3px solid #FFD700';
+        item.style.transform = 'scale(1.15) rotate(var(--rot, 0deg))';
+        item.classList.add('active');
+      } else {
+        item.style.border = 'none';
+        item.style.transform = '';
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  // Navigation
+  if (models.length > 1) {
+    prevBtn.addEventListener('click', () => {
+      currentModelIndex = (currentModelIndex - 1 + models.length) % models.length;
+      updateModel();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentModelIndex = (currentModelIndex + 1) % models.length;
+      updateModel();
+    });
+  } else {
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
+  }
+
+  // Sticker click
+  stickerItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const name = item.dataset.name;
+      const modelUrl = models[currentModelIndex];
+
+      if (!placedStickers[modelUrl]) {
+        placedStickers[modelUrl] = new Set();
+      }
+
+      if (placedStickers[modelUrl].has(name)) {
+        placedStickers[modelUrl].delete(name);
+      } else {
+        placedStickers[modelUrl].add(name);
+        createConfetti();
+      }
+      renderStickers();
+    });
+  });
+
+  // Confetti effect
+  function createConfetti() {
+    const colors = ['#ff9f43', '#ff9ff3', '#54a0ff', '#5f27cd', '#10ac84', '#FFD700'];
+    const rect = designArea.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 15; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.cssText = `
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        left: ${centerX}px;
+        top: ${centerY}px;
+        z-index: 9999;
+        border-radius: 2px;
+        pointer-events: none;
+      `;
+
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 80 + Math.random() * 80;
+      const tx = Math.cos(angle) * velocity;
+      const ty = Math.sin(angle) * velocity;
+
+      confetti.animate([
+        { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+        { transform: `translate(${tx}px, ${ty}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+      ], {
+        duration: 800,
+        easing: 'ease-out'
+      }).onfinish = () => confetti.remove();
+
+      document.body.appendChild(confetti);
+    }
+  }
+
+  // Swipe support
+  let touchStartX = 0;
+  designArea.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  designArea.addEventListener('touchend', e => {
+    const touchEndX = e.changedTouches[0].screenX;
+    if (touchEndX < touchStartX - 50) {
+      currentModelIndex = (currentModelIndex + 1) % models.length;
+      updateModel();
+    } else if (touchEndX > touchStartX + 50) {
+      currentModelIndex = (currentModelIndex - 1 + models.length) % models.length;
+      updateModel();
+    }
+  }, { passive: true });
+});
+</script>

@@ -30,7 +30,21 @@
 }
 {% endschema %}
 
-<div class="announcement-bar" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
+<style>
+.announcement-bar-gradient {
+  background: linear-gradient(90deg, {{ section.settings.bg_color }} 0%, #1a2980 50%, {{ section.settings.bg_color }} 100%);
+  background-size: 200% 100%;
+  animation: gradientShift 8s ease infinite;
+  color: {{ section.settings.text_color }};
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+</style>
+
+<div class="announcement-bar announcement-bar-gradient">
   <div class="container text-center py-2 flex justify-center items-center h-full">
     <div class="typewriter-container">
        <p class="text-sm font-medium typewriter-text" style="margin: 0; display: inline-block;">

@@ -31,31 +31,92 @@
 }
 {% endschema %}
 
+<style>
+.cta-card {
+  position: relative;
+  height: 400px;
+  display: block;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.cta-card:hover .cta-bg-img {
+  transform: scale(1.05);
+}
+
+.cta-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  z-index: 1;
+}
+
+.cta-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease;
+  z-index: 2;
+}
+
+.cta-card:hover .cta-overlay {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.cta-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.cta-title {
+  color: #fff;
+  font-size: 3.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-family: var(--font-heading);
+  text-align: center;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .cta-title {
+    font-size: 5rem;
+  }
+}
+</style>
+
 <div class="container py-10">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- Customize Card -->
-    <a href="{{ section.settings.link_1 | default: '#' }}" class="group relative block overflow-hidden rounded-2xl" style="height: 400px;">
-        {% if section.settings.image_1 %}
-            <img src="{{ section.settings.image_1 | image_url: width: 800 }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Customise">
-        {% else %}
-             {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover' }}
-        {% endif %}
-        <div class="absolute inset-0 bg-black bg-opacity-30 transition-opacity group-hover:bg-opacity-20"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-            <h2 class="text-white text-4xl md:text-5xl font-black uppercase tracking-tighter" style="font-family: var(--font-heading);">Customise</h2>
+    <a href="{{ section.settings.link_1 | default: '#' }}" class="cta-card">
+        <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/customise.png?v=1766322790" alt="Customise" class="cta-bg-img">
+        <div class="cta-overlay"></div>
+        <div class="cta-content">
+            <h2 class="cta-title">Customise</h2>
         </div>
     </a>
 
     <!-- Shop Now Card -->
-    <a href="{{ section.settings.link_2 | default: '/collections/all' }}" class="group relative block overflow-hidden rounded-2xl" style="height: 400px;">
-        {% if section.settings.image_2 %}
-            <img src="{{ section.settings.image_2 | image_url: width: 800 }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Shop Now">
-        {% else %}
-             {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover' }}
-        {% endif %}
-        <div class="absolute inset-0 bg-black bg-opacity-30 transition-opacity group-hover:bg-opacity-20"></div>
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-             <h2 class="text-white text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none" style="font-family: var(--font-heading);">Shop<br>Now</h2>
+    <a href="{{ section.settings.link_2 | default: '/collections/all' }}" class="cta-card">
+        <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/shop-now.png?v=1766322789" alt="Shop Now" class="cta-bg-img">
+        <div class="cta-overlay"></div>
+        <div class="cta-content">
+            <h2 class="cta-title">Shop Now</h2>
         </div>
     </a>
   </div>

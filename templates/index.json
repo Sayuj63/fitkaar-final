@@ -11,35 +11,9 @@
   "sections": {
     "slideshow": {
       "type": "hero-slideshow",
-      "blocks": {
-        "slide_1": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/IMG_8039.png",
-            "heading": "NEW ARRIVALS"
-          }
-        },
-        "slide_2": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/IMG_8040.png",
-            "heading": "SUMMER COLLECTION"
-          }
-        },
-        "slide_3": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/IMG_8041.png",
-            "heading": "BEST SELLERS"
-          }
-        }
-      },
-      "block_order": [
-        "slide_1",
-        "slide_2",
-        "slide_3"
-      ],
-      "settings": {}
+      "settings": {
+        "slide_duration": 4
+      }
     },
     "cta_double": {
       "type": "cta-double",
@@ -48,6 +22,22 @@
         "image_2": "shopify://shop_images/IMG_4354.png",
         "link_1": "",
         "link_2": ""
+      }
+    },
+    "interactive_builder": {
+      "type": "interactive-builder",
+      "settings": {
+        "title": "Build Your Vibe",
+        "male_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/male_model.png?v=1766327145",
+        "female_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/female_model.png?v=1766327146",
+        "sticker_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/football_sticker.png?v=1766327144",
+        "sticker_2": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/chai_sticker.png?v=1766327143",
+        "sticker_3": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/mountain_sticker.png?v=1766327143",
+        "sticker_4": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/ticket_sticker.png?v=1766327144",
+        "sticker_5": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/quote_sticker.png?v=1766327143",
+        "sticker_6": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/camera_sticker.png?v=1766327145",
+        "sticker_7": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/guitar_sticker.png?v=1766327143",
+        "sticker_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/pasta_sticker.png?v=1766327145"
       }
     },
     "best_sellers": {
@@ -128,13 +118,33 @@
       "settings": {
         "title": "AS SEEN ON REELS"
       }
+    },
+    "testimonials_carousel": {
+      "type": "testimonials-carousel",
+      "settings": {
+        "title": "WHAT THEY'RE SAYING",
+        "bg_color": "#f8f8f8",
+        "speed": 50,
+        "image_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-1.png?v=1766335038",
+        "image_2": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-2.png?v=1766335038",
+        "image_3": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-3.png?v=1766335038",
+        "image_4": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-4.png?v=1766335038",
+        "image_5": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-5.png?v=1766335038",
+        "image_6": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-6.png?v=1766335038",
+        "image_7": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-7.png?v=1766335038",
+        "image_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-8.png?v=1766335038",
+        "image_9": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-9.png?v=1766335038",
+        "image_10": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-10.png?v=1766335038"
+      }
     }
   },
   "order": [
     "slideshow",
     "cta_double",
+    "interactive_builder",
     "best_sellers",
     "testimonials",
-    "reels"
+    "reels",
+    "testimonials_carousel"
   ]
 }

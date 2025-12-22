@@ -1,5 +1,6 @@
 {% comment %}
   About Page Section - Fitkaar Story
+  Scrapbook-style animation with sticky center image
 {% endcomment %}
 
 <style>
@@ -8,22 +9,91 @@
 
 .about-page {
   font-family: 'Outfit', sans-serif;
-  background-color: #fdfdfd;
+  background-color: #fdfcfa;
   color: #333;
-  overflow-x: hidden;
   line-height: 1.6;
-  background-image: radial-gradient(circle at 10% 20%, rgba(230, 230, 250, 0.3) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(255, 240, 245, 0.3) 0%, transparent 20%);
+  position: relative;
+  z-index: 1;
+  /* Quirky hand-drawn style grid with scattered elements */
+  background-image:
+    /* Tiny plus signs scattered */
+    radial-gradient(circle at center, #71b6c8 0.8px, transparent 0.8px),
+    /* Small dots pattern */
+    radial-gradient(circle at center, #e0d5c8 1px, transparent 1px),
+    /* Very subtle large circles */
+    radial-gradient(circle at center, rgba(191, 219, 227, 0.15) 2px, transparent 2px);
+  background-size:
+    97px 97px,
+    31px 31px,
+    157px 157px;
+  background-position:
+    13px 17px,
+    0 0,
+    47px 73px;
+}
+
+/* Override ALL parent overflow for sticky to work */
+body.about-page-active,
+body.about-page-active #MainContent,
+body.about-page-active .content-for-layout,
+body.about-page-active main {
+  overflow: visible !important;
+  overflow-x: clip !important;
+}
+
+/* Floating color blobs for warmth */
+.about-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(ellipse 600px 400px at 10% 20%, rgba(255, 220, 210, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 90% 60%, rgba(191, 219, 227, 0.1) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 50% 90%, rgba(255, 235, 180, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Decorative doodle elements */
+.about-page::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    /* Small x marks */
+    url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 6l8 8M14 6l-8 8' stroke='%2371b6c8' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E"),
+    /* Tiny circles */
+    url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='15' cy='15' r='2' fill='none' stroke='%23bfdbe3' stroke-width='0.5' opacity='0.25'/%3E%3C/svg%3E"),
+    /* Small stars */
+    url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 22v6M22 25h6' stroke='%23000c5b' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
+  background-size:
+    120px 120px,
+    80px 80px,
+    200px 200px;
+  background-position:
+    23px 41px,
+    7px 13px,
+    67px 31px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.7;
 }
 
 /* Header */
 .about-header {
   text-align: center;
-  padding: 4rem 1rem 2rem;
+  padding: 5rem 1rem 3rem;
+  position: relative;
 }
 
 .about-brand-title {
-  font-size: 4rem;
+  font-size: 4.5rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
@@ -32,100 +102,107 @@
 }
 
 .about-brand-subtitle {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 300;
-  color: #666;
+  color: #888;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.2em;
 }
 
 /* Intro Section */
 .about-intro {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 5% 6rem;
+  padding: 2rem 5% 2rem;
   position: relative;
-}
-
-.about-intro::before {
-  content: '';
-  position: absolute;
-  top: -10%;
-  left: -5%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(255, 228, 225, 0.6) 0%, transparent 70%);
-  border-radius: 50%;
-  z-index: -1;
-  animation: about-float 6s ease-in-out infinite;
-}
-
-.about-intro::after {
-  content: '';
-  position: absolute;
-  bottom: 10%;
-  right: -5%;
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(230, 230, 250, 0.6) 0%, transparent 70%);
-  border-radius: 50%;
-  z-index: -1;
-  animation: about-float 8s ease-in-out infinite reverse;
 }
 
 .intro-content {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4rem;
-  justify-content: space-between;
+  gap: 1.5rem;
+  justify-content: center;
 }
 
 .founder-image-container {
-  flex: 1;
-  max-width: 45%;
-  margin: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  flex: 0 0 700px;
+  max-width: 90vw;
+  transform: rotate(-2deg);
+  transition: transform 0.4s ease, filter 0.4s ease;
+  position: relative;
 }
 
-.intro-text-container {
-  flex: 1;
-  text-align: left;
+.founder-image-container:hover {
+  transform: rotate(0deg) scale(1.03);
 }
 
-.intro-text {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  color: #444;
-  font-weight: 600;
+/* Bottom fade overlay on founders image */
+.founder-image-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35%;
+  background: linear-gradient(to top, #fdfcfa 0%, rgba(253, 252, 250, 0.8) 30%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .founder-img {
   width: 100%;
   height: auto;
   display: block;
+  /* Colorful quirky drop shadow that follows image shape */
+  filter:
+    drop-shadow(4px 4px 0px #71b6c8)
+    drop-shadow(8px 8px 0px rgba(191, 219, 227, 0.7))
+    drop-shadow(12px 12px 20px rgba(0, 12, 91, 0.15));
+  transition: filter 0.4s ease;
+}
+
+.founder-image-container:hover .founder-img {
+  filter:
+    drop-shadow(6px 6px 0px #71b6c8)
+    drop-shadow(12px 12px 0px rgba(191, 219, 227, 0.8))
+    drop-shadow(16px 16px 25px rgba(0, 12, 91, 0.2));
+}
+
+.intro-text-container {
+  flex: 1;
+  max-width: 650px;
+  text-align: center;
+}
+
+.intro-text {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .founder-desc {
   font-size: 1.1rem;
-  color: #555;
-  max-width: 700px;
-  margin: 0 auto;
+  color: #666;
+  line-height: 1.7;
 }
 
-/* Scroll Story Section */
-.scroll-story {
+/* ========================================
+   SCRAPBOOK SCROLL SECTION
+   ======================================== */
+.scrapbook-section {
   position: relative;
-  background-image: radial-gradient(#e0e0e0 1.5px, transparent 1.5px);
-  background-size: 30px 30px;
+  min-height: 300vh;
+  padding: 0;
 }
 
-.sticky-container {
+/* Sticky Center Image Container */
+.scrapbook-sticky {
   position: sticky;
-  top: 0;
-  height: 100vh;
-  width: 100%;
+  top: 100px;
+  height: calc(100vh - 120px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -133,317 +210,384 @@
   pointer-events: none;
 }
 
-.center-image {
-  height: 70vh;
-  width: auto;
-  max-width: 90vw;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-  transition: transform 0.1s linear;
+.center-image-wrapper {
+  position: relative;
+  width: 35vw;
+  max-width: 450px;
+  min-width: 280px;
+  transition: transform 0.3s ease;
   transform-origin: center center;
-  will-change: transform;
 }
 
-.story-content {
+.center-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+}
+
+/* Decorative tape on center image - moves with wrapper */
+.center-image-wrapper::before,
+.center-image-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 25px;
+  background: linear-gradient(135deg, rgba(255, 240, 200, 0.9) 0%, rgba(255, 230, 170, 0.85) 100%);
+  z-index: 10;
+  transform: rotate(-5deg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.center-image-wrapper::before {
+  top: -10px;
+  left: 20%;
+}
+
+.center-image-wrapper::after {
+  bottom: -10px;
+  right: 20%;
+  transform: rotate(5deg);
+}
+
+/* Story Content - Flows over sticky */
+.story-flow {
   position: relative;
   z-index: 2;
-  margin-top: -50vh;
+  margin-top: -80vh;
+  padding-bottom: 10vh;
 }
 
-.story-block {
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2rem 5%;
+/* Individual Scrapbook Cards */
+.scrapbook-card {
+  position: relative;
+  max-width: 380px;
+  padding: 0;
+  margin-bottom: 40vh;
   opacity: 0;
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  margin-bottom: 5vh;
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.story-block:nth-child(odd) {
-  flex-direction: row;
+/* Alternate left and right positioning */
+.scrapbook-card.card-left {
+  margin-left: 5%;
+  transform: translateX(-30px) rotate(-2deg);
 }
 
-.story-block:nth-child(even) {
-  flex-direction: row-reverse;
+.scrapbook-card.card-right {
+  margin-left: auto;
+  margin-right: 5%;
+  transform: translateX(30px) rotate(2deg);
 }
 
-.story-block.left {
-  transform: translateX(-50px);
-}
-
-.story-block.right {
-  transform: translateX(50px);
-}
-
-.story-block.visible {
+.scrapbook-card.visible {
   opacity: 1;
-  transform: translateX(0);
 }
 
-.block-text {
-  flex: 1;
-  max-width: 35%;
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  z-index: 5;
-  color: #fff;
+.scrapbook-card.visible.card-left {
+  transform: translateX(0) rotate(-1deg);
 }
 
-.block-text h2 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  color: #fff;
+.scrapbook-card.visible.card-right {
+  transform: translateX(0) rotate(1deg);
 }
 
-.block-text p {
-  font-size: 1.25rem;
-  color: #fff;
-  line-height: 1.6;
+/* Card Inner - Notebook paper effect */
+.card-inner {
+  background:
+    repeating-linear-gradient(
+      transparent,
+      transparent 27px,
+      #e8e8e8 27px,
+      #e8e8e8 28px
+    ),
+    linear-gradient(to bottom, #fefcf5 0%, #faf8f0 100%);
+  border-radius: 4px;
+  padding: 25px 20px 20px;
+  box-shadow:
+    0 1px 1px rgba(0,0,0,0.05),
+    0 4px 12px rgba(0,0,0,0.08),
+    0 20px 40px rgba(0,0,0,0.06);
+  position: relative;
+  pointer-events: auto;
+  border-left: 3px solid #f5c6c6;
+  margin-left: 10px;
+}
+
+/* Red margin line for notebook effect */
+.card-inner::after {
+  content: '';
+  position: absolute;
+  left: 25px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(245, 180, 180, 0.5);
+}
+
+/* Tape decoration on cards */
+.card-inner::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 80px;
+  height: 22px;
+  background: linear-gradient(135deg, rgba(255, 240, 200, 0.9) 0%, rgba(255, 230, 170, 0.85) 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  z-index: 1;
+}
+
+/* Card Text */
+.card-text {
+  font-size: 1.05rem;
+  color: #444;
+  line-height: 1.65;
+  margin-bottom: 15px;
   font-weight: 400;
 }
 
-.block-images {
-  flex: 1;
-  max-width: 60%;
+/* Card Images Grid */
+.card-images {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
   justify-content: center;
-  position: relative;
+  align-items: flex-start;
+  margin-top: 10px;
 }
 
-.image-grid img {
-  width: 140px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
-}
-
-.image-grid:not(.contain-images) img {
-  width: 200px;
-  height: 200px;
-}
-
-.image-grid:not(.contain-images) img:nth-child(3n+1) {
-  width: 220px;
-  height: 220px;
-}
-
-.image-grid.contain-images img {
+.card-images img {
+  max-width: 120px;
+  width: auto;
+  height: auto;
+  max-height: 150px;
   object-fit: contain;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  background: #fff;
+  padding: 4px;
+  border: 1px solid rgba(0,0,0,0.06);
 }
 
-.image-grid img:nth-child(3n+1) {
-  width: 160px;
-  height: 160px;
+.card-images img:nth-child(odd) {
+  transform: rotate(-2deg);
 }
 
-.image-grid img:nth-child(odd) {
-  transform: rotate(-3deg) translateY(10px);
+.card-images img:nth-child(even) {
+  transform: rotate(2deg);
 }
 
-.image-grid img:nth-child(even) {
-  transform: rotate(2deg) translateY(-10px);
+.card-images img:nth-child(3) {
+  transform: rotate(1deg) translateY(-5px);
 }
 
-.image-grid img:nth-child(3n) {
-  transform: rotate(4deg) scale(1.1);
-  z-index: 2;
-}
-
-.image-grid img:hover {
-  transform: scale(1.1) rotate(0deg);
+.card-images img:hover {
+  transform: rotate(0deg) scale(1.15);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
   z-index: 10;
-}
-
-/* Block 5 Specifics */
-.story-block.block-5 {
-  flex-direction: column !important;
-  align-items: stretch;
-}
-
-.story-block.block-5 .top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 2rem;
-}
-
-.story-block.block-5 .bottom-row {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-/* Final Transition Section */
-.final-transition {
-  height: 90vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 5%;
-  overflow: hidden;
-}
-
-.final-images-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
   position: relative;
 }
 
-.dummy-image {
-  width: 25vw;
-  height: 40vh;
-  background-color: #eee;
-  border-radius: 12px;
-  transition: margin 1.8s ease-out;
+/* Larger images for fewer items */
+.card-images.large-images img {
+  max-width: 160px;
+  max-height: 180px;
 }
 
-.dummy-image.left {
-  margin-right: 0;
+/* Single image takes more space */
+.card-images.single-image img {
+  max-width: 100%;
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  padding: 0;
 }
 
-.dummy-image.right {
-  margin-left: 0;
+/* Auto-detect portrait vs landscape */
+.card-images img[src*=".PNG"],
+.card-images img[src*=".png"] {
+  max-width: 100px;
+  max-height: 130px;
 }
 
-.dummy-image.left.spread {
-  margin-right: 26vw;
+.card-images.large-images img[src*=".jpg"],
+.card-images.large-images img[src*=".JPG"] {
+  max-width: 180px;
+  max-height: 200px;
 }
 
-.dummy-image.right.spread {
-  margin-left: 26vw;
-}
-
-.final-text {
-  margin-top: 3rem;
+/* ========================================
+   FINAL SECTION
+   ======================================== */
+.final-message {
   text-align: center;
-  width: 80%;
-  max-width: 800px;
+  padding: 8rem 5%;
+  background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.8) 100%);
   position: relative;
   z-index: 10;
 }
 
-.final-text p {
-  font-size: 1.25rem;
-  color: #444;
-  line-height: 1.6;
+.final-message p {
+  font-size: 1.5rem;
+  color: #333;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+  font-weight: 400;
 }
 
 /* Youtube Section */
 .youtube-section {
-  padding: 6rem 5%;
-  background-color: #f9f9f9;
+  padding: 5rem 5% 6rem;
+  background-color: #faf9f7;
   text-align: center;
 }
 
 .youtube-section h2 {
-  font-size: 2.5rem;
-  margin-bottom: 3rem;
-  color: #222;
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  color: #333;
   font-weight: 600;
   text-transform: none;
 }
 
-.yt-container {
-  max-width: 500px;
+/* macOS Window Frame */
+.macos-window {
+  max-width: 700px;
   margin: 0 auto;
-  position: relative;
-  border-radius: 16px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.3s ease;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 20px 50px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.yt-container:hover {
-  transform: scale(1.02);
+.macos-window:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 30px 60px rgba(0, 0, 0, 0.2);
 }
 
-.yt-container img {
+/* Title Bar */
+.window-titlebar {
+  background: linear-gradient(180deg, #e8e8e8 0%, #d8d8d8 100%);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #c0c0c0;
+}
+
+/* Traffic Light Buttons */
+.traffic-lights {
+  display: flex;
+  gap: 8px;
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.traffic-light.close {
+  background: linear-gradient(180deg, #ed6a5f 0%, #e24b41 100%);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+}
+
+.traffic-light.minimize {
+  background: linear-gradient(180deg, #f6be50 0%, #e1a73e 100%);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+}
+
+.traffic-light.maximize {
+  background: linear-gradient(180deg, #61c555 0%, #2dac2f 100%);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+}
+
+/* Window Title */
+.window-title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  color: #4a4a4a;
+  font-weight: 500;
+  margin-right: 52px;
+}
+
+/* Window Content */
+.window-content {
+  position: relative;
+  background: #000;
+  aspect-ratio: 16/9;
+}
+
+.window-content img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
+/* Play Button */
 .play-button {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80px;
-  height: 80px;
-  background-color: rgba(255, 255, 255, 0.9);
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  z-index: 10;
 }
 
-.play-button::before {
+.play-button::after {
   content: '';
-  display: block;
   width: 0;
   height: 0;
   border-left: 20px solid #333;
   border-top: 12px solid transparent;
   border-bottom: 12px solid transparent;
-  margin-left: 5px;
+  margin-left: 4px;
 }
 
-.yt-container:hover .play-button {
-  background-color: #fff;
+.macos-window:hover .play-button {
   transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* Animations */
-@keyframes about-float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-/* Responsive Styles */
+/* ========================================
+   RESPONSIVE STYLES
+   ======================================== */
 @media screen and (max-width: 1024px) {
-  .intro-content {
-    gap: 2rem;
+  .center-image-wrapper {
+    width: 30vw;
+    min-width: 200px;
   }
 
-  .founder-image-container {
-    max-width: 50%;
-  }
-
-  .center-image {
-    max-width: 80vw;
+  .scrapbook-card {
+    max-width: 320px;
   }
 }
 
 @media screen and (max-width: 768px) {
   .about-header {
-    padding: 3rem 1rem 1.5rem;
+    padding: 3rem 1rem 2rem;
   }
 
   .about-brand-title {
@@ -457,373 +601,342 @@
   }
 
   .founder-image-container {
-    max-width: 80%;
-    width: 80%;
-    margin: 0 auto;
+    flex: 0 0 auto;
+    width: 95%;
+    max-width: 500px;
+    transform: rotate(0deg);
+  }
+
+  .founder-img {
+    filter:
+      drop-shadow(3px 3px 0px #71b6c8)
+      drop-shadow(6px 6px 0px rgba(191, 219, 227, 0.7))
+      drop-shadow(8px 8px 15px rgba(0, 12, 91, 0.12));
   }
 
   .intro-text-container {
     text-align: center;
-    width: 100%;
   }
 
-  .intro-text {
-    font-size: 1.25rem;
-    text-align: center;
-  }
-
-  .founder-desc {
-    text-align: center;
-  }
-
-  .center-image {
+  /* Mobile: Stack layout instead of side-by-side */
+  .scrapbook-sticky {
+    position: relative;
+    top: 0;
     height: auto;
+    padding: 3rem 0;
+  }
+
+  .center-image-wrapper {
     width: 70%;
-    max-height: 50vh;
+    max-width: 300px;
   }
 
-  .story-block {
-    flex-direction: column !important;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 4rem 1rem;
-    min-height: auto;
-    margin-bottom: 10vh;
+  .story-flow {
+    margin-top: 0;
+    padding: 2rem 5%;
   }
 
-  .story-block.left,
-  .story-block.right {
-    transform: none;
-  }
-
-  .story-block.visible {
-    transform: none;
-    opacity: 1;
-  }
-
-  .block-text {
-    max-width: 90%;
-    width: 90%;
-    margin-bottom: 2rem;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    padding: 2rem;
-  }
-
-  .block-images {
+  .scrapbook-card {
     max-width: 100%;
-    width: 100%;
-    justify-content: center;
+    margin-bottom: 3rem;
   }
 
-  .dummy-image {
-    width: 25vw;
-    height: 20vh;
+  .scrapbook-card.card-left,
+  .scrapbook-card.card-right {
+    margin-left: 0;
+    margin-right: 0;
+    transform: none;
   }
 
-  .dummy-image.left.spread {
-    margin-right: 20vw;
+  .scrapbook-card.visible.card-left,
+  .scrapbook-card.visible.card-right {
+    transform: none;
   }
 
-  .dummy-image.right.spread {
-    margin-left: 20vw;
+  .card-images img {
+    max-width: 90px;
+    max-height: 110px;
   }
 
-  .final-text {
-    width: 90%;
+  .card-images.large-images img {
+    max-width: 120px;
+    max-height: 140px;
+  }
+
+  .card-inner {
+    margin-left: 0;
+    border-left-width: 2px;
+  }
+
+  .card-inner::after {
+    left: 20px;
+  }
+
+  .final-message {
+    padding: 4rem 5%;
+  }
+
+  .final-message p {
+    font-size: 1.2rem;
   }
 }
 
 @media screen and (max-width: 480px) {
-  .about-header {
-    padding: 2rem 1rem 1rem;
-  }
-
   .about-brand-title {
     font-size: 2.5rem;
   }
 
   .about-brand-subtitle {
-    font-size: 1.2rem;
-  }
-
-  .about-intro {
-    padding: 1rem 5% 4rem;
-  }
-
-  .founder-image-container {
-    width: 90%;
-    max-width: 90%;
-    margin-bottom: 1rem;
+    font-size: 1rem;
   }
 
   .intro-text {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 
-  .center-image {
-    width: 60%;
-  }
-
-  .block-text {
-    width: 95%;
-    padding: 1.5rem;
-  }
-
-  .block-text p {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-
-  .image-grid img {
-    width: 110px;
-    height: 110px;
-  }
-
-  .image-grid:not(.contain-images) img {
-    width: 150px;
-    height: 150px;
-  }
-
-  .image-grid:not(.contain-images) img:nth-child(3n+1) {
-    width: 160px;
-    height: 160px;
-  }
-
-  .youtube-section {
-    padding: 3rem 1rem;
+  .card-text {
+    font-size: 0.95rem;
   }
 
   .youtube-section h2 {
     font-size: 1.5rem;
-    margin-bottom: 2rem;
+  }
+
+  .macos-window {
+    border-radius: 8px;
+  }
+
+  .window-titlebar {
+    padding: 8px 10px;
+  }
+
+  .traffic-light {
+    width: 10px;
+    height: 10px;
+  }
+
+  .traffic-lights {
+    gap: 6px;
+  }
+
+  .window-title {
+    font-size: 11px;
+    margin-right: 40px;
   }
 
   .play-button {
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
+  }
+
+  .play-button::after {
+    border-left-width: 16px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
   }
 }
 </style>
 
 <div class="about-page">
-  <!-- Header & Intro -->
+  <!-- Header -->
   <header class="about-header">
     <h1 class="about-brand-title">Fitkaar</h1>
     <p class="about-brand-subtitle">Kapdo ka Kalakar</p>
   </header>
 
+  <!-- Intro Section -->
   <section class="about-intro">
     <div class="intro-content">
       <div class="founder-image-container">
-        <img src="{{ 'founders.PNG' | asset_url }}" alt="Fitkaar Founders" class="founder-img">
+        <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/founders.png?v=1766316803" alt="Fitkaar Founders" class="founder-img">
       </div>
       <div class="intro-text-container">
-        <p class="intro-text">India's first-ever fully customizable clothing brand, where we design specially for you. Proudly women-led and bootstrapped.</p>
-        <p class="founder-desc">What started as a college passion project, born out of a shared love for designing costumes for their dance society, soon turned into Fitkaar. With a growing team that helps bring your ideas to life, they continue to build a brand that makes fashion feel personal.</p>
+        <p class="intro-text">India's first-ever fully customizable clothing brand, where we design specially for you.</p>
+        <p class="founder-desc">Proudly women-led and bootstrapped. What started as a college passion project, born out of a shared love for designing costumes for their dance society, soon turned into Fitkaar.</p>
       </div>
     </div>
   </section>
 
-  <!-- Scroll Story Section -->
-  <section class="scroll-story" id="scroll-story">
-    <div class="sticky-container">
-      <img src="{{ 'flowing_image.JPG' | asset_url }}" alt="Flowing Fabric" class="center-image" id="center-flow-img">
+  <!-- Scrapbook Scroll Section -->
+  <section class="scrapbook-section" id="scrapbook-section">
+    <!-- Sticky Center Image -->
+    <div class="scrapbook-sticky">
+      <div class="center-image-wrapper">
+        <img src="{{ 'flowing_image.JPG' | asset_url }}" alt="Our Journey" class="center-image" id="center-image">
+      </div>
     </div>
 
-    <div class="story-content">
-      <!-- Block 1 (Left) -->
-      <div class="story-block left" data-side="left">
-        <div class="block-text">
-          <p>It all began in college. We were both part of the dance society, Suhani as the Vice President and Mitanshi as the Creative Head.</p>
-        </div>
-        <div class="block-images image-grid">
-          <img loading="lazy" src="{{ '1.1.jpg' | asset_url }}" alt="Story Image 1.1">
-          <img loading="lazy" src="{{ '1.2.JPG' | asset_url }}" alt="Story Image 1.2">
-          <img loading="lazy" src="{{ '1.3.JPG' | asset_url }}" alt="Story Image 1.3">
-        </div>
-      </div>
-
-      <!-- Block 2 (Right) -->
-      <div class="story-block right" data-side="right">
-        <div class="block-text">
-          <p>When it was time to plan our seniors' farewell, we wanted to gift them something personal, something that felt like them.</p>
-        </div>
-        <div class="block-images image-grid contain-images">
-          <img loading="lazy" src="{{ '2.1.PNG' | asset_url }}" alt="Story Image 2.1">
-          <img loading="lazy" src="{{ '2.2.PNG' | asset_url }}" alt="Story Image 2.2">
-          <img loading="lazy" src="{{ '2.3.PNG' | asset_url }}" alt="Story Image 2.3">
-          <img loading="lazy" src="{{ '2.4.PNG' | asset_url }}" alt="Story Image 2.4">
-        </div>
-      </div>
-
-      <!-- Block 3 (Left) -->
-      <div class="story-block left" data-side="left">
-        <div class="block-text">
-          <p>That's when the idea struck, personalised t-shirts with elements each senior loved.</p>
-        </div>
-        <div class="block-images image-grid contain-images">
-          <img loading="lazy" src="{{ '3.1.PNG' | asset_url }}" alt="Story Image 3.1">
-          <img loading="lazy" src="{{ '3.2.PNG' | asset_url }}" alt="Story Image 3.2">
-          <img loading="lazy" src="{{ '3.3.PNG' | asset_url }}" alt="Story Image 3.3">
-        </div>
-      </div>
-
-      <!-- Block 4 (Right) -->
-      <div class="story-block right" data-side="right">
-        <div class="block-text">
-          <p>After going through a lot of drafts and revisions, we finally had our first set of designs ready.</p>
-        </div>
-        <div class="block-images image-grid">
-          <img loading="lazy" src="{{ '4.1.jpg' | asset_url }}" alt="Story Image 4.1">
-          <img loading="lazy" src="{{ '4.2.PNG' | asset_url }}" alt="Story Image 4.2">
-          <img loading="lazy" src="{{ '4.3.PNG' | asset_url }}" alt="Story Image 4.3">
-        </div>
-      </div>
-
-      <!-- Block 5 (Left) -->
-      <div class="story-block left block-5" data-side="left">
-        <div class="top-row">
-          <div class="block-text">
-            <p>When we shared them with our batch, the responses poured in, 'you guys should start something together!'</p>
-          </div>
-          <div class="block-images image-grid side-images contain-images">
-            <img loading="lazy" src="{{ '5.1.PNG' | asset_url }}" alt="Story Image 5.1">
-            <img loading="lazy" src="{{ '5.2.PNG' | asset_url }}" alt="Story Image 5.2">
-            <img loading="lazy" src="{{ '5.3.PNG' | asset_url }}" alt="Story Image 5.3">
+    <!-- Story Cards Flow -->
+    <div class="story-flow">
+      <!-- Card 1 - Left -->
+      <div class="scrapbook-card card-left">
+        <div class="card-inner">
+          <p class="card-text">It all began in college. We were both part of the dance society — Suhani as the Vice President and Mitanshi as the Creative Head.</p>
+          <div class="card-images large-images">
+            <img loading="lazy" src="{{ '1.1.jpg' | asset_url }}" alt="College days">
+            <img loading="lazy" src="{{ '1.2.JPG' | asset_url }}" alt="Dance society">
+            <img loading="lazy" src="{{ '1.3.JPG' | asset_url }}" alt="Early days">
           </div>
         </div>
-        <div class="bottom-row image-grid bottom-images contain-images">
-          <img loading="lazy" src="{{ '5.4.PNG' | asset_url }}" alt="Story Image 5.4">
-          <img loading="lazy" src="{{ '5.5.PNG' | asset_url }}" alt="Story Image 5.5">
-          <img loading="lazy" src="{{ '5.6.PNG' | asset_url }}" alt="Story Image 5.6">
-          <img loading="lazy" src="{{ '5.7.PNG' | asset_url }}" alt="Story Image 5.7">
+      </div>
+
+      <!-- Card 2 - Right -->
+      <div class="scrapbook-card card-right">
+        <div class="card-inner">
+          <p class="card-text">When it was time to plan our seniors' farewell, we wanted to gift them something personal — something that felt like them.</p>
+          <div class="card-images">
+            <img loading="lazy" src="{{ '2.1.PNG' | asset_url }}" alt="Design process">
+            <img loading="lazy" src="{{ '2.2.PNG' | asset_url }}" alt="Sketches">
+            <img loading="lazy" src="{{ '2.3.PNG' | asset_url }}" alt="Ideas">
+            <img loading="lazy" src="{{ '2.4.PNG' | asset_url }}" alt="Concepts">
+          </div>
         </div>
       </div>
 
-      <!-- Block 6 (Right) -->
-      <div class="story-block right" data-side="right">
-        <div class="block-text">
-          <p>Seeing our seniors' reactions when they opened their tees was everything, it genuinely made us realise how special personalised designs can feel.</p>
-        </div>
-        <div class="block-images image-grid">
-          <img loading="lazy" src="{{ '6.1.JPG' | asset_url }}" alt="Story Image 6.1">
-        </div>
-      </div>
-
-      <!-- Block 7 (Left) -->
-      <div class="story-block left" data-side="left">
-        <div class="block-text">
-          <p>That same year, we also designed the costumes for our dance society.</p>
-        </div>
-        <div class="block-images image-grid">
-          <img loading="lazy" src="{{ '7.1.jpg' | asset_url }}" alt="Story Image 7.1">
+      <!-- Card 3 - Left -->
+      <div class="scrapbook-card card-left">
+        <div class="card-inner">
+          <p class="card-text">That's when the idea struck — personalised t-shirts with elements each senior loved.</p>
+          <div class="card-images">
+            <img loading="lazy" src="{{ '3.1.PNG' | asset_url }}" alt="T-shirt design">
+            <img loading="lazy" src="{{ '3.2.PNG' | asset_url }}" alt="Personalized">
+            <img loading="lazy" src="{{ '3.3.PNG' | asset_url }}" alt="Custom designs">
+          </div>
         </div>
       </div>
 
-      <!-- Block 8 (Right) -->
-      <div class="story-block right" data-side="right">
-        <div class="block-text">
-          <p>One day, we decided to take this passion project forward- we met, planned, and that's where Fitkaar began.</p>
-        </div>
-        <div class="block-images image-grid">
-          <img loading="lazy" src="{{ '8.1.JPG' | asset_url }}" alt="Story Image 8.1">
-          <img loading="lazy" src="{{ '8.2.jpg' | asset_url }}" alt="Story Image 8.2">
-          <img loading="lazy" src="{{ '8.3.JPG' | asset_url }}" alt="Story Image 8.3">
-          <img loading="lazy" src="{{ '8.4.JPG' | asset_url }}" alt="Story Image 8.4">
+      <!-- Card 4 - Right -->
+      <div class="scrapbook-card card-right">
+        <div class="card-inner">
+          <p class="card-text">After going through a lot of drafts and revisions, we finally had our first set of designs ready.</p>
+          <div class="card-images large-images">
+            <img loading="lazy" src="{{ '4.1.jpg' | asset_url }}" alt="First designs">
+            <img loading="lazy" src="{{ '4.2.PNG' | asset_url }}" alt="Drafts">
+            <img loading="lazy" src="{{ '4.3.PNG' | asset_url }}" alt="Final designs">
+          </div>
         </div>
       </div>
 
-      <!-- Final Transition Section -->
-      <div class="final-transition" id="final-transition">
-        <div class="final-images-container">
-          <div class="dummy-image left"></div>
-          <div class="dummy-image right"></div>
-        </div>
-        <div class="final-text">
-          <p>From designing for our seniors to now seeing so many of you wear what we create, it's been the most exciting and fulfilling journey, and we're just getting started.</p>
+      <!-- Card 5 - Left -->
+      <div class="scrapbook-card card-left">
+        <div class="card-inner">
+          <p class="card-text">When we shared them with our batch, the responses poured in — "you guys should start something together!"</p>
+          <div class="card-images">
+            <img loading="lazy" src="{{ '5.1.PNG' | asset_url }}" alt="Feedback">
+            <img loading="lazy" src="{{ '5.2.PNG' | asset_url }}" alt="Response">
+            <img loading="lazy" src="{{ '5.3.PNG' | asset_url }}" alt="Encouragement">
+            <img loading="lazy" src="{{ '5.4.PNG' | asset_url }}" alt="Support">
+          </div>
         </div>
       </div>
+
+      <!-- Card 6 - Right -->
+      <div class="scrapbook-card card-right">
+        <div class="card-inner">
+          <p class="card-text">Seeing our seniors' reactions when they opened their tees was everything. It genuinely made us realise how special personalised designs can feel.</p>
+          <div class="card-images single-image">
+            <img loading="lazy" src="{{ '6.1.JPG' | asset_url }}" alt="Reactions">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 7 - Left -->
+      <div class="scrapbook-card card-left">
+        <div class="card-inner">
+          <p class="card-text">That same year, we also designed the costumes for our dance society.</p>
+          <div class="card-images single-image">
+            <img loading="lazy" src="{{ '7.1.jpg' | asset_url }}" alt="Dance costumes">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8 - Right -->
+      <div class="scrapbook-card card-right">
+        <div class="card-inner">
+          <p class="card-text">One day, we decided to take this passion project forward — we met, planned, and that's where Fitkaar began.</p>
+          <div class="card-images large-images">
+            <img loading="lazy" src="{{ '8.1.JPG' | asset_url }}" alt="Planning">
+            <img loading="lazy" src="{{ '8.2.jpg' | asset_url }}" alt="Beginning">
+            <img loading="lazy" src="{{ '8.3.JPG' | asset_url }}" alt="Fitkaar start">
+            <img loading="lazy" src="{{ '8.4.JPG' | asset_url }}" alt="Team">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Message -->
+    <div class="final-message">
+      <p>From designing for our seniors to now seeing so many of you wear what we create — it's been the most exciting and fulfilling journey, and we're just getting started.</p>
     </div>
   </section>
 
   <!-- Youtube Section -->
   <section class="youtube-section">
-    <div class="content-wrapper">
-      <h2>A deeper glimpse into our journey</h2>
-      <a href="{{ section.settings.youtube_link }}" target="_blank" class="yt-container">
+    <h2>A deeper glimpse into our journey</h2>
+    <a href="{{ section.settings.youtube_link }}" target="_blank" class="macos-window">
+      <div class="window-titlebar">
+        <div class="traffic-lights">
+          <span class="traffic-light close"></span>
+          <span class="traffic-light minimize"></span>
+          <span class="traffic-light maximize"></span>
+        </div>
+        <span class="window-title">Fitkaar Journey</span>
+      </div>
+      <div class="window-content">
         <img src="{{ 'yt_thumbnail.PNG' | asset_url }}" alt="Fitkaar Journey on Youtube">
         <div class="play-button"></div>
-      </a>
-    </div>
+      </div>
+    </a>
   </section>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const storyBlocks = document.querySelectorAll('.story-block');
-  const finalSection = document.getElementById('final-transition');
-  const centerImage = document.getElementById('center-flow-img');
-  const scrollStorySection = document.getElementById('scroll-story');
+  // Add class to body for overflow control
+  document.body.classList.add('about-page-active');
 
-  // Observer for Story Blocks (Fade In / Slide)
-  const blockObserverOptions = {
-    threshold: 0.3,
-    rootMargin: "0px 0px -100px 0px"
-  };
+  const cards = document.querySelectorAll('.scrapbook-card');
+  const centerImage = document.getElementById('center-image');
+  const scrapbookSection = document.getElementById('scrapbook-section');
 
-  const blockObserver = new IntersectionObserver((entries, observer) => {
+  // Intersection Observer for card animations
+  const cardObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-      } else {
-        entry.target.classList.remove('visible');
       }
     });
-  }, blockObserverOptions);
-
-  storyBlocks.forEach(block => {
-    blockObserver.observe(block);
+  }, {
+    threshold: 0.2,
+    rootMargin: "0px 0px -50px 0px"
   });
 
-  // Scroll Listener for Gradual Shrink
-  window.addEventListener('scroll', () => {
-    if (!scrollStorySection || !centerImage) return;
+  cards.forEach(card => cardObserver.observe(card));
 
-    const sectionRect = scrollStorySection.getBoundingClientRect();
-    const sectionTop = sectionRect.top;
-    const sectionHeight = sectionRect.height;
+  // Parallax effect for center image wrapper (so tapes move with it)
+  const centerImageWrapper = document.querySelector('.center-image-wrapper');
+
+  window.addEventListener('scroll', () => {
+    if (!scrapbookSection || !centerImageWrapper) return;
+
+    const rect = scrapbookSection.getBoundingClientRect();
+    const sectionTop = rect.top;
+    const sectionHeight = rect.height;
     const viewportHeight = window.innerHeight;
 
-    if (sectionTop <= 0 && sectionRect.bottom > viewportHeight) {
-      const scrollDistance = Math.abs(sectionTop);
-      const maxScroll = sectionHeight - viewportHeight;
-      const progress = Math.min(Math.max(scrollDistance / maxScroll, 0), 1);
-      const scale = 1 - (progress * 0.4);
-      centerImage.style.transform = `scale(${scale})`;
+    // Only apply effect when section is in view
+    if (sectionTop < viewportHeight && rect.bottom > 0) {
+      const scrollProgress = Math.abs(Math.min(sectionTop, 0)) / (sectionHeight - viewportHeight);
+      const clampedProgress = Math.min(Math.max(scrollProgress, 0), 1);
+
+      // Subtle scale effect (image + tapes shrink together)
+      const scale = 1 - (clampedProgress * 0.2);
+      // Subtle rotation
+      const rotate = clampedProgress * 4;
+
+      centerImageWrapper.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
     }
   });
-
-  // Observer for Dummy Image Spread Animation
-  const spreadObserverOptions = {
-    threshold: 0.2
-  };
-
-  const spreadObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const dummies = entry.target.querySelectorAll('.dummy-image');
-      if (entry.isIntersecting) {
-        dummies.forEach(d => d.classList.add('spread'));
-      } else {
-        dummies.forEach(d => d.classList.remove('spread'));
-      }
-    });
-  }, spreadObserverOptions);
-
-  if (finalSection) {
-    spreadObserver.observe(finalSection);
-  }
 });
 </script>
 

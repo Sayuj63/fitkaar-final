@@ -1,0 +1,1007 @@
+{% comment %}
+  Contact Page Section - Fitkaar
+  Scrapbook-style matching About Page aesthetic
+{% endcomment %}
+
+<style>
+/* Contact Page Specific Styles */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+.contact-page {
+  font-family: 'Outfit', sans-serif;
+  background-color: #fdfcfa;
+  color: #333;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  /* Quirky hand-drawn style grid with scattered elements */
+  background-image:
+    /* Tiny plus signs scattered */
+    radial-gradient(circle at center, #71b6c8 0.8px, transparent 0.8px),
+    /* Small dots pattern */
+    radial-gradient(circle at center, #e0d5c8 1px, transparent 1px),
+    /* Very subtle large circles */
+    radial-gradient(circle at center, rgba(191, 219, 227, 0.15) 2px, transparent 2px);
+  background-size:
+    97px 97px,
+    31px 31px,
+    157px 157px;
+  background-position:
+    13px 17px,
+    0 0,
+    47px 73px;
+}
+
+/* Floating color blobs for warmth */
+.contact-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(ellipse 600px 400px at 10% 20%, rgba(255, 220, 210, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 90% 60%, rgba(191, 219, 227, 0.1) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 50% 90%, rgba(255, 235, 180, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Decorative doodle elements */
+.contact-page::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    /* Small x marks */
+    url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 6l8 8M14 6l-8 8' stroke='%2371b6c8' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E"),
+    /* Tiny circles */
+    url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='15' cy='15' r='2' fill='none' stroke='%23bfdbe3' stroke-width='0.5' opacity='0.25'/%3E%3C/svg%3E"),
+    /* Small stars */
+    url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 22v6M22 25h6' stroke='%23000c5b' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
+  background-size:
+    120px 120px,
+    80px 80px,
+    200px 200px;
+  background-position:
+    23px 41px,
+    7px 13px,
+    67px 31px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.7;
+}
+
+/* Header */
+.contact-header {
+  text-align: center;
+  padding: 5rem 1rem 2rem;
+  position: relative;
+}
+
+.contact-title {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+  text-transform: none;
+}
+
+.contact-subtitle {
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: #888;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Main Content Grid */
+.contact-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 5% 6rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* ========================================
+   LETTER FORM SECTION
+   ======================================== */
+.letter-container {
+  position: relative;
+  transform: rotate(-1deg);
+  transition: transform 0.4s ease;
+}
+
+.letter-container:hover {
+  transform: rotate(0deg);
+}
+
+/* Envelope flap decoration */
+.letter-container::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 30px solid #f5ebe0;
+  z-index: 1;
+  filter: drop-shadow(0 -2px 4px rgba(0,0,0,0.05));
+}
+
+/* Tape on envelope */
+.letter-container::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 100px;
+  height: 25px;
+  background: linear-gradient(135deg, rgba(255, 240, 200, 0.9) 0%, rgba(255, 230, 170, 0.85) 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  z-index: 2;
+}
+
+.letter-form {
+  background:
+    repeating-linear-gradient(
+      transparent,
+      transparent 30px,
+      #e8e8e8 30px,
+      #e8e8e8 31px
+    ),
+    linear-gradient(to bottom, #fefcf5 0%, #faf8f0 100%);
+  border-radius: 4px;
+  padding: 40px 35px 35px;
+  box-shadow:
+    0 1px 1px rgba(0,0,0,0.05),
+    0 4px 12px rgba(0,0,0,0.08),
+    0 20px 40px rgba(0,0,0,0.06);
+  position: relative;
+  border-left: 4px solid #f5c6c6;
+}
+
+/* Red margin line for notebook effect */
+.letter-form::after {
+  content: '';
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(245, 180, 180, 0.5);
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-title::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #71b6c8;
+  border-radius: 50%;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  color: #333;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #71b6c8;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(113, 182, 200, 0.15);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #aaa;
+}
+
+.form-textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #000c5b;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.submit-btn:hover {
+  background: #71b6c8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(113, 182, 200, 0.35);
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.submit-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* ========================================
+   CONTACT INFO SECTION
+   ======================================== */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Info Cards */
+.info-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.06),
+    0 1px 3px rgba(0,0,0,0.08);
+  position: relative;
+  transition: all 0.4s ease;
+  transform: rotate(1deg);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.info-card:nth-child(even) {
+  transform: rotate(-1deg);
+}
+
+.info-card:hover {
+  transform: rotate(0deg) translateY(-5px);
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.1),
+    0 4px 8px rgba(0,0,0,0.08);
+}
+
+/* Decorative corner */
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 40px 40px 0;
+  border-color: transparent #71b6c8 transparent transparent;
+  opacity: 0.15;
+  border-radius: 0 12px 0 0;
+}
+
+.info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.info-icon {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #71b6c8 0%, #bfdbe3 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: #fff;
+  stroke-width: 2;
+  fill: none;
+}
+
+.info-card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.info-card-content {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.info-card-content a {
+  color: #000c5b;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.info-card-content a:hover {
+  color: #71b6c8;
+}
+
+/* Social Links */
+.social-card {
+  background: linear-gradient(135deg, #000c5b 0%, #1a2a6c 100%);
+  color: #fff;
+  transform: rotate(-0.5deg);
+}
+
+.social-card:hover {
+  transform: rotate(0deg) translateY(-5px);
+}
+
+.social-card::before {
+  border-color: transparent #71b6c8 transparent transparent;
+  opacity: 0.3;
+}
+
+.social-card .info-card-title {
+  color: rgba(255,255,255,0.7);
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.social-link {
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.social-link:hover {
+  background: #71b6c8;
+  transform: translateY(-3px) scale(1.05);
+  border-color: #71b6c8;
+}
+
+.social-link svg {
+  width: 22px;
+  height: 22px;
+  fill: #fff;
+}
+
+/* Hours Card */
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hours-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.hours-day {
+  color: #666;
+}
+
+.hours-time {
+  color: #333;
+  font-weight: 500;
+}
+
+.hours-closed {
+  color: #e24b41;
+}
+
+/* ========================================
+   DECORATIVE STAMP
+   ======================================== */
+.stamp-decoration {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 80px;
+  height: 100px;
+  background: linear-gradient(135deg, #f5ebe0 0%, #e8ddd0 100%);
+  border: 3px dashed #d4c4b0;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(5deg);
+  opacity: 0.9;
+}
+
+.stamp-decoration::before {
+  content: '';
+  width: 50px;
+  height: 50px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000c5b' stroke-width='1.5'%3E%3Cpath d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'/%3E%3C/svg%3E") center/contain no-repeat;
+  opacity: 0.5;
+}
+
+.stamp-text {
+  font-size: 0.6rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 5px;
+}
+
+/* ========================================
+   FAQ/QUICK LINKS SECTION
+   ======================================== */
+.quick-links-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5% 6rem;
+}
+
+.quick-links-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.quick-link-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  border: 2px solid transparent;
+}
+
+.quick-link-card:hover {
+  transform: translateY(-5px);
+  border-color: #71b6c8;
+  box-shadow: 0 12px 30px rgba(113, 182, 200, 0.2);
+}
+
+.quick-link-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #bfdbe3 0%, #71b6c8 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+}
+
+.quick-link-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: #fff;
+  stroke-width: 2;
+  fill: none;
+}
+
+.quick-link-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.quick-link-desc {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* ========================================
+   RESPONSIVE STYLES
+   ======================================== */
+@media screen and (max-width: 1024px) {
+  .contact-content {
+    gap: 3rem;
+  }
+
+  .quick-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .contact-header {
+    padding: 3rem 1rem 1.5rem;
+  }
+
+  .contact-title {
+    font-size: 2.8rem;
+  }
+
+  .contact-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .contact-content {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 2rem 5% 4rem;
+  }
+
+  .letter-container {
+    transform: rotate(0deg);
+    order: 2;
+  }
+
+  .contact-info {
+    order: 1;
+  }
+
+  .letter-form {
+    padding: 35px 25px 30px;
+  }
+
+  .letter-form::after {
+    left: 25px;
+  }
+
+  .info-card,
+  .info-card:nth-child(even) {
+    transform: rotate(0deg);
+  }
+
+  .quick-links-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stamp-decoration {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .contact-title {
+    font-size: 2.2rem;
+  }
+
+  .contact-subtitle {
+    font-size: 1rem;
+  }
+
+  .letter-form {
+    padding: 30px 20px 25px;
+  }
+
+  .form-title {
+    font-size: 1.3rem;
+  }
+
+  .info-card {
+    padding: 20px;
+  }
+
+  .social-link {
+    width: 42px;
+    height: 42px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
+
+<div class="contact-page">
+  <!-- Header -->
+  <header class="contact-header">
+    <h1 class="contact-title">{{ section.settings.title | default: "Let's Talk" }}</h1>
+    <p class="contact-subtitle">{{ section.settings.subtitle | default: "Have a question, custom request, or just want to say hi? We'd love to hear from you." }}</p>
+  </header>
+
+  <!-- Main Content -->
+  <div class="contact-content">
+    <!-- Contact Form (Letter Style) -->
+    <div class="letter-container">
+      <form class="letter-form" action="{{ section.settings.form_action | default: '#' }}" method="POST">
+        <h2 class="form-title">Write to us</h2>
+
+        <div class="form-group">
+          <label class="form-label" for="contact-name">Your Name</label>
+          <input type="text" id="contact-name" name="name" class="form-input" placeholder="What should we call you?" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contact-email">Email Address</label>
+          <input type="email" id="contact-email" name="email" class="form-input" placeholder="your@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contact-subject">Subject</label>
+          <input type="text" id="contact-subject" name="subject" class="form-input" placeholder="What's this about?">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contact-message">Your Message</label>
+          <textarea id="contact-message" name="message" class="form-textarea" placeholder="Tell us what's on your mind..." required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Send Message
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Contact Info Cards -->
+    <div class="contact-info">
+      <!-- Stamp Decoration -->
+      <div class="stamp-decoration">
+        <span class="stamp-text">Mail Us</span>
+      </div>
+
+      <!-- Email Card -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <span class="info-card-title">Email Us</span>
+        </div>
+        <div class="info-card-content">
+          <a href="mailto:{{ section.settings.email | default: 'hello@fitkaar.com' }}">
+            {{ section.settings.email | default: 'hello@fitkaar.com' }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Phone Card -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+          </div>
+          <span class="info-card-title">Call Us</span>
+        </div>
+        <div class="info-card-content">
+          <a href="tel:{{ section.settings.phone | default: '+919876543210' }}">
+            {{ section.settings.phone | default: '+91 98765 43210' }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Location Card -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <span class="info-card-title">Visit Us</span>
+        </div>
+        <div class="info-card-content">
+          {{ section.settings.address | default: 'New Delhi, India' }}
+        </div>
+      </div>
+
+      <!-- Response Time Card -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <span class="info-card-title">Response Time</span>
+        </div>
+        <div class="info-card-content">
+          {{ section.settings.response_time | default: 'We typically respond within 24 hours' }}
+        </div>
+      </div>
+
+      <!-- Social Card -->
+      <div class="info-card social-card">
+        <div class="info-card-header">
+          <span class="info-card-title">Connect with us</span>
+        </div>
+        <div class="social-links">
+          {% if section.settings.instagram_url != blank %}
+          <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          {% endif %}
+
+          {% if section.settings.facebook_url != blank %}
+          <a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+            <svg viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </a>
+          {% endif %}
+
+          {% if section.settings.whatsapp_number != blank %}
+          <a href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-' }}" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </a>
+          {% endif %}
+
+          {% if section.settings.youtube_url != blank %}
+          <a href="{{ section.settings.youtube_url }}" target="_blank" rel="noopener" class="social-link" aria-label="YouTube">
+            <svg viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links Section -->
+  {% if section.settings.show_quick_links %}
+  <section class="quick-links-section">
+    <h2 class="quick-links-title">{{ section.settings.quick_links_title | default: 'Quick Help' }}</h2>
+    <div class="quick-links-grid">
+      <a href="{{ section.settings.faq_link | default: '#' }}" class="quick-link-card">
+        <div class="quick-link-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h3 class="quick-link-title">FAQs</h3>
+        <p class="quick-link-desc">Find quick answers</p>
+      </a>
+
+      <a href="{{ section.settings.customization_link | default: '#' }}" class="quick-link-card">
+        <div class="quick-link-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <h3 class="quick-link-title">Custom Orders</h3>
+        <p class="quick-link-desc">Design your own</p>
+      </a>
+
+      <a href="{{ section.settings.shipping_link | default: '#' }}" class="quick-link-card">
+        <div class="quick-link-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <h3 class="quick-link-title">Shipping Info</h3>
+        <p class="quick-link-desc">Delivery details</p>
+      </a>
+    </div>
+  </section>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Let's Talk"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Have a question, custom request, or just want to say hi? We'd love to hear from you."
+    },
+    {
+      "type": "header",
+      "content": "Contact Information"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "hello@fitkaar.com"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "+91 98765 43210"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address",
+      "default": "New Delhi, India"
+    },
+    {
+      "type": "text",
+      "id": "response_time",
+      "label": "Response Time Message",
+      "default": "We typically respond within 24 hours"
+    },
+    {
+      "type": "header",
+      "content": "Form Settings"
+    },
+    {
+      "type": "url",
+      "id": "form_action",
+      "label": "Form Action URL",
+      "info": "Leave blank for default behavior"
+    },
+    {
+      "type": "header",
+      "content": "Social Links"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp Number",
+      "info": "Include country code (e.g., +919876543210)"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Quick Links Section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_links",
+      "label": "Show Quick Links",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "quick_links_title",
+      "label": "Quick Links Title",
+      "default": "Quick Help"
+    },
+    {
+      "type": "url",
+      "id": "faq_link",
+      "label": "FAQs Link"
+    },
+    {
+      "type": "url",
+      "id": "customization_link",
+      "label": "Custom Orders Link"
+    },
+    {
+      "type": "url",
+      "id": "shipping_link",
+      "label": "Shipping Info Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Page"
+    }
+  ]
+}
+{% endschema %}

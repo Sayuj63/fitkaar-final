@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "contact": {
+      "type": "contact-page",
+      "settings": {
+        "title": "Let's Talk",
+        "subtitle": "Have a question, custom request, or just want to say hi? We'd love to hear from you.",
+        "email": "hello@fitkaar.com",
+        "phone": "+91 98765 43210",
+        "address": "New Delhi, India",
+        "response_time": "We typically respond within 24 hours",
+        "show_quick_links": true,
+        "quick_links_title": "Quick Help"
+      }
+    }
+  },
+  "order": [
+    "contact"
+  ]
+}

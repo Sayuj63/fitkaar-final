@@ -1,0 +1,1481 @@
+{% schema %}
+{
+  "name": "Product Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "free_tshirt_threshold",
+      "label": "Free T-shirt Threshold (in INR)",
+      "default": "3000"
+    },
+    {
+      "type": "text",
+      "id": "first_order_discount",
+      "label": "First Order Discount %",
+      "default": "10"
+    },
+    {
+      "type": "text",
+      "id": "model_size",
+      "label": "Model Size",
+      "default": "M"
+    },
+    {
+      "type": "email",
+      "id": "support_email",
+      "label": "Support Email",
+      "default": "fitkaar.in@gmail.com"
+    },
+    {
+      "type": "url",
+      "id": "returns_policy_url",
+      "label": "Returns Policy Page URL"
+    },
+    {
+      "type": "url",
+      "id": "customise_url",
+      "label": "Customise Page URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Page"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .product-page {
+    padding: 40px 0 80px;
+    background: #fff;
+  }
+
+  .product-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  @media (min-width: 992px) {
+    .product-container {
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+  }
+
+  /* Image Gallery */
+  .product-gallery {
+    position: sticky;
+    top: 100px;
+    align-self: start;
+  }
+
+  .main-image {
+    width: 100%;
+    aspect-ratio: 3/4;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f5f5f5;
+    margin-bottom: 16px;
+  }
+
+  .main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .main-image:hover img {
+    transform: scale(1.05);
+  }
+
+  .thumbnail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .thumbnail {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+
+  .thumbnail.active,
+  .thumbnail:hover {
+    border-color: var(--color-primary);
+  }
+
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Product Info */
+  .product-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .product-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .product-price-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .product-price {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .product-price .compare-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 1.25rem;
+    margin-left: 12px;
+  }
+
+  .price-note {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  /* Offers Section */
+  .offers-section {
+    background: linear-gradient(135deg, #fff8e7 0%, #fff 100%);
+    border: 1px solid #f0e6d0;
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .offers-title {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .offers-title svg {
+    width: 20px;
+    height: 20px;
+    color: #f5a623;
+  }
+
+  .offer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .offer-item:not(:last-child) {
+    border-bottom: 1px dashed #e0e0e0;
+  }
+
+  .offer-bullet {
+    width: 6px;
+    height: 6px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  /* Variant Selectors */
+  .variant-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .variant-label {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 8px;
+  }
+
+  .color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .color-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .color-swatch.active {
+    border-color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .color-swatch:hover {
+    transform: scale(1.1);
+  }
+
+  .color-swatch::after {
+    content: attr(data-color-name);
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #666;
+  }
+
+  .color-swatch:hover::after,
+  .color-swatch.active::after {
+    opacity: 1;
+  }
+
+  .size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .size-btn {
+    min-width: 50px;
+    padding: 12px 18px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+  }
+
+  .size-btn:hover {
+    border-color: var(--color-primary);
+  }
+
+  .size-btn.active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+  }
+
+  .size-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Pincode Checker */
+  .pincode-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .pincode-title {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 8px;
+  }
+
+  .pincode-description {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .pincode-input-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  .pincode-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .pincode-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .pincode-btn {
+    padding: 12px 24px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .pincode-btn:hover {
+    background: #000940;
+  }
+
+  .pincode-result {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    display: none;
+  }
+
+  .pincode-result.success {
+    display: block;
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .pincode-result.error {
+    display: block;
+    background: #ffebee;
+    color: #c62828;
+  }
+
+  /* Size Chart */
+  .size-chart-section {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .size-chart-toggle {
+    width: 100%;
+    padding: 16px 20px;
+    background: #fff;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .size-chart-toggle svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .size-chart-toggle.open svg {
+    transform: rotate(180deg);
+  }
+
+  .size-chart-content {
+    display: none;
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .size-chart-content.open {
+    display: block;
+  }
+
+  .size-chart-notes {
+    font-size: 0.8rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .size-chart-notes li {
+    margin-bottom: 8px;
+    padding-left: 8px;
+  }
+
+  .size-chart-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .size-chart-table th,
+  .size-chart-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+
+  .size-chart-table th {
+    background: var(--color-primary);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .size-chart-table tr:nth-child(even) {
+    background: #f0f0f0;
+  }
+
+  /* Action Buttons */
+  .actions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .quantity-label {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .quantity-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: #f5f5f5;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .quantity-btn:hover {
+    background: #e0e0e0;
+  }
+
+  .quantity-input {
+    width: 60px;
+    height: 44px;
+    text-align: center;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .quantity-input:focus {
+    outline: none;
+  }
+
+  .primary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-add-cart {
+    width: 100%;
+    padding: 16px 32px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+  }
+
+  .btn-add-cart:hover {
+    background: #333;
+    transform: translateY(-2px);
+  }
+
+  .btn-buy-now {
+    width: 100%;
+    padding: 16px 32px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+  }
+
+  .btn-buy-now:hover {
+    background: #000940;
+    transform: translateY(-2px);
+  }
+
+  .secondary-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .btn-secondary {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 16px;
+    background: #fff;
+    color: #000;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .btn-secondary svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-customise {
+    width: 100%;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-customise:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(113, 182, 200, 0.4);
+  }
+
+  .customise-note {
+    font-size: 0.75rem;
+    color: #666;
+    text-align: center;
+    margin-top: -8px;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  /* Product Details Accordion */
+  .details-section {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 32px;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .accordion-toggle {
+    width: 100%;
+    padding: 20px 0;
+    background: transparent;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #000;
+  }
+
+  .accordion-toggle svg {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+  }
+
+  .accordion-toggle.open svg {
+    transform: rotate(180deg);
+  }
+
+  .accordion-content {
+    display: none;
+    padding-bottom: 24px;
+  }
+
+  .accordion-content.open {
+    display: block;
+  }
+
+  .accordion-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .accordion-content li {
+    padding: 8px 0;
+    padding-left: 24px;
+    position: relative;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  .accordion-content li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 8px;
+    height: 8px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+  }
+
+  .accordion-content p {
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.7;
+  }
+
+  /* Reviews Section */
+  .reviews-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 16px;
+  }
+
+  .reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .reviews-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .reviews-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .reviews-link {
+    font-size: 0.875rem;
+    color: var(--color-secondary);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .review-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .review-stars {
+    color: #f5a623;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .review-text {
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .review-author {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 600;
+  }
+
+  /* Info Boxes */
+  .info-box {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 16px;
+  }
+
+  .info-box-title {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .info-box-title svg {
+    width: 20px;
+    height: 20px;
+    color: var(--color-secondary);
+  }
+
+  .info-box p,
+  .info-box a {
+    font-size: 0.875rem;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .info-box a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  /* Loading State */
+  .btn-loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .btn-loading::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    margin-left: 8px;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Toast Notification */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--color-primary);
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 9999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* Mobile Adjustments */
+  @media (max-width: 767px) {
+    .product-gallery {
+      position: relative;
+      top: 0;
+    }
+
+    .product-title {
+      font-size: 1.5rem;
+    }
+
+    .product-price {
+      font-size: 1.5rem;
+    }
+
+    .secondary-actions {
+      flex-direction: column;
+    }
+
+    .btn-secondary {
+      min-width: 100%;
+    }
+  }
+</style>
+
+<section class="product-page" x-data="productPage()">
+  <div class="product-container">
+    <!-- Left Column: Image Gallery -->
+    <div class="product-gallery">
+      <div class="main-image">
+        <img
+          :src="selectedImage"
+          :alt="'{{ product.title }}'"
+          id="mainProductImage"
+        >
+      </div>
+      <div class="thumbnail-grid">
+        {% for image in product.images %}
+          <div
+            class="thumbnail"
+            :class="{ 'active': selectedImage === '{{ image | image_url: width: 800 }}' }"
+            @click="selectImage('{{ image | image_url: width: 800 }}')"
+          >
+            <img src="{{ image | image_url: width: 200 }}" alt="{{ product.title }} - Image {{ forloop.index }}">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right Column: Product Info -->
+    <div class="product-info-section">
+      <!-- Title -->
+      <h1 class="product-title">{{ product.title }}</h1>
+
+      <!-- Price -->
+      <div class="product-price-section">
+        <div class="product-price">
+          {{ product.selected_or_first_available_variant.price | money }}
+          {% if product.compare_at_price > product.price %}
+            <span class="compare-price">{{ product.compare_at_price | money }}</span>
+          {% endif %}
+        </div>
+        <p class="price-note">Prices include free shipping and are inclusive of all taxes.</p>
+      </div>
+
+      <!-- Offers -->
+      <div class="offers-section">
+        <div class="offers-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+          Save extra with these offers
+        </div>
+        <div class="offer-item">
+          <span class="offer-bullet"></span>
+          <span>Shop for ₹{{ section.settings.free_tshirt_threshold }} or more and get a <strong>FREE T-shirt</strong></span>
+        </div>
+        <div class="offer-item">
+          <span class="offer-bullet"></span>
+          <span>Extra <strong>{{ section.settings.first_order_discount }}% off</strong> on your first order</span>
+        </div>
+      </div>
+
+      <!-- Color Selection -->
+      {% if product.options_by_name['Color'] %}
+        <div class="variant-section">
+          <div class="variant-label">Colour: <span x-text="selectedColor">{{ product.options_by_name['Color'].values[0] }}</span></div>
+          <div class="color-swatches">
+            {% for color in product.options_by_name['Color'].values %}
+              {% assign color_lower = color | downcase %}
+              {% case color_lower %}
+                {% when 'black' %}
+                  {% assign swatch_color = '#000000' %}
+                {% when 'white' %}
+                  {% assign swatch_color = '#ffffff' %}
+                {% when 'beige' %}
+                  {% assign swatch_color = '#f5f5dc' %}
+                {% when 'red' %}
+                  {% assign swatch_color = '#dc2626' %}
+                {% when 'blue' %}
+                  {% assign swatch_color = '#2563eb' %}
+                {% when 'navy' %}
+                  {% assign swatch_color = '#000c5b' %}
+                {% when 'grey' or 'gray' %}
+                  {% assign swatch_color = '#6b7280' %}
+                {% else %}
+                  {% assign swatch_color = color_lower %}
+              {% endcase %}
+              <div
+                class="color-swatch"
+                :class="{ 'active': selectedColor === '{{ color }}' }"
+                style="background-color: {{ swatch_color }}; {% if color_lower == 'white' %}border: 1px solid #ddd;{% endif %}"
+                data-color-name="{{ color }}"
+                @click="selectColor('{{ color }}')"
+              ></div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Pincode Checker -->
+      <div class="pincode-section">
+        <div class="pincode-title">Pincode Checker</div>
+        <p class="pincode-description">
+          Use this to check whether delivery is available at your pincode. Please note that delivery may not be available in select or smaller areas. This tool is only to check serviceability and does not provide delivery date estimates.
+        </p>
+        <div class="pincode-input-group">
+          <input
+            type="text"
+            class="pincode-input"
+            placeholder="Enter pincode"
+            maxlength="6"
+            x-model="pincode"
+            @keyup.enter="checkPincode()"
+          >
+          <button class="pincode-btn" @click="checkPincode()">Check</button>
+        </div>
+        <div class="pincode-result" :class="{ 'success': pincodeStatus === 'available', 'error': pincodeStatus === 'unavailable' }">
+          <span x-text="pincodeMessage"></span>
+        </div>
+      </div>
+
+      <!-- Size Selection -->
+      {% if product.options_by_name['Size'] %}
+        <div class="variant-section">
+          <div class="variant-label">Size: <span x-text="selectedSize">{{ product.options_by_name['Size'].values[0] }}</span></div>
+          <div class="size-options">
+            {% for size in product.options_by_name['Size'].values %}
+              <button
+                class="size-btn"
+                :class="{ 'active': selectedSize === '{{ size }}' }"
+                @click="selectSize('{{ size }}')"
+              >{{ size }}</button>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Size Chart -->
+      <div class="size-chart-section">
+        <button class="size-chart-toggle" :class="{ 'open': sizeChartOpen }" @click="sizeChartOpen = !sizeChartOpen">
+          <span>Size Chart</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="size-chart-content" :class="{ 'open': sizeChartOpen }">
+          <ul class="size-chart-notes">
+            <li>All measurements are in inches</li>
+            <li>Measurements shown are of the apparel itself and not body or chest size</li>
+            <li><strong>How to measure:</strong> Lay the garment flat on a surface. Measure from shoulder to shoulder for width, from underarm to underarm for chest width, and from the highest point of the shoulder to the hem for length. Compare these measurements with a similar T-shirt you already own for best fit.</li>
+            <li>Model is wearing size {{ section.settings.model_size }}</li>
+            <li><strong>If you are confused about your size, we recommend choosing a bigger size</strong></li>
+          </ul>
+          <table class="size-chart-table">
+            <thead>
+              <tr>
+                <th>Size</th>
+                <th>Chest (in)</th>
+                <th>Length (in)</th>
+                <th>Shoulder (in)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>S</td>
+                <td>38</td>
+                <td>26</td>
+                <td>17</td>
+              </tr>
+              <tr>
+                <td>M</td>
+                <td>40</td>
+                <td>27</td>
+                <td>18</td>
+              </tr>
+              <tr>
+                <td>L</td>
+                <td>42</td>
+                <td>28</td>
+                <td>19</td>
+              </tr>
+              <tr>
+                <td>XL</td>
+                <td>44</td>
+                <td>29</td>
+                <td>20</td>
+              </tr>
+              <tr>
+                <td>XXL</td>
+                <td>46</td>
+                <td>30</td>
+                <td>21</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions-section">
+        <!-- Quantity -->
+        <div class="quantity-selector">
+          <span class="quantity-label">Quantity</span>
+          <div class="quantity-controls">
+            <button class="quantity-btn" @click="quantity > 1 ? quantity-- : null">-</button>
+            <input type="number" class="quantity-input" x-model="quantity" min="1" max="10">
+            <button class="quantity-btn" @click="quantity < 10 ? quantity++ : null">+</button>
+          </div>
+        </div>
+
+        <!-- Primary Actions -->
+        <div class="primary-actions">
+          <button
+            class="btn-add-cart"
+            :class="{ 'btn-loading': isAddingToCart }"
+            @click="addToCart()"
+            :disabled="isAddingToCart"
+          >
+            Add to Cart
+          </button>
+          <button
+            class="btn-buy-now"
+            @click="buyNow()"
+          >
+            Buy It Now
+          </button>
+        </div>
+
+        <!-- Secondary Actions -->
+        <div class="secondary-actions">
+          <button class="btn-secondary" @click="shareProduct()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+            Share
+          </button>
+          <button class="btn-secondary" @click="addToWishlist()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            Wishlist
+          </button>
+        </div>
+
+        <!-- Customise Button -->
+        {% if section.settings.customise_url != blank %}
+          <a href="{{ section.settings.customise_url }}" class="btn-customise">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            Customise
+          </a>
+          <p class="customise-note">Didn't find what you're looking for and have your own design or idea in mind? Get your artwork, concept, or personalised idea customised with us.</p>
+        {% endif %}
+      </div>
+
+      <!-- Product Details Accordion -->
+      <div class="details-section">
+        <!-- Description -->
+        <div class="accordion-item">
+          <button class="accordion-toggle" :class="{ 'open': accordions.description }" @click="accordions.description = !accordions.description">
+            <span>Description</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content" :class="{ 'open': accordions.description }">
+            <ul>
+              <li><strong>Neckline:</strong> Round Neck</li>
+              <li><strong>Composition:</strong> 100% Cotton</li>
+              <li><strong>Fabric Weight:</strong> 180 GSM</li>
+              <li><strong>Print Type:</strong> DTF Printing</li>
+              <li><strong>Colour Options:</strong> Black, White, Beige</li>
+              <li><strong>Fit Options:</strong> Oversized, Regular</li>
+              <li><strong>Country of Production:</strong> India</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Wash Care -->
+        <div class="accordion-item">
+          <button class="accordion-toggle" :class="{ 'open': accordions.washcare }" @click="accordions.washcare = !accordions.washcare">
+            <span>Wash Care Instructions</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content" :class="{ 'open': accordions.washcare }">
+            <ul>
+              <li>Machine wash or hand wash in normal water</li>
+              <li>Do not wash in hot water</li>
+              <li>Do not bleach</li>
+              <li>Line dry or tumble dry suitable</li>
+              <li>Dry dark colours in shade to avoid fading</li>
+              <li>Use mild detergents only</li>
+              <li>Turn the garment inside out before ironing</li>
+              <li>Do not iron directly on the print</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Please Note -->
+        <div class="accordion-item">
+          <button class="accordion-toggle" :class="{ 'open': accordions.notes }" @click="accordions.notes = !accordions.notes">
+            <span>Please Note</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content" :class="{ 'open': accordions.notes }">
+            <ul>
+              <li>Colours may slightly vary depending on screen brightness</li>
+              <li>Actual product specifications and GSM may vary by ±5%</li>
+              <li>Each product has its own size chart</li>
+              <li><strong>MRP: ₹1199/-</strong> inclusive of all taxes</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Product Feel & Fit -->
+        <div class="accordion-item">
+          <button class="accordion-toggle" :class="{ 'open': accordions.feel }" @click="accordions.feel = !accordions.feel">
+            <span>Product Feel & Fit</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content" :class="{ 'open': accordions.feel }">
+            <ul>
+              <li>Soft, printed cotton fabric with a smooth feel on the skin</li>
+              <li>Ribbed trim around the neckline</li>
+              <li>Comfortable half sleeves for ease of movement</li>
+              <li>Breathable and suitable for Indian weather</li>
+              <li>Unisex design that is easy to style for everyday wear, whether for casual outings or a more dressed-up look</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="reviews-section">
+        <div class="reviews-header">
+          <h3 class="reviews-title">Reviews</h3>
+          <div class="reviews-actions">
+            <a class="reviews-link">See more reviews</a>
+            <span>|</span>
+            <a class="reviews-link">Write a review</a>
+          </div>
+        </div>
+
+        <!-- Sample Reviews - In production, this would be dynamic -->
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Amazing quality! The fabric feels premium and the print is exactly as shown. Fits perfectly!"</p>
+          <p class="review-author">— Verified Buyer</p>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Love the design and comfort. Perfect for daily wear. Will definitely order more!"</p>
+          <p class="review-author">— Verified Buyer</p>
+        </div>
+      </div>
+
+      <!-- Returns & Refunds -->
+      <div class="info-box">
+        <div class="info-box-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          Returns & Refunds
+        </div>
+        <p>
+          As we are a customisable clothing brand, even our existing designs offer fit and colour customisation. Due to this, we do not offer returns or exchanges.
+          {% if section.settings.returns_policy_url != blank %}
+            For more details, please refer to our <a href="{{ section.settings.returns_policy_url }}">Returns & Refunds Policy</a> page.
+          {% endif %}
+        </p>
+      </div>
+
+      <!-- Need Assistance -->
+      <div class="info-box">
+        <div class="info-box-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          Need Assistance?
+        </div>
+        <p>Contact us at <a href="mailto:{{ section.settings.support_email }}">{{ section.settings.support_email }}</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" :class="{ 'show': toastVisible }" x-text="toastMessage"></div>
+</section>
+
+<script>
+  function productPage() {
+    return {
+      // Product data
+      productId: {{ product.id }},
+      productTitle: '{{ product.title | escape }}',
+      productUrl: '{{ product.url }}',
+
+      // Images
+      selectedImage: '{{ product.featured_image | image_url: width: 800 }}',
+
+      // Variants
+      selectedColor: '{{ product.options_by_name['Color'].values[0] | default: '' }}',
+      selectedSize: '{{ product.options_by_name['Size'].values[0] | default: '' }}',
+      selectedVariantId: {{ product.selected_or_first_available_variant.id }},
+
+      // Variants JSON
+      variants: {{ product.variants | json }},
+
+      // Quantity
+      quantity: 1,
+
+      // UI State
+      isAddingToCart: false,
+      sizeChartOpen: false,
+      accordions: {
+        description: true,
+        washcare: false,
+        notes: false,
+        feel: false
+      },
+
+      // Pincode
+      pincode: '',
+      pincodeStatus: '',
+      pincodeMessage: '',
+
+      // Toast
+      toastVisible: false,
+      toastMessage: '',
+
+      // Methods
+      selectImage(imageUrl) {
+        this.selectedImage = imageUrl;
+      },
+
+      selectColor(color) {
+        this.selectedColor = color;
+        this.updateVariant();
+        // Update images based on color if available
+        {% for variant in product.variants %}
+          if ('{{ variant.option1 }}' === color && '{{ variant.featured_image }}' !== '') {
+            this.selectedImage = '{{ variant.featured_image | image_url: width: 800 }}';
+          }
+        {% endfor %}
+      },
+
+      selectSize(size) {
+        this.selectedSize = size;
+        this.updateVariant();
+      },
+
+      updateVariant() {
+        // Find matching variant
+        const variant = this.variants.find(v => {
+          return (v.option1 === this.selectedColor || v.option1 === this.selectedSize) &&
+                 (v.option2 === this.selectedSize || v.option2 === this.selectedColor);
+        });
+
+        if (variant) {
+          this.selectedVariantId = variant.id;
+          // Update URL
+          window.history.replaceState({}, '', `${this.productUrl}?variant=${variant.id}`);
+        }
+      },
+
+      checkPincode() {
+        if (this.pincode.length !== 6 || isNaN(this.pincode)) {
+          this.pincodeStatus = 'error';
+          this.pincodeMessage = 'Please enter a valid 6-digit pincode';
+          return;
+        }
+
+        // Simulate pincode check - In production, integrate with delivery API
+        const serviceable = ['110001', '110002', '110003', '400001', '400002', '560001', '560002', '500001', '600001', '700001'];
+
+        // For demo: Most pincodes are serviceable
+        if (this.pincode.startsWith('1') || this.pincode.startsWith('4') || this.pincode.startsWith('5') || this.pincode.startsWith('6') || this.pincode.startsWith('7')) {
+          this.pincodeStatus = 'available';
+          this.pincodeMessage = '✓ Delivery available to ' + this.pincode;
+        } else {
+          this.pincodeStatus = 'unavailable';
+          this.pincodeMessage = '✗ Sorry, delivery is not available to this pincode';
+        }
+      },
+
+      async addToCart() {
+        this.isAddingToCart = true;
+
+        try {
+          const response = await fetch(window.routes.cart_add_url + '.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: this.selectedVariantId,
+              quantity: this.quantity
+            })
+          });
+
+          if (response.ok) {
+            this.showToast('Added to cart!');
+            // Update cart count in header
+            this.updateCartCount();
+          } else {
+            const error = await response.json();
+            this.showToast(error.description || 'Failed to add to cart');
+          }
+        } catch (error) {
+          this.showToast('Failed to add to cart');
+        }
+
+        this.isAddingToCart = false;
+      },
+
+      async buyNow() {
+        this.isAddingToCart = true;
+
+        try {
+          const response = await fetch(window.routes.cart_add_url + '.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: this.selectedVariantId,
+              quantity: this.quantity
+            })
+          });
+
+          if (response.ok) {
+            window.location.href = '/checkout';
+          } else {
+            const error = await response.json();
+            this.showToast(error.description || 'Failed to proceed');
+          }
+        } catch (error) {
+          this.showToast('Failed to proceed');
+        }
+
+        this.isAddingToCart = false;
+      },
+
+      shareProduct() {
+        if (navigator.share) {
+          navigator.share({
+            title: this.productTitle,
+            url: window.location.href
+          });
+        } else {
+          // Fallback: Copy to clipboard
+          navigator.clipboard.writeText(window.location.href);
+          this.showToast('Link copied to clipboard!');
+        }
+      },
+
+      addToWishlist() {
+        // In production, integrate with wishlist functionality
+        this.showToast('Added to wishlist!');
+      },
+
+      showToast(message) {
+        this.toastMessage = message;
+        this.toastVisible = true;
+        setTimeout(() => {
+          this.toastVisible = false;
+        }, 3000);
+      },
+
+      async updateCartCount() {
+        try {
+          const response = await fetch('/cart.js');
+          const cart = await response.json();
+          const cartCount = document.querySelector('.cart-count');
+          if (cartCount) {
+            cartCount.textContent = cart.item_count;
+          }
+        } catch (e) {
+          console.error('Failed to update cart count');
+        }
+      }
+    }
+  }
+</script>

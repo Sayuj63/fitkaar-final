@@ -36,11 +36,6 @@
       "id": "customise_url",
       "label": "Customise Page URL"
     }
-  ],
-  "presets": [
-    {
-      "name": "Product Page"
-    }
   ]
 }
 {% endschema %}
@@ -67,37 +62,115 @@
     }
   }
 
-  /* Image Gallery */
+  /* Image Gallery Carousel */
   .product-gallery {
     position: sticky;
     top: 100px;
     align-self: start;
   }
 
-  .main-image {
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .carousel-main {
+    position: relative;
     width: 100%;
     aspect-ratio: 3/4;
     border-radius: 12px;
     overflow: hidden;
     background: #f5f5f5;
-    margin-bottom: 16px;
   }
 
-  .main-image img {
+  .carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.4s ease-out;
+  }
+
+  .carousel-slide {
+    min-width: 100%;
+    height: 100%;
+  }
+
+  .carousel-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
   }
 
-  .main-image:hover img {
-    transform: scale(1.05);
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  .carousel-btn:hover {
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .carousel-btn svg {
+    width: 20px;
+    height: 20px;
+    color: #333;
+  }
+
+  .carousel-btn.prev {
+    left: 12px;
+  }
+
+  .carousel-btn.next {
+    right: 12px;
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .carousel-dot.active {
+    background: var(--color-primary);
+    transform: scale(1.2);
+  }
+
+  .carousel-dot:hover {
+    background: var(--color-secondary);
   }
 
   .thumbnail-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 10px;
+    margin-top: 12px;
   }
 
   .thumbnail {
@@ -106,18 +179,38 @@
     overflow: hidden;
     cursor: pointer;
     border: 2px solid transparent;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
+    opacity: 0.6;
   }
 
-  .thumbnail.active,
-  .thumbnail:hover {
+  .thumbnail.active {
     border-color: var(--color-primary);
+    opacity: 1;
+  }
+
+  .thumbnail:hover {
+    opacity: 1;
+    border-color: var(--color-secondary);
   }
 
   .thumbnail img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  /* Image counter */
+  .image-counter {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    z-index: 10;
   }
 
   /* Product Info */
@@ -866,6 +959,24 @@
       top: 0;
     }
 
+    .carousel-btn {
+      width: 36px;
+      height: 36px;
+    }
+
+    .carousel-btn.prev {
+      left: 8px;
+    }
+
+    .carousel-btn.next {
+      right: 8px;
+    }
+
+    .thumbnail-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
     .product-title {
       font-size: 1.5rem;
     }
@@ -884,28 +995,73 @@
   }
 </style>
 
-<section class="product-page" x-data="productPage()">
+<section class="product-page" x-data="productPage()" x-init="initSwipe()">
   <div class="product-container">
-    <!-- Left Column: Image Gallery -->
+    <!-- Left Column: Image Gallery Carousel -->
     <div class="product-gallery">
-      <div class="main-image">
-        <img
-          :src="selectedImage"
-          :alt="'{{ product.title }}'"
-          id="mainProductImage"
-        >
-      </div>
-      <div class="thumbnail-grid">
-        {% for image in product.images %}
-          <div
-            class="thumbnail"
-            :class="{ 'active': selectedImage === '{{ image | image_url: width: 800 }}' }"
-            @click="selectImage('{{ image | image_url: width: 800 }}')"
-          >
-            <img src="{{ image | image_url: width: 200 }}" alt="{{ product.title }} - Image {{ forloop.index }}">
+      <div class="carousel-container">
+        <div class="carousel-main">
+          <div class="carousel-track" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
+            {% for image in product.images %}
+              <div class="carousel-slide">
+                <img
+                  src="{{ image | image_url: width: 800 }}"
+                  alt="{{ product.title }} - Image {{ forloop.index }}"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                >
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
+
+          <!-- Navigation Arrows -->
+          {% if product.images.size > 1 %}
+            <button class="carousel-btn prev" @click="prevSlide()" aria-label="Previous image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="carousel-btn next" @click="nextSlide()" aria-label="Next image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+
+            <!-- Image Counter -->
+            <div class="image-counter">
+              <span x-text="currentSlide + 1"></span> / {{ product.images.size }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Dots Navigation -->
+        {% if product.images.size > 1 %}
+          <div class="carousel-dots">
+            {% for image in product.images %}
+              <button
+                class="carousel-dot"
+                :class="{ 'active': currentSlide === {{ forloop.index0 }} }"
+                @click="goToSlide({{ forloop.index0 }})"
+                aria-label="Go to image {{ forloop.index }}"
+              ></button>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
+
+      <!-- Thumbnails -->
+      {% if product.images.size > 1 %}
+        <div class="thumbnail-grid">
+          {% for image in product.images %}
+            <div
+              class="thumbnail"
+              :class="{ 'active': currentSlide === {{ forloop.index0 }} }"
+              @click="goToSlide({{ forloop.index0 }})"
+            >
+              <img src="{{ image | image_url: width: 200 }}" alt="{{ product.title }} - Thumbnail {{ forloop.index }}">
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
 
     <!-- Right Column: Product Info -->
@@ -1292,8 +1448,11 @@
       productTitle: '{{ product.title | escape }}',
       productUrl: '{{ product.url }}',
 
-      // Images
-      selectedImage: '{{ product.featured_image | image_url: width: 800 }}',
+      // Carousel
+      currentSlide: 0,
+      totalSlides: {{ product.images.size | default: 1 }},
+      touchStartX: 0,
+      touchEndX: 0,
 
       // Variants
       selectedColor: '{{ product.options_by_name['Color'].values[0] | default: '' }}',
@@ -1325,11 +1484,45 @@
       toastVisible: false,
       toastMessage: '',
 
-      // Methods
-      selectImage(imageUrl) {
-        this.selectedImage = imageUrl;
+      // Carousel Methods
+      nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
       },
 
+      prevSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+      },
+
+      goToSlide(index) {
+        this.currentSlide = index;
+      },
+
+      initSwipe() {
+        const carousel = document.querySelector('.carousel-main');
+        if (!carousel) return;
+
+        carousel.addEventListener('touchstart', (e) => {
+          this.touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        carousel.addEventListener('touchend', (e) => {
+          this.touchEndX = e.changedTouches[0].screenX;
+          this.handleSwipe();
+        }, { passive: true });
+      },
+
+      handleSwipe() {
+        const diff = this.touchStartX - this.touchEndX;
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) {
+            this.nextSlide();
+          } else {
+            this.prevSlide();
+          }
+        }
+      },
+
+      // Variant Methods
       selectColor(color) {
         this.selectedColor = color;
         this.updateVariant();

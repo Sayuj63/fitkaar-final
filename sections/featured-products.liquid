@@ -45,7 +45,8 @@
               <h3 class="text-xl font-bold mb-1" style="font-family: var(--font-heading);">{{ product.title }}</h3>
               
               <div class="flex items-center justify-between mb-2">
-                 <p class="text-sm text-gray-600">COLOR: <span class="text-black">{{ product.options_by_name['Color'].values[0] | default: 'Standard' }}</span></p>
+                 {% assign color_opt = product.options_with_values | where: "name", "Color" | first %}
+                 <p class="text-sm text-gray-600">COLOR: <span class="text-black">{{ color_opt.values[0] | default: 'Standard' }}</span></p>
               </div>
 
               <!-- Color Swatches Mockup -->
@@ -57,9 +58,12 @@
               
               <div class="flex items-center gap-2 mb-2">
                 <span class="text-xs font-bold uppercase">SIZE</span>
-                {% for size in product.options_by_name['Size'].values %}
+                {% assign size_opt = product.options_with_values | where: "name", "Size" | first %}
+                {% if size_opt %}
+                {% for size in size_opt.values %}
                     <span class="text-xs text-gray-500">{{ size }}</span>
                 {% endfor %}
+                {% endif %}
               </div>
               
               <div class="text-green-600 text-xs font-bold flex items-center">

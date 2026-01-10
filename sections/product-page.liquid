@@ -1100,11 +1100,12 @@
       </div>
 
       <!-- Color Selection -->
-      {% if product.options_by_name['Color'] %}
+      {% assign color_option = product.options_with_values | where: "name", "Color" | first %}
+      {% if color_option %}
         <div class="variant-section">
-          <div class="variant-label">Colour: <span x-text="selectedColor">{{ product.options_by_name['Color'].values[0] }}</span></div>
+          <div class="variant-label">Colour: <span x-text="selectedColor">{{ color_option.values[0] }}</span></div>
           <div class="color-swatches">
-            {% for color in product.options_by_name['Color'].values %}
+            {% for color in color_option.values %}
               {% assign color_lower = color | downcase %}
               {% case color_lower %}
                 {% when 'black' %}
@@ -1159,11 +1160,12 @@
       </div>
 
       <!-- Size Selection -->
-      {% if product.options_by_name['Size'] %}
+      {% assign size_option = product.options_with_values | where: "name", "Size" | first %}
+      {% if size_option %}
         <div class="variant-section">
-          <div class="variant-label">Size: <span x-text="selectedSize">{{ product.options_by_name['Size'].values[0] }}</span></div>
+          <div class="variant-label">Size: <span x-text="selectedSize">{{ size_option.values[0] }}</span></div>
           <div class="size-options">
-            {% for size in product.options_by_name['Size'].values %}
+            {% for size in size_option.values %}
               <button
                 class="size-btn"
                 :class="{ 'active': selectedSize === '{{ size }}' }"
@@ -1455,8 +1457,8 @@
       touchEndX: 0,
 
       // Variants
-      selectedColor: '{{ product.options_by_name['Color'].values[0] | default: '' }}',
-      selectedSize: '{{ product.options_by_name['Size'].values[0] | default: '' }}',
+      selectedColor: '{% assign color_opt = product.options_with_values | where: "name", "Color" | first %}{{ color_opt.values[0] | default: '' }}',
+      selectedSize: '{% assign size_opt = product.options_with_values | where: "name", "Size" | first %}{{ size_opt.values[0] | default: '' }}',
       selectedVariantId: {{ product.selected_or_first_available_variant.id }},
 
       // Variants JSON

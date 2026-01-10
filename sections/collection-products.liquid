@@ -227,7 +227,7 @@
                   {% endif %}
                 </div>
 
-                {% assign color_option = product.options_by_name['Color'] %}
+                {% assign color_option = product.options_with_values | where: "name", "Color" | first %}
                 {% if color_option and color_option.values.size > 1 %}
                   <div class="product-card-colors">
                     {% for color in color_option.values limit: 4 %}

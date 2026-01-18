@@ -1478,14 +1478,46 @@
       productId: {{ product.id }},
       productTitle: '{{ product.title | escape }}',
       productUrl: '{{ product.url }}',
+      
+      // Images Data (Loaded from Liquid)
+      allImages: [
+        {% for image in product.images %}
+          {
+            id: {{ image.id }},
+            src: '{{ image | image_url: width: 800 }}',
+            thumb: '{{ image | image_url: width: 200 }}',
+            alt: `{{ image.alt | escape }}`
+          },
+        {% endfor %}
+      ],
 
-      // Carousel
+      // Carousel State
       currentSlide: 0,
-      totalSlides: {{ product.images.size | default: 1 }},
       transitionImage: '',
       isTransitioning: false,
       touchStartX: 0,
       touchEndX: 0,
+      
+      // Computed: Visible Images based on selection
+      get visibleImages() {
+        if (!this.selectedColor) return this.allImages;
+        
+        // Filter images that have the selected color in their alt text
+        // OR images that have no specific color tag (generic images)
+        const relevant = this.allImages.filter(img => {
+          // If alt is empty, show it for all (optional, or specific logic)
+          // Here strictly matching color name if present
+          if (!img.alt || img.alt === '' || img.alt === '{{ product.title | escape }}') return true; // Generic
+          
+          return img.alt.toLowerCase().includes(this.selectedColor.toLowerCase());
+        });
+        
+        return relevant.length > 0 ? relevant : this.allImages; 
+      },
+      
+      get totalSlides() {
+        return this.visibleImages.length;
+      },
 
       // Variants
       selectedColor: '{% assign color_opt = product.options_with_values | where: "name", "Color" | first %}{{ color_opt.values[0] | default: '' }}',
@@ -1560,43 +1592,55 @@
         // If already on this color, do nothing
         if (this.selectedColor === color) return;
 
-        // 1. Capture current visible image as transition overlay
+        // 1. FREEZE: Capture current visible image as transition overlay
         const currentImages = document.querySelectorAll('.carousel-slide img');
         if (currentImages && currentImages[this.currentSlide]) {
           this.transitionImage = currentImages[this.currentSlide].src;
           this.isTransitioning = true;
         }
 
-        // 2. Perform state updates in next frame
+        // 2. JUMP & DISSOLVE in next frame
         requestAnimationFrame(() => {
           this.selectedColor = color;
           this.updateVariant();
           
-          // Find the variant image index
+          // Find the image assigned to this variant
           let newIndex = -1;
-          {% for variant in product.variants %}
-            if ('{{ variant.option1 }}' === color && '{{ variant.featured_image }}' !== '') {
-               // Logic to find index of this image in the main array
-               // Since we don't have direct index access here easily without complex liquid
-               // We'll rely on client-side search if needed, or simple direct src match
-               const newSrc = '{{ variant.featured_image | image_url: width: 800 }}';
-               // Simple search in existing slides
-               const slides = Array.from(document.querySelectorAll('.carousel-slide img'));
-               newIndex = slides.findIndex(img => img.src.includes('{{ variant.featured_image.id }}') || img.src === newSrc);
-            }
-          {% endfor %}
-
-          if (newIndex !== -1) {
-            this.goToSlide(newIndex);
+          
+          // Logic: Look for the specific image attached to the chosen variant
+          // Data is available in the 'variants' JSON
+          const matchingVariant = this.variants.find(v => v.option1 === color);
+          
+          if (matchingVariant && matchingVariant.featured_image) {
+             // Find the slide index that matches this featured image
+             // We match based on image ID or Src URL logic
+             const targetSrc = matchingVariant.featured_image.src; 
+             const variantId = matchingVariant.featured_image.id;
+             
+             // Search in the slider images
+             const slides = Array.from(document.querySelectorAll('.carousel-slide img'));
+             
+             // Try to match by ID in existing images loop (requires liquid ID output which we added)
+             // Or match roughly by src
+             newIndex = slides.findIndex(img => img.src.includes(variantId) || (targetSrc && img.src.includes(targetSrc.split('?')[0])));
           }
 
-          // 3. Fade out overlay
+          if (newIndex !== -1) {
+             // Instantly jump to the new image (behind the overlay)
+             // Pass true to bypass any scroll animation if supported, or just setting index works 
+             // because the overlay hides the jump.
+             this.currentSlide = newIndex; 
+          }
+
+          // 3. FADE OUT overlay
+          // Small timeout to ensure DOM updated the slider position behind the scenes
           setTimeout(() => {
-            this.isTransitioning = false;
-            // Clear transition image after transition completes to save memory
+            this.isTransitioning = false; // This triggers CSS opacity: 0 on overlay
+            
+            // Cleanup
             setTimeout(() => {
               if (!this.isTransitioning) this.transitionImage = '';
-            }, 500);
+            }, 600);
           }, 50);
         });
       },

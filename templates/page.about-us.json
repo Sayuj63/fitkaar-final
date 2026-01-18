@@ -2,10 +2,31 @@
   "sections": {
     "about": {
       "type": "about-page",
-      "settings": {}
+      "settings": {
+        "youtube_link": ""
+      }
+    },
+    "testimonials_carousel": {
+      "type": "testimonials-carousel",
+      "settings": {
+        "title": "Here it from our customer's",
+        "bg_color": "#f8f8f8",
+        "speed": 50,
+        "image_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-1.png?v=1766335038",
+        "image_2": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-2.png?v=1766335038",
+        "image_3": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-3.png?v=1766335038",
+        "image_4": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-4.png?v=1766335038",
+        "image_5": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-5.png?v=1766335038",
+        "image_6": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-6.png?v=1766335038",
+        "image_7": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-7.png?v=1766335038",
+        "image_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-8.png?v=1766335038",
+        "image_9": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-9.png?v=1766335038",
+        "image_10": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-10.png?v=1766335038"
+      }
     }
   },
   "order": [
-    "about"
+    "about",
+    "testimonials_carousel"
   ]
 }

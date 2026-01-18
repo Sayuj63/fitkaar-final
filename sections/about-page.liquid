@@ -874,39 +874,24 @@ body.about-page-active main {
 
     <!-- Story Cards Flow -->
     <div class="story-flow">
-      <!-- Card 1 - Left -->
+      <!-- Card 1 - Left (keep only 1 image) -->
       <div class="scrapbook-card card-left">
         <div class="card-inner">
           <p class="card-text">It all began in college. We were both part of the dance society — Suhani as the Vice President and Mitanshi as the Creative Head.</p>
           <div class="card-images large-images">
             <img loading="lazy" src="{{ '1.1.jpg' | asset_url }}" alt="College days">
-            <img loading="lazy" src="{{ '1.2.JPG' | asset_url }}" alt="Dance society">
-            <img loading="lazy" src="{{ '1.3.JPG' | asset_url }}" alt="Early days">
           </div>
         </div>
       </div>
 
-      <!-- Photo Element - After Card 1 - Using different photo from card -->
+      <!-- Photo from Card 1 set (1.2) -->
       <div class="scrapbook-photo photo-right">
         <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '1.1.jpg' | asset_url }}" alt="College memories">
+          <img loading="lazy" src="{{ '1.2.JPG' | asset_url }}" alt="Dance society">
         </div>
       </div>
 
-      <!-- Card 2 - Right -->
-      <div class="scrapbook-card card-right">
-        <div class="card-inner">
-          <p class="card-text">When it was time to plan our seniors' farewell, we wanted to gift them something personal — something that felt like them.</p>
-          <div class="card-images">
-            <img loading="lazy" src="{{ '2.1.PNG' | asset_url }}" alt="Design process">
-            <img loading="lazy" src="{{ '2.2.PNG' | asset_url }}" alt="Sketches">
-            <img loading="lazy" src="{{ '2.3.PNG' | asset_url }}" alt="Ideas">
-            <img loading="lazy" src="{{ '2.4.PNG' | asset_url }}" alt="Concepts">
-          </div>
-        </div>
-      </div>
-
-      <!-- Photo Element - After Card 2 - Two photos for variety -->
+      <!-- Photo from Card 1 set (1.3) -->
       <div class="scrapbook-photo photo-left">
         <div class="photo-wrapper">
           <img loading="lazy" src="{{ '1.3.JPG' | asset_url }}" alt="Early days">
@@ -914,65 +899,121 @@ body.about-page-active main {
         </div>
       </div>
 
-      <!-- Card 3 - Left -->
+      <!-- Card 2 - Right (keep only 1 image) -->
+      <div class="scrapbook-card card-right">
+        <div class="card-inner">
+          <p class="card-text">When it was time to plan our seniors' farewell, we wanted to gift them something personal — something that felt like them.</p>
+          <div class="card-images">
+            <img loading="lazy" src="{{ '2.1.PNG' | asset_url }}" alt="Design process">
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo from Card 2 set (2.2) -->
+      <div class="scrapbook-photo photo-left">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '2.2.PNG' | asset_url }}" alt="Sketches">
+        </div>
+      </div>
+
+      <!-- Photo from Card 2 set (2.3) -->
+      <div class="scrapbook-photo photo-right">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '2.3.PNG' | asset_url }}" alt="Ideas">
+          <div class="photo-caption">Planning!</div>
+        </div>
+      </div>
+
+      <!-- Photo from Card 2 set (2.4) -->
+      <div class="scrapbook-photo photo-left">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '2.4.PNG' | asset_url }}" alt="Concepts">
+        </div>
+      </div>
+
+      <!-- Card 3 - Left (keep only 1 image) -->
       <div class="scrapbook-card card-left">
         <div class="card-inner">
           <p class="card-text">That's when the idea struck — personalised t-shirts with elements each senior loved.</p>
           <div class="card-images">
             <img loading="lazy" src="{{ '3.1.PNG' | asset_url }}" alt="T-shirt design">
-            <img loading="lazy" src="{{ '3.2.PNG' | asset_url }}" alt="Personalized">
-            <img loading="lazy" src="{{ '3.3.PNG' | asset_url }}" alt="Custom designs">
           </div>
         </div>
       </div>
 
-      <!-- Photo Element - After Card 3 - Single photo -->
-      <div class="scrapbook-photo photo-center">
+      <!-- Photo from Card 3 set (3.2) -->
+      <div class="scrapbook-photo photo-right">
         <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '2.1.PNG' | asset_url }}" alt="Design sketches">
+          <img loading="lazy" src="{{ '3.2.PNG' | asset_url }}" alt="Personalized">
         </div>
       </div>
 
-      <!-- Card 4 - Right -->
+      <!-- Photo from Card 3 set (3.3) -->
+      <div class="scrapbook-photo photo-left">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '3.3.PNG' | asset_url }}" alt="Custom designs">
+          <div class="photo-caption">First ideas!</div>
+        </div>
+      </div>
+
+      <!-- Card 4 - Right (keep only 1 image) -->
       <div class="scrapbook-card card-right">
         <div class="card-inner">
           <p class="card-text">After going through a lot of drafts and revisions, we finally had our first set of designs ready.</p>
           <div class="card-images large-images">
             <img loading="lazy" src="{{ '4.1.jpg' | asset_url }}" alt="First designs">
-            <img loading="lazy" src="{{ '4.2.PNG' | asset_url }}" alt="Drafts">
-            <img loading="lazy" src="{{ '4.3.PNG' | asset_url }}" alt="Final designs">
           </div>
         </div>
       </div>
 
-      <!-- Photo Element - After Card 4 - Two photos scattered -->
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '5.1.PNG' | asset_url }}" alt="Feedback messages">
-        </div>
-      </div>
-
+      <!-- Photo from Card 4 set (4.2) -->
       <div class="scrapbook-photo photo-left">
         <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '3.1.PNG' | asset_url }}" alt="T-shirt concepts">
-          <div class="photo-caption">Brainstorming</div>
+          <img loading="lazy" src="{{ '4.2.PNG' | asset_url }}" alt="Drafts">
+          <div class="photo-caption">So many revisions!</div>
         </div>
       </div>
 
-      <!-- Card 5 - Left -->
+      <!-- Photo from Card 4 set (4.3) -->
+      <div class="scrapbook-photo photo-right">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '4.3.PNG' | asset_url }}" alt="Final designs">
+        </div>
+      </div>
+
+      <!-- Card 5 - Left (keep only 1 image) -->
       <div class="scrapbook-card card-left">
         <div class="card-inner">
           <p class="card-text">When we shared them with our batch, the responses poured in — "you guys should start something together!"</p>
           <div class="card-images">
             <img loading="lazy" src="{{ '5.1.PNG' | asset_url }}" alt="Feedback">
-            <img loading="lazy" src="{{ '5.2.PNG' | asset_url }}" alt="Response">
-            <img loading="lazy" src="{{ '5.3.PNG' | asset_url }}" alt="Encouragement">
-            <img loading="lazy" src="{{ '5.4.PNG' | asset_url }}" alt="Support">
           </div>
         </div>
       </div>
 
-      <!-- Card 6 - Right -->
+      <!-- Photo from Card 5 set (5.2) -->
+      <div class="scrapbook-photo photo-right">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '5.2.PNG' | asset_url }}" alt="Response">
+        </div>
+      </div>
+
+      <!-- Photo from Card 5 set (5.3) -->
+      <div class="scrapbook-photo photo-left">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '5.3.PNG' | asset_url }}" alt="Encouragement">
+          <div class="photo-caption">Overwhelming support!</div>
+        </div>
+      </div>
+
+      <!-- Photo from Card 5 set (5.4) -->
+      <div class="scrapbook-photo photo-right">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '5.4.PNG' | asset_url }}" alt="Support">
+        </div>
+      </div>
+
+      <!-- Card 6 - Right (single image card - keep as is) -->
       <div class="scrapbook-card card-right">
         <div class="card-inner">
           <p class="card-text">Seeing our seniors' reactions when they opened their tees was everything. It genuinely made us realise how special personalised designs can feel.</p>
@@ -982,21 +1023,7 @@ body.about-page-active main {
         </div>
       </div>
 
-      <!-- Photo Element - After Card 6 - Three photos for density -->
-      <div class="scrapbook-photo photo-center">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '7.1.jpg' | asset_url }}" alt="Dance costumes">
-        </div>
-      </div>
-
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '5.2.PNG' | asset_url }}" alt="Positive responses">
-          <div class="photo-caption">Overwhelming support!</div>
-        </div>
-      </div>
-
-      <!-- Card 7 - Left -->
+      <!-- Card 7 - Left (single image card - keep as is) -->
       <div class="scrapbook-card card-left">
         <div class="card-inner">
           <p class="card-text">That same year, we also designed the costumes for our dance society.</p>
@@ -1006,16 +1033,35 @@ body.about-page-active main {
         </div>
       </div>
 
-      <!-- Card 8 - Right -->
+      <!-- Card 8 - Right (keep only 1 image) -->
       <div class="scrapbook-card card-right">
         <div class="card-inner">
           <p class="card-text">One day, we decided to take this passion project forward — we met, planned, and that's where Fitkaar began.</p>
           <div class="card-images large-images">
             <img loading="lazy" src="{{ '8.1.JPG' | asset_url }}" alt="Planning">
-            <img loading="lazy" src="{{ '8.2.jpg' | asset_url }}" alt="Beginning">
-            <img loading="lazy" src="{{ '8.3.JPG' | asset_url }}" alt="Fitkaar start">
-            <img loading="lazy" src="{{ '8.4.JPG' | asset_url }}" alt="Team">
           </div>
+        </div>
+      </div>
+
+      <!-- Photo from Card 8 set (8.2) -->
+      <div class="scrapbook-photo photo-left">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '8.2.jpg' | asset_url }}" alt="Beginning">
+        </div>
+      </div>
+
+      <!-- Photo from Card 8 set (8.3) -->
+      <div class="scrapbook-photo photo-right">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '8.3.JPG' | asset_url }}" alt="Fitkaar start">
+          <div class="photo-caption">The beginning!</div>
+        </div>
+      </div>
+
+      <!-- Photo from Card 8 set (8.4) -->
+      <div class="scrapbook-photo photo-left">
+        <div class="photo-wrapper">
+          <img loading="lazy" src="{{ '8.4.JPG' | asset_url }}" alt="Team">
         </div>
       </div>
     </div>

@@ -38,38 +38,22 @@
         "collection": ""
       }
     },
-    "testimonials": {
-      "type": "testimonials-bento",
-      "blocks": {
-        "text_1": {
-          "type": "review_text",
-          "settings": {
-            "text": "the tshirt i got from you is my most fav tshirt, no kidding. the quality is soooo good.",
-            "author": "hiii",
-            "card_size": "medium"
-          }
-        },
-        "image_1": {
-          "type": "review_image",
-          "settings": {
-            "card_size": "small"
-          }
-        },
-        "image_2": {
-          "type": "review_image",
-          "settings": {
-            "card_size": "small"
-          }
-        }
-      },
-      "block_order": [
-        "text_1",
-        "image_1",
-        "image_2"
-      ],
+    "testimonials_carousel": {
+      "type": "testimonials-carousel",
       "settings": {
-        "title": "TESTIMONIALS",
-        "bg_color": "#bfdbe3"
+        "title": "WHAT THEY'RE SAYING",
+        "bg_color": "#f8f8f8",
+        "speed": 50,
+        "image_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-1.png?v=1766335038",
+        "image_2": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-2.png?v=1766335038",
+        "image_3": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-3.png?v=1766335038",
+        "image_4": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-4.png?v=1766335038",
+        "image_5": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-5.png?v=1766335038",
+        "image_6": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-6.png?v=1766335038",
+        "image_7": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-7.png?v=1766335038",
+        "image_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-8.png?v=1766335038",
+        "image_9": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-9.png?v=1766335038",
+        "image_10": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-10.png?v=1766335038"
       }
     },
     "reels": {
@@ -109,24 +93,6 @@
       "settings": {
         "title": "AS SEEN ON REELS"
       }
-    },
-    "testimonials_carousel": {
-      "type": "testimonials-carousel",
-      "settings": {
-        "title": "WHAT THEY'RE SAYING",
-        "bg_color": "#f8f8f8",
-        "speed": 50,
-        "image_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-1.png?v=1766335038",
-        "image_2": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-2.png?v=1766335038",
-        "image_3": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-3.png?v=1766335038",
-        "image_4": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-4.png?v=1766335038",
-        "image_5": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-5.png?v=1766335038",
-        "image_6": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-6.png?v=1766335038",
-        "image_7": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-7.png?v=1766335038",
-        "image_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-8.png?v=1766335038",
-        "image_9": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-9.png?v=1766335038",
-        "image_10": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-10.png?v=1766335038"
-      }
     }
   },
   "order": [
@@ -134,8 +100,7 @@
     "cta_double",
     "interactive_builder",
     "best_sellers",
-    "testimonials",
-    "reels",
-    "testimonials_carousel"
+    "testimonials_carousel",
+    "reels"
   ]
 }

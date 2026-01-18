@@ -1,41 +1,342 @@
-<div class="container py-8 md:py-16 px-4 md:px-8 max-w-7xl mx-auto" x-data="cartPage()">
-  <h1 class="text-3xl md:text-5xl font-bold mb-8 md:mb-12 text-center" style="font-family: var(--font-heading);">YOUR CART</h1>
+<style>
+  .cart-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .cart-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 700;
+  }
+
+  /* Cart Layout */
+  .cart-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  @media (min-width: 992px) {
+    .cart-layout {
+      grid-template-columns: 2fr 1fr;
+      gap: 60px;
+    }
+  }
+
+  /* Cart Items */
+  .cart-items-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .cart-header-product { text-align: left; }
+  .cart-header-qty { text-align: center; }
+  .cart-header-total { text-align: right; }
+
+  @media (max-width: 768px) {
+    .cart-items-header { display: none; }
+  }
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid #f3f4f6;
+    position: relative;
+    transition: opacity 0.3s ease;
+  }
+  
+  .cart-item.loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .cart-item {
+      grid-template-columns: 100px 2fr 1fr 1fr;
+      align-items: center;
+    }
+  }
+
+  .cart-item-image {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+  }
+
+  .cart-item-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .cart-item-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .cart-item-variant {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .cart-item-price-mobile {
+    margin-top: 8px;
+    font-weight: 600;
+    display: block;
+  }
+  @media (min-width: 768px) {
+    .cart-item-price-mobile { display: none; }
+  }
+
+  /* Quantity Selector */
+  .qty-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qty-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 40px;
+    width: 120px;
+  }
+
+  .qty-btn {
+    width: 36px;
+    height: 100%;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .qty-btn:hover { background: #f9fafb; }
+
+  .qty-input {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    -moz-appearance: textfield;
+  }
+  .qty-input::-webkit-inner-spin-button, 
+  .qty-input::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+
+  .remove-btn {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: #ef4444;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  @media (min-width: 768px) {
+     .remove-btn {
+        margin-top: 0;
+        margin-left: 10px;
+        position: static;
+        display: inline-block;
+        color: #9ca3af;
+        text-decoration: none;
+     }
+     .remove-btn:hover { color: #ef4444; }
+     .qty-wrapper {
+        flex-direction: row;
+        justify-content: center;
+     }
+  }
+
+  .items-total-price {
+    text-align: right;
+    font-weight: 700;
+    font-size: 1.125rem;
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .items-total-price { display: block; }
+  }
+
+  /* Order Summary */
+  .cart-summary {
+    background: #f9fafb;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 30px;
+    position: sticky;
+    top: 100px;
+  }
+
+  .summary-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #4b5563;
+  }
+
+  .summary-price {
+    font-weight: 700;
+    color: #000;
+    font-size: 1.25rem;
+  }
+
+  .summary-note {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+
+  .checkout-btn {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    font-weight: 700;
+    padding: 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.3s, transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .checkout-btn:hover {
+    background-color: #1f2937;
+    transform: translateY(-2px);
+  }
+  
+  .checkout-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+  
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* Empty State */
+  .empty-cart {
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    opacity: 0.3;
+  }
+  .continue-shopping-btn {
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    padding: 14px 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 20px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  .continue-shopping-btn:hover { background: #333; }
+</style>
+
+<div class="cart-container" x-data="cartPage()">
+  <h1 class="cart-title">YOUR CART</h1>
 
   <template x-if="itemCount > 0">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+    <div class="cart-layout">
       
       <!-- Cart Items List (Left Column) -->
-      <div class="lg:col-span-8 space-y-6 md:space-y-8">
+      <div class="cart-items-section">
         <!-- Header Row (Desktop Only) -->
-        <div class="hidden md:grid grid-cols-12 gap-4 border-b border-gray-200 pb-4 text-sm font-semibold tracking-wider text-gray-500 uppercase">
-          <div class="col-span-6">Product</div>
-          <div class="col-span-3 text-center">Quantity</div>
-          <div class="col-span-3 text-right">Total</div>
+        <div class="cart-items-header">
+          <div class="cart-header-product">Product</div>
+          <div class="cart-header-qty">Quantity</div>
+          <div class="cart-header-total">Total</div>
         </div>
 
         <!-- Items Loop -->
         <template x-for="(item, index) in items" :key="item.key">
-          <div class="grid grid-cols-3 md:grid-cols-12 gap-4 md:gap-6 items-center border-b border-gray-100 pb-6 last:border-0 relative" :class="{ 'opacity-50 pointer-events-none': loading }">
+          <div class="cart-item" :class="{ 'loading': loading }">
             
-            <!-- Product Image & Info -->
-            <div class="col-span-2 md:col-span-6 flex gap-4 md:gap-6">
-              <a :href="item.url" class="shrink-0 w-20 h-24 md:w-28 md:h-36 bg-gray-100 rounded-md overflow-hidden relative">
-                <img :src="item.image ? item.image : ''" :alt="item.title" class="w-full h-full object-cover">
-              </a>
-              <div class="flex flex-col justify-center">
-                <a :href="item.url" class="font-bold text-base md:text-lg hover:underline transition-colors duration-200" x-text="item.product_title"></a>
-                <p class="text-sm text-gray-500 mt-1" x-text="item.variant_title !== 'Default Title' ? item.variant_title : ''"></p>
-                <div class="md:hidden mt-2 font-medium" x-text="formatMoney(item.original_line_price)"></div>
-              </div>
+            <!-- Image (Grid Col 1) -->
+            <a :href="item.url">
+              <img :src="item.image ? item.image : ''" :alt="item.title" class="cart-item-image">
+            </a>
+
+            <!-- Details (Grid Col 2) -->
+            <div class="cart-item-details">
+              <a :href="item.url" class="cart-item-title" x-text="item.product_title"></a>
+              <p class="cart-item-variant" x-text="item.variant_title !== 'Default Title' ? item.variant_title : ''"></p>
+              <div class="cart-item-price-mobile" x-text="formatMoney(item.original_line_price)"></div>
             </div>
 
-            <!-- Quantity Selector & Remove -->
-            <div class="col-span-1 md:col-span-3 flex flex-col md:flex-row items-center justify-center gap-2">
-              <div class="flex items-center border border-gray-300 rounded md:rounded-none h-10 w-full md:w-32 max-w-[100px] md:max-w-none">
+            <!-- Quantity (Grid Col 3) -->
+            <div class="qty-wrapper">
+              <div class="qty-input-group">
                 <button 
                   type="button"
                   @click="updateQuantity(index, item.quantity - 1)" 
-                  class="w-8 md:w-10 h-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+                  class="qty-btn"
                   aria-label="Decrease quantity"
                 >−</button>
                 <input 
@@ -43,66 +344,57 @@
                   x-model="item.quantity"
                   @change="updateQuantity(index, parseInt($el.value))"
                   min="0" 
-                  class="flex-1 w-full text-center border-none p-0 focus:ring-0 text-sm md:text-base h-full [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
+                  class="qty-input"
                 >
                 <button 
                   type="button" 
                   @click="updateQuantity(index, item.quantity + 1)" 
-                  class="w-8 md:w-10 h-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+                  class="qty-btn"
                   aria-label="Increase quantity"
                 >+</button>
               </div>
               <button 
                 @click="updateQuantity(index, 0)" 
-                class="text-xs text-red-500 underline md:no-underline md:text-gray-400 md:hover:text-red-500 transition-colors md:absolute md:top-1/2 md:translate-y-[-50%] md:right-4 md:mt-0"
-                :class="{'mt-2': true}"
+                class="remove-btn"
+                aria-label="Remove item"
               >
                 <span class="md:hidden">Remove</span>
-                <svg class="hidden md:block w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <!-- Desktop Trash Icon -->
+                <svg viewBox="0 0 24 24" fill="none" class="hidden md:block" stroke="currentColor" width="20" height="20" style="display:none">
+                   <!-- Icon handled by CSS display media queries if cleaner, using text 'remove' for now on mobile -->
                 </svg>
               </button>
             </div>
 
-            <!-- Total Price (Desktop) -->
-            <div class="col-span-3 text-right font-bold text-lg hidden md:block" x-text="formatMoney(item.original_line_price)"></div>
+            <!-- Total Price (Grid Col 4) -->
+            <div class="items-total-price" x-text="formatMoney(item.original_line_price)"></div>
           </div>
         </template>
       </div>
 
-      <!-- Order Summary (Right Column - Sticky) -->
-      <div class="lg:col-span-4 mt-8 lg:mt-0">
-        <div class="bg-gray-50 p-6 md:p-8 rounded-lg md:sticky md:top-32 shadow-sm border border-gray-100">
-           <h2 class="text-xl md:text-2xl font-bold mb-6 pb-4 border-b border-gray-200">Order Summary</h2>
+      <!-- Order Summary (Right Column) -->
+      <div class="cart-summary-section">
+        <div class="cart-summary">
+           <h2 class="summary-title">Order Summary</h2>
            
-           <div class="flex justify-between items-center mb-4 text-gray-600">
+           <div class="summary-row">
               <span>Subtotal</span>
-              <span class="font-bold text-black text-lg" x-text="formatMoney(window.cart.total_price)"></span> <!-- Fallback or x-text binding -->
-              <span class="font-bold text-black text-lg" x-text="formatMoney(totalPrice)"></span>
+              <span class="summary-price" x-text="formatMoney(window.cart ? window.cart.total_price : totalPrice)"></span>
            </div>
            
-           <p class="text-sm text-gray-500 mb-8 italic">Shipping & taxes calculated at checkout</p>
+           <p class="summary-note">Shipping & taxes calculated at checkout</p>
            
            <!-- Checkout Actions -->
-           <form action="{{ routes.cart_url }}" method="post" class="space-y-3">
+           <form action="{{ routes.cart_url }}" method="post">
              <button 
                type="submit" 
                name="checkout" 
-               class="w-full bg-black text-white py-4 px-6 font-bold text-base md:text-lg hover:bg-gray-800 transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+               class="checkout-btn"
                :disabled="loading"
-               :class="{ 'opacity-75 cursor-wait': loading }"
              >
                <span x-show="!loading">PROCEED TO CHECKOUT</span>
-               <span x-show="loading" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+               <span x-show="loading" class="loading-spinner"></span>
              </button>
-             
-             <!-- Payment Icons -->
-             <div class="flex justify-center gap-2 pt-4 opacity-70 grayscale">
-               <!-- Simple SVGs for generic cards -->
-               <div class="h-6 w-10 bg-gray-200 rounded"></div>
-               <div class="h-6 w-10 bg-gray-200 rounded"></div>
-               <div class="h-6 w-10 bg-gray-200 rounded"></div>
-             </div>
            </form>
         </div>
       </div>
@@ -112,15 +404,13 @@
 
   <!-- Empty Cart State -->
   <template x-if="itemCount === 0 && !initialLoading">
-    <div class="text-center py-20 md:py-32 fadeIn">
-       <div class="mb-6 opacity-30">
-          <svg class="w-20 h-20 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
-       </div>
-       <h2 class="text-2xl font-bold mb-4">Your cart is current empty.</h2>
-       <p class="text-gray-500 mb-8 max-w-md mx-auto">Looks like you haven't added any items to your cart yet.</p>
-       <a href="/collections/all" class="inline-block bg-black text-white px-8 py-3 font-bold uppercase hover:bg-gray-800 transition-colors">Start Shopping</a>
+    <div class="empty-cart fadeIn">
+       <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+       </svg>
+       <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 10px;">Your cart is currently empty.</h2>
+       <p style="color: #6b7280; margin-bottom: 30px;">Looks like you haven't added any items to your cart yet.</p>
+       <a href="/collections/all" class="continue-shopping-btn">Start Shopping</a>
     </div>
   </template>
 </div>

@@ -101,6 +101,30 @@
     object-fit: cover;
   }
 
+  /* Transition Overlay for Smooth Color Swaps */
+  .transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .transition-overlay.active {
+    opacity: 1;
+    pointer-events: auto; /* Block interactions while transitioning */
+  }
+
+  .transition-overlay img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .carousel-btn {
     position: absolute;
     top: 50%;
@@ -1001,7 +1025,12 @@
     <div class="product-gallery">
       <div class="carousel-container">
         <div class="carousel-main">
-          <div class="carousel-track" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
+          <!-- Transition Overlay -->
+          <div class="transition-overlay" :class="{ 'active': isTransitioning }">
+            <img :src="transitionImage" alt="" x-show="transitionImage">
+          </div>
+
+          <div class="carousel-track" :style="{ transform: `translateX(-${currentSlide * 100}%)`, transition: isTransitioning ? 'none' : 'transform 0.4s ease-out' }">
             {% for image in product.images %}
               <div class="carousel-slide">
                 <img
@@ -1453,6 +1482,8 @@
       // Carousel
       currentSlide: 0,
       totalSlides: {{ product.images.size | default: 1 }},
+      transitionImage: '',
+      isTransitioning: false,
       touchStartX: 0,
       touchEndX: 0,
 
@@ -1526,14 +1557,48 @@
 
       // Variant Methods
       selectColor(color) {
-        this.selectedColor = color;
-        this.updateVariant();
-        // Update images based on color if available
-        {% for variant in product.variants %}
-          if ('{{ variant.option1 }}' === color && '{{ variant.featured_image }}' !== '') {
-            this.selectedImage = '{{ variant.featured_image | image_url: width: 800 }}';
+        // If already on this color, do nothing
+        if (this.selectedColor === color) return;
+
+        // 1. Capture current visible image as transition overlay
+        const currentImages = document.querySelectorAll('.carousel-slide img');
+        if (currentImages && currentImages[this.currentSlide]) {
+          this.transitionImage = currentImages[this.currentSlide].src;
+          this.isTransitioning = true;
+        }
+
+        // 2. Perform state updates in next frame
+        requestAnimationFrame(() => {
+          this.selectedColor = color;
+          this.updateVariant();
+          
+          // Find the variant image index
+          let newIndex = -1;
+          {% for variant in product.variants %}
+            if ('{{ variant.option1 }}' === color && '{{ variant.featured_image }}' !== '') {
+               // Logic to find index of this image in the main array
+               // Since we don't have direct index access here easily without complex liquid
+               // We'll rely on client-side search if needed, or simple direct src match
+               const newSrc = '{{ variant.featured_image | image_url: width: 800 }}';
+               // Simple search in existing slides
+               const slides = Array.from(document.querySelectorAll('.carousel-slide img'));
+               newIndex = slides.findIndex(img => img.src.includes('{{ variant.featured_image.id }}') || img.src === newSrc);
+            }
+          {% endfor %}
+
+          if (newIndex !== -1) {
+            this.goToSlide(newIndex);
           }
-        {% endfor %}
+
+          // 3. Fade out overlay
+          setTimeout(() => {
+            this.isTransitioning = false;
+            // Clear transition image after transition completes to save memory
+            setTimeout(() => {
+              if (!this.isTransitioning) this.transitionImage = '';
+            }, 500);
+          }, 50);
+        });
       },
 
       selectSize(size) {

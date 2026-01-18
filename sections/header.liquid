@@ -37,10 +37,10 @@
       {% for link in linklists.main-menu.links %}
         {% assign link_title_lower = link.title | downcase %}
         {% unless link_title_lower contains 'about' %}
-          <a href="{{ link.url }}" class="text-base hover:text-primary uppercase font-bold" style="color: #000; text-decoration: none;">{{ link.title }}</a>
+          <a href="{{ link.url }}" class="text-base hover:text-primary uppercase font-bold" style="font-family: var(--font-heading); color: #000; text-decoration: none;">{{ link.title }}</a>
         {% endunless %}
       {% endfor %}
-      <a href="/pages/about-us" class="text-base hover:text-primary uppercase font-bold" style="color: #000; text-decoration: none;">About Us</a>
+      <a href="/pages/about-us" class="text-base hover:text-primary uppercase font-bold" style="font-family: var(--font-heading); color: #000; text-decoration: none;">About Us</a>
     </nav>
 
     <!-- Icons -->
@@ -81,7 +81,7 @@
          x-transition:leave-end="-translate-x-full">
          
          <div class="flex justify-between items-center mb-8">
-            <span class="font-bold text-xl uppercase">Menu</span>
+            <span class="font-bold text-xl uppercase" style="font-family: var(--font-heading);">Menu</span>
             <button @click="mobileMenuOpen = false">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
@@ -91,10 +91,10 @@
             {% for link in linklists.main-menu.links %}
               {% assign link_title_lower = link.title | downcase %}
               {% unless link_title_lower contains 'about' %}
-                <a href="{{ link.url }}" class="text-lg font-bold uppercase border-b border-gray-100 pb-2">{{ link.title }}</a>
+                <a href="{{ link.url }}" class="text-lg font-bold uppercase" style="font-family: var(--font-heading); background-color: #f8f8f8; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #000; display: block;">{{ link.title }}</a>
               {% endunless %}
             {% endfor %}
-            <a href="/pages/about-us" class="text-lg font-bold uppercase border-b border-gray-100 pb-2">About Us</a>
+            <a href="/pages/about-us" class="text-lg font-bold uppercase" style="font-family: var(--font-heading); background-color: #f8f8f8; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #000; display: block;">About Us</a>
          </nav>
     </div>
   </div>

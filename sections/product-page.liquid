@@ -1128,45 +1128,68 @@
         </div>
       </div>
 
-      <!-- Color Selection -->
-      {% assign color_option = product.options_with_values | where: "name", "Color" | first %}
-      {% if color_option %}
-        <div class="variant-section">
-          <div class="variant-label">Colour: <span x-text="selectedColor">{{ color_option.values[0] }}</span></div>
-          <div class="color-swatches">
-            {% for color in color_option.values %}
-              {% assign color_lower = color | downcase %}
-              {% case color_lower %}
-                {% when 'black' %}
-                  {% assign swatch_color = '#000000' %}
-                {% when 'white' %}
-                  {% assign swatch_color = '#ffffff' %}
-                {% when 'beige' %}
-                  {% assign swatch_color = '#f5f5dc' %}
-                {% when 'red' %}
-                  {% assign swatch_color = '#dc2626' %}
-                {% when 'blue' %}
-                  {% assign swatch_color = '#2563eb' %}
-                {% when 'navy' %}
-                  {% assign swatch_color = '#000c5b' %}
-                {% when 'grey' or 'gray' %}
-                  {% assign swatch_color = '#6b7280' %}
-                {% else %}
-                  {% assign swatch_color = color_lower %}
-              {% endcase %}
-              <div
-                class="color-swatch"
-                :class="{ 'active': selectedColor === '{{ color }}' }"
-                style="background-color: {{ swatch_color }}; {% if color_lower == 'white' %}border: 1px solid #ddd;{% endif %}"
-                data-color-name="{{ color }}"
-                @click="selectColor('{{ color }}')"
-              ></div>
-            {% endfor %}
+      <!-- Dynamic Variant Options -->
+      {% for option in product.options_with_values %}
+        {% assign option_name_lower = option.name | downcase %}
+        
+        <!-- Color Option (Swatches) -->
+        {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+          <div class="variant-section">
+            <div class="variant-label">{{ option.name }}: <span x-text="selectedColor">{{ option.selected_value }}</span></div>
+            <div class="color-swatches">
+              {% for value in option.values %}
+                {% assign value_lower = value | downcase %}
+                {% assign swatch_color = value_lower %}
+                {% case value_lower %}
+                  {% when 'black' %}{% assign swatch_color = '#000000' %}
+                  {% when 'white' %}{% assign swatch_color = '#ffffff' %}
+                  {% when 'beige' %}{% assign swatch_color = '#f5f5dc' %}
+                  {% when 'red' %}{% assign swatch_color = '#dc2626' %}
+                  {% when 'blue' %}{% assign swatch_color = '#2563eb' %}
+                  {% when 'navy' %}{% assign swatch_color = '#000c5b' %}
+                  {% when 'grey' or 'gray' %}{% assign swatch_color = '#6b7280' %}
+                {% endcase %}
+                
+                <div
+                  class="color-swatch"
+                  :class="{ 'active': selectedColor === '{{ value }}' }"
+                  style="background-color: {{ swatch_color }}; {% if value_lower == 'white' %}border: 1px solid #ddd;{% endif %}"
+                  data-color-name="{{ value }}"
+                  @click="selectColor('{{ value }}')"
+                ></div>
+              {% endfor %}
+            </div>
           </div>
-        </div>
-      {% endif %}
 
-      <!-- Pincode Checker -->
+        <!-- Size Option (Buttons) -->
+        {% elsif option_name_lower contains 'size' %}
+          <div class="variant-section">
+            <div class="variant-label">{{ option.name }}: <span x-text="selectedSize">{{ option.selected_value }}</span></div>
+            <div class="size-options">
+              {% for value in option.values %}
+                <button
+                  class="size-btn"
+                  :class="{ 'active': selectedSize === '{{ value }}' }"
+                  @click="selectSize('{{ value }}')"
+                >{{ value }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        
+        <!-- Other Options (Generic Buttons) -->
+        {% else %}
+          <div class="variant-section">
+             <div class="variant-label">{{ option.name }}</div>
+             <div class="size-options"> <!-- Using size style for others -->
+              {% for value in option.values %}
+                <button class="size-btn" style="min-width: unset; padding: 10px 15px;">{{ value }}</button>
+              {% endfor %}
+             </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+      
+      <!-- Pincode Checker (Moved after variants) -->
       <div class="pincode-section">
         <div class="pincode-title">Pincode Checker</div>
         <p class="pincode-description">
@@ -1187,23 +1210,6 @@
           <span x-text="pincodeMessage"></span>
         </div>
       </div>
-
-      <!-- Size Selection -->
-      {% assign size_option = product.options_with_values | where: "name", "Size" | first %}
-      {% if size_option %}
-        <div class="variant-section">
-          <div class="variant-label">Size: <span x-text="selectedSize">{{ size_option.values[0] }}</span></div>
-          <div class="size-options">
-            {% for size in size_option.values %}
-              <button
-                class="size-btn"
-                :class="{ 'active': selectedSize === '{{ size }}' }"
-                @click="selectSize('{{ size }}')"
-              >{{ size }}</button>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
 
       <!-- Size Chart -->
       <div class="size-chart-section">
@@ -1520,8 +1526,20 @@
       },
 
       // Variants
-      selectedColor: '{% assign color_opt = product.options_with_values | where: "name", "Color" | first %}{{ color_opt.values[0] | default: '' }}',
-      selectedSize: '{% assign size_opt = product.options_with_values | where: "name", "Size" | first %}{{ size_opt.values[0] | default: '' }}',
+      // Variants - Dynamic Initialization
+      {% assign color_opt = null %}
+      {% assign size_opt = null %}
+      {% for option in product.options_with_values %}
+        {% assign opt_name = option.name | downcase %}
+        {% if opt_name contains 'color' or opt_name contains 'colour' %}
+          {% assign color_opt = option %}
+        {% elsif opt_name contains 'size' %}
+          {% assign size_opt = option %}
+        {% endif %}
+      {% endfor %}
+      
+      selectedColor: '{{ color_opt.selected_value | default: color_opt.values[0] | default: '' }}',
+      selectedSize: '{{ size_opt.selected_value | default: size_opt.values[0] | default: '' }}',
       selectedVariantId: {{ product.selected_or_first_available_variant.id }},
 
       // Variants JSON

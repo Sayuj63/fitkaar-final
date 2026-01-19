@@ -13,38 +13,38 @@
   line-height: 1.6;
   position: relative;
   z-index: 1;
-  background-color: #fdfcfa;
+  background-color: transparent; /* Changed from #fdfcfa to allow fixed bg to show */
+  min-height: 100vh;
+}
+
+/* Fixed Background Implementation */
+.about-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
   
   /* Mobile Background */
   background-image: url('https://cdn.shopify.com/s/files/1/0716/3373/1756/files/about_us_bg_phone.png?v=1768809046');
   background-size: cover;
-  background-position: top center;
+  background-position: center;
   background-repeat: no-repeat;
+  will-change: transform; /* Performance optimization */
 }
 
 @media (min-width: 768px) {
-  .about-page {
+  .about-page::before {
     /* Desktop Background */
     background-image: url('https://cdn.shopify.com/s/files/1/0716/3373/1756/files/about_us_bg_laptop.png?v=1768809046');
-    background-attachment: fixed;
-    background-position: center center;
   }
 }
 
-/* Override ALL parent overflow for sticky to work */
-body.about-page-active,
-body.about-page-active #MainContent,
-body.about-page-active .content-for-layout,
-body.about-page-active main {
-  overflow: visible !important;
-  overflow-x: clip !important;
-}
-
-/* Remove old decorative elements */
-.about-page::before,
-.about-page::after {
-  content: none;
-  display: none;
+/* Ensure remove old direct background usage */
+.about-page {
+  background-image: none !important;
 }
 
 /* Header */

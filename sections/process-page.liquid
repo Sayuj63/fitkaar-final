@@ -1,0 +1,338 @@
+{% comment %}
+  Process Page Section - Fitkaar
+  Detailed Custom Order Form with Fabric/Stitch Aesthetics matching Contact Page
+{% endcomment %}
+
+<style>
+/* Reusing Contact Page Typography & Base Styles */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap');
+
+.process-page {
+  font-family: 'Outfit', sans-serif;
+  background-color: #faf9f7;
+  color: #333;
+  line-height: 1.6;
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  /* Linen texture similar to Contact page */
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h1v1H0V0zm2 0h1v1H2V0zm2 0h1v1H4V0zm2 0h1v1H6V0zm2 0h1v1H8V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0z' fill='%23e8e4de' fill-opacity='0.4'/%3E%3C/svg%3E");
+}
+
+/* Header */
+.process-header {
+  text-align: center;
+  padding: 5rem 1rem 3rem;
+}
+
+.process-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #000c5b;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.process-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Form Container */
+.process-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 4px;
+  position: relative;
+  /* Stitched border effect */
+  border: 2px dashed #000c5b;
+  outline: 2px solid #fff;
+  outline-offset: -6px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+/* Corner fabric fold */
+.process-form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 60px 60px 0;
+  border-color: transparent #f0ebe3 transparent transparent;
+  z-index: 2;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000c5b;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.form-label span.required {
+  color: #e53935;
+  margin-left: 2px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 12px 15px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  background: #fdfcfa;
+  color: #333;
+  border-radius: 0;
+  transition: all 0.3s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #000c5b;
+  box-shadow: 0 0 0 3px rgba(0, 12, 91, 0.05);
+  background: #fff;
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* File Input Styling */
+.form-file-input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: #f4f4f4;
+  border: 1px dashed #ccc;
+  cursor: pointer;
+}
+
+.section-divider {
+  margin: 2rem 0 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  color: #000c5b;
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: #000c5b;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 2rem;
+}
+
+.submit-btn:hover {
+  background: #71b6c8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .process-form-container {
+    padding: 25px;
+    margin: 0 15px;
+  }
+  .process-title {
+    font-size: 2.5rem;
+  }
+}
+</style>
+
+<div class="process-page">
+  <div class="process-header">
+    <h1 class="process-title">{{ section.settings.title | default: "Custom Order Process" }}</h1>
+    <p class="process-subtitle">{{ section.settings.subtitle | default: "Tell us what you have in mind, and we'll craft it for you." }}</p>
+  </div>
+
+  <div class="process-form-container">
+    {% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <div style="background: #e8f5e9; color: #2e7d32; padding: 15px; margin-bottom: 20px; text-align: center; border: 1px solid #c8e6c9;">
+          <strong>Thanks!</strong> Your custom order request has been sent. We'll be in touch shortly.
+        </div>
+      {% elsif form.errors %}
+        <div style="background: #ffebee; color: #c62828; padding: 15px; margin-bottom: 20px; border: 1px solid #ffcdd2;">
+          <strong>Error:</strong> Please check the form and try again.
+        </div>
+      {% endif %}
+
+      <!-- Hidden Identifiers -->
+      <input type="hidden" name="contact[form_type]" value="custom_order_process">
+
+      <!-- Personal Info -->
+      <h3 class="section-divider">Contact Details</h3>
+      
+      <div class="form-group">
+        <label class="form-label" for="ContactFormName">Name <span class="required">*</span></label>
+        <input type="text" id="ContactFormName" name="contact[name]" class="form-input" placeholder="Your Name" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormEmail">Email <span class="required">*</span></label>
+        <input type="email" id="ContactFormEmail" name="contact[email]" class="form-input" placeholder="your@email.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormPhone">Phone (WhatsApp) <span class="required">*</span></label>
+        <input type="tel" id="ContactFormPhone" name="contact[phone]" class="form-input" placeholder="Just numbers please" pattern="[0-9]*" required title="Please enter only numbers">
+      </div>
+
+      <!-- Order Specifics -->
+      <h3 class="section-divider">Order Details</h3>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormPurpose">Purpose <span class="required">*</span></label>
+        <select id="ContactFormPurpose" name="contact[purpose]" class="form-select" required>
+          <option value="" disabled selected>Select Purpose</option>
+          <option value="Gifting">Gifting</option>
+          <option value="Yourself">Yourself</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormApparel">Choice of Apparel <span class="required">*</span></label>
+        <select id="ContactFormApparel" name="contact[apparel]" class="form-select" required>
+          <option value="" disabled selected>Select Apparel Type</option>
+          <option value="Cropped Tee">Cropped Tee (Only front printing)</option>
+          <option value="Regular Tee">Regular Tee</option>
+          <option value="Oversized Tee">Oversized Tee</option>
+          <option value="Boxy Vest">Boxy Vest</option>
+          <option value="Sweatshirt">Sweatshirt</option>
+          <option value="Hoodie">Hoodie</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormQuantity">Quantity <span class="required">*</span></label>
+        <input type="number" id="ContactFormQuantity" name="contact[quantity]" class="form-input" placeholder="1" min="1" required>
+        <small style="display:block; color:#777; margin-top:5px; font-size:0.8rem;">For same design only. Fill separate forms for different designs.</small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormSize">Size <span class="required">*</span></label>
+        <select id="ContactFormSize" name="contact[size]" class="form-select" required>
+          <option value="" disabled selected>Pick a Size</option>
+          <option value="XS">XS</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+        </select>
+        {% if section.settings.size_chart_image %}
+          <div style="margin-top: 10px;">
+            <img src="{{ section.settings.size_chart_image | image_url: width: 600 }}" alt="Size Chart" style="max-width: 100%; border: 1px solid #ddd;">
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Personalization Questions -->
+      <h3 class="section-divider">Personalization</h3>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormHobbies">Hobbies / Interests</label>
+        <textarea id="ContactFormHobbies" name="contact[hobbies]" class="form-textarea" placeholder="What are the recipient’s favorites?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormFood">Favorite Food / Cuisine</label>
+        <textarea id="ContactFormFood" name="contact[food]" class="form-textarea" placeholder="E.g., Pizza, Ramen, Indian..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormMovies">Movies / TV Shows</label>
+        <textarea id="ContactFormMovies" name="contact[movies]" class="form-textarea" placeholder="Any specific references?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormQuotes">Quotes / Words</label>
+        <textarea id="ContactFormQuotes" name="contact[quotes]" class="form-textarea" placeholder="Phrases to include in the design"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormMusic">Songs / Artists</label>
+        <textarea id="ContactFormMusic" name="contact[music]" class="form-textarea" placeholder="Specific lyrics or artists..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormElements">Other Elements</label>
+        <textarea id="ContactFormElements" name="contact[other_elements]" class="form-textarea" placeholder="Anything else to include?"></textarea>
+      </div>
+
+      <!-- File Uploads (Note: Standard Shopify contact form doesn't support attachments natively without app, but adding inputs as requested) -->
+      <h3 class="section-divider">Uploads</h3>
+      
+      <div class="form-group">
+        <label class="form-label">Photos to Include</label>
+        <input type="file" name="contact[photos]" class="form-file-input" multiple accept="image/*">
+        <small style="display:block; color:#777; margin-top:5px;">We recommend sending high-quality images via email if this upload fails.</small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Design References</label>
+        <input type="file" name="contact[references]" class="form-file-input" multiple accept="image/*">
+      </div>
+
+      <button type="submit" class="submit-btn">Submit Request</button>
+
+    {% endform %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Process Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page Title",
+      "default": "Custom Order Process"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Fill out the details below so we can create something unique for you."
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_image",
+      "label": "Size Chart Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Process Page"
+    }
+  ]
+}
+{% endschema %}

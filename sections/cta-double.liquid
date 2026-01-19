@@ -31,8 +31,8 @@
 }
 {% endschema %}
 
-<div class="container py-6 md:py-10">
-  <div class="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4">
+<div class="container py-10">
+  <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
     <!-- Customize Card -->
     <a href="{{ section.settings.link_1 | default: '#' }}" class="cta-card">
         <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/customise.png?v=1766322790" alt="Customise" class="cta-bg-img">
@@ -56,10 +56,10 @@
 <style>
 .cta-card {
   position: relative;
-  height: 200px; /* Smaller height on mobile */
+  height: 250px; /* restored slightly larger mobile height for better proportion */
   display: block;
   overflow: hidden;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
 }
 
 .cta-title {

@@ -9,27 +9,26 @@
 
 .about-page {
   font-family: 'Outfit', sans-serif;
-  background-color: #fdfcfa;
   color: #333;
   line-height: 1.6;
   position: relative;
   z-index: 1;
-  /* Quirky hand-drawn style grid with scattered elements */
-  background-image:
-    /* Tiny plus signs scattered */
-    radial-gradient(circle at center, #71b6c8 0.8px, transparent 0.8px),
-    /* Small dots pattern */
-    radial-gradient(circle at center, #e0d5c8 1px, transparent 1px),
-    /* Very subtle large circles */
-    radial-gradient(circle at center, rgba(191, 219, 227, 0.15) 2px, transparent 2px);
-  background-size:
-    97px 97px,
-    31px 31px,
-    157px 157px;
-  background-position:
-    13px 17px,
-    0 0,
-    47px 73px;
+  background-color: #fdfcfa;
+  
+  /* Mobile Background */
+  background-image: url('https://cdn.shopify.com/s/files/1/0716/3373/1756/files/about_us_bg_phone.png?v=1768809046');
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+  .about-page {
+    /* Desktop Background */
+    background-image: url('https://cdn.shopify.com/s/files/1/0716/3373/1756/files/about_us_bg_laptop.png?v=1768809046');
+    background-attachment: fixed;
+    background-position: center center;
+  }
 }
 
 /* Override ALL parent overflow for sticky to work */
@@ -41,48 +40,11 @@ body.about-page-active main {
   overflow-x: clip !important;
 }
 
-/* Floating color blobs for warmth */
-.about-page::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image:
-    radial-gradient(ellipse 600px 400px at 10% 20%, rgba(255, 220, 210, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 500px 500px at 90% 60%, rgba(191, 219, 227, 0.1) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 300px at 50% 90%, rgba(255, 235, 180, 0.1) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Decorative doodle elements */
+/* Remove old decorative elements */
+.about-page::before,
 .about-page::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image:
-    /* Small x marks */
-    url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 6l8 8M14 6l-8 8' stroke='%2371b6c8' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E"),
-    /* Tiny circles */
-    url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='15' cy='15' r='2' fill='none' stroke='%23bfdbe3' stroke-width='0.5' opacity='0.25'/%3E%3C/svg%3E"),
-    /* Small stars */
-    url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 22v6M22 25h6' stroke='%23000c5b' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
-  background-size:
-    120px 120px,
-    80px 80px,
-    200px 200px;
-  background-position:
-    23px 41px,
-    7px 13px,
-    67px 31px;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.7;
+  content: none;
+  display: none;
 }
 
 /* Header */

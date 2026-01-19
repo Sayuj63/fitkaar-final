@@ -44,14 +44,15 @@
 }
 </style>
 
-<div class="announcement-bar announcement-bar-gradient">
+<div class="announcement-bar announcement-bar-gradient" style="position: relative; z-index: 50;">
   <div class="container text-center py-2 flex justify-center items-center h-full">
     <div class="typewriter-container">
        <p class="text-sm font-medium typewriter-text" style="margin: 0; display: inline-block;">
         {% assign text = section.settings.text %}
         {% assign highlight = section.settings.highlight_text %}
         {% if text contains highlight %}
-          {{ text | replace: highlight, ' <span class="highlight">' | append: highlight | append: '</span>' | replace: '<span class="highlight">', '<span class="highlight" style="font-weight: 800; text-decoration: underline;">' }}
+          {% assign highlight_span = '<span class="highlight" style="font-weight: 800; text-decoration: underline;">' | append: highlight | append: '</span>' %}
+          {{ text | replace: highlight, highlight_span }}
         {% else %}
           {{ text }}
         {% endif %}

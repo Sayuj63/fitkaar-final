@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "slideshow": {
@@ -18,7 +27,7 @@
     "interactive_builder": {
       "type": "interactive-builder",
       "settings": {
-        "title": "All yours fave in one!",
+        "title": "All your favs in one!",
         "male_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/male_model.png?v=1766327145",
         "female_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/female_model.png?v=1766327146",
         "sticker_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/football_sticker.png?v=1766327144",

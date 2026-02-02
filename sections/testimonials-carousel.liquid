@@ -87,6 +87,8 @@
   background: {{ section.settings.bg_color }};
   padding: 60px 0;
   overflow: hidden;
+  position: relative;
+  z-index: 10;
 }
 
 .testimonials-carousel-title {
@@ -105,7 +107,7 @@
   overflow: hidden;
 }
 
-/* Fade edges */
+/* Fade edges removed 
 .testimonials-track-wrapper::before,
 .testimonials-track-wrapper::after {
   content: '';
@@ -126,6 +128,7 @@
   right: 0;
   background: linear-gradient(to left, {{ section.settings.bg_color }}, transparent);
 }
+*/
 
 .testimonials-track {
   display: flex;

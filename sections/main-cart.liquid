@@ -297,6 +297,85 @@
     transition: background 0.3s;
   }
   .continue-shopping-btn:hover { background: #333; }
+
+  /* Size Chart */
+  .size-chart-section {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  .size-chart-toggle {
+    width: 100%;
+    padding: 16px 20px;
+    background: #fff;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .size-chart-toggle svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .size-chart-toggle.open svg {
+    transform: rotate(180deg);
+  }
+
+  .size-chart-content {
+    display: none;
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .size-chart-content.open {
+    display: block;
+  }
+
+  .size-chart-notes {
+    font-size: 0.8rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .size-chart-notes li {
+    margin-bottom: 8px;
+    padding-left: 8px;
+  }
+
+  .size-chart-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .size-chart-table th,
+  .size-chart-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+
+  .size-chart-table th {
+    background: var(--color-primary);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .size-chart-table tr:nth-child(even) {
+    background: #f0f0f0;
+  }
 </style>
 
 <div class="cart-container" x-data="cartPage()">
@@ -396,6 +475,67 @@
                <span x-show="loading" class="loading-spinner"></span>
              </button>
            </form>
+
+           <!-- Size Chart -->
+           <div class="size-chart-section">
+             <button class="size-chart-toggle" :class="{ 'open': sizeChartOpen }" @click="sizeChartOpen = !sizeChartOpen">
+               <span>Size Chart</span>
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                 <polyline points="6 9 12 15 18 9"></polyline>
+               </svg>
+             </button>
+             <div class="size-chart-content" :class="{ 'open': sizeChartOpen }">
+               <ul class="size-chart-notes">
+                 <li>All measurements are in inches</li>
+                 <li>Measurements shown are of the apparel itself and not body or chest size</li>
+                 <li><strong>How to measure:</strong> Lay the garment flat on a surface. Measure from shoulder to shoulder for width, from underarm to underarm for chest width, and from the highest point of the shoulder to the hem for length. Compare these measurements with a similar T-shirt you already own for best fit.</li>
+                 <li>Model is wearing size M</li>
+                 <li><strong>If you are confused about your size, we recommend choosing a bigger size</strong></li>
+               </ul>
+               <table class="size-chart-table">
+                 <thead>
+                   <tr>
+                     <th>Size</th>
+                     <th>Chest (in)</th>
+                     <th>Length (in)</th>
+                     <th>Shoulder (in)</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr>
+                     <td>S</td>
+                     <td>38</td>
+                     <td>26</td>
+                     <td>17</td>
+                   </tr>
+                   <tr>
+                     <td>M</td>
+                     <td>40</td>
+                     <td>27</td>
+                     <td>18</td>
+                   </tr>
+                   <tr>
+                     <td>L</td>
+                     <td>42</td>
+                     <td>28</td>
+                     <td>19</td>
+                   </tr>
+                   <tr>
+                     <td>XL</td>
+                     <td>44</td>
+                     <td>29</td>
+                     <td>20</td>
+                   </tr>
+                   <tr>
+                     <td>XXL</td>
+                     <td>46</td>
+                     <td>30</td>
+                     <td>21</td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
         </div>
       </div>
     
@@ -423,6 +563,7 @@
       totalPrice: 0,
       loading: false,
       initialLoading: true,
+      sizeChartOpen: false,
 
       init() {
         // Fetch cart data on load to ensure fresh state

@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "slideshow": {
@@ -18,7 +27,7 @@
     "interactive_builder": {
       "type": "interactive-builder",
       "settings": {
-        "title": "All yours fave in one!",
+        "title": "All your favs in one!",
         "male_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/male_model.png?v=1766327145",
         "female_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/female_model.png?v=1766327146",
         "sticker_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/football_sticker.png?v=1766327144",
@@ -41,19 +50,19 @@
     "testimonials_carousel": {
       "type": "testimonials-carousel",
       "settings": {
-        "title": "Here it from our customer's",
+        "title": "Here it from our customers",
         "bg_color": "#f8f8f8",
         "speed": 50,
-        "image_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-1.png?v=1766335038",
-        "image_2": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-2.png?v=1766335038",
-        "image_3": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-3.png?v=1766335038",
-        "image_4": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-4.png?v=1766335038",
-        "image_5": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-5.png?v=1766335038",
-        "image_6": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-6.png?v=1766335038",
-        "image_7": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-7.png?v=1766335038",
-        "image_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-8.png?v=1766335038",
-        "image_9": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-9.png?v=1766335038",
-        "image_10": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-10.png?v=1766335038"
+        "image_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-1.png",
+        "image_2": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-2.png",
+        "image_3": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-3.png",
+        "image_4": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-4.png",
+        "image_5": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-5.png",
+        "image_6": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-6.png",
+        "image_7": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-7.png",
+        "image_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-8.png",
+        "image_9": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-9.png",
+        "image_10": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/testimonial-10.png"
       }
     },
     "reels": {

@@ -4,8 +4,8 @@
       "announcement-bar": {
         "type": "announcement-bar",
         "settings": {
-          "text": "Free shipping on all orders",
-          "highlight_text": "Free shipping",
+          "text": "Free Shipping On All Orders!",
+          "highlight_text": "",
           "bg_color": "#000c5b",
           "text_color": "#ffffff"
         }

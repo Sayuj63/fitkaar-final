@@ -15,7 +15,6 @@
   position: relative;
   min-height: 100vh;
   padding-bottom: 4rem;
-  /* Linen texture similar to Contact page */
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h1v1H0V0zm2 0h1v1H2V0zm2 0h1v1H4V0zm2 0h1v1H6V0zm2 0h1v1H8V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0z' fill='%23e8e4de' fill-opacity='0.4'/%3E%3C/svg%3E");
 }
 
@@ -50,7 +49,6 @@
   padding: 40px;
   border-radius: 4px;
   position: relative;
-  /* Stitched border effect */
   border: 2px dashed #000c5b;
   outline: 2px solid #fff;
   outline-offset: -6px;
@@ -154,6 +152,118 @@
   background: #71b6c8;
 }
 
+/* Product Block Styles */
+.product-block {
+  border: 1px solid #eee;
+  padding: 20px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  background: #fdfcfa;
+}
+
+.product-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.product-block-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  color: #000c5b;
+  font-weight: 600;
+}
+
+.remove-product-btn {
+  background: none;
+  border: 1px solid #e53935;
+  color: #e53935;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s;
+}
+
+.remove-product-btn:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+.add-product-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 2px dashed #000c5b;
+  color: #000c5b;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 1rem;
+}
+
+.add-product-btn:hover {
+  background: rgba(0, 12, 91, 0.05);
+}
+
+.add-product-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Design Fee */
+.design-fee-display {
+  background: #f0f7fa;
+  border: 1px solid #71b6c8;
+  padding: 15px 20px;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.design-fee-label {
+  font-weight: 600;
+  color: #000c5b;
+  font-size: 1rem;
+}
+
+.design-fee-amount {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #000c5b;
+}
+
+.form-hint {
+  display: block;
+  color: #777;
+  margin-top: 5px;
+  font-size: 0.8rem;
+}
+
+/* Size Chart Link */
+.size-chart-toggle {
+  color: #000c5b;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+.size-chart-container {
+  display: none;
+  margin-top: 10px;
+}
+
+.size-chart-container.active {
+  display: block;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .process-form-container {
@@ -162,6 +272,9 @@
   }
   .process-title {
     font-size: 2.5rem;
+  }
+  .product-block {
+    padding: 15px;
   }
 }
 </style>
@@ -186,10 +299,12 @@
 
       <!-- Hidden Identifiers -->
       <input type="hidden" name="contact[form_type]" value="custom_order_process">
+      <input type="hidden" name="contact[product_count]" id="productCountField" value="1">
+      <input type="hidden" name="contact[design_fee]" id="designFeeField" value="">
 
       <!-- Personal Info -->
       <h3 class="section-divider">Contact Details</h3>
-      
+
       <div class="form-group">
         <label class="form-label" for="ContactFormName">Name <span class="required">*</span></label>
         <input type="text" id="ContactFormName" name="contact[name]" class="form-input" placeholder="Your Name" required>
@@ -205,7 +320,7 @@
         <input type="tel" id="ContactFormPhone" name="contact[phone]" class="form-input" placeholder="Just numbers please" pattern="[0-9]*" required title="Please enter only numbers">
       </div>
 
-      <!-- Order Specifics -->
+      <!-- Order Details -->
       <h3 class="section-divider">Order Details</h3>
 
       <div class="form-group">
@@ -217,49 +332,79 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="ContactFormApparel">Choice of Apparel <span class="required">*</span></label>
-        <select id="ContactFormApparel" name="contact[apparel]" class="form-select" required>
-          <option value="" disabled selected>Select Apparel Type</option>
-          <option value="Cropped Tee">Cropped Tee (Only front printing)</option>
-          <option value="Regular Tee">Regular Tee</option>
-          <option value="Oversized Tee">Oversized Tee</option>
-          <option value="Boxy Vest">Boxy Vest</option>
-          <option value="Sweatshirt">Sweatshirt</option>
-          <option value="Hoodie">Hoodie</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="ContactFormQuantity">Quantity <span class="required">*</span></label>
-        <input type="number" id="ContactFormQuantity" name="contact[quantity]" class="form-input" placeholder="1" min="1" required>
-        <small style="display:block; color:#777; margin-top:5px; font-size:0.8rem;">For same design only. Fill separate forms for different designs.</small>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="ContactFormSize">Size <span class="required">*</span></label>
-        <select id="ContactFormSize" name="contact[size]" class="form-select" required>
-          <option value="" disabled selected>Pick a Size</option>
-          <option value="XS">XS</option>
-          <option value="S">S</option>
-          <option value="M">M</option>
-          <option value="L">L</option>
-          <option value="XL">XL</option>
-          <option value="XXL">XXL</option>
-        </select>
-        {% if section.settings.size_chart_image %}
-          <div style="margin-top: 10px;">
-            <img src="{{ section.settings.size_chart_image | image_url: width: 600 }}" alt="Size Chart" style="max-width: 100%; border: 1px solid #ddd;">
+      <!-- Product Blocks Container -->
+      <div id="productBlocksContainer">
+        <!-- Product 1 (always visible, can't be removed) -->
+        <div class="product-block" data-product="1">
+          <div class="product-block-header">
+            <span class="product-block-title">Product 1</span>
           </div>
-        {% endif %}
+
+          <div class="form-group">
+            <label class="form-label">Choice of Apparel <span class="required">*</span></label>
+            <select name="contact[product_1_apparel]" class="form-select apparel-select" data-product="1" required>
+              <option value="" disabled selected>Select Apparel Type</option>
+              <option value="Cropped Tee">Cropped Tee (Only front printing)</option>
+              <option value="Regular Tee">Regular Tee</option>
+              <option value="Oversized Tee">Oversized Tee</option>
+              <option value="Boxy Vest">Boxy Vest</option>
+              <option value="Sweatshirt">Sweatshirt</option>
+              <option value="Hoodie">Hoodie</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Colour <span class="required">*</span></label>
+            <select name="contact[product_1_colour]" class="form-select colour-select" data-product="1" required>
+              <option value="" disabled selected>Select apparel first</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Quantity <span class="required">*</span></label>
+            <input type="number" name="contact[product_1_quantity]" class="form-input" placeholder="1" min="1" required>
+            <small class="form-hint">For same design only.</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Size <span class="required">*</span></label>
+            <select name="contact[product_1_size]" class="form-select" required>
+              <option value="" disabled selected>Pick a Size</option>
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="XXL">XXL</option>
+            </select>
+            {% if section.settings.size_chart_image %}
+              <span class="size-chart-toggle" onclick="this.nextElementSibling.classList.toggle('active')">View Size Chart</span>
+              <div class="size-chart-container">
+                <img src="{{ section.settings.size_chart_image | image_url: width: 600 }}" alt="Size Chart" style="max-width: 100%; border: 1px solid #ddd;">
+              </div>
+            {% endif %}
+          </div>
+        </div>
       </div>
+
+      <!-- Add Another Product Button -->
+      <button type="button" class="add-product-btn" id="addProductBtn" onclick="addProduct()">
+        + Add Another Product (up to 5)
+      </button>
+
+      <!-- Design Fee Display -->
+      <div class="design-fee-display">
+        <span class="design-fee-label">Design Fee</span>
+        <span class="design-fee-amount" id="designFeeDisplay">{{ section.settings.design_fee_amount | default: 499 | money_without_trailing_zeros }}</span>
+      </div>
+      <small class="form-hint" style="margin-top: 4px;">Design fee is per product. Multiple products = fee x number of products.</small>
 
       <!-- Personalization Questions -->
       <h3 class="section-divider">Personalization</h3>
 
       <div class="form-group">
         <label class="form-label" for="ContactFormHobbies">Hobbies / Interests</label>
-        <textarea id="ContactFormHobbies" name="contact[hobbies]" class="form-textarea" placeholder="What are the recipient’s favorites?"></textarea>
+        <textarea id="ContactFormHobbies" name="contact[hobbies]" class="form-textarea" placeholder="What are the recipient's favorites?"></textarea>
       </div>
 
       <div class="form-group">
@@ -268,18 +413,13 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="ContactFormMovies">Movies / TV Shows</label>
-        <textarea id="ContactFormMovies" name="contact[movies]" class="form-textarea" placeholder="Any specific references?"></textarea>
-      </div>
-
-      <div class="form-group">
         <label class="form-label" for="ContactFormQuotes">Quotes / Words</label>
         <textarea id="ContactFormQuotes" name="contact[quotes]" class="form-textarea" placeholder="Phrases to include in the design"></textarea>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="ContactFormMusic">Songs / Artists</label>
-        <textarea id="ContactFormMusic" name="contact[music]" class="form-textarea" placeholder="Specific lyrics or artists..."></textarea>
+        <label class="form-label" for="ContactFormColourPref">Any particular colour to be included in the design?</label>
+        <textarea id="ContactFormColourPref" name="contact[colour_preference]" class="form-textarea" placeholder="E.g., Red and black theme, pastel tones, neon..."></textarea>
       </div>
 
       <div class="form-group">
@@ -287,18 +427,19 @@
         <textarea id="ContactFormElements" name="contact[other_elements]" class="form-textarea" placeholder="Anything else to include?"></textarea>
       </div>
 
-      <!-- File Uploads (Note: Standard Shopify contact form doesn't support attachments natively without app, but adding inputs as requested) -->
+      <!-- File Uploads -->
       <h3 class="section-divider">Uploads</h3>
-      
+
       <div class="form-group">
         <label class="form-label">Photos to Include</label>
         <input type="file" name="contact[photos]" class="form-file-input" multiple accept="image/*">
-        <small style="display:block; color:#777; margin-top:5px;">We recommend sending high-quality images via email if this upload fails.</small>
+        <small class="form-hint">For high-quality images or if upload fails, email them to <strong>fitkaarclothing@gmail.com</strong></small>
       </div>
 
       <div class="form-group">
         <label class="form-label">Design References</label>
         <input type="file" name="contact[references]" class="form-file-input" multiple accept="image/*">
+        <small class="form-hint">You can also send references via email to <strong>fitkaarclothing@gmail.com</strong></small>
       </div>
 
       <button type="submit" class="submit-btn">Submit Request</button>
@@ -306,6 +447,148 @@
     {% endform %}
   </div>
 </div>
+
+<script>
+(function() {
+  const DESIGN_FEE = {{ section.settings.design_fee_amount | default: 499 }};
+  let productCount = 1;
+  const MAX_PRODUCTS = 5;
+
+  // Colour options per apparel type
+  const coloursByApparel = {
+    'Cropped Tee': ['Black', 'White', 'Baby Pink', 'Lavender', 'Sky Blue'],
+    'Regular Tee': ['Black', 'White', 'Navy Blue', 'Maroon', 'Grey', 'Olive Green', 'Baby Pink', 'Lavender'],
+    'Oversized Tee': ['Black', 'White', 'Navy Blue', 'Beige', 'Grey', 'Olive Green', 'Lavender', 'Baby Pink'],
+    'Boxy Vest': ['Black', 'White', 'Grey'],
+    'Sweatshirt': ['Black', 'White', 'Navy Blue', 'Grey', 'Maroon', 'Olive Green', 'Beige'],
+    'Hoodie': ['Black', 'White', 'Navy Blue', 'Grey', 'Maroon', 'Olive Green', 'Beige']
+  };
+
+  // Update colour dropdown when apparel changes
+  document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('apparel-select')) {
+      const productNum = e.target.dataset.product;
+      const colourSelect = document.querySelector('.colour-select[data-product="' + productNum + '"]');
+      const apparel = e.target.value;
+      const colours = coloursByApparel[apparel] || [];
+
+      colourSelect.innerHTML = '<option value="" disabled selected>Select Colour</option>';
+      colours.forEach(function(colour) {
+        const opt = document.createElement('option');
+        opt.value = colour;
+        opt.textContent = colour;
+        colourSelect.appendChild(opt);
+      });
+      // Add "Other" option
+      var otherOpt = document.createElement('option');
+      otherOpt.value = 'Other';
+      otherOpt.textContent = 'Other (specify in personalization)';
+      colourSelect.appendChild(otherOpt);
+    }
+  });
+
+  // Add product function
+  window.addProduct = function() {
+    if (productCount >= MAX_PRODUCTS) return;
+    productCount++;
+
+    var container = document.getElementById('productBlocksContainer');
+    var block = document.createElement('div');
+    block.className = 'product-block';
+    block.dataset.product = productCount;
+    block.innerHTML =
+      '<div class="product-block-header">' +
+        '<span class="product-block-title">Product ' + productCount + '</span>' +
+        '<button type="button" class="remove-product-btn" onclick="removeProduct(this)">Remove</button>' +
+      '</div>' +
+      '<div class="form-group">' +
+        '<label class="form-label">Choice of Apparel <span class="required">*</span></label>' +
+        '<select name="contact[product_' + productCount + '_apparel]" class="form-select apparel-select" data-product="' + productCount + '" required>' +
+          '<option value="" disabled selected>Select Apparel Type</option>' +
+          '<option value="Cropped Tee">Cropped Tee (Only front printing)</option>' +
+          '<option value="Regular Tee">Regular Tee</option>' +
+          '<option value="Oversized Tee">Oversized Tee</option>' +
+          '<option value="Boxy Vest">Boxy Vest</option>' +
+          '<option value="Sweatshirt">Sweatshirt</option>' +
+          '<option value="Hoodie">Hoodie</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="form-group">' +
+        '<label class="form-label">Colour <span class="required">*</span></label>' +
+        '<select name="contact[product_' + productCount + '_colour]" class="form-select colour-select" data-product="' + productCount + '" required>' +
+          '<option value="" disabled selected>Select apparel first</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="form-group">' +
+        '<label class="form-label">Quantity <span class="required">*</span></label>' +
+        '<input type="number" name="contact[product_' + productCount + '_quantity]" class="form-input" placeholder="1" min="1" required>' +
+        '<small class="form-hint">For same design only.</small>' +
+      '</div>' +
+      '<div class="form-group">' +
+        '<label class="form-label">Size <span class="required">*</span></label>' +
+        '<select name="contact[product_' + productCount + '_size]" class="form-select" required>' +
+          '<option value="" disabled selected>Pick a Size</option>' +
+          '<option value="XS">XS</option>' +
+          '<option value="S">S</option>' +
+          '<option value="M">M</option>' +
+          '<option value="L">L</option>' +
+          '<option value="XL">XL</option>' +
+          '<option value="XXL">XXL</option>' +
+        '</select>' +
+      '</div>';
+
+    container.appendChild(block);
+    updateFee();
+    updateAddButton();
+  };
+
+  // Remove product function
+  window.removeProduct = function(btn) {
+    var block = btn.closest('.product-block');
+    block.remove();
+    productCount--;
+
+    // Renumber remaining blocks
+    var blocks = document.querySelectorAll('.product-block');
+    blocks.forEach(function(b, i) {
+      var num = i + 1;
+      b.dataset.product = num;
+      b.querySelector('.product-block-title').textContent = 'Product ' + num;
+
+      // Update name attributes
+      var selects = b.querySelectorAll('select');
+      var inputs = b.querySelectorAll('input');
+      selects.forEach(function(s) {
+        s.name = s.name.replace(/product_\d+/, 'product_' + num);
+        if (s.classList.contains('apparel-select') || s.classList.contains('colour-select')) {
+          s.dataset.product = num;
+        }
+      });
+      inputs.forEach(function(inp) {
+        if (inp.name) inp.name = inp.name.replace(/product_\d+/, 'product_' + num);
+      });
+    });
+
+    updateFee();
+    updateAddButton();
+  };
+
+  function updateFee() {
+    var count = document.querySelectorAll('.product-block').length;
+    document.getElementById('productCountField').value = count;
+    var totalFee = DESIGN_FEE * count;
+    document.getElementById('designFeeDisplay').textContent = '\u20B9' + totalFee.toLocaleString('en-IN');
+    document.getElementById('designFeeField').value = totalFee;
+  }
+
+  function updateAddButton() {
+    var btn = document.getElementById('addProductBtn');
+    var count = document.querySelectorAll('.product-block').length;
+    btn.disabled = count >= MAX_PRODUCTS;
+    btn.textContent = count >= MAX_PRODUCTS ? 'Maximum 5 products reached' : '+ Add Another Product (up to 5)';
+  }
+})();
+</script>
 
 {% schema %}
 {
@@ -327,6 +610,12 @@
       "type": "image_picker",
       "id": "size_chart_image",
       "label": "Size Chart Image"
+    },
+    {
+      "type": "number",
+      "id": "design_fee_amount",
+      "label": "Design Fee per Product (INR)",
+      "default": 499
     }
   ],
   "presets": [

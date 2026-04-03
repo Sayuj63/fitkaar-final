@@ -1,14 +1,7 @@
 {% comment %}
   Footer Section - FitKaar
-  Layout: 2 rows with flexbox
-  Row 1: Logo | Menus (NEED HELP + COMPANY) | Newsletter
-  Row 2: Social Icons | Tagline
-
-  Color Psychology:
-  - Background: Dark Navy (#000c5b) - Trust, professionalism
-  - Headings: Teal (#71b6c8) - Attention, brand accent
-  - Body/Links: Light Blue (#bfdbe3) - Soft, readable
-  - Tagline: Teal (#71b6c8) - Brand emphasis
+  Layout: Logo+tagline | INFO | SHOP/EXPLORE | PROFILE | Newsletter
+  Bottom: Social icons (only) | Tagline
 {% endcomment %}
 
 <style>
@@ -21,41 +14,50 @@
     z-index: 100;
   }
 
-  /* Row 1 - Main Content: 3 columns with space-between */
+  /* Row 1 - Main Content */
   .fk-footer__row-1 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 60px;
+    gap: 40px;
+    margin-bottom: 50px;
   }
 
-  /* Column 1 - Logo */
+  /* Column 1 - Logo + Taglines */
   .fk-footer__logo-col {
     flex: 0 0 auto;
+    max-width: 220px;
   }
 
   .fk-footer__logo img {
     width: 180px;
     height: auto;
+    margin-bottom: 16px;
   }
 
-  /* Column 2 - Menus (grouped together) */
+  .fk-footer__brand-tagline {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-accent, #bfdbe3);
+    margin: 0;
+  }
+
+  /* Menu Columns */
   .fk-footer__menu-col {
     flex: 0 0 auto;
     display: flex;
-    gap: 60px;
+    gap: 50px;
   }
 
   .fk-footer__menu-group {
-    min-width: 150px;
+    min-width: 140px;
   }
 
-  /* Headings - Teal for attention */
   .fk-footer__menu-group h4 {
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.08em;
-    margin: 0 0 20px 0;
+    margin: 0 0 18px 0;
     color: var(--color-secondary, #71b6c8);
     font-family: var(--font-secondary, 'Raleway', sans-serif);
     text-transform: uppercase;
@@ -68,16 +70,15 @@
   }
 
   .fk-footer__menu-group li {
-    margin-bottom: 8px;
+    margin-bottom: 7px;
   }
 
-  /* Links - Light Blue for readability */
   .fk-footer__menu-group a {
     color: var(--color-accent, #bfdbe3);
     text-decoration: none;
-    font-size: 15px;
-    line-height: 1.8;
-    transition: color 0.2s, opacity 0.2s;
+    font-size: 14px;
+    line-height: 1.7;
+    transition: color 0.2s;
     font-family: var(--font-secondary, 'Raleway', sans-serif);
   }
 
@@ -85,34 +86,31 @@
     color: var(--color-white, #ffffff);
   }
 
-  /* Column 3 - Newsletter */
+  /* Newsletter Column */
   .fk-footer__newsletter-col {
     flex: 0 0 auto;
     max-width: 280px;
   }
 
-  /* Newsletter Heading - Teal */
   .fk-footer__newsletter-heading {
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.08em;
-    margin: 0 0 16px 0;
+    margin: 0 0 14px 0;
     color: var(--color-secondary, #71b6c8);
     font-family: var(--font-secondary, 'Raleway', sans-serif);
     text-transform: uppercase;
   }
 
-  /* Newsletter Text - Light Blue */
   .fk-footer__newsletter-text {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.5;
     color: var(--color-accent, #bfdbe3);
-    margin: 0 0 20px 0;
+    margin: 0 0 16px 0;
     max-width: 260px;
     font-family: var(--font-secondary, 'Raleway', sans-serif);
   }
 
-  /* Form - Teal background for prominence */
   .fk-footer__form {
     display: flex;
     align-items: center;
@@ -126,8 +124,8 @@
     flex: 1;
     border: none;
     background: transparent;
-    padding: 14px 20px;
-    font-size: 14px;
+    padding: 12px 18px;
+    font-size: 13px;
     color: var(--color-primary, #000c5b);
     outline: none;
     font-family: var(--font-secondary, 'Raleway', sans-serif);
@@ -141,7 +139,7 @@
   .fk-footer__form button {
     background: transparent;
     border: none;
-    padding: 14px 20px;
+    padding: 12px 18px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -154,17 +152,17 @@
     stroke: var(--color-primary, #000c5b);
   }
 
-  /* Row 2 - Bottom: Both items bottom-aligned */
+  /* Row 2 - Social Icons & Tagline */
   .fk-footer__row-2 {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
   }
 
-  /* Social Icons - Minimalistic with micro-interactions */
+  /* Social Icons */
   .fk-footer__socials {
     display: flex;
-    gap: 20px;
+    gap: 18px;
     align-items: flex-end;
   }
 
@@ -177,19 +175,17 @@
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* Micro-interaction: Scale up smoothly */
   .fk-footer__socials a:hover {
     transform: translateY(-4px);
   }
 
-  /* Micro-interaction: Subtle press effect */
   .fk-footer__socials a:active {
     transform: translateY(-2px) scale(0.95);
   }
 
   .fk-footer__socials svg {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     transition: all 0.3s ease;
   }
 
@@ -203,7 +199,6 @@
     fill: var(--color-secondary, #71b6c8);
   }
 
-  /* Hover: Change to white with glow */
   .fk-footer__socials a:hover svg.icon-stroke {
     stroke: var(--color-white, #ffffff);
     filter: drop-shadow(0 0 6px rgba(113, 182, 200, 0.5));
@@ -214,7 +209,7 @@
     filter: drop-shadow(0 0 6px rgba(113, 182, 200, 0.5));
   }
 
-  /* Tagline - Bottom aligned */
+  /* Tagline */
   .fk-footer__tagline {
     font-size: 48px;
     font-weight: 800;
@@ -241,10 +236,10 @@
     }
     .fk-footer__row-1 {
       flex-wrap: wrap;
-      gap: 40px;
+      gap: 32px;
     }
     .fk-footer__menu-col {
-      gap: 40px;
+      gap: 32px;
     }
     .fk-footer__tagline {
       font-size: 36px;
@@ -257,13 +252,17 @@
     }
     .fk-footer__row-1 {
       flex-direction: column;
-      gap: 32px;
+      gap: 28px;
     }
     .fk-footer__logo img {
       width: 140px;
     }
     .fk-footer__menu-col {
-      gap: 32px;
+      flex-wrap: wrap;
+      gap: 28px;
+    }
+    .fk-footer__menu-group {
+      min-width: 120px;
     }
     .fk-footer__row-2 {
       flex-direction: column;
@@ -274,8 +273,8 @@
       font-size: 24px;
     }
     .fk-footer__socials svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
   }
 </style>
@@ -284,53 +283,77 @@
   <!-- Row 1: Logo, Menus, Newsletter -->
   <div class="fk-footer__row-1">
 
-    <!-- Column 1: Logo -->
+    <!-- Column 1: Logo + Brand Taglines -->
     <div class="fk-footer__logo-col">
       <div class="fk-footer__logo">
         <img src="{{ 'FitKaar.png' | asset_url }}" alt="{{ shop.name }}" loading="lazy">
       </div>
+      <p class="fk-footer__brand-tagline">
+        India's first ever fully customisable clothing brand<br>
+        Serving Pan India
+      </p>
     </div>
 
-    <!-- Column 2: Menus -->
+    <!-- Menu Columns -->
     <div class="fk-footer__menu-col">
-      <!-- NEED HELP -->
+      <!-- INFO -->
       <div class="fk-footer__menu-group">
-        <h4>NEED HELP</h4>
+        <h4>Info</h4>
         <ul>
           {% if linklists[section.settings.m1].links.size > 0 %}
             {% for link in linklists[section.settings.m1].links %}
               <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {% endfor %}
           {% else %}
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">Track Order</a></li>
-            <li><a href="#">Returns & Refunds</a></li>
-            <li><a href="#">FAQs</a></li>
-            <li><a href="#">My Account</a></li>
+            <li><a href="/pages/contact">Contact Us</a></li>
+            <li><a href="/pages/faqs">FAQs</a></li>
+            <li><a href="/policies">Policies</a></li>
+            <li><a href="/policies/terms-of-service">Terms & Conditions</a></li>
+            <li><a href="/pages/about-us">About Us</a></li>
           {% endif %}
         </ul>
       </div>
 
-      <!-- COMPANY -->
+      <!-- SHOP / EXPLORE -->
       <div class="fk-footer__menu-group">
-        <h4>COMPANY</h4>
+        <h4>Shop / Explore</h4>
         <ul>
           {% if linklists[section.settings.m2].links.size > 0 %}
             {% for link in linklists[section.settings.m2].links %}
               <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {% endfor %}
           {% else %}
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Investor Relation</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Gift Vouchers</a></li>
-            <li><a href="#">Community Initiatives</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/collections/all">Shop</a></li>
+            <li><a href="/collections/best-sellers">Best Sellers</a></li>
+            <li><a href="/pages/custom-orders">Custom Orders</a></li>
+            <li><a href="/pages/bulk-orders">Bulk / Corporate Orders</a></li>
+            <li><a href="/collections">Collections</a></li>
+            <li><a href="/collections/gift-cards">Gift Cards</a></li>
+            <li><a href="/collections/sale">Offers / Sales</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="fk-footer__menu-group">
+        <h4>Profile</h4>
+        <ul>
+          {% if linklists[section.settings.m3].links.size > 0 %}
+            {% for link in linklists[section.settings.m3].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="/account">My Account</a></li>
+            <li><a href="/account/login">Login / Register</a></li>
+            <li><a href="/account/orders">Order History</a></li>
+            <li><a href="/pages/wishlist">Wishlist</a></li>
           {% endif %}
         </ul>
       </div>
     </div>
 
-    <!-- Column 3: Newsletter -->
+    <!-- Newsletter -->
     <div class="fk-footer__newsletter-col">
       <h4 class="fk-footer__newsletter-heading">WE'VE GOT YOU COVERED:</h4>
       <p class="fk-footer__newsletter-text">Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops.</p>
@@ -359,7 +382,7 @@
   <!-- Row 2: Social Icons & Tagline -->
   <div class="fk-footer__row-2">
 
-    <!-- Social Icons -->
+    <!-- Social Icons (only icons) -->
     <div class="fk-footer__socials">
       <!-- Instagram -->
       <a href="{{ section.settings.ig | default: '#' }}" target="_blank" rel="noopener" aria-label="Instagram">
@@ -370,10 +393,10 @@
         </svg>
       </a>
 
-      <!-- Facebook -->
-      <a href="{{ section.settings.fb | default: '#' }}" target="_blank" rel="noopener" aria-label="Facebook">
+      <!-- LinkedIn -->
+      <a href="{{ section.settings.li | default: '#' }}" target="_blank" rel="noopener" aria-label="LinkedIn">
         <svg class="icon-fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
         </svg>
       </a>
 
@@ -384,10 +407,20 @@
         </svg>
       </a>
 
-      <!-- LinkedIn -->
-      <a href="{{ section.settings.in | default: '#' }}" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <svg class="icon-fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      <!-- Website -->
+      <a href="{{ section.settings.website | default: '#' }}" target="_blank" rel="noopener" aria-label="Website">
+        <svg class="icon-stroke" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </a>
+
+      <!-- Blog -->
+      <a href="{{ section.settings.blog | default: '/blogs' }}" target="_blank" rel="noopener" aria-label="Blog">
+        <svg class="icon-stroke" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
         </svg>
       </a>
     </div>
@@ -411,13 +444,19 @@
     {
       "type": "link_list",
       "id": "m1",
-      "label": "Need Help Menu",
+      "label": "Info Menu",
       "info": "Leave blank to show default items"
     },
     {
       "type": "link_list",
       "id": "m2",
-      "label": "Company Menu",
+      "label": "Shop / Explore Menu",
+      "info": "Leave blank to show default items"
+    },
+    {
+      "type": "link_list",
+      "id": "m3",
+      "label": "Profile Menu",
       "info": "Leave blank to show default items"
     },
     {
@@ -431,8 +470,8 @@
     },
     {
       "type": "url",
-      "id": "fb",
-      "label": "Facebook URL"
+      "id": "li",
+      "label": "LinkedIn URL"
     },
     {
       "type": "url",
@@ -441,8 +480,13 @@
     },
     {
       "type": "url",
-      "id": "in",
-      "label": "LinkedIn URL"
+      "id": "website",
+      "label": "Website URL"
+    },
+    {
+      "type": "url",
+      "id": "blog",
+      "label": "Blog URL"
     }
   ],
   "presets": [

@@ -1,6 +1,6 @@
 {% comment %}
   About Page Section - Fitkaar Story
-  Scrapbook-style animation with sticky center image
+  Scrapbook-style with sticky parallax center image and compact 3-column layout
 {% endcomment %}
 
 <style>
@@ -13,7 +13,7 @@
   line-height: 1.6;
   position: relative;
   z-index: 1;
-  background-color: transparent; /* Changed from #fdfcfa to allow fixed bg to show */
+  background-color: transparent;
   min-height: 100vh;
 }
 
@@ -26,23 +26,19 @@
   width: 100%;
   height: 100%;
   z-index: -1;
-  
-  /* Mobile Background */
   background-image: url('https://cdn.shopify.com/s/files/1/0716/3373/1756/files/about_us_bg_phone.png?v=1768809046');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  will-change: transform; /* Performance optimization */
+  will-change: transform;
 }
 
 @media (min-width: 768px) {
   .about-page::before {
-    /* Desktop Background */
     background-image: url('https://cdn.shopify.com/s/files/1/0716/3373/1756/files/about_us_bg_laptop.png?v=1768809046');
   }
 }
 
-/* Ensure remove old direct background usage */
 .about-page {
   background-image: none !important;
 }
@@ -103,7 +99,6 @@
   width: 100%;
   height: auto;
   display: block;
-  /* Colorful quirky drop shadow that follows image shape */
   filter:
     drop-shadow(4px 4px 0px #71b6c8)
     drop-shadow(8px 8px 0px rgba(191, 219, 227, 0.7))
@@ -139,31 +134,50 @@
 }
 
 /* ========================================
-   SCRAPBOOK SCROLL SECTION
+   SCRAPBOOK SECTION - 3-Column with Sticky Center
    ======================================== */
 .scrapbook-section {
   position: relative;
-  min-height: 300vh;
   padding: 0;
 }
 
-/* Sticky Center Image Container */
+.scrapbook-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 3%;
+}
+
+/* Left & Right story columns */
+.story-column-left,
+.story-column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 2rem;
+}
+
+/* Sticky center column */
+.story-column-center {
+  position: relative;
+}
+
 .scrapbook-sticky {
   position: sticky;
   top: 100px;
-  height: calc(100vh - 120px);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 2vh;
   z-index: 1;
-  pointer-events: none;
 }
 
 .center-image-wrapper {
   position: relative;
-  width: 35vw;
-  max-width: 450px;
-  min-width: 280px;
+  width: 100%;
+  max-width: 400px;
   transition: transform 0.3s ease;
   transform-origin: center center;
 }
@@ -175,7 +189,7 @@
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
 }
 
-/* Decorative tape on center image - moves with wrapper */
+/* Decorative tape on center image */
 .center-image-wrapper::before,
 .center-image-wrapper::after {
   content: '';
@@ -199,56 +213,37 @@
   transform: rotate(5deg);
 }
 
-/* Story Content - Flows over sticky */
-.story-flow {
-  position: relative;
-  z-index: 2;
-  margin-top: -80vh;
-  padding-bottom: 10vh;
-}
-
-/* Individual Scrapbook Cards */
+/* ========================================
+   SCRAPBOOK CARDS - Compact
+   ======================================== */
 .scrapbook-card {
   position: relative;
-  max-width: 380px;
+  max-width: 100%;
   padding: 0;
-  margin-bottom: 20vh;
   opacity: 0;
   transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(15px);
 }
 
-/* Variable spacing for organic feel */
-.scrapbook-card:nth-child(1) { margin-bottom: 15vh; }
-.scrapbook-card:nth-child(2) { margin-bottom: 25vh; }
-.scrapbook-card:nth-child(3) { margin-bottom: 18vh; }
-.scrapbook-card:nth-child(4) { margin-bottom: 22vh; }
-.scrapbook-card:nth-child(5) { margin-bottom: 20vh; }
-.scrapbook-card:nth-child(6) { margin-bottom: 25vh; }
-.scrapbook-card:nth-child(7) { margin-bottom: 18vh; }
-.scrapbook-card:nth-child(8) { margin-bottom: 15vh; }
-
-/* Alternate left and right positioning */
 .scrapbook-card.card-left {
-  margin-left: 5%;
-  transform: translateX(-30px) rotate(-2deg);
+  transform: translateY(15px) rotate(-1deg);
 }
 
 .scrapbook-card.card-right {
-  margin-left: auto;
-  margin-right: 5%;
-  transform: translateX(30px) rotate(2deg);
+  transform: translateY(15px) rotate(1deg);
 }
 
 .scrapbook-card.visible {
   opacity: 1;
+  transform: translateY(0) rotate(0deg);
 }
 
 .scrapbook-card.visible.card-left {
-  transform: translateX(0) rotate(-1deg);
+  transform: translateY(0) rotate(-1deg);
 }
 
 .scrapbook-card.visible.card-right {
-  transform: translateX(0) rotate(1deg);
+  transform: translateY(0) rotate(1deg);
 }
 
 /* Card Inner - Notebook paper effect */
@@ -262,7 +257,7 @@
     ),
     linear-gradient(to bottom, #fefcf5 0%, #faf8f0 100%);
   border-radius: 4px;
-  padding: 25px 20px 20px;
+  padding: 22px 18px 18px;
   box-shadow:
     0 1px 1px rgba(0,0,0,0.05),
     0 4px 12px rgba(0,0,0,0.08),
@@ -270,7 +265,6 @@
   position: relative;
   pointer-events: auto;
   border-left: 3px solid #f5c6c6;
-  margin-left: 10px;
 }
 
 /* Red margin line for notebook effect */
@@ -303,7 +297,7 @@
   font-size: 1.05rem;
   color: #444;
   line-height: 1.65;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   font-weight: 400;
 }
 
@@ -311,10 +305,10 @@
 .card-images {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .card-images img {
@@ -340,10 +334,6 @@
   transform: rotate(2deg);
 }
 
-.card-images img:nth-child(3) {
-  transform: rotate(1deg) translateY(-5px);
-}
-
 .card-images img:hover {
   transform: rotate(0deg) scale(1.15);
   box-shadow: 0 12px 30px rgba(0,0,0,0.18);
@@ -351,22 +341,19 @@
   position: relative;
 }
 
-/* Larger images for fewer items */
 .card-images.large-images img {
   max-width: 160px;
   max-height: 180px;
 }
 
-/* Single image takes more space */
 .card-images.single-image img {
   max-width: 100%;
   width: 100%;
-  max-height: 250px;
+  max-height: 220px;
   object-fit: cover;
   padding: 0;
 }
 
-/* Auto-detect portrait vs landscape */
 .card-images img[src*=".PNG"],
 .card-images img[src*=".png"] {
   max-width: 100px;
@@ -380,34 +367,17 @@
 }
 
 /* ========================================
-   SCRAPBOOK PHOTO ELEMENTS (Small photos between cards)
+   SCRAPBOOK PHOTO ELEMENTS - Compact inline
    ======================================== */
 .scrapbook-photo {
   position: relative;
-  max-width: 280px;
-  margin-bottom: 12vh;
+  max-width: 100%;
   opacity: 0;
   transition: opacity 0.6s ease, transform 0.6s ease;
   pointer-events: auto;
+  transform: translateY(10px);
 }
 
-/* Positioning variations */
-.scrapbook-photo.photo-center {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.scrapbook-photo.photo-left {
-  margin-left: 8%;
-  margin-right: auto;
-}
-
-.scrapbook-photo.photo-right {
-  margin-left: auto;
-  margin-right: 8%;
-}
-
-/* Visible state */
 .scrapbook-photo.visible {
   opacity: 1;
   transform: translateY(0);
@@ -417,7 +387,7 @@
 .photo-wrapper {
   position: relative;
   background: #fff;
-  padding: 8px;
+  padding: 6px;
   border-radius: 4px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.12);
   transform-origin: center center;
@@ -443,14 +413,13 @@
   top: -10px;
   left: 50%;
   transform: translateX(-50%) rotate(-4deg);
-  width: 70px;
-  height: 20px;
+  width: 60px;
+  height: 18px;
   background: linear-gradient(135deg, rgba(255, 240, 200, 0.9) 0%, rgba(255, 230, 170, 0.85) 100%);
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   z-index: 10;
 }
 
-/* Photo image */
 .photo-wrapper img {
   width: 100%;
   height: auto;
@@ -461,18 +430,44 @@
 /* Optional caption on sticky note */
 .photo-caption {
   position: absolute;
-  bottom: -25px;
-  right: -15px;
+  bottom: -20px;
+  right: -10px;
   background: linear-gradient(135deg, #fef9c3 0%, #fde68a 100%);
-  padding: 8px 12px;
-  font-size: 0.85rem;
+  padding: 6px 10px;
+  font-size: 0.8rem;
   color: #333;
   font-weight: 500;
   transform: rotate(3deg);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   border-radius: 2px;
-  max-width: 150px;
+  max-width: 130px;
   line-height: 1.3;
+}
+
+/* Story group - wraps card + its photos */
+.story-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Photos row - side by side within columns */
+.photos-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.photos-row .scrapbook-photo {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Mobile flow container (created by JS) */
+.story-flow-mobile {
+  display: none;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 /* ========================================
@@ -480,7 +475,7 @@
    ======================================== */
 .final-message {
   text-align: center;
-  padding: 8rem 5%;
+  padding: 4rem 5%;
   background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.8) 100%);
   position: relative;
   z-index: 10;
@@ -531,7 +526,6 @@
     0 30px 60px rgba(0, 0, 0, 0.2);
 }
 
-/* Title Bar */
 .window-titlebar {
   background: linear-gradient(180deg, #e8e8e8 0%, #d8d8d8 100%);
   padding: 10px 12px;
@@ -541,7 +535,6 @@
   border-bottom: 1px solid #c0c0c0;
 }
 
-/* Traffic Light Buttons */
 .traffic-lights {
   display: flex;
   gap: 8px;
@@ -569,7 +562,6 @@
   box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.15);
 }
 
-/* Window Title */
 .window-title {
   flex: 1;
   text-align: center;
@@ -579,7 +571,6 @@
   margin-right: 52px;
 }
 
-/* Window Content */
 .window-content {
   position: relative;
   background: #000;
@@ -593,7 +584,6 @@
   display: block;
 }
 
-/* Play Button */
 .play-button {
   position: absolute;
   top: 50%;
@@ -630,13 +620,13 @@
    RESPONSIVE STYLES
    ======================================== */
 @media screen and (max-width: 1024px) {
-  .center-image-wrapper {
-    width: 30vw;
-    min-width: 200px;
+  .scrapbook-layout {
+    gap: 1rem;
+    padding: 1.5rem 2%;
   }
 
-  .scrapbook-card {
-    max-width: 320px;
+  .center-image-wrapper {
+    max-width: 350px;
   }
 }
 
@@ -673,66 +663,120 @@
     text-align: center;
   }
 
-  /* Mobile: Stack layout instead of side-by-side */
+  /* Mobile: 2-column layout — story flow + sticky image */
+  .scrapbook-layout {
+    grid-template-columns: 1fr 140px;
+    gap: 1rem;
+    padding: 1rem 3%;
+  }
+
+  /* Hide the desktop left/right columns on mobile */
+  .scrapbook-layout.mobile-active .story-column-left,
+  .scrapbook-layout.mobile-active .story-column-right {
+    display: none;
+  }
+
+  /* Show the mobile flow container */
+  .scrapbook-layout.mobile-active .story-flow-mobile {
+    display: flex;
+  }
+
+  /* Center column stays in place */
+  .story-column-center {
+    order: 2;
+  }
+
   .scrapbook-sticky {
-    position: relative;
-    top: 0;
-    height: auto;
-    padding: 3rem 0;
+    top: 80px;
   }
 
   .center-image-wrapper {
-    width: 70%;
-    max-width: 300px;
+    max-width: 140px;
+    min-width: auto;
   }
 
-  .story-flow {
-    margin-top: 0;
-    padding: 2rem 5%;
+  .center-image {
+    border-radius: 8px;
   }
 
-  .scrapbook-card {
-    max-width: 100%;
-    margin-bottom: 3rem;
+  .center-image-wrapper::before,
+  .center-image-wrapper::after {
+    width: 40px;
+    height: 16px;
+  }
+
+  .story-column-left,
+  .story-column-right {
+    padding-top: 0;
   }
 
   .scrapbook-card.card-left,
   .scrapbook-card.card-right {
-    margin-left: 0;
-    margin-right: 0;
-    transform: none;
+    transform: translateY(15px);
   }
 
   .scrapbook-card.visible.card-left,
   .scrapbook-card.visible.card-right {
-    transform: none;
-  }
-
-  .card-images img {
-    max-width: 90px;
-    max-height: 110px;
-  }
-
-  .card-images.large-images img {
-    max-width: 120px;
-    max-height: 140px;
+    transform: translateY(0);
   }
 
   .card-inner {
-    margin-left: 0;
+    padding: 16px 14px 14px;
     border-left-width: 2px;
   }
 
   .card-inner::after {
-    left: 20px;
+    left: 18px;
+  }
+
+  .card-inner::before {
+    width: 60px;
+    height: 18px;
+  }
+
+  .card-text {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+
+  .card-images img {
+    max-width: 80px;
+    max-height: 100px;
+  }
+
+  .card-images.large-images img {
+    max-width: 110px;
+    max-height: 130px;
+  }
+
+  .card-images.single-image img {
+    max-height: 180px;
+  }
+
+  .photo-wrapper {
+    padding: 4px;
+  }
+
+  .photo-wrapper::before {
+    width: 45px;
+    height: 14px;
+  }
+
+  .story-group {
+    gap: 0.8rem;
   }
 
   .final-message {
-    padding: 4rem 5%;
+    padding: 3rem 5%;
   }
 
   .final-message p {
     font-size: 1.2rem;
+  }
+
+  .photos-row {
+    gap: 6px;
   }
 }
 
@@ -749,8 +793,44 @@
     font-size: 1.3rem;
   }
 
+  .scrapbook-layout {
+    grid-template-columns: 1fr 110px;
+    gap: 0.7rem;
+    padding: 0.8rem 2%;
+  }
+
+  .center-image-wrapper {
+    max-width: 110px;
+  }
+
+  .scrapbook-sticky {
+    top: 70px;
+  }
+
+  .card-inner {
+    padding: 14px 12px 12px;
+  }
+
   .card-text {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
+  }
+
+  .card-images img {
+    max-width: 65px;
+    max-height: 85px;
+  }
+
+  .card-images.large-images img {
+    max-width: 90px;
+    max-height: 110px;
+  }
+
+  .story-group {
+    gap: 0.6rem;
+  }
+
+  .story-flow-mobile {
+    gap: 1rem;
   }
 
   .youtube-section h2 {
@@ -812,207 +892,209 @@
     </div>
   </section>
 
-  <!-- Scrapbook Scroll Section -->
+  <!-- Scrapbook Section - 3 Column with Sticky Center -->
   <section class="scrapbook-section" id="scrapbook-section">
-    <!-- Sticky Center Image -->
-    <div class="scrapbook-sticky">
-      <div class="center-image-wrapper">
-        <img src="{{ 'flowing_image.JPG' | asset_url }}" alt="Our Journey" class="center-image" id="center-image">
-      </div>
-    </div>
+    <div class="scrapbook-layout">
 
-    <!-- Story Cards Flow -->
-    <div class="story-flow">
-      <!-- Card 1 - Left (keep only 1 image) -->
-      <div class="scrapbook-card card-left">
-        <div class="card-inner">
-          <p class="card-text">It all began in college. We were both part of the dance society, Suhani as the Vice President and Mitanshi as the Creative Head.</p>
-          <div class="card-images large-images">
-            <img loading="lazy" src="{{ '1.1.jpg' | asset_url }}" alt="College days">
+      <!-- LEFT COLUMN: Cards 1, 3, 5, 7 + their photos -->
+      <div class="story-column-left">
+        <div class="story-group" data-order="1">
+          <div class="scrapbook-card card-left">
+            <div class="card-inner">
+              <p class="card-text">It all began in college. We were both part of the dance society, Suhani as the Vice President and Mitanshi as the Creative Head.</p>
+              <div class="card-images large-images">
+                <img loading="lazy" src="{{ '1.1.jpg' | asset_url }}" alt="College days">
+              </div>
+            </div>
+          </div>
+          <div class="photos-row">
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '1.2.JPG' | asset_url }}" alt="Dance society">
+              </div>
+            </div>
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '1.3.JPG' | asset_url }}" alt="Early days">
+                <div class="photo-caption">Good times!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-group" data-order="3">
+          <div class="scrapbook-card card-left">
+            <div class="card-inner">
+              <p class="card-text">That's when the idea struck, personalised t-shirts with elements each senior loved.</p>
+              <div class="card-images">
+                <img loading="lazy" src="{{ '3.1.PNG' | asset_url }}" alt="T-shirt design">
+              </div>
+            </div>
+          </div>
+          <div class="photos-row">
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '3.2.PNG' | asset_url }}" alt="Personalized">
+              </div>
+            </div>
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '3.3.PNG' | asset_url }}" alt="Custom designs">
+                <div class="photo-caption">First ideas!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-group" data-order="5">
+          <div class="scrapbook-card card-left">
+            <div class="card-inner">
+              <p class="card-text">When we shared them with our batch, the responses poured in, "you guys should start something together!"</p>
+              <div class="card-images">
+                <img loading="lazy" src="{{ '5.1.PNG' | asset_url }}" alt="Feedback">
+              </div>
+            </div>
+          </div>
+          <div class="photos-row">
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '5.2.PNG' | asset_url }}" alt="Response">
+              </div>
+            </div>
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '5.3.PNG' | asset_url }}" alt="Encouragement">
+                <div class="photo-caption">Overwhelming support!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-group" data-order="7">
+          <div class="scrapbook-card card-left">
+            <div class="card-inner">
+              <p class="card-text">That same year, we also designed the costumes for our dance society.</p>
+              <div class="card-images single-image">
+                <img loading="lazy" src="{{ '7.1.jpg' | asset_url }}" alt="Dance costumes">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-group" data-order="9">
+          <div class="photos-row">
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '8.2.jpg' | asset_url }}" alt="Beginning">
+              </div>
+            </div>
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '8.3.JPG' | asset_url }}" alt="Fitkaar start">
+                <div class="photo-caption">The beginning!</div>
+              </div>
+            </div>
+          </div>
+          <div class="scrapbook-photo">
+            <div class="photo-wrapper">
+              <img loading="lazy" src="{{ '8.4.JPG' | asset_url }}" alt="Team">
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Photo from Card 1 set (1.2) -->
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '1.2.JPG' | asset_url }}" alt="Dance society">
-        </div>
-      </div>
-
-      <!-- Photo from Card 1 set (1.3) -->
-      <div class="scrapbook-photo photo-left">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '1.3.JPG' | asset_url }}" alt="Early days">
-          <div class="photo-caption">Good times!</div>
-        </div>
-      </div>
-
-      <!-- Card 2 - Right (keep only 1 image) -->
-      <div class="scrapbook-card card-right">
-        <div class="card-inner">
-          <p class="card-text">When it was time to plan our seniors' farewell, we wanted to gift them something personal, something that felt like them.</p>
-          <div class="card-images">
-            <img loading="lazy" src="{{ '2.1.PNG' | asset_url }}" alt="Design process">
+      <!-- CENTER COLUMN: Sticky parallax image -->
+      <div class="story-column-center">
+        <div class="scrapbook-sticky">
+          <div class="center-image-wrapper">
+            <img src="{{ 'flowing_image.JPG' | asset_url }}" alt="Our Journey" class="center-image" id="center-image">
           </div>
         </div>
       </div>
 
-      <!-- Photo from Card 2 set (2.2) -->
-      <div class="scrapbook-photo photo-left">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '2.2.PNG' | asset_url }}" alt="Sketches">
+      <!-- RIGHT COLUMN: Cards 2, 4, 6, 8 + their photos -->
+      <div class="story-column-right">
+        <div class="story-group" data-order="2">
+          <div class="scrapbook-card card-right">
+            <div class="card-inner">
+              <p class="card-text">When it was time to plan our seniors' farewell, we wanted to gift them something personal, something that felt like them.</p>
+              <div class="card-images">
+                <img loading="lazy" src="{{ '2.1.PNG' | asset_url }}" alt="Design process">
+              </div>
+            </div>
+          </div>
+          <div class="photos-row">
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '2.2.PNG' | asset_url }}" alt="Sketches">
+              </div>
+            </div>
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '2.3.PNG' | asset_url }}" alt="Ideas">
+              </div>
+            </div>
+          </div>
+          <div class="scrapbook-photo">
+            <div class="photo-wrapper">
+              <img loading="lazy" src="{{ '2.4.PNG' | asset_url }}" alt="Concepts">
+              <div class="photo-caption">Planning!</div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Photo from Card 2 set (2.3) -->
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '2.3.PNG' | asset_url }}" alt="Ideas">
-          <div class="photo-caption">Planning!</div>
+        <div class="story-group" data-order="4">
+          <div class="scrapbook-card card-right">
+            <div class="card-inner">
+              <p class="card-text">After going through a lot of drafts and revisions, we finally had our first set of designs ready.</p>
+              <div class="card-images large-images">
+                <img loading="lazy" src="{{ '4.1.jpg' | asset_url }}" alt="First designs">
+              </div>
+            </div>
+          </div>
+          <div class="photos-row">
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '4.2.PNG' | asset_url }}" alt="Drafts">
+                <div class="photo-caption">So many revisions!</div>
+              </div>
+            </div>
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '4.3.PNG' | asset_url }}" alt="Final designs">
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Photo from Card 2 set (2.4) -->
-      <div class="scrapbook-photo photo-left">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '2.4.PNG' | asset_url }}" alt="Concepts">
+        <div class="story-group" data-order="6">
+          <div class="scrapbook-card card-right">
+            <div class="card-inner">
+              <p class="card-text">Seeing our seniors' reactions when they opened their tees was everything, it genuinely made us realise how special personalised designs can feel.</p>
+              <div class="card-images single-image">
+                <img loading="lazy" src="{{ '6.1.JPG' | asset_url }}" alt="Reactions">
+              </div>
+            </div>
+          </div>
+          <div class="scrapbook-photo">
+            <div class="photo-wrapper">
+              <img loading="lazy" src="{{ '5.4.PNG' | asset_url }}" alt="Support">
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Card 3 - Left (keep only 1 image) -->
-      <div class="scrapbook-card card-left">
-        <div class="card-inner">
-          <p class="card-text">That's when the idea struck, personalised t-shirts with elements each senior loved.</p>
-          <div class="card-images">
-            <img loading="lazy" src="{{ '3.1.PNG' | asset_url }}" alt="T-shirt design">
+        <div class="story-group" data-order="8">
+          <div class="scrapbook-card card-right">
+            <div class="card-inner">
+              <p class="card-text">One day, we decided to take this passion project forward — we met, planned, and that's where Fitkaar began.</p>
+              <div class="card-images large-images">
+                <img loading="lazy" src="{{ '8.1.JPG' | asset_url }}" alt="Planning">
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Photo from Card 3 set (3.2) -->
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '3.2.PNG' | asset_url }}" alt="Personalized">
-        </div>
-      </div>
-
-      <!-- Photo from Card 3 set (3.3) -->
-      <div class="scrapbook-photo photo-left">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '3.3.PNG' | asset_url }}" alt="Custom designs">
-          <div class="photo-caption">First ideas!</div>
-        </div>
-      </div>
-
-      <!-- Card 4 - Right (keep only 1 image) -->
-      <div class="scrapbook-card card-right">
-        <div class="card-inner">
-          <p class="card-text">After going through a lot of drafts and revisions, we finally had our first set of designs ready.</p>
-          <div class="card-images large-images">
-            <img loading="lazy" src="{{ '4.1.jpg' | asset_url }}" alt="First designs">
-          </div>
-        </div>
-      </div>
-
-      <!-- Photo from Card 4 set (4.2) -->
-      <div class="scrapbook-photo photo-left">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '4.2.PNG' | asset_url }}" alt="Drafts">
-          <div class="photo-caption">So many revisions!</div>
-        </div>
-      </div>
-
-      <!-- Photo from Card 4 set (4.3) -->
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '4.3.PNG' | asset_url }}" alt="Final designs">
-        </div>
-      </div>
-
-      <!-- Card 5 - Left (keep only 1 image) -->
-      <div class="scrapbook-card card-left">
-        <div class="card-inner">
-          <p class="card-text">When we shared them with our batch, the responses poured in, "you guys should start something together!"</p>
-          <div class="card-images">
-            <img loading="lazy" src="{{ '5.1.PNG' | asset_url }}" alt="Feedback">
-          </div>
-        </div>
-      </div>
-
-      <!-- Photo from Card 5 set (5.2) -->
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '5.2.PNG' | asset_url }}" alt="Response">
-        </div>
-      </div>
-
-      <!-- Photo from Card 5 set (5.3) -->
-      <div class="scrapbook-photo photo-left">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '5.3.PNG' | asset_url }}" alt="Encouragement">
-          <div class="photo-caption">Overwhelming support!</div>
-        </div>
-      </div>
-
-      <!-- Photo from Card 5 set (5.4) -->
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '5.4.PNG' | asset_url }}" alt="Support">
-        </div>
-      </div>
-
-      <!-- Card 6 - Right (single image card - keep as is) -->
-      <div class="scrapbook-card card-right">
-        <div class="card-inner">
-          <p class="card-text">Seeing our seniors' reactions when they opened their tees was everything, it genuinely made us realise how special personalised designs can feel.</p>
-          <div class="card-images single-image">
-            <img loading="lazy" src="{{ '6.1.JPG' | asset_url }}" alt="Reactions">
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 7 - Left (single image card - keep as is) -->
-      <div class="scrapbook-card card-left">
-        <div class="card-inner">
-          <p class="card-text">That same year, we also designed the costumes for our dance society.</p>
-          <div class="card-images single-image">
-            <img loading="lazy" src="{{ '7.1.jpg' | asset_url }}" alt="Dance costumes">
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 8 - Right (keep only 1 image) -->
-      <div class="scrapbook-card card-right">
-        <div class="card-inner">
-          <p class="card-text">One day, we decided to take this passion project forward — we met, planned, and that's where Fitkaar began.</p>
-          <div class="card-images large-images">
-            <img loading="lazy" src="{{ '8.1.JPG' | asset_url }}" alt="Planning">
-          </div>
-        </div>
-      </div>
-
-      <!-- Photo from Card 8 set (8.2) -->
-      <div class="scrapbook-photo photo-left">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '8.2.jpg' | asset_url }}" alt="Beginning">
-        </div>
-      </div>
-
-      <!-- Photo from Card 8 set (8.3) -->
-      <div class="scrapbook-photo photo-right">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '8.3.JPG' | asset_url }}" alt="Fitkaar start">
-          <div class="photo-caption">The beginning!</div>
-        </div>
-      </div>
-
-      <!-- Photo from Card 8 set (8.4) -->
-      <div class="scrapbook-photo photo-left">
-        <div class="photo-wrapper">
-          <img loading="lazy" src="{{ '8.4.JPG' | asset_url }}" alt="Team">
-        </div>
-      </div>
     </div>
 
     <!-- Final Message -->
@@ -1043,13 +1125,55 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Add class to body for overflow control
   document.body.classList.add('about-page-active');
 
-  const cards = document.querySelectorAll('.scrapbook-card');
-  const photos = document.querySelectorAll('.scrapbook-photo');
-  const centerImage = document.getElementById('center-image');
+  const scrapbookLayout = document.querySelector('.scrapbook-layout');
+  const leftCol = document.querySelector('.story-column-left');
+  const rightCol = document.querySelector('.story-column-right');
+  const centerImageWrapper = document.querySelector('.center-image-wrapper');
   const scrapbookSection = document.getElementById('scrapbook-section');
+
+  // Mobile reordering: merge left/right story groups into chronological order
+  let mobileFlow = null;
+  let isMobileActive = false;
+
+  function setupMobileLayout() {
+    if (window.innerWidth <= 768 && !isMobileActive) {
+      // Create mobile flow container if not exists
+      if (!mobileFlow) {
+        mobileFlow = document.createElement('div');
+        mobileFlow.className = 'story-flow-mobile';
+        // Collect all story groups from both columns
+        const allGroups = [...document.querySelectorAll('.story-group')];
+        // Sort by data-order
+        allGroups.sort((a, b) => parseInt(a.dataset.order) - parseInt(b.dataset.order));
+        // Move them into the mobile flow container
+        allGroups.forEach(group => mobileFlow.appendChild(group));
+        // Insert mobile flow as first child of layout (before center column)
+        scrapbookLayout.insertBefore(mobileFlow, scrapbookLayout.firstChild);
+      }
+      scrapbookLayout.classList.add('mobile-active');
+      isMobileActive = true;
+      // Re-observe new elements
+      reobserveElements();
+    } else if (window.innerWidth > 768 && isMobileActive) {
+      // Move story groups back to their original columns
+      if (mobileFlow) {
+        const groups = [...mobileFlow.querySelectorAll('.story-group')];
+        groups.forEach(group => {
+          const order = parseInt(group.dataset.order);
+          if (order % 2 === 1) {
+            leftCol.appendChild(group);
+          } else {
+            rightCol.appendChild(group);
+          }
+        });
+      }
+      scrapbookLayout.classList.remove('mobile-active');
+      isMobileActive = false;
+      reobserveElements();
+    }
+  }
 
   // Intersection Observer for card and photo animations
   const cardObserver = new IntersectionObserver((entries) => {
@@ -1059,16 +1183,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }, {
-    threshold: 0.2,
-    rootMargin: "0px 0px -50px 0px"
+    threshold: 0.15,
+    rootMargin: "0px 0px -30px 0px"
   });
 
-  cards.forEach(card => cardObserver.observe(card));
-  photos.forEach(photo => cardObserver.observe(photo));
+  function reobserveElements() {
+    const cards = document.querySelectorAll('.scrapbook-card');
+    const photos = document.querySelectorAll('.scrapbook-photo');
+    cards.forEach(card => cardObserver.observe(card));
+    photos.forEach(photo => cardObserver.observe(photo));
+  }
 
-  // Parallax effect for center image wrapper (so tapes move with it)
-  const centerImageWrapper = document.querySelector('.center-image-wrapper');
+  reobserveElements();
 
+  // Parallax effect for center image
   window.addEventListener('scroll', () => {
     if (!scrapbookSection || !centerImageWrapper) return;
 
@@ -1077,18 +1205,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionHeight = rect.height;
     const viewportHeight = window.innerHeight;
 
-    // Only apply effect when section is in view
     if (sectionTop < viewportHeight && rect.bottom > 0) {
       const scrollProgress = Math.abs(Math.min(sectionTop, 0)) / (sectionHeight - viewportHeight);
       const clampedProgress = Math.min(Math.max(scrollProgress, 0), 1);
 
-      // Subtle scale effect (image + tapes shrink together)
       const scale = 1 - (clampedProgress * 0.2);
-      // Subtle rotation
       const rotate = clampedProgress * 4;
 
       centerImageWrapper.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
     }
+  });
+
+  // Setup on load and resize
+  setupMobileLayout();
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(setupMobileLayout, 150);
   });
 });
 </script>

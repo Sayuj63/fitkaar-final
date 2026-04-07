@@ -554,82 +554,99 @@
     color: #c62828;
   }
 
-  /* Size Chart */
-  .size-chart-section {
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .size-chart-toggle {
-    width: 100%;
-    padding: 16px 20px;
-    background: #fff;
-    border: none;
+  /* Size Chart Modal */
+  .size-label-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .sizing-guide-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
     cursor: pointer;
     font-family: var(--font-heading);
-    font-size: 0.875rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 0;
+  }
+
+  .sizing-guide-link svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .size-chart-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .size-chart-modal {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .size-chart-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .size-chart-modal-header h3 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
+    margin: 0;
   }
 
-  .size-chart-toggle svg {
-    width: 20px;
-    height: 20px;
-    transition: transform 0.3s ease;
+  .size-chart-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #333;
   }
 
-  .size-chart-toggle.open svg {
-    transform: rotate(180deg);
+  .size-chart-close svg {
+    width: 24px;
+    height: 24px;
   }
 
-  .size-chart-content {
-    display: none;
-    padding: 20px;
-    background: #f8f9fa;
-    border-top: 1px solid #e0e0e0;
+  .size-chart-modal-body {
+    padding: 24px;
   }
 
-  .size-chart-content.open {
-    display: block;
-  }
-
-  .size-chart-notes {
-    font-size: 0.8rem;
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-
-  .size-chart-notes li {
-    margin-bottom: 8px;
-    padding-left: 8px;
-  }
-
-  .size-chart-table {
+  .size-chart-modal-body img {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
+    height: auto;
+    border-radius: 8px;
   }
 
-  .size-chart-table th,
-  .size-chart-table td {
-    padding: 12px;
+  .size-chart-no-image {
     text-align: center;
-    border: 1px solid #ddd;
-  }
-
-  .size-chart-table th {
-    background: var(--color-primary);
-    color: #fff;
-    font-weight: 700;
-  }
-
-  .size-chart-table tr:nth-child(even) {
-    background: #f0f0f0;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 0.9rem;
   }
 
   /* Action Buttons */
@@ -1264,7 +1281,17 @@
         <!-- Size Option (Buttons) -->
         {% elsif option_name_lower contains 'size' %}
           <div class="variant-section">
-            <div class="variant-label">{{ option.name }}: <span x-text="selectedSize">{{ option.selected_value }}</span></div>
+            <div class="variant-label size-label-row">
+              <span>{{ option.name }}: <span x-text="selectedSize">{{ option.selected_value }}</span></span>
+              <button class="sizing-guide-link" @click="sizeChartOpen = true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="11.73"></line>
+                </svg>
+                Sizing guide
+              </button>
+            </div>
             <div class="size-options">
               {% for value in option.values %}
                 <button
@@ -1311,64 +1338,26 @@
         </div>
       </div>
 
-      <!-- Size Chart -->
-      <div class="size-chart-section">
-        <button class="size-chart-toggle" :class="{ 'open': sizeChartOpen }" @click="sizeChartOpen = !sizeChartOpen">
-          <span>Size Chart</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-        <div class="size-chart-content" :class="{ 'open': sizeChartOpen }">
-          <ul class="size-chart-notes">
-            <li>All measurements are in inches</li>
-            <li>Measurements shown are of the apparel itself and not body or chest size</li>
-            <li><strong>How to measure:</strong> Lay the garment flat on a surface. Measure from shoulder to shoulder for width, from underarm to underarm for chest width, and from the highest point of the shoulder to the hem for length. Compare these measurements with a similar T-shirt you already own for best fit.</li>
-            <li>Model is wearing size {{ section.settings.model_size }}</li>
-            <li><strong>If you are confused about your size, we recommend choosing a bigger size</strong></li>
-          </ul>
-          <table class="size-chart-table">
-            <thead>
-              <tr>
-                <th>Size</th>
-                <th>Chest (in)</th>
-                <th>Length (in)</th>
-                <th>Shoulder (in)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>S</td>
-                <td>38</td>
-                <td>26</td>
-                <td>17</td>
-              </tr>
-              <tr>
-                <td>M</td>
-                <td>40</td>
-                <td>27</td>
-                <td>18</td>
-              </tr>
-              <tr>
-                <td>L</td>
-                <td>42</td>
-                <td>28</td>
-                <td>19</td>
-              </tr>
-              <tr>
-                <td>XL</td>
-                <td>44</td>
-                <td>29</td>
-                <td>20</td>
-              </tr>
-              <tr>
-                <td>XXL</td>
-                <td>46</td>
-                <td>30</td>
-                <td>21</td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- Size Chart Modal -->
+      <div class="size-chart-overlay" x-show="sizeChartOpen" x-transition.opacity @click.self="sizeChartOpen = false" x-cloak>
+        <div class="size-chart-modal">
+          <div class="size-chart-modal-header">
+            <h3>Sizing Guide — <span x-text="selectedType"></span></h3>
+            <button class="size-chart-close" @click="sizeChartOpen = false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="size-chart-modal-body">
+            <template x-if="sizeChartImage">
+              <img :src="sizeChartImage.src" :alt="'Size chart for ' + selectedType">
+            </template>
+            <template x-if="!sizeChartImage">
+              <div class="size-chart-no-image">No size chart available for this type.</div>
+            </template>
+          </div>
         </div>
       </div>
 
@@ -1604,12 +1593,14 @@
       touchStartX: 0,
       touchEndX: 0,
       
-      // Computed: Visible Images based on selection
+      // Computed: Visible Images based on selection (excludes size chart images)
       get visibleImages() {
+        const isSizeChart = (img) => img.alt && img.alt.toLowerCase().includes('size chart');
         const isGeneric = (img) => !img.alt || img.alt === '' || img.alt === '{{ product.title | escape }}';
 
         // First try to find images matching the selected type + colour
         const matched = this.allImages.filter(img => {
+          if (isSizeChart(img)) return false;
           if (isGeneric(img)) return false;
 
           const alt = img.alt.toLowerCase();
@@ -1623,12 +1614,27 @@
           return true;
         });
 
-        // If we found matching images, use them; otherwise fall back to all images
-        return matched.length > 0 ? matched : this.allImages;
+        // If we found matching images, use them; otherwise fall back to non-size-chart images
+        if (matched.length > 0) return matched;
+        return this.allImages.filter(img => !isSizeChart(img));
       },
-      
+
       get totalSlides() {
         return this.visibleImages.length;
+      },
+
+      // Computed: Size chart image for the currently selected type
+      get sizeChartImage() {
+        if (!this.selectedType) return null;
+        console.log('Looking for size chart. Type:', this.selectedType);
+        console.log('All image alts:', this.allImages.map(img => img.alt));
+        const found = this.allImages.find(img => {
+          if (!img.alt) return false;
+          const alt = img.alt.toLowerCase();
+          return alt.includes('size chart') && alt.includes(this.selectedType.toLowerCase());
+        }) || null;
+        console.log('Found:', found);
+        return found;
       },
 
       // Variants

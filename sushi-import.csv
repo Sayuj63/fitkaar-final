@@ -1,0 +1,49 @@
+Handle,Title,Body (HTML),Vendor,Type,Tags,Published,Option1 Name,Option1 Value,Option2 Name,Option2 Value,Option3 Name,Option3 Value,Variant SKU,Variant Grams,Variant Inventory Tracker,Variant Inventory Qty,Variant Inventory Policy,Variant Fulfillment Service,Variant Price,Variant Compare At Price,Variant Requires Shipping,Variant Taxable,Variant Weight Unit,Status
+sushi,Sushi,,Fitkaar,,,,Type,Regular Tshirt,Colour,Black,Size,S,,0,shopify,10,deny,manual,799,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Regular Tshirt,Colour,Black,Size,M,,0,shopify,10,deny,manual,799,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Regular Tshirt,Colour,Black,Size,L,,0,shopify,10,deny,manual,799,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Regular Tshirt,Colour,Black,Size,XL,,0,shopify,10,deny,manual,799,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Regular Tshirt,Colour,Brown,Size,S,,0,shopify,10,deny,manual,799,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Regular Tshirt,Colour,Brown,Size,M,,0,shopify,10,deny,manual,799,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Regular Tshirt,Colour,Brown,Size,L,,0,shopify,10,deny,manual,799,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Regular Tshirt,Colour,Brown,Size,XL,,0,shopify,10,deny,manual,799,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Black,Size,S,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Black,Size,M,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Black,Size,L,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Black,Size,XL,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Brown,Size,S,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Brown,Size,M,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Brown,Size,L,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Brown,Size,XL,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Navy Blue,Size,S,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Navy Blue,Size,M,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Navy Blue,Size,L,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Oversized Tshirt,Colour,Navy Blue,Size,XL,,0,shopify,10,deny,manual,999,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Cropped Tee,Colour,Black,Size,S,,0,shopify,10,deny,manual,699,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Cropped Tee,Colour,Black,Size,M,,0,shopify,10,deny,manual,699,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Cropped Tee,Colour,Black,Size,L,,0,shopify,10,deny,manual,699,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Cropped Tee,Colour,Black,Size,XL,,0,shopify,10,deny,manual,699,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Boxy Vest,Colour,Black,Size,S,,0,shopify,10,deny,manual,599,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Boxy Vest,Colour,Black,Size,M,,0,shopify,10,deny,manual,599,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Boxy Vest,Colour,Black,Size,L,,0,shopify,10,deny,manual,599,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Boxy Vest,Colour,Black,Size,XL,,0,shopify,10,deny,manual,599,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Boxy Vest,Colour,Brown,Size,S,,0,shopify,10,deny,manual,599,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Boxy Vest,Colour,Brown,Size,M,,0,shopify,10,deny,manual,599,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Boxy Vest,Colour,Brown,Size,L,,0,shopify,10,deny,manual,599,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Boxy Vest,Colour,Brown,Size,XL,,0,shopify,10,deny,manual,599,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Black,Size,S,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Black,Size,M,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Black,Size,L,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Black,Size,XL,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Brown,Size,S,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Brown,Size,M,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Brown,Size,L,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Brown,Size,XL,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Bottle Green,Size,S,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Bottle Green,Size,M,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Bottle Green,Size,L,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Sweatshirt,Colour,Bottle Green,Size,XL,,0,shopify,10,deny,manual,1299,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Hoodie,Colour,Black,Size,S,,0,shopify,10,deny,manual,1499,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Hoodie,Colour,Black,Size,M,,0,shopify,10,deny,manual,1499,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Hoodie,Colour,Black,Size,L,,0,shopify,10,deny,manual,1499,,TRUE,TRUE,g,active
+sushi,Sushi,,,,,,Type,Hoodie,Colour,Black,Size,XL,,0,shopify,10,deny,manual,1499,,TRUE,TRUE,g,active

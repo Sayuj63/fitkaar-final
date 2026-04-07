@@ -1195,13 +1195,16 @@
                   {% when 'beige' %}{% assign swatch_color = '#f5f5dc' %}
                   {% when 'red' %}{% assign swatch_color = '#dc2626' %}
                   {% when 'blue' %}{% assign swatch_color = '#2563eb' %}
-                  {% when 'navy' %}{% assign swatch_color = '#000c5b' %}
+                  {% when 'brown' %}{% assign swatch_color = '#5C4033' %}
+                  {% when 'navy' or 'navy blue' %}{% assign swatch_color = '#000c5b' %}
+                  {% when 'bottle green' %}{% assign swatch_color = '#006A4E' %}
                   {% when 'grey' or 'gray' %}{% assign swatch_color = '#6b7280' %}
                 {% endcase %}
                 
                 <div
                   class="color-swatch"
                   :class="{ 'active': selectedColor === '{{ value }}' }"
+                  x-show="isColorAvailable('{{ value }}')"
                   style="background-color: {{ swatch_color }}; {% if value_lower == 'white' %}border: 1px solid #ddd;{% endif %}"
                   data-color-name="{{ value }}"
                   @click="selectColor('{{ value }}')"
@@ -1601,19 +1604,22 @@
       
       // Computed: Visible Images based on selection
       get visibleImages() {
-        if (!this.selectedColor) return this.allImages;
-        
-        // Filter images that have the selected color in their alt text
-        // OR images that have no specific color tag (generic images)
         const relevant = this.allImages.filter(img => {
-          // If alt is empty, show it for all (optional, or specific logic)
-          // Here strictly matching color name if present
-          if (!img.alt || img.alt === '' || img.alt === '{{ product.title | escape }}') return true; // Generic
-          
-          return img.alt.toLowerCase().includes(this.selectedColor.toLowerCase());
+          // Generic images (blank alt or product title) always show
+          if (!img.alt || img.alt === '' || img.alt === '{{ product.title | escape }}') return true;
+
+          const alt = img.alt.toLowerCase();
+
+          // Filter by type first (e.g., "Hoodie")
+          if (this.selectedType && !alt.includes(this.selectedType.toLowerCase())) return false;
+
+          // Then filter by colour (e.g., "Black")
+          if (this.selectedColor && !alt.includes(this.selectedColor.toLowerCase())) return false;
+
+          return true;
         });
-        
-        return relevant.length > 0 ? relevant : this.allImages; 
+
+        return relevant.length > 0 ? relevant : this.allImages;
       },
       
       get totalSlides() {
@@ -1704,6 +1710,28 @@
         }
       },
 
+      // Available colours for the currently selected type
+      get availableColorsForType() {
+        if (!this.selectedType) return [];
+        const colors = new Set();
+        this.variants.forEach(v => {
+          const opts = [v.option1, v.option2, v.option3];
+          if (opts.includes(this.selectedType) && v.available) {
+            // Find the colour option value
+            {% if color_opt %}
+              {% for cv in color_opt.values %}
+                if (opts.includes('{{ cv }}')) colors.add('{{ cv }}');
+              {% endfor %}
+            {% endif %}
+          }
+        });
+        return Array.from(colors);
+      },
+
+      isColorAvailable(color) {
+        return this.availableColorsForType.includes(color);
+      },
+
       // Variant Methods
       selectColor(color) {
         if (this.selectedColor === color) return;
@@ -1759,6 +1787,12 @@
         // 2. JUMP & DISSOLVE in next frame
         requestAnimationFrame(() => {
           this.selectedType = type;
+
+          // Auto-select first available colour if current colour isn't available for this type
+          if (!this.availableColorsForType.includes(this.selectedColor)) {
+            this.selectedColor = this.availableColorsForType[0] || this.selectedColor;
+          }
+
           this.updateVariant();
 
           // Find variant matching this type + current color + current size
@@ -1770,7 +1804,7 @@
           });
 
           let newIndex = this._findSlideForVariant(matchingVariant);
-          if (newIndex !== -1) this.currentSlide = newIndex;
+          this.currentSlide = newIndex !== -1 ? newIndex : 0;
 
           // 3. FADE OUT overlay
           setTimeout(() => {

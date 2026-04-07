@@ -1079,67 +1079,69 @@
           </div>
 
           <div class="carousel-track" :style="{ transform: `translateX(-${currentSlide * 100}%)`, transition: isTransitioning ? 'none' : 'transform 0.4s ease-out' }">
-            {% for image in product.images %}
-              <div class="carousel-slide" data-image-id="{{ image.id }}">
+            <template x-for="(image, index) in visibleImages" :key="image.id">
+              <div class="carousel-slide" :data-image-id="image.id">
                 <img
-                  src="{{ image | image_url: width: 800 }}"
-                  alt="{{ image.alt | default: product.title }}"
-                  data-image-id="{{ image.id }}"
-                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  :src="image.src"
+                  :alt="image.alt"
+                  :data-image-id="image.id"
+                  :loading="index === 0 ? 'eager' : 'lazy'"
                 >
               </div>
-            {% endfor %}
+            </template>
           </div>
 
           <!-- Navigation Arrows -->
-          {% if product.images.size > 1 %}
-            <button class="carousel-btn prev" @click="prevSlide()" aria-label="Previous image">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-            <button class="carousel-btn next" @click="nextSlide()" aria-label="Next image">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
+          <template x-if="totalSlides > 1">
+            <div>
+              <button class="carousel-btn prev" @click="prevSlide()" aria-label="Previous image">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button class="carousel-btn next" @click="nextSlide()" aria-label="Next image">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
 
-            <!-- Image Counter -->
-            <div class="image-counter">
-              <span x-text="currentSlide + 1"></span> / {{ product.images.size }}
+              <!-- Image Counter -->
+              <div class="image-counter">
+                <span x-text="currentSlide + 1"></span> / <span x-text="totalSlides"></span>
+              </div>
             </div>
-          {% endif %}
+          </template>
         </div>
 
         <!-- Dots Navigation -->
-        {% if product.images.size > 1 %}
+        <template x-if="totalSlides > 1">
           <div class="carousel-dots">
-            {% for image in product.images %}
+            <template x-for="(image, index) in visibleImages" :key="'dot-' + image.id">
               <button
                 class="carousel-dot"
-                :class="{ 'active': currentSlide === {{ forloop.index0 }} }"
-                @click="goToSlide({{ forloop.index0 }})"
-                aria-label="Go to image {{ forloop.index }}"
+                :class="{ 'active': currentSlide === index }"
+                @click="goToSlide(index)"
+                :aria-label="'Go to image ' + (index + 1)"
               ></button>
-            {% endfor %}
+            </template>
           </div>
-        {% endif %}
+        </template>
       </div>
 
       <!-- Thumbnails -->
-      {% if product.images.size > 1 %}
+      <template x-if="totalSlides > 1">
         <div class="thumbnail-grid">
-          {% for image in product.images %}
+          <template x-for="(image, index) in visibleImages" :key="'thumb-' + image.id">
             <div
               class="thumbnail"
-              :class="{ 'active': currentSlide === {{ forloop.index0 }} }"
-              @click="goToSlide({{ forloop.index0 }})"
+              :class="{ 'active': currentSlide === index }"
+              @click="goToSlide(index)"
             >
-              <img src="{{ image | image_url: width: 200 }}" alt="{{ image.alt | default: product.title }}" data-image-id="{{ image.id }}">
+              <img :src="image.thumb" :alt="image.alt" :data-image-id="image.id">
             </div>
-          {% endfor %}
+          </template>
         </div>
-      {% endif %}
+      </template>
     </div>
 
     <!-- Right Column: Product Info -->
@@ -1604,9 +1606,11 @@
       
       // Computed: Visible Images based on selection
       get visibleImages() {
-        const relevant = this.allImages.filter(img => {
-          // Generic images (blank alt or product title) always show
-          if (!img.alt || img.alt === '' || img.alt === '{{ product.title | escape }}') return true;
+        const isGeneric = (img) => !img.alt || img.alt === '' || img.alt === '{{ product.title | escape }}';
+
+        // First try to find images matching the selected type + colour
+        const matched = this.allImages.filter(img => {
+          if (isGeneric(img)) return false;
 
           const alt = img.alt.toLowerCase();
 
@@ -1619,7 +1623,8 @@
           return true;
         });
 
-        return relevant.length > 0 ? relevant : this.allImages;
+        // If we found matching images, use them; otherwise fall back to all images
+        return matched.length > 0 ? matched : this.allImages;
       },
       
       get totalSlides() {
@@ -1737,9 +1742,9 @@
         if (this.selectedColor === color) return;
 
         // 1. FREEZE: Capture current visible image
-        const currentImages = document.querySelectorAll('.carousel-slide img');
-        if (currentImages && currentImages[this.currentSlide]) {
-          this.transitionImage = currentImages[this.currentSlide].src;
+        const currentImg = this.visibleImages[this.currentSlide];
+        if (currentImg) {
+          this.transitionImage = currentImg.src;
           this.isTransitioning = true;
         }
 
@@ -1748,16 +1753,8 @@
           this.selectedColor = color;
           this.updateVariant();
 
-          // Find variant matching this color + current type + current size
-          const matchingVariant = this.variants.find(v => {
-            const opts = [v.option1, v.option2, v.option3];
-            return opts.includes(color) &&
-              (!this.selectedType || opts.includes(this.selectedType)) &&
-              (!this.selectedSize || opts.includes(this.selectedSize));
-          });
-
-          let newIndex = this._findSlideForVariant(matchingVariant);
-          if (newIndex !== -1) this.currentSlide = newIndex;
+          // Reset to first slide since visibleImages will now show filtered results
+          this.currentSlide = 0;
 
           // 3. FADE OUT overlay
           setTimeout(() => {
@@ -1778,9 +1775,9 @@
         if (this.selectedType === type) return;
 
         // 1. FREEZE: Capture current visible image
-        const currentImages = document.querySelectorAll('.carousel-slide img');
-        if (currentImages && currentImages[this.currentSlide]) {
-          this.transitionImage = currentImages[this.currentSlide].src;
+        const currentImg = this.visibleImages[this.currentSlide];
+        if (currentImg) {
+          this.transitionImage = currentImg.src;
           this.isTransitioning = true;
         }
 
@@ -1795,16 +1792,8 @@
 
           this.updateVariant();
 
-          // Find variant matching this type + current color + current size
-          const matchingVariant = this.variants.find(v => {
-            const opts = [v.option1, v.option2, v.option3];
-            return opts.includes(type) &&
-              (!this.selectedColor || opts.includes(this.selectedColor)) &&
-              (!this.selectedSize || opts.includes(this.selectedSize));
-          });
-
-          let newIndex = this._findSlideForVariant(matchingVariant);
-          this.currentSlide = newIndex !== -1 ? newIndex : 0;
+          // Reset to first slide since visibleImages will now show filtered results
+          this.currentSlide = 0;
 
           // 3. FADE OUT overlay
           setTimeout(() => {
@@ -1833,22 +1822,9 @@
       _findSlideForVariant(variant) {
         if (!variant || !variant.featured_image) return -1;
 
-        const targetId = String(variant.featured_image.id);
-        const slides = Array.from(document.querySelectorAll('.carousel-slide'));
-
-        // 1. Match by data-image-id attribute (most reliable)
-        let idx = slides.findIndex(slide => slide.dataset.imageId === targetId);
-        if (idx !== -1) return idx;
-
-        // 2. Fallback: match by src URL (strip query params)
-        if (variant.featured_image.src) {
-          const targetBase = variant.featured_image.src.split('?')[0];
-          const slideImgs = slides.map(s => s.querySelector('img'));
-          idx = slideImgs.findIndex(img => img && img.src.split('?')[0].includes(targetBase.split('/').pop()));
-          if (idx !== -1) return idx;
-        }
-
-        return -1;
+        const targetId = variant.featured_image.id;
+        const idx = this.visibleImages.findIndex(img => img.id === targetId);
+        return idx;
       },
 
       checkPincode() {

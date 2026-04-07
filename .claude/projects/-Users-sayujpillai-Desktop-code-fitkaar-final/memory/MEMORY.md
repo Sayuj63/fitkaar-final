@@ -1,0 +1,1 @@
+- [Product Image Alt Text Convention](project_image_alt_text_convention.md) — Alt text format "Type Colour" for gallery filtering on product pages

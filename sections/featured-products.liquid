@@ -73,7 +73,7 @@
                
               <form method="post" action="/cart/add" class="mt-4">
                   <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
-                  <button type="submit" class="w-full bg-black text-white py-3 font-bold uppercase hover:opacity-90">Add to Cart - {{ product.price | money }}</button>
+                  <button type="submit" class="w-full bg-black text-white py-3 font-bold uppercase hover:opacity-90">Add to Cart - ₹{{ product.price | divided_by: 100 }}/-</button>
               </form>
             </div>
           </div>

@@ -27,12 +27,24 @@
   .fk-footer__logo-col {
     flex: 0 0 auto;
     max-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .fk-footer__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 16px;
   }
 
   .fk-footer__logo img {
     width: 180px;
     height: auto;
-    margin-bottom: 16px;
+    object-fit: contain;
   }
 
   .fk-footer__brand-tagline {
@@ -40,6 +52,7 @@
     line-height: 1.6;
     color: var(--color-accent, #bfdbe3);
     margin: 0;
+    text-align: center;
   }
 
   /* Menu Columns */

@@ -900,7 +900,12 @@
       {% endif %}
       <div class="intro-text-container">
         {% if section.settings.intro_text %}
-          {{ section.settings.intro_text }}
+          {% assign intro_lines = section.settings.intro_text | split: newline %}
+          {% for line in intro_lines %}
+            {% if line != blank %}
+              <p class="intro-text">{{ line }}</p>
+            {% endif %}
+          {% endfor %}
         {% endif %}
       </div>
     </div>
@@ -918,7 +923,7 @@
               <div class="scrapbook-card card-left">
                 <div class="card-inner">
                   {% if block.settings.story_text %}
-                    <div class="card-text">{{ block.settings.story_text }}</div>
+                    <p class="card-text">{{ block.settings.story_text }}</p>
                   {% endif %}
                   {% if block.settings.story_image %}
                     <div class="card-images">
@@ -953,7 +958,7 @@
               <div class="scrapbook-card card-right">
                 <div class="card-inner">
                   {% if block.settings.story_text %}
-                    <div class="card-text">{{ block.settings.story_text }}</div>
+                    <p class="card-text">{{ block.settings.story_text }}</p>
                   {% endif %}
                   {% if block.settings.story_image %}
                     <div class="card-images">
@@ -972,9 +977,7 @@
     <!-- Final Message -->
     <div class="final-message">
       {% if section.settings.final_message %}
-        {{ section.settings.final_message }}
-      {% else %}
-        <p>From designing for our seniors to now seeing so many of you wear what we create, it's been the most exciting and fulfilling journey, and we're just getting started.</p>
+        <p>{{ section.settings.final_message }}</p>
       {% endif %}
     </div>
   </section>
@@ -1124,9 +1127,10 @@ document.addEventListener('DOMContentLoaded', () => {
       "label": "Founder Image"
     },
     {
-      "type": "richtext",
+      "type": "textarea",
       "id": "intro_text",
-      "label": "Introduction Text"
+      "label": "Introduction Text",
+      "default": "India's first-ever fully customizable clothing brand, where we design specially for you.\n\nProudly women-led and bootstrapped. What started as a college passion project, born out of a shared love for designing costumes for their dance society, soon turned into Fitkaar."
     },
     {
       "type": "image_picker",
@@ -1134,9 +1138,10 @@ document.addEventListener('DOMContentLoaded', () => {
       "label": "Center Flowing Image"
     },
     {
-      "type": "richtext",
+      "type": "textarea",
       "id": "final_message",
-      "label": "Final Message Text"
+      "label": "Final Message Text",
+      "default": "From designing for our seniors to now seeing so many of you wear what we create, it's been the most exciting and fulfilling journey, and we're just getting started."
     },
     {
       "type": "url",
@@ -1162,42 +1167,17 @@ document.addEventListener('DOMContentLoaded', () => {
               "value": "right",
               "label": "Right"
             }
-          ],
-          "default": "left"
+          ]
         },
         {
-          "type": "richtext",
+          "type": "textarea",
           "id": "story_text",
           "label": "Story Text"
         },
         {
           "type": "image_picker",
           "id": "story_image",
-          "label": "Story Image (Card)"
-        }
-      ]
-    },
-    {
-      "type": "photos",
-      "name": "Photo Gallery",
-      "settings": [
-        {
-          "type": "text",
-          "id": "gallery_title",
-          "label": "Gallery Group ID"
-        }
-      ],
-      "blocks": [
-        {
-          "type": "photo",
-          "name": "Photo",
-          "settings": [
-            {
-              "type": "image_picker",
-              "id": "photo_image",
-              "label": "Photo"
-            }
-          ]
+          "label": "Story Image"
         }
       ]
     }

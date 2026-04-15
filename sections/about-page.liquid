@@ -900,12 +900,8 @@
       {% endif %}
       <div class="intro-text-container">
         {% if section.settings.intro_text %}
-          {% assign intro_lines = section.settings.intro_text | split: newline %}
-          {% for line in intro_lines %}
-            {% if line != blank %}
-              <p class="intro-text">{{ line }}</p>
-            {% endif %}
-          {% endfor %}
+          <p class="intro-text">{{ section.settings.intro_text | replace: "
+", "</p><p class='intro-text'>" }}</p>
         {% endif %}
       </div>
     </div>

@@ -20,38 +20,63 @@
 
 /* Creative Section */
 .process-creative {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-bottom: 2rem;
+}
+
+.creative-wrapper {
   position: relative;
-  margin-bottom: 3rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+  transform-origin: center center;
 }
 
 .creative-image {
   width: 100%;
   height: auto;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
   display: block;
+}
+
+/* Decorative tape on creative image */
+.creative-wrapper::before,
+.creative-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 25px;
+  background: linear-gradient(135deg, rgba(255, 240, 200, 0.9) 0%, rgba(255, 230, 170, 0.85) 100%);
+  z-index: 10;
+  transform: rotate(-5deg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.creative-wrapper::before {
+  top: -10px;
+  left: 20%;
+}
+
+.creative-wrapper::after {
+  bottom: -10px;
+  right: 20%;
+  transform: rotate(5deg);
 }
 
 /* Category Circles Section */
 .process-categories {
   max-width: 1200px;
   margin: 0 auto 3rem;
-  padding: 2rem 5%;
+  padding: 1rem 5%;
   position: relative;
-}
-
-.categories-title {
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 3rem;
-  color: #1a1a1a;
 }
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 2rem;
   justify-items: center;
 }
@@ -341,9 +366,9 @@
 }
 
 /* Circle Responsive */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .categories-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
   }
 
@@ -356,17 +381,12 @@
     font-size: 0.95rem;
     max-width: 140px;
   }
-
-  .categories-title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .categories-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
 
   .circle-image-container {
@@ -378,10 +398,22 @@
     font-size: 0.9rem;
     max-width: 120px;
   }
+}
 
-  .categories-title {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+@media (max-width: 480px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .circle-image-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .category-name {
+    font-size: 0.85rem;
+    max-width: 100px;
   }
 }
 
@@ -403,17 +435,17 @@
 <div class="process-page">
   <!-- Creative Section -->
   <div class="process-creative">
-    <img
-      src="{{ section.settings.creative_image | asset_url }}"
-      alt="{{ section.settings.creative_alt_text }}"
-      class="creative-image"
-    >
+    <div class="creative-wrapper">
+      <img
+        src="{{ section.settings.creative_image | asset_url }}"
+        alt="{{ section.settings.creative_alt_text }}"
+        class="creative-image"
+      >
+    </div>
   </div>
 
   <!-- Category Circles Section -->
   <div class="process-categories">
-    <h2 class="categories-title">{{ section.settings.categories_title }}</h2>
-
     <div class="categories-grid">
       {% for block in section.blocks %}
         {% if block.type == 'category' %}
@@ -787,12 +819,6 @@
       "id": "creative_alt_text",
       "label": "Creative Image Alt Text",
       "default": "Fitkaar Process"
-    },
-    {
-      "type": "text",
-      "id": "categories_title",
-      "label": "Categories Section Title",
-      "default": "Customize Your Way"
     },
     {
       "type": "text",

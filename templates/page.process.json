@@ -4,8 +4,7 @@
             "type": "process-page",
             "settings": {
                 "creative_image": "flowing_image.JPG",
-                "creative_alt_text": "Fitkaar Process",
-                "categories_title": "Customize Your Way"
+                "creative_alt_text": "Fitkaar Process"
             },
             "blocks": {
                 "category1": {

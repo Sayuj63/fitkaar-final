@@ -421,15 +421,28 @@
 
   /* Type Options */
   .type-options {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .type-options {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .type-options {
+      grid-template-columns: 1fr;
+    }
   }
 
   .type-option {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 16px 12px;
     border: 2px solid #ddd;
@@ -437,8 +450,8 @@
     background: #fff;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 80px;
     text-align: center;
+    width: 100%;
   }
 
   .type-option:hover {

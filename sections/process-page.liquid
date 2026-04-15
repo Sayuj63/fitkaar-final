@@ -316,27 +316,90 @@
   cursor: not-allowed;
 }
 
-/* Design Fee */
-.design-fee-display {
-  background: #f0f7fa;
-  border: 1px solid #71b6c8;
-  padding: 15px 20px;
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Design Fee Section - Purple */
+.design-fee-section {
+  background: #e8d5f2;
+  border: 1px solid #d4b5e8;
+  padding: 25px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 4px;
 }
 
-.design-fee-label {
+.design-fee-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #000c5b;
+  margin-bottom: 1rem;
+}
+
+.design-fee-text {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.7;
+  margin-bottom: 0.8rem;
+}
+
+.design-fee-text:last-child {
+  margin-bottom: 0;
+}
+
+/* Price Breakdown Section - Green */
+.price-breakdown-section {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 25px;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 4px;
+}
+
+.price-breakdown-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #000c5b;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.price-breakdown-subtitle {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.apparel-pricing {
+  margin-bottom: 1.5rem;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.7);
+  border-left: 4px solid #28a745;
+  border-radius: 2px;
+}
+
+.apparel-name {
   font-weight: 600;
   color: #000c5b;
   font-size: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.design-fee-amount {
-  font-size: 1.3rem;
-  font-weight: 700;
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.price-label {
+  font-weight: 500;
+}
+
+.price-value {
+  text-align: right;
   color: #000c5b;
+  font-weight: 600;
 }
 
 .form-hint {
@@ -580,12 +643,104 @@
         + Add Another Product (up to 5)
       </button>
 
-      <!-- Design Fee Display -->
-      <div class="design-fee-display">
-        <span class="design-fee-label">Design Fee</span>
-        <span class="design-fee-amount" id="designFeeDisplay">{{ section.settings.design_fee_amount | default: 499 | money_without_trailing_zeros }}</span>
+      <!-- Design Fee Information Section - Purple -->
+      <div class="design-fee-section">
+        <div class="design-fee-title">We can't wait to design for you 🩵</div>
+        <div class="design-fee-text">To begin your order and start designing, we take a small non-refundable advance of ₹400/- per design, which is adjusted in your final product price.</div>
+        <div class="design-fee-text">We will be sharing a draft with you based on your brief and if there are any changes, we can accommodate them however, naturally, it would cause a delay in the order timeline.</div>
+        <div class="design-fee-text">You can find the price breakdown below!✨</div>
       </div>
-      <small class="form-hint" style="margin-top: 4px;">Design fee is per product. Multiple products = fee x number of products.</small>
+
+      <!-- Price Breakdown Section - Green -->
+      <div class="price-breakdown-section">
+        <div class="price-breakdown-title">Price Breakdown</div>
+        <div class="price-breakdown-subtitle">Sharing the price breakdown for each apparel:</div>
+
+        <!-- T-Shirt -->
+        <div class="apparel-pricing">
+          <div class="apparel-name">T-Shirt</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹999/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹599/-</span>
+          </div>
+        </div>
+
+        <!-- Cropped Tee -->
+        <div class="apparel-pricing">
+          <div class="apparel-name">Cropped Tee</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹699/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹299/-</span>
+          </div>
+        </div>
+
+        <!-- Boxy Vest -->
+        <div class="apparel-pricing">
+          <div class="apparel-name">Boxy Vest</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹1099/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹699/-</span>
+          </div>
+        </div>
+
+        <!-- Sweatshirt -->
+        <div class="apparel-pricing">
+          <div class="apparel-name">Sweatshirt</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹1499/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹1099/-</span>
+          </div>
+        </div>
+
+        <!-- Hoodie -->
+        <div class="apparel-pricing">
+          <div class="apparel-name">Hoodie</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹1699/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹1299/-</span>
+          </div>
+        </div>
+      </div>
 
       <!-- Personalization Questions -->
       <h3 class="section-divider">Personalization</h3>

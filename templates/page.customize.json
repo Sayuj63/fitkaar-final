@@ -7,43 +7,38 @@
         "creative_alt_text": "Fitkaar Customize",
         "categories_title": "Customize Your Way"
       },
-      "blocks": [
-        {
+      "blocks": {
+        "category1": {
           "type": "category",
           "settings": {
-            "category_image": "",
             "category_name": "Baby Tees - Women"
           }
         },
-        {
+        "category2": {
           "type": "category",
           "settings": {
-            "category_image": "",
             "category_name": "Oversized Tees"
           }
         },
-        {
+        "category3": {
           "type": "category",
           "settings": {
-            "category_image": "",
             "category_name": "Hoodies"
           }
         },
-        {
+        "category4": {
           "type": "category",
           "settings": {
-            "category_image": "",
             "category_name": "Sweatshirts"
           }
         },
-        {
+        "category5": {
           "type": "category",
           "settings": {
-            "category_image": "",
             "category_name": "Category"
           }
         }
-      ]
+      }
     }
   },
   "order": [

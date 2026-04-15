@@ -2,7 +2,43 @@
     "sections": {
         "main": {
             "type": "process-page",
-            "settings": {}
+            "settings": {
+                "creative_image": "flowing_image.JPG",
+                "creative_alt_text": "Fitkaar Process",
+                "categories_title": "Customize Your Way"
+            },
+            "blocks": {
+                "category1": {
+                    "type": "category",
+                    "settings": {
+                        "category_name": "Baby Tees - Women"
+                    }
+                },
+                "category2": {
+                    "type": "category",
+                    "settings": {
+                        "category_name": "Oversized Tees"
+                    }
+                },
+                "category3": {
+                    "type": "category",
+                    "settings": {
+                        "category_name": "Hoodies"
+                    }
+                },
+                "category4": {
+                    "type": "category",
+                    "settings": {
+                        "category_name": "Sweatshirts"
+                    }
+                },
+                "category5": {
+                    "type": "category",
+                    "settings": {
+                        "category_name": "Category"
+                    }
+                }
+            }
         }
     },
     "order": [

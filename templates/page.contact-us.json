@@ -1,16 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "contact": {
       "type": "contact-page",
       "settings": {
-        "title": "Let's Talk",
-        "subtitle": "Have a question, custom request, or just want to say hi? We'd love to hear from you.",
-        "email": "fitkaarclothing@gmail.com",
-        "phone": "+91 98765 43210",
-        "address": "New Delhi, India",
-        "response_time": "We typically respond within 24 hours",
-        "show_quick_links": true,
-        "quick_links_title": "Quick Help"
+        "title": "Let's Talk"
       }
     }
   },

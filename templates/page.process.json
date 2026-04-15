@@ -1,46 +1,70 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-    "sections": {
-        "main": {
-            "type": "process-page",
-            "settings": {
-                "creative_image": "flowing_image.JPG",
-                "creative_alt_text": "Fitkaar Process"
-            },
-            "blocks": {
-                "category1": {
-                    "type": "category",
-                    "settings": {
-                        "category_name": "Baby Tees - Women"
-                    }
-                },
-                "category2": {
-                    "type": "category",
-                    "settings": {
-                        "category_name": "Oversized Tees"
-                    }
-                },
-                "category3": {
-                    "type": "category",
-                    "settings": {
-                        "category_name": "Hoodies"
-                    }
-                },
-                "category4": {
-                    "type": "category",
-                    "settings": {
-                        "category_name": "Sweatshirts"
-                    }
-                },
-                "category5": {
-                    "type": "category",
-                    "settings": {
-                        "category_name": "Category"
-                    }
-                }
-            }
+  "sections": {
+    "main": {
+      "type": "process-page",
+      "blocks": {
+        "category_EiDiyE": {
+          "type": "category",
+          "settings": {
+            "category_image": "",
+            "category_name": "Category"
+          }
+        },
+        "category_Wx3Axj": {
+          "type": "category",
+          "settings": {
+            "category_image": "",
+            "category_name": "Category"
+          }
+        },
+        "category_nccyVq": {
+          "type": "category",
+          "settings": {
+            "category_image": "",
+            "category_name": "Category"
+          }
+        },
+        "category_WHRkeQ": {
+          "type": "category",
+          "settings": {
+            "category_image": "",
+            "category_name": "Category"
+          }
+        },
+        "category_BTBmDD": {
+          "type": "category",
+          "settings": {
+            "category_image": "",
+            "category_name": "Category"
+          }
         }
-    },
-    "order": [
-        "main"
-    ]
+      },
+      "block_order": [
+        "category_EiDiyE",
+        "category_Wx3Axj",
+        "category_nccyVq",
+        "category_WHRkeQ",
+        "category_BTBmDD"
+      ],
+      "settings": {
+        "creative_image": "flowing_image.JPG",
+        "creative_alt_text": "Fitkaar Process",
+        "title": "Custom Order Process",
+        "subtitle": "Fill out the details below so we can create something unique for you.",
+        "design_fee_amount": 499
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
 }

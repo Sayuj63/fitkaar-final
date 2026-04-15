@@ -425,6 +425,32 @@
         <textarea id="ContactFormElements" name="contact[other_elements]" class="form-textarea" placeholder="Anything else to include?"></textarea>
       </div>
 
+      <div class="form-group">
+        <label class="form-label" for="ContactFormGender">Recipient's Gender <span style="color: #999; font-weight: normal;">(if you're comfortable sharing)</span></label>
+        <select id="ContactFormGender" name="contact[recipient_gender]" class="form-select">
+          <option value="">Select an option</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Non-binary">Non-binary</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormJokes">Inside Jokes, Habits, or Traits</label>
+        <textarea id="ContactFormJokes" name="contact[inside_jokes]" class="form-textarea" placeholder="Any inside jokes, funny habits, or unique traits we should include?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormSymbols">Symbols or Elements</label>
+        <textarea id="ContactFormSymbols" name="contact[symbols_elements]" class="form-textarea" placeholder="E.g., stars, cars, butterflies, hearts, etc."></textarea>
+      </div>
+
+      <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
+        <input type="checkbox" id="BillingAddress" name="contact[billing_same]" value="yes" style="width: auto; margin: 0;">
+        <label for="BillingAddress" style="margin-bottom: 0; font-weight: 400; font-size: 0.95rem;">Billing address to be same as this address</label>
+      </div>
+
       <!-- File Uploads -->
       <h3 class="section-divider">Uploads</h3>
 

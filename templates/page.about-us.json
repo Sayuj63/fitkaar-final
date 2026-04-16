@@ -35,7 +35,7 @@
     }
   },
   "order": [
-    "testimonials_carousel",
-    "about"
+    "about",
+    "testimonials_carousel"
   ]
 }

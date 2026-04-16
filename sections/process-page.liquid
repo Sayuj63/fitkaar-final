@@ -66,59 +66,88 @@
   transform: rotate(5deg);
 }
 
-/* Category Circles Section */
-.process-categories {
+/* Product Pricing Boxes Section */
+.process-products-showcase {
   max-width: 1200px;
   margin: 0 auto 3rem;
-  padding: 1rem 5%;
+  padding: 2rem 5%;
   position: relative;
 }
 
-.categories-grid {
+.products-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
   justify-items: center;
+  margin-bottom: 2rem;
 }
 
-/* Circle Box */
-.category-circle {
+/* Product Box */
+.product-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
   cursor: pointer;
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
-.category-circle:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
+.product-box:hover {
+  transform: translateY(-8px);
 }
 
-.circle-image-container {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
+.product-box-image {
+  width: 160px;
+  height: 200px;
+  border-radius: 12px;
   overflow: hidden;
   background-color: #f5f5f5;
   flex-shrink: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.circle-image {
+.product-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.category-name {
+.product-box-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  color: #000c5b;
+  text-transform: uppercase;
+  max-width: 160px;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+}
+
+.product-box-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #000c5b;
+}
+
+.products-info-text {
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.no-hidden-charges-banner {
+  background: #000c5b;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
   font-size: 1.1rem;
   font-weight: 600;
-  text-align: center;
-  color: #1a1a1a;
-  max-width: 180px;
-  word-wrap: break-word;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  margin-bottom: 2rem;
 }
 
 /* Header */
@@ -326,6 +355,33 @@
   border-radius: 4px;
 }
 
+/* No Hidden Charges Badge Animation */
+@keyframes pulse-highlight {
+  0%, 100% {
+    transform: scale(1);
+    color: #000c5b;
+    text-shadow: 0 0 0px rgba(113, 182, 200, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    color: #71b6c8;
+    text-shadow: 0 0 15px rgba(113, 182, 200, 0.8);
+  }
+}
+
+.no-hidden-charges-badge {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000c5b;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+  text-align: center;
+  animation: pulse-highlight 2s ease-in-out infinite;
+  display: inline-block;
+  width: 100%;
+}
+
 .design-fee-title {
   font-size: 1.2rem;
   font-weight: 600;
@@ -428,55 +484,68 @@
   display: block;
 }
 
-/* Circle Responsive */
+/* Products Responsive */
 @media (max-width: 1024px) {
-  .categories-grid {
+  .products-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
   }
 
-  .circle-image-container {
-    width: 140px;
-    height: 140px;
+  .product-box-image {
+    width: 130px;
+    height: 160px;
   }
 
-  .category-name {
-    font-size: 0.95rem;
-    max-width: 140px;
+  .product-box-name {
+    font-size: 0.85rem;
+    max-width: 130px;
   }
 }
 
 @media (max-width: 768px) {
-  .categories-grid {
+  .products-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
 
-  .circle-image-container {
-    width: 120px;
-    height: 120px;
+  .product-box-image {
+    width: 110px;
+    height: 140px;
   }
 
-  .category-name {
-    font-size: 0.9rem;
-    max-width: 120px;
+  .product-box-name {
+    font-size: 0.8rem;
+    max-width: 110px;
+  }
+
+  .no-hidden-charges-banner {
+    font-size: 0.95rem;
   }
 }
 
 @media (max-width: 480px) {
-  .categories-grid {
-    grid-template-columns: 1fr;
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
 
-  .circle-image-container {
-    width: 100px;
-    height: 100px;
+  .product-box-image {
+    width: 90px;
+    height: 120px;
   }
 
-  .category-name {
+  .product-box-name {
+    font-size: 0.75rem;
+    max-width: 90px;
+  }
+
+  .products-info-text {
+    font-size: 0.9rem;
+  }
+
+  .no-hidden-charges-banner {
     font-size: 0.85rem;
-    max-width: 100px;
+    padding: 0.8rem;
   }
 }
 
@@ -507,33 +576,62 @@
     </div>
   </div>
 
-  <!-- Category Circles Section -->
-  <div class="process-categories">
-    <div class="categories-grid">
-      {% for block in section.blocks %}
-        {% if block.type == 'category' %}
-          <div class="category-circle">
-            <div class="circle-image-container">
-              {% if block.settings.category_image != blank %}
-                <img
-                  src="{{ block.settings.category_image | asset_url }}"
-                  alt="{{ block.settings.category_name }}"
-                  class="circle-image"
-                >
-              {% else %}
-                <div style="width: 100%; height: 100%; background-color: #ddd; display: flex; align-items: center; justify-content: center; color: #999;">No image</div>
-              {% endif %}
-            </div>
-            <p class="category-name">{{ block.settings.category_name }}</p>
-          </div>
-        {% endif %}
-      {% endfor %}
+  <!-- Product Pricing Boxes Section -->
+  <div class="process-products-showcase">
+    <div class="products-grid">
+      <div class="product-box">
+        <div class="product-box-image">
+          <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/regular_tee.png" alt="T-Shirts" class="product-image">
+        </div>
+        <div class="product-box-name">T-SHIRTS</div>
+        <div class="product-box-price">999/-</div>
+      </div>
+
+      <div class="product-box">
+        <div class="product-box-image">
+          <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/cropped_tee.png" alt="Cropped Tees" class="product-image">
+        </div>
+        <div class="product-box-name">CROPPED<br>TEES</div>
+        <div class="product-box-price">699/-</div>
+      </div>
+
+      <div class="product-box">
+        <div class="product-box-image">
+          <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/boxy_vest.png" alt="Boxy Vests" class="product-image">
+        </div>
+        <div class="product-box-name">BOXY<br>VESTS</div>
+        <div class="product-box-price">1099/-</div>
+      </div>
+
+      <div class="product-box">
+        <div class="product-box-image">
+          <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/sweatshirt.png" alt="Sweat Shirts" class="product-image">
+        </div>
+        <div class="product-box-name">SWEAT<br>SHIRTS</div>
+        <div class="product-box-price">1499/-</div>
+      </div>
+
+      <div class="product-box">
+        <div class="product-box-image">
+          <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/hoodie.png" alt="Hoodies" class="product-image">
+        </div>
+        <div class="product-box-name">HOODIES</div>
+        <div class="product-box-price">1699/-</div>
+      </div>
+    </div>
+
+    <!-- Info Text -->
+    <p class="products-info-text">The prices are inclusive of designing and all taxes.<br>Shipping is on us!</p>
+
+    <!-- No Hidden Charges Banner -->
+    <div class="no-hidden-charges-banner">
+      No hidden charges | Same price irrespective of the design!
     </div>
   </div>
 
   <div class="process-header">
-    <h1 class="process-title">{{ section.settings.title | default: "Custom Order Process" }}</h1>
-    <p class="process-subtitle">{{ section.settings.subtitle | default: "Tell us what you have in mind, and we'll craft it for you." }}</p>
+    <h1 class="process-title">GET YOUR CUSTOMISED</h1>
+    <p class="process-subtitle">Fill out the details below so we can create something unique for you.</p>
   </div>
 
   <div class="process-form-container">
@@ -583,6 +681,17 @@
         </select>
       </div>
 
+      <div class="form-group">
+        <label class="form-label" for="ContactFormGender">Recipient's Gender <span style="color: #999; font-weight: normal;">(if you're comfortable sharing)</span></label>
+        <select id="ContactFormGender" name="contact[recipient_gender]" class="form-select">
+          <option value="">Select an option</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Non-binary">Non-binary</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+      </div>
+
       <!-- Product Blocks Container -->
       <div id="productBlocksContainer">
         <!-- Product 1 (always visible, can't be removed) -->
@@ -602,19 +711,6 @@
               <option value="Sweatshirt">Sweatshirt</option>
               <option value="Hoodie">Hoodie</option>
             </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Colour <span class="required">*</span></label>
-            <select name="contact[product_1_colour]" class="form-select colour-select" data-product="1" required>
-              <option value="" disabled selected>Select apparel first</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Quantity <span class="required">*</span></label>
-            <input type="number" name="contact[product_1_quantity]" class="form-input" placeholder="1" min="1" required>
-            <small class="form-hint">For the same design, If you want more than one design, please fill separate forms for the other ones!</small>
           </div>
 
           <div class="form-group">
@@ -643,107 +739,9 @@
         + Add Another Product (up to 5)
       </button>
 
-      <!-- Design Fee Information Section - Purple -->
-      <div class="design-fee-section">
-        <div class="design-fee-title">We can't wait to design for you 🩵</div>
-        <div class="design-fee-text">To begin your order and start designing, we take a small non-refundable advance of ₹400/- per design, which is adjusted in your final product price.</div>
-        <div class="design-fee-text">We will be sharing a draft with you based on your brief and if there are any changes, we can accommodate them however, naturally, it would cause a delay in the order timeline.</div>
-        <div class="design-fee-text">You can find the price breakdown below!✨</div>
-      </div>
-
-      <!-- Price Breakdown Section - Green -->
-      <div class="price-breakdown-section">
-        <div class="price-breakdown-title">Price Breakdown</div>
-        <div class="price-breakdown-subtitle">Sharing the price breakdown for each apparel:</div>
-
-        <!-- T-Shirt -->
-        <div class="apparel-pricing">
-          <div class="apparel-name">T-Shirt</div>
-          <div class="pricing-row">
-            <span class="price-label">Price:</span>
-            <span class="price-value">₹999/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Design Advance:</span>
-            <span class="price-value">₹400/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Balance Amount:</span>
-            <span class="price-value">₹599/-</span>
-          </div>
-        </div>
-
-        <!-- Cropped Tee -->
-        <div class="apparel-pricing">
-          <div class="apparel-name">Cropped Tee</div>
-          <div class="pricing-row">
-            <span class="price-label">Price:</span>
-            <span class="price-value">₹699/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Design Advance:</span>
-            <span class="price-value">₹400/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Balance Amount:</span>
-            <span class="price-value">₹299/-</span>
-          </div>
-        </div>
-
-        <!-- Boxy Vest -->
-        <div class="apparel-pricing">
-          <div class="apparel-name">Boxy Vest</div>
-          <div class="pricing-row">
-            <span class="price-label">Price:</span>
-            <span class="price-value">₹1099/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Design Advance:</span>
-            <span class="price-value">₹400/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Balance Amount:</span>
-            <span class="price-value">₹699/-</span>
-          </div>
-        </div>
-
-        <!-- Sweatshirt -->
-        <div class="apparel-pricing">
-          <div class="apparel-name">Sweatshirt</div>
-          <div class="pricing-row">
-            <span class="price-label">Price:</span>
-            <span class="price-value">₹1499/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Design Advance:</span>
-            <span class="price-value">₹400/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Balance Amount:</span>
-            <span class="price-value">₹1099/-</span>
-          </div>
-        </div>
-
-        <!-- Hoodie -->
-        <div class="apparel-pricing">
-          <div class="apparel-name">Hoodie</div>
-          <div class="pricing-row">
-            <span class="price-label">Price:</span>
-            <span class="price-value">₹1699/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Design Advance:</span>
-            <span class="price-value">₹400/-</span>
-          </div>
-          <div class="pricing-row">
-            <span class="price-label">Balance Amount:</span>
-            <span class="price-value">₹1299/-</span>
-          </div>
-        </div>
-      </div>
-
       <!-- Personalization Questions -->
       <h3 class="section-divider">Personalization</h3>
+      <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">Note: Please provide only the details you'd like to be included in the design.</p>
 
       <div class="form-group">
         <label class="form-label" for="ContactFormHobbies">Hobbies / Interests</label>
@@ -761,27 +759,6 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="ContactFormColourPref">Any particular colour to be included in the design?</label>
-        <textarea id="ContactFormColourPref" name="contact[colour_preference]" class="form-textarea" placeholder="E.g., Red and black theme, pastel tones, neon..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="ContactFormElements">Other Elements</label>
-        <textarea id="ContactFormElements" name="contact[other_elements]" class="form-textarea" placeholder="Anything else to include?"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="ContactFormGender">Recipient's Gender <span style="color: #999; font-weight: normal;">(if you're comfortable sharing)</span></label>
-        <select id="ContactFormGender" name="contact[recipient_gender]" class="form-select">
-          <option value="">Select an option</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Non-binary">Non-binary</option>
-          <option value="Prefer not to say">Prefer not to say</option>
-        </select>
-      </div>
-
-      <div class="form-group">
         <label class="form-label" for="ContactFormJokes">Inside Jokes, Habits, or Traits</label>
         <textarea id="ContactFormJokes" name="contact[inside_jokes]" class="form-textarea" placeholder="Any inside jokes, funny habits, or unique traits we should include?"></textarea>
       </div>
@@ -791,9 +768,14 @@
         <textarea id="ContactFormSymbols" name="contact[symbols_elements]" class="form-textarea" placeholder="E.g., stars, cars, butterflies, hearts, etc."></textarea>
       </div>
 
-      <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
-        <input type="checkbox" id="BillingAddress" name="contact[billing_same]" value="yes" style="width: auto; margin: 0;">
-        <label for="BillingAddress" style="margin-bottom: 0; font-weight: 400; font-size: 0.95rem;">Billing address to be same as this address</label>
+      <div class="form-group">
+        <label class="form-label" for="ContactFormColourPref">Any particular colour to be included in the design?</label>
+        <textarea id="ContactFormColourPref" name="contact[colour_preference]" class="form-textarea" placeholder="E.g., Red and black theme, pastel tones, neon..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ContactFormElements">Is there anything else you'd like us to know?</label>
+        <textarea id="ContactFormElements" name="contact[other_elements]" class="form-textarea" placeholder="Any other details or requests?"></textarea>
       </div>
 
       <!-- File Uploads -->
@@ -811,7 +793,124 @@
         <small class="form-hint">You can also send references via email to <strong>fitkaarclothing@gmail.com</strong></small>
       </div>
 
-      <button type="submit" class="submit-btn">Submit Request</button>
+      <!-- Design Fee Information Section - Purple -->
+      <div class="design-fee-section">
+        <div class="design-fee-title">We can't wait to design for you 🩵</div>
+        <div class="design-fee-text">To begin your order and start designing, we take a small non-refundable advance of ₹400/- per design, which is adjusted in your final product price.</div>
+        <div class="design-fee-text">We will be sharing a draft with you based on your brief and if there are any changes, we can accommodate them however, naturally, it would cause a delay in the order timeline.</div>
+        <div class="design-fee-text">You can find the price breakdown below!✨</div>
+      </div>
+
+      <!-- Price Breakdown Section - Green -->
+      <div class="price-breakdown-section">
+        <div class="price-breakdown-title">Price Breakdown</div>
+
+        <!-- T-Shirt -->
+        <div class="apparel-pricing" id="pricing-Regular Tee">
+          <div class="apparel-name">Regular Tee</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹999/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹599/-</span>
+          </div>
+        </div>
+
+        <!-- Cropped Tee -->
+        <div class="apparel-pricing" id="pricing-Cropped Tee">
+          <div class="apparel-name">Cropped Tee</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹699/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹299/-</span>
+          </div>
+        </div>
+
+        <!-- Boxy Vest -->
+        <div class="apparel-pricing" id="pricing-Boxy Vest">
+          <div class="apparel-name">Boxy Vest</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹1099/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹699/-</span>
+          </div>
+        </div>
+
+        <!-- Sweatshirt -->
+        <div class="apparel-pricing" id="pricing-Sweatshirt">
+          <div class="apparel-name">Sweatshirt</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹1499/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹1099/-</span>
+          </div>
+        </div>
+
+        <!-- Hoodie -->
+        <div class="apparel-pricing" id="pricing-Hoodie">
+          <div class="apparel-name">Hoodie</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹1699/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹1299/-</span>
+          </div>
+        </div>
+
+        <!-- Oversized Tee -->
+        <div class="apparel-pricing" id="pricing-Oversized Tee">
+          <div class="apparel-name">Oversized Tee</div>
+          <div class="pricing-row">
+            <span class="price-label">Price:</span>
+            <span class="price-value">₹999/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Design Advance:</span>
+            <span class="price-value">₹400/-</span>
+          </div>
+          <div class="pricing-row">
+            <span class="price-label">Balance Amount:</span>
+            <span class="price-value">₹599/-</span>
+          </div>
+        </div>
+
+        <p style="font-style: italic; margin-top: 1.5rem; color: #666; font-size: 0.9rem;">To be paid once the design has been finalised</p>
+      </div>
+
+      <button type="submit" class="submit-btn">Proceed</button>
 
     {% endform %}
   </div>
@@ -823,38 +922,34 @@
   let productCount = 1;
   const MAX_PRODUCTS = 5;
 
-  // Colour options per apparel type
-  const coloursByApparel = {
-    'Cropped Tee': ['Black', 'White', 'Baby Pink', 'Lavender', 'Sky Blue'],
-    'Regular Tee': ['Black', 'White', 'Navy Blue', 'Maroon', 'Grey', 'Olive Green', 'Baby Pink', 'Lavender'],
-    'Oversized Tee': ['Black', 'White', 'Navy Blue', 'Beige', 'Grey', 'Olive Green', 'Lavender', 'Baby Pink'],
-    'Boxy Vest': ['Black', 'White', 'Grey'],
-    'Sweatshirt': ['Black', 'White', 'Navy Blue', 'Grey', 'Maroon', 'Olive Green', 'Beige'],
-    'Hoodie': ['Black', 'White', 'Navy Blue', 'Grey', 'Maroon', 'Olive Green', 'Beige']
-  };
+  // Track selected apparels to show/hide pricing
+  const selectedApparels = new Set();
 
-  // Update colour dropdown when apparel changes
+  // Update price breakdown visibility when apparel changes
   document.addEventListener('change', function(e) {
     if (e.target.classList.contains('apparel-select')) {
-      const productNum = e.target.dataset.product;
-      const colourSelect = document.querySelector('.colour-select[data-product="' + productNum + '"]');
-      const apparel = e.target.value;
-      const colours = coloursByApparel[apparel] || [];
-
-      colourSelect.innerHTML = '<option value="" disabled selected>Select Colour</option>';
-      colours.forEach(function(colour) {
-        const opt = document.createElement('option');
-        opt.value = colour;
-        opt.textContent = colour;
-        colourSelect.appendChild(opt);
-      });
-      // Add "Other" option
-      var otherOpt = document.createElement('option');
-      otherOpt.value = 'Other';
-      otherOpt.textContent = 'Other (specify in personalization)';
-      colourSelect.appendChild(otherOpt);
+      updatePriceBreakdown();
+      updateFee();
     }
   });
+
+  // Update price breakdown to show only selected apparels
+  function updatePriceBreakdown() {
+    selectedApparels.clear();
+
+    // Collect all selected apparels
+    document.querySelectorAll('.apparel-select').forEach(function(select) {
+      if (select.value) {
+        selectedApparels.add(select.value);
+      }
+    });
+
+    // Show/hide pricing blocks
+    document.querySelectorAll('.apparel-pricing').forEach(function(block) {
+      var apparelName = block.querySelector('.apparel-name').textContent;
+      block.style.display = selectedApparels.has(apparelName) ? 'block' : 'none';
+    });
+  }
 
   // Add product function
   window.addProduct = function() {
@@ -881,17 +976,6 @@
           '<option value="Sweatshirt">Sweatshirt</option>' +
           '<option value="Hoodie">Hoodie</option>' +
         '</select>' +
-      '</div>' +
-      '<div class="form-group">' +
-        '<label class="form-label">Colour <span class="required">*</span></label>' +
-        '<select name="contact[product_' + productCount + '_colour]" class="form-select colour-select" data-product="' + productCount + '" required>' +
-          '<option value="" disabled selected>Select apparel first</option>' +
-        '</select>' +
-      '</div>' +
-      '<div class="form-group">' +
-        '<label class="form-label">Quantity <span class="required">*</span></label>' +
-        '<input type="number" name="contact[product_' + productCount + '_quantity]" class="form-input" placeholder="1" min="1" required>' +
-        '<small class="form-hint">For same design only.</small>' +
       '</div>' +
       '<div class="form-group">' +
         '<label class="form-label">Size <span class="required">*</span></label>' +
@@ -929,7 +1013,7 @@
       var inputs = b.querySelectorAll('input');
       selects.forEach(function(s) {
         s.name = s.name.replace(/product_\d+/, 'product_' + num);
-        if (s.classList.contains('apparel-select') || s.classList.contains('colour-select')) {
+        if (s.classList.contains('apparel-select')) {
           s.dataset.product = num;
         }
       });
@@ -938,6 +1022,7 @@
       });
     });
 
+    updatePriceBreakdown();
     updateFee();
     updateAddButton();
   };
@@ -946,7 +1031,6 @@
     var count = document.querySelectorAll('.product-block').length;
     document.getElementById('productCountField').value = count;
     var totalFee = DESIGN_FEE * count;
-    document.getElementById('designFeeDisplay').textContent = '\u20B9' + totalFee.toLocaleString('en-IN');
     document.getElementById('designFeeField').value = totalFee;
   }
 

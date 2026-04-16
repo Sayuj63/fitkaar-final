@@ -34,8 +34,8 @@
 <div class="container py-10">
   <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
     <!-- Customize Card -->
-    <a href="{{ section.settings.link_1 | default: '#' }}" class="cta-card">
-        <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/IMG_1957.png?v=1775245458" alt="Customise" class="cta-bg-img">
+    <a href="{{ section.settings.link_1 | default: '#' }}" class="cta-card cta-card-customise">
+        <img src="{{ 'image copy.png' | asset_url }}" alt="Customise" class="cta-bg-img">
         <div class="cta-overlay"></div>
         <div class="cta-content">
             <h2 class="cta-title">Customise</h2>
@@ -54,12 +54,25 @@
 </div>
 
 <style>
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 12, 91, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(113, 182, 200, 0.5);
+  }
+}
+
 .cta-card {
   position: relative;
   height: 250px; /* restored slightly larger mobile height for better proportion */
   display: block;
   overflow: hidden;
   border-radius: 1rem;
+}
+
+.cta-card-customise {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
 
 .cta-title {

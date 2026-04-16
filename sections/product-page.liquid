@@ -479,6 +479,12 @@
     color: currentColor;
   }
 
+  .type-icon-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
   .type-name {
     font-family: var(--font-heading);
     font-size: 0.75rem;
@@ -1198,39 +1204,19 @@
                   <div class="type-icon">
                     {% case value_lower %}
                       {% when 'hoodie' %}
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M7 2h10c1 0 2 1 2 2v4c0 0-1 1-2 1h-1v12H8V9H7c-1 0-2-1-2-1V4c0-1 1-2 2-2z"/>
-                          <circle cx="8.5" cy="5" r="0.5" fill="currentColor"/>
-                          <circle cx="15.5" cy="5" r="0.5" fill="currentColor"/>
-                        </svg>
-                      {% when 'vest' %}
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M7 2v5h10V2M7 7v15h10V7M9 7h6v2H9z"/>
-                        </svg>
-                      {% when 't-shirt' or 'tshirt' %}
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M6 2l2 4v14h8V6l2-4"/>
-                          <path d="M6 6l-2 2v2l2-2"/>
-                          <path d="M18 6l2 2v2l-2-2"/>
-                        </svg>
+                        <img src="{{ 'Sweatshirts.PNG' | asset_url }}" alt="Hoodie" class="type-icon-img">
+                      {% when 'boxy vest' or 'vest' %}
+                        <img src="{{ 'Boxy vests .PNG' | asset_url }}" alt="Boxy Vest" class="type-icon-img">
+                      {% when 'regular tee' or 't-shirt' or 'tshirt' %}
+                        <img src="{{ 'Regular tshirt .PNG' | asset_url }}" alt="Regular Tee" class="type-icon-img">
                       {% when 'sweatshirt' %}
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M6 2h12c1 0 2 1 2 2v6c0 0-1 2-2 2h-1v10H7V12H6c-1 0-2-2-2-2V4c0-1 1-2 2-2z"/>
-                          <path d="M9 5h6"/>
-                        </svg>
-                      {% when 'cropped' %}
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M6 2l2 3v9h8V5l2-3"/>
-                          <path d="M6 5l-2 2v2l2-2"/>
-                          <path d="M18 5l2 2v2l-2-2"/>
-                          <line x1="4" y1="14" x2="20" y2="14"/>
-                        </svg>
+                        <img src="{{ 'Sweatshirts.PNG' | asset_url }}" alt="Sweatshirt" class="type-icon-img">
+                      {% when 'oversized tee' or 'oversized' %}
+                        <img src="{{ 'Oversized tees.PNG' | asset_url }}" alt="Oversized Tee" class="type-icon-img">
+                      {% when 'cropped tee' or 'cropped' %}
+                        <img src="{{ 'Cropped tee .PNG' | asset_url }}" alt="Cropped Tee" class="type-icon-img">
                       {% else %}
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M6 2l2 4v14h8V6l2-4"/>
-                          <path d="M6 6l-2 2v2l2-2"/>
-                          <path d="M18 6l2 2v2l-2-2"/>
-                        </svg>
+                        <img src="{{ 'Regular tshirt .PNG' | asset_url }}" alt="{{ value }}" class="type-icon-img">
                     {% endcase %}
                   </div>
                   <span class="type-name">{{ value }}</span>

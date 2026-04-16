@@ -1125,10 +1125,8 @@
       <!-- Price -->
       <div class="product-price-section">
         <div class="product-price">
-          {{ product.selected_or_first_available_variant.price | money }}
-          {% if product.compare_at_price > product.price %}
-            <span class="compare-price">{{ product.compare_at_price | money }}</span>
-          {% endif %}
+          <span x-text="'Rs. ' + (currentVariantPrice / 100).toFixed(2)"></span>
+          <span class="compare-price" x-show="currentVariantComparePrice > currentVariantPrice" x-text="'Rs. ' + (currentVariantComparePrice / 100).toFixed(2)"></span>
         </div>
         <p class="price-note">Prices include free shipping and are inclusive of all taxes.</p>
       </div>
@@ -1664,6 +1662,17 @@
 
       isColorAvailable(color) {
         return this.availableColorsForType.includes(color);
+      },
+
+      // Current variant price getter
+      get currentVariantPrice() {
+        const variant = this.variants.find(v => v.id === this.selectedVariantId);
+        return variant ? variant.price : {{ product.selected_or_first_available_variant.price }};
+      },
+
+      get currentVariantComparePrice() {
+        const variant = this.variants.find(v => v.id === this.selectedVariantId);
+        return variant ? (variant.compare_at_price || variant.price) : ({{ product.selected_or_first_available_variant.compare_at_price | default: product.selected_or_first_available_variant.price }});
       },
 
       // Variant Methods

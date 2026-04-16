@@ -351,11 +351,12 @@
   cursor: not-allowed;
 }
 
-/* Design Fee Section - Purple */
+/* Design Fee Section - Blue */
 .design-fee-section {
-  background: #e8d5f2;
-  border: 1px solid #d4b5e8;
+  background: #d5e8f2;
+  border: 1px solid #a8d4e8;
   padding: 25px;
+  display: none;
   margin-top: 2rem;
   margin-bottom: 2rem;
   border-radius: 4px;
@@ -414,6 +415,7 @@
   margin-top: 1.5rem;
   margin-bottom: 2rem;
   border-radius: 4px;
+  display: none;
 }
 
 .price-breakdown-title {
@@ -943,6 +945,18 @@
         selectedApparels.add(select.value);
       }
     });
+
+    // Show/hide the entire design fee and price breakdown sections
+    var hasSelected = selectedApparels.size > 0;
+    var designFeeSection = document.querySelector('.design-fee-section');
+    var priceBreakdownSection = document.querySelector('.price-breakdown-section');
+
+    if (designFeeSection) {
+      designFeeSection.style.display = hasSelected ? 'block' : 'none';
+    }
+    if (priceBreakdownSection) {
+      priceBreakdownSection.style.display = hasSelected ? 'block' : 'none';
+    }
 
     // Show/hide pricing blocks
     document.querySelectorAll('.apparel-pricing').forEach(function(block) {

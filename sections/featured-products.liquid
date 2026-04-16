@@ -22,6 +22,29 @@
 }
 {% endschema %}
 
+<style>
+.featured-product-btn {
+  width: 100%;
+  padding: 16px 32px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.featured-product-btn:hover {
+  background: #333;
+  transform: translateY(-2px);
+}
+</style>
+
 <section class="py-12 bg-white">
   <div class="container">
     <h2 class="text-center text-4xl font-bold mb-8 uppercase" style="color: var(--color-primary); font-family: var(--font-heading);">{{ section.settings.title }}</h2>
@@ -73,7 +96,7 @@
                
               <form method="post" action="/cart/add" class="mt-4">
                   <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
-                  <button type="submit" class="w-full bg-black text-white py-3 font-bold uppercase hover:opacity-90">Add to Cart - ₹{{ product.price | divided_by: 100 }}/-</button>
+                  <button type="submit" class="featured-product-btn">Add to Cart - ₹{{ product.price | divided_by: 100 }}/-</button>
               </form>
             </div>
           </div>

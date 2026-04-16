@@ -23,12 +23,9 @@
 
     <!-- Logo -->
     <div class="logo">
-      <a href="/" class="flex items-center">
-        {% if section.settings.logo %}
-          <img src="{{ section.settings.logo | image_url: width: 150 }}" alt="{{ shop.name }}" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}">
-        {% else %}
-          <span class="h2" style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--color-primary);">FITKAAR</span>
-        {% endif %}
+      <a href="/" class="flex items-center gap-2">
+        <img src="{{ 'image copy 5.png' | asset_url }}" alt="Fitkaar Logo" style="height: 50px; width: auto; object-fit: contain;">
+        <span class="h2" style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--color-primary); margin: 0;">FITKAAR</span>
       </a>
     </div>
 

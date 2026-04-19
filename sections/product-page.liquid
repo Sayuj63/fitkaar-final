@@ -1040,6 +1040,76 @@
       min-width: 100%;
     }
   }
+
+  /* Dual Vertical Carousel */
+  .dual-vertical-carousel {
+    margin-top: 40px;
+    padding: 40px 0;
+    overflow: hidden;
+  }
+
+  .carousel-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height: 600px;
+  }
+
+  .carousel-column {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #f9f9f9;
+  }
+
+  .carousel-column-track {
+    display: flex;
+    flex-direction: column;
+    height: 200%;
+    animation: scrollUp 30s linear infinite;
+  }
+
+  .carousel-column-track.reverse {
+    animation: scrollDown 30s linear infinite;
+  }
+
+  .carousel-column-slide {
+    flex: 0 0 50%;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+  }
+
+  .carousel-column-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .carousel-column-slide:hover img {
+    transform: scale(1.05);
+  }
+
+  @keyframes scrollUp {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+
+  @keyframes scrollDown {
+    0% { transform: translateY(-50%); }
+    100% { transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .carousel-columns {
+      grid-template-columns: 1fr;
+      height: 400px;
+    }
+    .carousel-column-slide {
+      height: 200px;
+    }
+  }
 </style>
 
 <section class="product-page" x-data="productPage()" x-init="initSwipe()">
@@ -1117,6 +1187,44 @@
           </template>
         </div>
       </template>
+      <!-- Dual Vertical Carousel -->
+      <div class="dual-vertical-carousel">
+        <div class="carousel-columns">
+          <!-- Left Column (Scrolls Up) -->
+          <div class="carousel-column">
+            <div class="carousel-column-track">
+              <template x-for="(image, index) in visibleImages" :key="'left-' + index">
+                <div class="carousel-column-slide">
+                  <img :src="image.src" :alt="image.alt">
+                </div>
+              </template>
+              <!-- Repeat for infinite scroll -->
+              <template x-for="(image, index) in visibleImages" :key="'left-repeat-' + index">
+                <div class="carousel-column-slide">
+                  <img :src="image.src" :alt="image.alt">
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Right Column (Scrolls Down) -->
+          <div class="carousel-column">
+            <div class="carousel-column-track reverse">
+              <template x-for="(image, index) in visibleImages" :key="'right-' + index">
+                <div class="carousel-column-slide">
+                  <img :src="image.src" :alt="image.alt">
+                </div>
+              </template>
+              <!-- Repeat for infinite scroll -->
+              <template x-for="(image, index) in visibleImages" :key="'right-repeat-' + index">
+                <div class="carousel-column-slide">
+                  <img :src="image.src" :alt="image.alt">
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Right Column: Product Info -->

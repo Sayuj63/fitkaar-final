@@ -11,53 +11,9 @@
   "sections": {
     "main": {
       "type": "process-page",
-      "blocks": {
-        "category_EiDiyE": {
-          "type": "category",
-          "settings": {
-            "category_image": "",
-            "category_name": "Category"
-          }
-        },
-        "category_Wx3Axj": {
-          "type": "category",
-          "settings": {
-            "category_image": "",
-            "category_name": "Category"
-          }
-        },
-        "category_nccyVq": {
-          "type": "category",
-          "settings": {
-            "category_image": "",
-            "category_name": "Category"
-          }
-        },
-        "category_WHRkeQ": {
-          "type": "category",
-          "settings": {
-            "category_image": "",
-            "category_name": "Category"
-          }
-        },
-        "category_BTBmDD": {
-          "type": "category",
-          "settings": {
-            "category_image": "",
-            "category_name": "Category"
-          }
-        }
-      },
-      "block_order": [
-        "category_EiDiyE",
-        "category_Wx3Axj",
-        "category_nccyVq",
-        "category_WHRkeQ",
-        "category_BTBmDD"
-      ],
       "settings": {
-        "creative_image": "image copy 4.png",
-        "creative_alt_text": "Fitkaar Process",
+        "banner_image_1": "shopify://shop_images/Home_page_3.png",
+        "banner_image_2": "shopify://shop_images/Home_page_2.png",
         "title": "Custom Order Process",
         "subtitle": "Fill out the details below so we can create something unique for you.",
         "design_fee_amount": 499

@@ -18,52 +18,33 @@
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h1v1H0V0zm2 0h1v1H2V0zm2 0h1v1H4V0zm2 0h1v1H6V0zm2 0h1v1H8V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0zm2 0h1v1h-1V0z' fill='%23e8e4de' fill-opacity='0.4'/%3E%3C/svg%3E");
 }
 
-/* Creative Section */
+/* Creative Section - Full Width Slideshow */
 .process-creative {
-  text-align: center;
-  padding: 4rem 1rem;
+  width: 100%;
+  height: 850px;
   margin-bottom: 3rem;
+  overflow: hidden;
 }
 
 .creative-wrapper {
   position: relative;
   width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  transition: transform 0.3s ease;
-  transform-origin: center center;
+  height: 100%;
 }
 
 .creative-image {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
-  display: block;
-}
-
-/* Decorative tape on creative image */
-.creative-wrapper::before,
-.creative-wrapper::after {
-  content: '';
   position: absolute;
-  width: 60px;
-  height: 25px;
-  background: linear-gradient(135deg, rgba(255, 240, 200, 0.9) 0%, rgba(255, 230, 170, 0.85) 100%);
-  z-index: 10;
-  transform: rotate(-5deg);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  top: 0;
+  left: 0;
 }
 
-.creative-wrapper::before {
-  top: -10px;
-  left: 20%;
-}
-
-.creative-wrapper::after {
-  bottom: -10px;
-  right: 20%;
-  transform: rotate(5deg);
+.creative-image.active {
+  opacity: 1;
 }
 
 /* Product Pricing Boxes Section */
@@ -574,14 +555,23 @@
 </style>
 
 <div class="process-page">
-  <!-- Creative Section -->
+  <!-- Creative Section - Full Width Slideshow -->
   <div class="process-creative">
     <div class="creative-wrapper">
-      <img
-        src="{{ section.settings.creative_image | asset_url }}"
-        alt="{{ section.settings.creative_alt_text }}"
-        class="creative-image"
-      >
+      {% if section.settings.banner_image_1 %}
+        <img
+          src="{{ section.settings.banner_image_1 | image_url: width: 1600 }}"
+          alt="Banner 1"
+          class="creative-image active"
+        >
+      {% endif %}
+      {% if section.settings.banner_image_2 %}
+        <img
+          src="{{ section.settings.banner_image_2 | image_url: width: 1600 }}"
+          alt="Banner 2"
+          class="creative-image"
+        >
+      {% endif %}
     </div>
   </div>
 
@@ -921,6 +911,18 @@
 
 <script>
 (function() {
+  // Slideshow for creative section
+  const images = document.querySelectorAll('.creative-image');
+  let currentSlide = 0;
+
+  if (images.length > 1) {
+    setInterval(() => {
+      images[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % images.length;
+      images[currentSlide].classList.add('active');
+    }, 4000);
+  }
+
   const DESIGN_FEE = {{ section.settings.design_fee_amount | default: 499 }};
   let productCount = 1;
   const MAX_PRODUCTS = 5;
@@ -1063,16 +1065,14 @@
   "name": "Process Page",
   "settings": [
     {
-      "type": "text",
-      "id": "creative_image",
-      "label": "Creative Image Filename",
-      "default": "image copy 4.png"
+      "type": "image_picker",
+      "id": "banner_image_1",
+      "label": "Banner Image 1"
     },
     {
-      "type": "text",
-      "id": "creative_alt_text",
-      "label": "Creative Image Alt Text",
-      "default": "Fitkaar Process"
+      "type": "image_picker",
+      "id": "banner_image_2",
+      "label": "Banner Image 2"
     },
     {
       "type": "text",
@@ -1096,25 +1096,6 @@
       "id": "design_fee_amount",
       "label": "Design Fee per Product (INR)",
       "default": 499
-    }
-  ],
-  "blocks": [
-    {
-      "type": "category",
-      "name": "Category",
-      "settings": [
-        {
-          "type": "text",
-          "id": "category_image",
-          "label": "Category Image Filename"
-        },
-        {
-          "type": "text",
-          "id": "category_name",
-          "label": "Category Name",
-          "default": "Category"
-        }
-      ]
     }
   ],
   "presets": [

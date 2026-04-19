@@ -1187,40 +1187,40 @@
           </template>
         </div>
       </template>
-      <!-- Dual Vertical Carousel -->
+      <!-- Dual Vertical Carousel - All Product Images -->
       <div class="dual-vertical-carousel">
         <div class="carousel-columns">
           <!-- Left Column (Scrolls Up) -->
           <div class="carousel-column">
             <div class="carousel-column-track">
-              <template x-for="(image, index) in visibleImages" :key="'left-' + index">
+              {% for image in product.images %}
                 <div class="carousel-column-slide">
-                  <img :src="image.src" :alt="image.alt">
+                  <img src="{{ image | image_url: width: 400 }}" alt="{{ product.title }}">
                 </div>
-              </template>
+              {% endfor %}
               <!-- Repeat for infinite scroll -->
-              <template x-for="(image, index) in visibleImages" :key="'left-repeat-' + index">
+              {% for image in product.images %}
                 <div class="carousel-column-slide">
-                  <img :src="image.src" :alt="image.alt">
+                  <img src="{{ image | image_url: width: 400 }}" alt="{{ product.title }}">
                 </div>
-              </template>
+              {% endfor %}
             </div>
           </div>
 
           <!-- Right Column (Scrolls Down) -->
           <div class="carousel-column">
             <div class="carousel-column-track reverse">
-              <template x-for="(image, index) in visibleImages" :key="'right-' + index">
+              {% for image in product.images %}
                 <div class="carousel-column-slide">
-                  <img :src="image.src" :alt="image.alt">
+                  <img src="{{ image | image_url: width: 400 }}" alt="{{ product.title }}">
                 </div>
-              </template>
+              {% endfor %}
               <!-- Repeat for infinite scroll -->
-              <template x-for="(image, index) in visibleImages" :key="'right-repeat-' + index">
+              {% for image in product.images %}
                 <div class="carousel-column-slide">
-                  <img :src="image.src" :alt="image.alt">
+                  <img src="{{ image | image_url: width: 400 }}" alt="{{ product.title }}">
                 </div>
-              </template>
+              {% endfor %}
             </div>
           </div>
         </div>

@@ -38,20 +38,55 @@
   color: {{ section.settings.text_color }};
 }
 
+.typewriter-container {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.typewriter-text {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid rgba(255,255,255,0.75);
+  animation:
+    typing 5s steps(40, end) infinite,
+    blink-caret 0.75s step-end infinite;
+  max-width: fit-content;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.typewriter-text .highlight {
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+@keyframes typing {
+  0% { width: 0; }
+  35% { width: 100%; }
+  85% { width: 100%; }
+  100% { width: 0; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: rgba(255,255,255,0.75); }
+}
+
 @keyframes gradientShift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
 </style>
 
-<div class="announcement-bar announcement-bar-gradient" style="position: relative; z-index: 50;">
-  <div class="container text-center py-2 flex justify-center items-center h-full">
+<div class="announcement-bar announcement-bar-gradient" style="position: relative; z-index: 50; padding: 8px 0;">
+  <div style="text-align: center;">
     <div class="typewriter-container">
-       <p class="text-sm font-medium typewriter-text" style="margin: 0; display: inline-block;">
+      <p class="typewriter-text" style="margin: 0; font-size: 0.9rem; font-weight: 500;">
         {% assign text = section.settings.text %}
         {% assign highlight = section.settings.highlight_text %}
         {% if text contains highlight %}
-          {% assign highlight_span = '<span class="highlight" style="font-weight: 800; text-decoration: underline;">' | append: highlight | append: '</span>' %}
+          {% assign highlight_span = '<span class="highlight">' | append: highlight | append: '</span>' %}
           {{ text | replace: highlight, highlight_span }}
         {% else %}
           {{ text }}

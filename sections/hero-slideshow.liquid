@@ -54,11 +54,49 @@
   display: block;
 }
 
+.hero-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.hero-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.hero-dot.active {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.hero-dot:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 /* Ensure container maintains aspect ratio on mobile */
 @media (max-width: 768px) {
   .hero-fade-slideshow {
     height: 60vh;
     max-height: 600px;
+  }
+
+  .hero-dots {
+    bottom: 20px;
+    gap: 8px;
+  }
+
+  .hero-dot {
+    width: 8px;
+    height: 8px;
   }
 }
 </style>
@@ -85,70 +123,84 @@
   <div class="hero-slide" data-index="6">
     <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/Home_page_6.png?v=1768768964" alt="Fitkaar Home 6">
   </div>
+
+  <div class="hero-dots" id="heroDots"></div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const slides = document.querySelectorAll('#heroSlideshow .hero-slide');
+  const dotsContainer = document.getElementById('heroDots');
   const totalSlides = slides.length;
   let currentSlide = 0;
   const duration = {{ section.settings.slide_duration | default: 4 }} * 1000;
   let slideTimer;
   let gifDuration = 0;
-  const GIF_INDEX = 4; // Index of the GIF slide (5th slide, 0-indexed)
+  const GIF_INDEX = 4;
+
+  // Create dots
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('div');
+    dot.classList.add('hero-dot');
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+  }
+
+  const dots = document.querySelectorAll('.hero-dot');
+
+  function updateDots() {
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentSlide);
+    });
+  }
+
+  function goToSlide(index) {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = index;
+    slides[currentSlide].classList.add('active');
+    updateDots();
+    clearTimeout(slideTimer);
+    slideTimer = setTimeout(nextSlide, duration);
+  }
 
   // Show first slide
   if (slides.length > 0) {
     slides[0].classList.add('active');
   }
 
-  // Function to detect GIF duration
   function getGifDuration(imgElement) {
     return new Promise((resolve) => {
-      // Create a temporary canvas to analyze the GIF
       const img = new Image();
       img.src = imgElement.src;
-      
       img.onload = function() {
-        // For GIFs, we'll estimate based on file size and typical frame rates
-        // Most GIFs are 10-15 frames at 10fps, so roughly 1-1.5 seconds
-        // We'll use a safe default of 3 seconds to ensure it completes
-        // You can adjust this value based on your specific GIF
-        const estimatedDuration = 3000; // 3 seconds
-        resolve(estimatedDuration);
+        resolve(3000);
       };
-      
       img.onerror = function() {
-        resolve(duration); // Fallback to normal duration
+        resolve(duration);
       };
     });
   }
 
-  // Fade transition function
   async function nextSlide() {
     slides[currentSlide].classList.remove('active');
     currentSlide = (currentSlide + 1) % totalSlides;
     slides[currentSlide].classList.add('active');
+    updateDots();
 
-    // Clear existing timer
     if (slideTimer) {
       clearTimeout(slideTimer);
     }
 
-    // Check if current slide is the GIF
     if (currentSlide === GIF_INDEX) {
       const gifImg = slides[currentSlide].querySelector('img');
       const gifDuration = await getGifDuration(gifImg);
-      
-      // Wait for GIF to complete before transitioning
-      slideTimer = setTimeout(nextSlide, gifDuration + 1000); // Add 1 second buffer
+      slideTimer = setTimeout(nextSlide, gifDuration + 1000);
     } else {
-      // Normal slide duration
       slideTimer = setTimeout(nextSlide, duration);
     }
   }
 
-  // Start the slideshow
   slideTimer = setTimeout(nextSlide, duration);
 });
 </script>

@@ -84,7 +84,7 @@
 
 <style>
 .testimonials-carousel-section {
-  background: {{ section.settings.bg_color }};
+  background-color: transparent;
   padding: 60px 0;
   overflow: hidden;
   position: relative;
@@ -93,48 +93,31 @@
 
 .testimonials-carousel-title {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 42px;
   font-weight: 900;
-  letter-spacing: 0.1em;
+  letter-spacing: 2px;
+  word-spacing: 5px;
   margin-bottom: 40px;
-  font-family: var(--font-heading);
-  color: #1a1a1a;
+  font-family: var(--font-primary);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  padding: 0 20px;
 }
 
 .testimonials-track-wrapper {
   position: relative;
   width: 100%;
   overflow: hidden;
+  padding: 10px 0;
+  will-change: transform;
 }
-
-/* Fade edges removed 
-.testimonials-track-wrapper::before,
-.testimonials-track-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.testimonials-track-wrapper::before {
-  left: 0;
-  background: linear-gradient(to right, {{ section.settings.bg_color }}, transparent);
-}
-
-.testimonials-track-wrapper::after {
-  right: 0;
-  background: linear-gradient(to left, {{ section.settings.bg_color }}, transparent);
-}
-*/
 
 .testimonials-track {
   display: flex;
-  gap: 10px;
+  gap: 0;
   animation: scrollTestimonials {{ section.settings.speed }}s linear infinite;
   width: max-content;
+  will-change: transform;
 }
 
 .testimonials-track:hover {
@@ -152,19 +135,25 @@
 
 .testimonial-card {
   flex-shrink: 0;
-  width: 500px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-}
-
-.testimonial-card:hover {
-  transform: translateY(-5px);
+  display: block;
+  margin: 0;
+  padding: 0;
+  margin-right: -145px;
 }
 
 .testimonial-card img {
-  width: 100%;
-  height: auto;
+  height: 300px;
+  width: auto;
+  object-fit: contain;
   display: block;
+  margin: 0;
+  padding: 0;
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover img {
+  transform: scale(1.02);
+  z-index: 10;
 }
 
 /* Responsive */
@@ -174,35 +163,31 @@
   }
 
   .testimonials-carousel-title {
-    font-size: 1.8rem;
+    font-size: 28px;
     margin-bottom: 30px;
+    letter-spacing: 1px;
   }
 
   .testimonial-card {
-    width: 400px;
+    margin-right: -100px;
   }
 
-  .testimonials-track {
-    gap: 8px;
-  }
-
-  .testimonials-track-wrapper::before,
-  .testimonials-track-wrapper::after {
-    width: 50px;
+  .testimonial-card img {
+    height: 250px;
   }
 }
 
 @media (max-width: 480px) {
   .testimonial-card {
-    width: 320px;
+    margin-right: -80px;
   }
 
   .testimonials-carousel-title {
-    font-size: 1.5rem;
+    font-size: 20px;
   }
 
-  .testimonials-track {
-    gap: 6px;
+  .testimonial-card img {
+    height: 200px;
   }
 }
 </style>

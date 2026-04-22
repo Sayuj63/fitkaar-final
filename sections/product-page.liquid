@@ -721,6 +721,71 @@
     font-weight: 600;
   }
 
+  .unit-sizes-panel {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border: 1px solid #e3e6ef;
+    border-radius: 10px;
+    background: #f8f9fc;
+  }
+
+  .unit-sizes-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-primary, #000c5b);
+    margin-bottom: 4px;
+  }
+
+  .unit-sizes-subtitle {
+    font-size: 0.78rem;
+    color: #666;
+    margin-bottom: 12px;
+  }
+
+  .unit-sizes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+  }
+
+  .unit-size-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #e3e6ef;
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+
+  .unit-size-row__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-primary, #000c5b);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .unit-size-row select {
+    flex: 1;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #111;
+    padding: 4px 18px 4px 4px;
+    cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, #111 50%), linear-gradient(135deg, #111 50%, transparent 50%);
+    background-position: calc(100% - 9px) 55%, calc(100% - 4px) 55%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+  }
+
   .quantity-input:focus {
     outline: none;
   }
@@ -1102,17 +1167,11 @@
   }
 
   @media (max-width: 768px) {
-    .carousel-columns {
-      grid-template-columns: 1fr;
-      height: 400px;
-    }
-    .carousel-column-slide {
-      height: 200px;
-    }
+    .dual-vertical-carousel { display: none !important; }
   }
 </style>
 
-<section class="product-page" x-data="productPage()" x-init="initSwipe()">
+<section class="product-page" x-data="productPage()" x-init="initSwipe(); initUnitSizes()">
   <div class="product-container">
     <!-- Left Column: Image Gallery Carousel -->
     <div class="product-gallery">
@@ -1423,8 +1482,28 @@
           <span class="quantity-label">Quantity</span>
           <div class="quantity-controls">
             <button class="quantity-btn" @click="quantity > 1 ? quantity-- : null">-</button>
-            <input type="number" class="quantity-input" x-model="quantity" min="1" max="10">
+            <input type="number" class="quantity-input" x-model.number="quantity" min="1" max="10">
             <button class="quantity-btn" @click="quantity < 10 ? quantity++ : null">+</button>
+          </div>
+        </div>
+
+        <!-- Per-unit sizes (visible only when quantity > 1) -->
+        <div class="unit-sizes-panel" x-show="quantity > 1" x-cloak>
+          <div class="unit-sizes-title">Size for each unit</div>
+          <div class="unit-sizes-subtitle">Pick a size for every piece you're ordering — they can be different.</div>
+          <div class="unit-sizes-grid">
+            <template x-for="(size, idx) in unitSizes" :key="idx">
+              <label class="unit-size-row">
+                <span class="unit-size-row__label" x-text="'Unit ' + (idx + 1)"></span>
+                <select :value="size" @change="setUnitSize(idx, $event.target.value)">
+                  {% if size_opt %}
+                    {% for value in size_opt.values %}
+                      <option value="{{ value }}">{{ value }}</option>
+                    {% endfor %}
+                  {% endif %}
+                </select>
+              </label>
+            </template>
           </div>
         </div>
 
@@ -1483,32 +1562,37 @@
       <div class="details-section">
         <!-- Description -->
         <div class="accordion-item">
-          <button class="accordion-toggle" :class="{ 'open': accordions.description }" @click="accordions.description = !accordions.description">
+          <button class="accordion-toggle" :class="{ 'open': openAccordion === 'description' }" @click="toggleAccordion('description')">
             <span>Description</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-          <div class="accordion-content" :class="{ 'open': accordions.description }">
+          <div class="accordion-content" :class="{ 'open': openAccordion === 'description' }">
             <ul>
-              <li><strong>Neckline:</strong> Round Neck</li>
-              <li><strong>Composition:</strong> 100% Cotton</li>
-              <li><strong>Fabric Weight:</strong> 180 GSM</li>
-              <li><strong>Print Type:</strong> DTF Printing</li>
-              <li><strong>Country of Production:</strong> India</li>
+              <template x-for="item in descriptionLines" :key="item.label + item.value">
+                <li>
+                  <template x-if="item.label">
+                    <span><strong x-text="item.label + ':'"></strong>&nbsp;<span x-text="item.value"></span></span>
+                  </template>
+                  <template x-if="!item.label">
+                    <span x-text="item.value"></span>
+                  </template>
+                </li>
+              </template>
             </ul>
           </div>
         </div>
 
         <!-- Wash Care -->
         <div class="accordion-item">
-          <button class="accordion-toggle" :class="{ 'open': accordions.washcare }" @click="accordions.washcare = !accordions.washcare">
+          <button class="accordion-toggle" :class="{ 'open': openAccordion === 'washcare' }" @click="toggleAccordion('washcare')">
             <span>Wash Care Instructions</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-          <div class="accordion-content" :class="{ 'open': accordions.washcare }">
+          <div class="accordion-content" :class="{ 'open': openAccordion === 'washcare' }">
             <ul>
               <li>Machine wash or hand wash in normal water</li>
               <li>Do not wash in hot water</li>
@@ -1524,36 +1608,35 @@
 
         <!-- Please Note -->
         <div class="accordion-item">
-          <button class="accordion-toggle" :class="{ 'open': accordions.notes }" @click="accordions.notes = !accordions.notes">
+          <button class="accordion-toggle" :class="{ 'open': openAccordion === 'notes' }" @click="toggleAccordion('notes')">
             <span>Please Note</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-          <div class="accordion-content" :class="{ 'open': accordions.notes }">
+          <div class="accordion-content" :class="{ 'open': openAccordion === 'notes' }">
             <ul>
               <li>Colours may slightly vary depending on screen brightness</li>
               <li>Actual product specifications and GSM may vary by ±5%</li>
               <li>Each product has its own size chart</li>
+              <li>Print size and placement may vary slightly from the digital mock-ups shown</li>
             </ul>
           </div>
         </div>
 
         <!-- Product Feel & Fit -->
         <div class="accordion-item">
-          <button class="accordion-toggle" :class="{ 'open': accordions.feel }" @click="accordions.feel = !accordions.feel">
+          <button class="accordion-toggle" :class="{ 'open': openAccordion === 'feel' }" @click="toggleAccordion('feel')">
             <span>Product Feel & Fit</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-          <div class="accordion-content" :class="{ 'open': accordions.feel }">
+          <div class="accordion-content" :class="{ 'open': openAccordion === 'feel' }">
             <ul>
-              <li>Soft, printed cotton fabric with a smooth feel on the skin</li>
-              <li>Ribbed trim around the neckline</li>
-              <li>Comfortable half sleeves for ease of movement</li>
-              <li>Breathable and suitable for Indian weather</li>
-              <li>Unisex design that is easy to style for everyday wear, whether for casual outings or a more dressed-up look</li>
+              <template x-for="line in feelFitLines" :key="line">
+                <li x-text="line"></li>
+              </template>
             </ul>
           </div>
         </div>
@@ -1593,6 +1676,196 @@
   <!-- Toast Notification -->
   <div class="toast" :class="{ 'show': toastVisible }" x-text="toastMessage"></div>
 </section>
+
+<style>
+  .pdp-strip {
+    padding: 60px 20px;
+    background: #fff;
+    border-top: 1px solid #eee;
+  }
+  .pdp-strip + .pdp-strip { border-top: 1px solid #eee; }
+
+  .pdp-strip__inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .pdp-strip__title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-primary, #000c5b);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 24px 0;
+    text-align: center;
+  }
+
+  .pdp-strip__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (min-width: 700px)  { .pdp-strip__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1024px) { .pdp-strip__grid { grid-template-columns: repeat(5, 1fr); } }
+
+  .pdp-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .pdp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  }
+  .pdp-card__image {
+    aspect-ratio: 3 / 4;
+    background: #f5f5f5;
+    overflow: hidden;
+  }
+  .pdp-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .pdp-card:hover .pdp-card__image img { transform: scale(1.04); }
+  .pdp-card__info { padding: 12px 14px 14px; }
+  .pdp-card__title {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    line-height: 1.3;
+    color: #000;
+  }
+  .pdp-card__price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-primary, #000c5b);
+  }
+
+  .pdp-strip--hidden { display: none; }
+</style>
+
+{%- comment -%} You may also like — picks from the same collection as the current product {%- endcomment -%}
+{%- assign related_collection = product.collections | first -%}
+{%- if related_collection -%}
+  {%- assign related_products = related_collection.products -%}
+  {%- assign related_count = 0 -%}
+  {%- for p in related_products -%}
+    {%- if p.id != product.id -%}{%- assign related_count = related_count | plus: 1 -%}{%- endif -%}
+  {%- endfor -%}
+
+  {%- if related_count > 0 -%}
+    <section class="pdp-strip">
+      <div class="pdp-strip__inner">
+        <h2 class="pdp-strip__title">You may also like</h2>
+        <div class="pdp-strip__grid">
+          {%- assign shown = 0 -%}
+          {%- for p in related_products -%}
+            {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+            {%- if shown >= 5 -%}{%- break -%}{%- endif -%}
+            <a href="{{ p.url }}" class="pdp-card">
+              <div class="pdp-card__image">
+                {%- if p.featured_image != blank -%}
+                  <img src="{{ p.featured_image | image_url: width: 500 }}" alt="{{ p.title | escape }}" loading="lazy">
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg w-full h-full' }}
+                {%- endif -%}
+              </div>
+              <div class="pdp-card__info">
+                <h3 class="pdp-card__title">{{ p.title }}</h3>
+                <div class="pdp-card__price">₹{{ p.price | divided_by: 100 }}/-</div>
+              </div>
+            </a>
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%} Recently viewed — populated client-side via localStorage {%- endcomment -%}
+<section class="pdp-strip pdp-strip--hidden" id="RecentlyViewedStrip" aria-hidden="true">
+  <div class="pdp-strip__inner">
+    <h2 class="pdp-strip__title">Recently viewed</h2>
+    <div class="pdp-strip__grid" id="RecentlyViewedGrid"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'fitkaar:recentlyViewed';
+  var MAX_ITEMS = 12;
+
+  var currentProduct = {
+    id: {{ product.id | json }},
+    handle: {{ product.handle | json }},
+    url: {{ product.url | json }},
+    title: {{ product.title | json }},
+    price: {{ product.price | json }},
+    image: {{ product.featured_image | image_url: width: 500 | json }}
+  };
+
+  function read() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+  function write(list) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+
+  var list = read().filter(function(item) { return item && item.id !== currentProduct.id; });
+  list.unshift(currentProduct);
+  if (list.length > MAX_ITEMS) list = list.slice(0, MAX_ITEMS);
+  write(list);
+
+  var toRender = list.filter(function(item) { return item.id !== currentProduct.id; }).slice(0, 5);
+  if (toRender.length === 0) return;
+
+  var strip = document.getElementById('RecentlyViewedStrip');
+  var grid  = document.getElementById('RecentlyViewedGrid');
+  if (!strip || !grid) return;
+
+  grid.innerHTML = toRender.map(function(p) {
+    var priceText = (typeof p.price === 'number') ? ('₹' + (p.price / 100) + '/-') : '';
+    var imgHtml = p.image
+      ? '<img src="' + p.image + '" alt="' + escapeAttr(p.title || '') + '" loading="lazy">'
+      : '';
+    return '<a href="' + escapeAttr(p.url || '#') + '" class="pdp-card">' +
+             '<div class="pdp-card__image">' + imgHtml + '</div>' +
+             '<div class="pdp-card__info">' +
+               '<h3 class="pdp-card__title">' + escapeHtml(p.title || '') + '</h3>' +
+               (priceText ? '<div class="pdp-card__price">' + priceText + '</div>' : '') +
+             '</div>' +
+           '</a>';
+  }).join('');
+
+  strip.classList.remove('pdp-strip--hidden');
+  strip.setAttribute('aria-hidden', 'false');
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+  function escapeAttr(s) {
+    return escapeHtml(s).replace(/"/g, '&quot;');
+  }
+})();
+</script>
 
 <script>
   function productPage() {
@@ -1692,14 +1965,165 @@
       // Quantity
       quantity: 1,
 
+      // Per-unit sizes (one entry per unit when quantity > 1)
+      unitSizes: [],
+
+      initUnitSizes() {
+        this.unitSizes = [this.selectedSize];
+        this.$watch('quantity', (newQty) => {
+          const qty = Math.max(1, parseInt(newQty, 10) || 1);
+          if (this.unitSizes.length < qty) {
+            while (this.unitSizes.length < qty) this.unitSizes.push(this.selectedSize);
+          } else if (this.unitSizes.length > qty) {
+            this.unitSizes = this.unitSizes.slice(0, qty);
+          }
+        });
+        this.$watch('selectedSize', (newSize, oldSize) => {
+          // If every unit still shows the old main size, mirror the new one across all units.
+          // Otherwise the customer has customised each unit — leave them alone.
+          if (this.unitSizes.every(s => s === oldSize)) {
+            this.unitSizes = this.unitSizes.map(() => newSize);
+          }
+        });
+      },
+
+      setUnitSize(idx, size) {
+        const copy = this.unitSizes.slice();
+        copy[idx] = size;
+        this.unitSizes = copy;
+      },
+
+      findVariantIdForSize(size) {
+        const variant = this.variants.find(v => {
+          const options = [v.option1, v.option2, v.option3].filter(Boolean);
+          const selected = [this.selectedColor, size, this.selectedType].filter(Boolean);
+          return selected.every(sel => options.includes(sel));
+        });
+        return variant ? variant.id : null;
+      },
+
+      buildCartItems() {
+        if (this.quantity <= 1) {
+          return [{ id: this.selectedVariantId, quantity: 1 }];
+        }
+        const counts = {};
+        for (let i = 0; i < this.quantity; i++) {
+          const size = this.unitSizes[i] || this.selectedSize;
+          const id = this.findVariantIdForSize(size) || this.selectedVariantId;
+          counts[id] = (counts[id] || 0) + 1;
+        }
+        return Object.keys(counts).map(id => ({ id: parseInt(id, 10), quantity: counts[id] }));
+      },
+
       // UI State
       isAddingToCart: false,
       sizeChartOpen: false,
-      accordions: {
-        description: true,
-        washcare: false,
-        notes: false,
-        feel: false
+
+      // Only one accordion open at a time
+      openAccordion: 'description',
+      toggleAccordion(key) {
+        this.openAccordion = this.openAccordion === key ? null : key;
+      },
+
+      // Per-apparel Description (changes with selectedType)
+      descriptionsByType: {
+        'Hoodie': [
+          { label: 'Composition', value: 'Heavyweight Cotton fleece' },
+          { label: 'Fabric Weight', value: '450 GSM' },
+          { label: 'Print Type', value: 'DTF Printing' },
+          { label: 'Country of Production', value: 'India' }
+        ],
+        'Sweatshirt': [
+          { label: 'Neckline', value: 'Crewneck' },
+          { label: 'Composition', value: 'Thick Cotton fleece' },
+          { label: 'Fabric Weight', value: '360 GSM' },
+          { label: 'Print Type', value: 'DTF Printing' },
+          { label: 'Country of Production', value: 'India' }
+        ],
+        'Boxy Vest': [
+          { label: 'Neckline', value: 'Round Neck' },
+          { label: 'Composition', value: '100% Cotton' },
+          { label: 'Fabric Weight', value: '240 GSM' },
+          { label: 'Print Type', value: 'DTF Printing' },
+          { label: 'Country of Production', value: 'India' }
+        ],
+        'Cropped Tee': [
+          { label: 'Neckline', value: 'Round Neck' },
+          { label: 'Composition', value: '100% Cotton' },
+          { label: 'Fabric Weight', value: '180 GSM' },
+          { label: 'Print Type', value: 'DTF Printing' },
+          { label: 'Country of Production', value: 'India' }
+        ],
+        'Regular Tee': [
+          { label: 'Neckline', value: 'Round Neck' },
+          { label: 'Composition', value: '100% Cotton' },
+          { label: 'Fabric Weight', value: '180 GSM' },
+          { label: 'Print Type', value: 'DTF Printing' },
+          { label: 'Country of Production', value: 'India' }
+        ],
+        'Oversized Tee': [
+          { label: 'Neckline', value: 'Round Neck' },
+          { label: 'Composition', value: '100% Cotton' },
+          { label: 'Fabric Weight', value: '180 GSM' },
+          { label: 'Print Type', value: 'DTF Printing' },
+          { label: 'Country of Production', value: 'India' }
+        ]
+      },
+
+      // Per-apparel Product Feel & Fit
+      feelFitByType: {
+        'Hoodie': [
+          'Heavyweight Cotton fleece fabric with a thick, premium feel',
+          'Brushed inner surface that provides warmth and insulation',
+          'Comfortable full sleeves with ribbed cuffs and neckline',
+          'Designed to keep you warm and cosy during winters',
+          'Unisex design that is easy to style for everyday wear'
+        ],
+        'Sweatshirt': [
+          'Soft cotton fleece fabric with a thick, premium feel',
+          'Brushed inner surface that provides warmth and insulation',
+          'Comfortable full sleeves with ribbed cuffs and neckline',
+          'Designed to keep you warm and cosy during winters',
+          'Unisex design that is easy to style for everyday wear'
+        ],
+        'Boxy Vest': [
+          'Soft, printed cotton fabric with a smooth feel on the skin',
+          'Ribbed trim around the neckline',
+          'Comfortable cut sleeves for ease of movement',
+          'Breathable and suitable for Indian weather',
+          'Unisex design that is easy to style for everyday wear'
+        ],
+        'Cropped Tee': [
+          'Soft, printed cotton fabric with a smooth feel on the skin',
+          'Ribbed trim around the neckline',
+          'Body-hugging silhouette',
+          'Cropped length for a fitted, flattering look',
+          'Breathable and suitable for Indian weather'
+        ],
+        'Regular Tee': [
+          'Soft, printed cotton fabric with a smooth feel on the skin',
+          'Ribbed trim around the neckline',
+          'Comfortable half sleeves for ease of movement',
+          'Breathable and suitable for Indian weather',
+          'Unisex design that is easy to style for everyday wear'
+        ],
+        'Oversized Tee': [
+          'Soft, printed cotton fabric with a smooth feel on the skin',
+          'Ribbed trim around the neckline',
+          'Relaxed, oversized silhouette for a trendy street-style look',
+          'Breathable and suitable for Indian weather',
+          'Unisex design that is easy to style for everyday wear'
+        ]
+      },
+
+      get descriptionLines() {
+        return this.descriptionsByType[this.selectedType]
+            || this.descriptionsByType['Regular Tee'];
+      },
+
+      get feelFitLines() {
+        return this.feelFitByType[this.selectedType]
+            || this.feelFitByType['Regular Tee'];
       },
 
       // Pincode
@@ -1896,20 +2320,15 @@
         this.isAddingToCart = true;
 
         try {
+          const items = this.buildCartItems();
           const response = await fetch(window.routes.cart_add_url + '.js', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              id: this.selectedVariantId,
-              quantity: this.quantity
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items })
           });
 
           if (response.ok) {
             this.showToast('Added to cart!');
-            // Update cart count in header
             this.updateCartCount();
           } else {
             const error = await response.json();
@@ -1926,15 +2345,11 @@
         this.isAddingToCart = true;
 
         try {
+          const items = this.buildCartItems();
           const response = await fetch(window.routes.cart_add_url + '.js', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              id: this.selectedVariantId,
-              quantity: this.quantity
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items })
           });
 
           if (response.ok) {

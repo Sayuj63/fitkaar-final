@@ -112,11 +112,24 @@
   opacity: 0.9;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
 }
+
+.reels-section {
+  padding: 20px 0 24px;
+  background: #fff;
+  overflow: hidden;
+}
+.reels-section .reels-heading {
+  margin-bottom: 18px;
+}
+@media (max-width: 768px) {
+  .reels-section { padding: 14px 0 18px; }
+  .reels-section .reels-heading { margin-bottom: 14px; }
+}
 </style>
 
-<section class="py-12 bg-white overflow-hidden">
+<section class="reels-section">
   {% if section.settings.title != blank %}
-    <h2 class="text-center text-3xl font-bold mb-8 uppercase" style="font-family: var(--font-heading);">{{ section.settings.title }}</h2>
+    <h2 class="reels-heading text-center text-3xl font-bold uppercase" style="font-family: var(--font-heading);">{{ section.settings.title }}</h2>
   {% endif %}
 
   <div class="marquee-container w-full">

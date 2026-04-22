@@ -12,37 +12,17 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
-        "image_slide_jD3fkR": {
+        "image_slide_xefXph": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/131_338c33ff-a84e-42e5-b05d-5e1dc7b464f1.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
-        "video_slide_ChhzKM": {
-          "type": "video_slide",
-          "settings": {
-            "video": "shopify://files/videos/home page video (laptop ratio) .MOV",
-            "autoplay": true,
-            "loop": true,
-            "alt": "Fitkaar hero video",
-            "link": ""
-          }
-        },
-        "image_slide_wLTUAj": {
-          "type": "image_slide",
-          "settings": {
-            "image": "shopify://shop_images/Heroine_Creatives_5.png",
+            "image": "shopify://shop_images/5_home_page_mobile.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
         }
       },
       "block_order": [
-        "image_slide_jD3fkR",
-        "video_slide_ChhzKM",
-        "image_slide_wLTUAj"
+        "image_slide_xefXph"
       ],
       "settings": {
         "slide_duration": 4,

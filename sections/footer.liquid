@@ -26,11 +26,15 @@
   /* Column 1 - Logo + Taglines */
   .fk-footer__logo-col {
     flex: 0 0 auto;
-    max-width: 220px;
+    max-width: 360px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+
+  .fk-footer__brand-tagline .fk-footer__brand-line {
+    white-space: nowrap;
   }
 
   .fk-footer__logo {
@@ -289,6 +293,12 @@
       width: 22px;
       height: 22px;
     }
+    .fk-footer__logo-col {
+      max-width: 100%;
+    }
+    .fk-footer__brand-tagline .fk-footer__brand-line {
+      white-space: normal;
+    }
   }
 </style>
 
@@ -302,8 +312,8 @@
         <img src="{{ 'FitKaar.png' | asset_url }}" alt="{{ shop.name }}" loading="lazy">
       </div>
       <p class="fk-footer__brand-tagline">
-        India's first ever fully customisable clothing brand<br>
-        Serving Pan India
+        <span class="fk-footer__brand-line">India's first ever fully customisable clothing brand</span><br>
+        <span class="fk-footer__brand-line">Serving Pan India</span>
       </p>
     </div>
 

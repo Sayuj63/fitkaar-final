@@ -15,6 +15,21 @@
       "default": "FREE shipping"
     },
     {
+      "type": "text",
+      "id": "separator",
+      "label": "Separator between repeats",
+      "default": "✦"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll speed (seconds per loop)",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "default": 40
+    },
+    {
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
@@ -38,60 +53,103 @@
   color: {{ section.settings.text_color }};
 }
 
-.typewriter-container {
-  display: inline-block;
+.announcement-marquee {
   overflow: hidden;
+  position: relative;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
 }
 
-.typewriter-text {
-  display: inline-block;
+.announcement-track {
+  display: flex;
+  width: max-content;
+  animation: announcementScroll {{ section.settings.speed }}s linear infinite;
+  will-change: transform;
+}
+
+.announcement-track:hover {
+  animation-play-state: paused;
+}
+
+.announcement-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  overflow: hidden;
-  border-right: 2px solid rgba(255,255,255,0.75);
-  animation:
-    typing 5s steps(40, end) infinite,
-    blink-caret 0.75s step-end infinite;
-  max-width: fit-content;
-  letter-spacing: 0.05em;
   line-height: 1.2;
 }
 
-.typewriter-text .highlight {
+.announcement-item .sep {
+  opacity: 0.6;
+  font-size: 0.8rem;
+}
+
+.announcement-item .highlight {
   font-weight: 800;
-  text-decoration: underline;
+  color: #fff;
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.55),
+    0 0 14px rgba(113, 182, 200, 0.45);
+  animation: highlightGlow 2.4s ease-in-out infinite;
 }
 
-@keyframes typing {
-  0% { width: 0; }
-  35% { width: 100%; }
-  85% { width: 100%; }
-  100% { width: 0; }
-}
-
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: rgba(255,255,255,0.75); }
+@keyframes announcementScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 @keyframes gradientShift {
   0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+@keyframes highlightGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 6px rgba(255, 255, 255, 0.45),
+      0 0 14px rgba(113, 182, 200, 0.35);
+  }
+  50% {
+    text-shadow:
+      0 0 10px rgba(255, 255, 255, 0.85),
+      0 0 22px rgba(113, 182, 200, 0.75);
+  }
+}
+
+@media (max-width: 768px) {
+  .announcement-item {
+    gap: 1.75rem;
+    padding-right: 1.75rem;
+    font-size: 0.8rem;
+  }
 }
 </style>
 
+{%- assign text = section.settings.text -%}
+{%- assign highlight = section.settings.highlight_text -%}
+{%- assign separator = section.settings.separator | default: '•' -%}
+
+{%- if text contains highlight and highlight != blank -%}
+  {%- capture highlight_span -%}<span class="highlight">{{ highlight }}</span>{%- endcapture -%}
+  {%- assign rendered_text = text | replace: highlight, highlight_span -%}
+{%- else -%}
+  {%- assign rendered_text = text -%}
+{%- endif -%}
+
 <div class="announcement-bar announcement-bar-gradient" style="position: relative; z-index: 50; padding: 8px 0;">
-  <div style="text-align: center;">
-    <div class="typewriter-container">
-      <p class="typewriter-text" style="margin: 0; font-size: 0.9rem; font-weight: 500;">
-        {% assign text = section.settings.text %}
-        {% assign highlight = section.settings.highlight_text %}
-        {% if text contains highlight %}
-          {% assign highlight_span = '<span class="highlight">' | append: highlight | append: '</span>' %}
-          {{ text | replace: highlight, highlight_span }}
-        {% else %}
-          {{ text }}
-        {% endif %}
-      </p>
+  <div class="announcement-marquee">
+    <div class="announcement-track">
+      {%- for i in (1..8) -%}
+        <span class="announcement-item">
+          {{ rendered_text }}
+          <span class="sep" aria-hidden="true">{{ separator }}</span>
+        </span>
+      {%- endfor -%}
     </div>
   </div>
 </div>

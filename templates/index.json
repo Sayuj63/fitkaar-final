@@ -11,8 +11,44 @@
   "sections": {
     "slideshow": {
       "type": "hero-slideshow",
+      "blocks": {
+        "slide_1": {
+          "type": "image_slide",
+          "settings": {
+            "alt": "Fitkaar hero slide"
+          }
+        },
+        "slide_2": {
+          "type": "image_slide",
+          "settings": {
+            "alt": "Fitkaar hero slide"
+          }
+        },
+        "slide_3": {
+          "type": "image_slide",
+          "settings": {
+            "alt": "Fitkaar hero slide"
+          }
+        },
+        "slide_4": {
+          "type": "video_slide",
+          "settings": {
+            "autoplay": true,
+            "loop": true,
+            "alt": "Fitkaar hero video"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4"
+      ],
       "settings": {
-        "slide_duration": 4
+        "slide_duration": 4,
+        "desktop_height": 100,
+        "mobile_height": 60
       }
     },
     "cta_double": {
@@ -20,7 +56,7 @@
       "settings": {
         "image_1": "shopify://shop_images/IMG_4354.png",
         "image_2": "shopify://shop_images/IMG_4354.png",
-        "link_1": "",
+        "link_1": "/pages/process",
         "link_2": ""
       }
     },

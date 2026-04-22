@@ -12,24 +12,38 @@
   "blocks": [
     {
       "type": "reel",
-      "name": "Reel Thumbnail",
+      "name": "Reel",
       "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Upload reel video",
+          "info": "Upload an mp4/mov directly from Shopify admin. Plays muted and loops on hover/tap."
+        },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Thumbnail Image"
+          "label": "Thumbnail / poster image",
+          "info": "Shown before the video plays. Used as the still thumbnail if no video is uploaded."
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Reel Link"
+          "label": "Reel link (optional)",
+          "info": "If set, clicking opens this link (e.g. Instagram reel). Otherwise clicking plays the video inline."
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Reels Carousel"
+      "name": "Reels Carousel",
+      "blocks": [
+        { "type": "reel" },
+        { "type": "reel" },
+        { "type": "reel" },
+        { "type": "reel" }
+      ]
     }
   ]
 }
@@ -67,6 +81,37 @@
     flex: 0 0 200px; /* Fixed width for mobile items */
   }
 }
+
+.reel-item video,
+.reel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.reel-item .reel-media {
+  position: absolute;
+  inset: 0;
+}
+
+.reel-play-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0);
+  transition: background 0.25s ease;
+  pointer-events: none;
+}
+.reel-item:hover .reel-play-icon {
+  background: rgba(0,0,0,0.2);
+}
+.reel-play-icon svg {
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+}
 </style>
 
 <section class="py-12 bg-white overflow-hidden">
@@ -79,22 +124,55 @@
       <!-- We duplicate blocks 4 times to ensure seamless loop with 3 visible items -->
       {% for i in (1..4) %}
         {% for block in section.blocks %}
-          <!-- 9:16 aspect ratio for Instagram Reels -->
-          <a href="{{ block.settings.link | default: '#' }}" 
-             class="reel-item block relative overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition-shadow" 
-             style="width: 280px; height: 498px; flex-shrink: 0;">
-             {% if block.settings.image %}
-               <img src="{{ block.settings.image | image_url: width: 400 }}" alt="Reel" class="w-full h-full object-cover">
-             {% else %}
-               {{ 'image' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover opacity-50' }}
-             {% endif %}
-             <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-20 transition-all">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="#fff" class="opacity-0 hover:opacity-100 transition-opacity"><path d="M8 5v14l11-7z"/></svg>
-             </div>
-          </a>
+          {%- assign has_video = false -%}
+          {%- if block.settings.video != blank -%}{%- assign has_video = true -%}{%- endif -%}
+          {%- assign poster_url = '' -%}
+          {%- if block.settings.image != blank -%}
+            {%- assign poster_url = block.settings.image | image_url: width: 800 -%}
+          {%- endif -%}
+
+          {%- capture reel_inner -%}
+            <div class="reel-media" {{ block.shopify_attributes }}>
+              {%- if has_video -%}
+                <video
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  {% if poster_url != '' %}poster="{{ poster_url }}"{% endif %}
+                  data-reel-video>
+                  {%- for source in block.settings.video.sources -%}
+                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {%- endfor -%}
+                </video>
+              {%- elsif poster_url != '' -%}
+                <img src="{{ poster_url }}" alt="Reel" loading="lazy">
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover opacity-50' }}
+              {%- endif -%}
+            </div>
+            <div class="reel-play-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          {%- endcapture -%}
+
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}"
+               class="reel-item block relative overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition-shadow"
+               style="width: 280px; height: 498px; flex-shrink: 0;"
+               data-reel>
+              {{ reel_inner }}
+            </a>
+          {%- else -%}
+            <div class="reel-item block relative overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition-shadow"
+                 style="width: 280px; height: 498px; flex-shrink: 0;"
+                 data-reel>
+              {{ reel_inner }}
+            </div>
+          {%- endif -%}
         {% endfor %}
       {% endfor %}
-      
+
       <!-- Placeholder if empty -->
       {% if section.blocks.size == 0 %}
          {% for i in (1..6) %}
@@ -104,3 +182,18 @@
     </div>
   </div>
 </section>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-reel]').forEach(function(card) {
+    var video = card.querySelector('[data-reel-video]');
+    if (!video) return;
+    card.addEventListener('mouseenter', function() { video.play().catch(function(){}); });
+    card.addEventListener('mouseleave', function() { video.pause(); });
+    card.addEventListener('touchstart', function() {
+      if (video.paused) video.play().catch(function(){});
+      else video.pause();
+    }, { passive: true });
+  });
+})();
+</script>

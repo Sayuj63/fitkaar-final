@@ -9,44 +9,129 @@
       "min": 2,
       "max": 10,
       "step": 1,
-      "default": 2
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop height (vh)",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile height (vh)",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_slide",
+      "name": "Image Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide image",
+          "info": "Upload directly from Shopify admin."
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text",
+          "default": "Fitkaar hero slide"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Slide link (optional)"
+        }
+      ]
+    },
+    {
+      "type": "video_slide",
+      "name": "Video Slide",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Slide video",
+          "info": "Upload an mp4/mov directly from Shopify admin."
+        },
+        {
+          "type": "image_picker",
+          "id": "poster",
+          "label": "Poster image",
+          "info": "Shown before the video plays and as a fallback."
+        },
+        {
+          "type": "checkbox",
+          "id": "autoplay",
+          "label": "Autoplay (muted)",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "loop",
+          "label": "Loop",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text",
+          "default": "Fitkaar hero video"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Slide link (optional)"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Hero Slideshow"
+      "name": "Hero Slideshow",
+      "blocks": [
+        { "type": "image_slide" },
+        { "type": "image_slide" },
+        { "type": "image_slide" }
+      ]
     }
   ]
 }
 {% endschema %}
 
 <style>
-.hero-fade-slideshow {
+#HeroSlideshow-{{ section.id }} {
   position: relative;
   width: 100%;
-  height: 100vh;
-  max-height: 800px;
+  height: {{ section.settings.desktop_height }}vh;
+  max-height: 900px;
   overflow: hidden;
+  background: #000;
 }
 
-.hero-slide {
+#HeroSlideshow-{{ section.id }} .hero-slide {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   opacity: 0;
   transition: opacity 1s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.hero-slide.active {
+#HeroSlideshow-{{ section.id }} .hero-slide.active {
   opacity: 1;
 }
 
-.hero-slide img {
+#HeroSlideshow-{{ section.id }} .hero-slide img,
+#HeroSlideshow-{{ section.id }} .hero-slide video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -54,7 +139,13 @@
   display: block;
 }
 
-.hero-dots {
+#HeroSlideshow-{{ section.id }} .hero-slide a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#HeroSlideshow-{{ section.id }} .hero-dots {
   position: absolute;
   bottom: 30px;
   left: 50%;
@@ -64,7 +155,7 @@
   z-index: 10;
 }
 
-.hero-dot {
+#HeroSlideshow-{{ section.id }} .hero-dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -74,133 +165,169 @@
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
-.hero-dot.active {
+#HeroSlideshow-{{ section.id }} .hero-dot.active {
   background-color: rgba(255, 255, 255, 1);
 }
 
-.hero-dot:hover {
+#HeroSlideshow-{{ section.id }} .hero-dot:hover {
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-/* Ensure container maintains aspect ratio on mobile */
-@media (max-width: 768px) {
-  .hero-fade-slideshow {
-    height: 60vh;
-    max-height: 600px;
-  }
+#HeroSlideshow-{{ section.id }} .hero-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #fff;
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
 
-  .hero-dots {
+@media (max-width: 768px) {
+  #HeroSlideshow-{{ section.id }} {
+    height: {{ section.settings.mobile_height }}vh;
+    max-height: 700px;
+  }
+  #HeroSlideshow-{{ section.id }} .hero-dots {
     bottom: 20px;
     gap: 8px;
   }
-
-  .hero-dot {
+  #HeroSlideshow-{{ section.id }} .hero-dot {
     width: 8px;
     height: 8px;
   }
 }
 </style>
 
-<div class="hero-slideshow hero-fade-slideshow" id="heroSlideshow">
-  <div class="hero-slide" data-index="0">
-    <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/Home_page_1.png?v=1768768965" alt="Fitkaar Home 1" loading="eager">
-  </div>
-  <div class="hero-slide" data-index="1">
-    <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/Home_page_2.png?v=1768768965" alt="Fitkaar Home 2">
-  </div>
-  <div class="hero-slide" data-index="2">
-    <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/Home_page_3.png?v=1768768964" alt="Fitkaar Home 3">
-  </div>
-  <div class="hero-slide" data-index="3">
-    <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/home_page_4.png?v=1768768964" alt="Fitkaar Home 4">
-  </div>
-  <div class="hero-slide" data-index="4" data-is-gif="true">
-    <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/hero.gif?v=1766316556" alt="Fitkaar Hero GIF">
-  </div>
-  <div class="hero-slide" data-index="5">
-    <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/Home_page_5.png?v=1768768964" alt="Fitkaar Home 5">
-  </div>
-  <div class="hero-slide" data-index="6">
-    <img src="https://cdn.shopify.com/s/files/1/0716/3373/1756/files/Home_page_6.png?v=1768768964" alt="Fitkaar Home 6">
-  </div>
+<div class="hero-slideshow hero-fade-slideshow" id="HeroSlideshow-{{ section.id }}">
+  {%- if section.blocks.size == 0 -%}
+    <div class="hero-empty">Add a slide from the theme editor</div>
+  {%- else -%}
+    {%- for block in section.blocks -%}
+      {%- assign is_active = '' -%}
+      {%- if forloop.first -%}{%- assign is_active = ' active' -%}{%- endif -%}
 
-  <div class="hero-dots" id="heroDots"></div>
+      {%- case block.type -%}
+        {%- when 'image_slide' -%}
+          <div class="hero-slide{{ is_active }}" data-index="{{ forloop.index0 }}" data-type="image" {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 2000 }}"
+                srcset="{{ block.settings.image | image_url: width: 800 }} 800w,
+                        {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                        {{ block.settings.image | image_url: width: 1600 }} 1600w,
+                        {{ block.settings.image | image_url: width: 2000 }} 2000w"
+                sizes="100vw"
+                alt="{{ block.settings.alt | escape }}"
+                {% if forloop.first %}loading="eager"{% else %}loading="lazy"{% endif %}
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}">
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg w-full h-full' }}
+            {%- endif -%}
+            {%- if block.settings.link != blank -%}</a>{%- endif -%}
+          </div>
+
+        {%- when 'video_slide' -%}
+          <div class="hero-slide{{ is_active }}" data-index="{{ forloop.index0 }}" data-type="video" {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
+            {%- if block.settings.video != blank -%}
+              <video
+                class="hero-video"
+                {% if block.settings.autoplay %}autoplay muted playsinline{% endif %}
+                {% if block.settings.loop %}loop{% endif %}
+                preload="metadata"
+                {% if block.settings.poster != blank %}poster="{{ block.settings.poster | image_url: width: 2000 }}"{% endif %}>
+                {%- for source in block.settings.video.sources -%}
+                  <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                {%- endfor -%}
+              </video>
+            {%- elsif block.settings.poster != blank -%}
+              <img src="{{ block.settings.poster | image_url: width: 2000 }}" alt="{{ block.settings.alt | escape }}">
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg w-full h-full' }}
+            {%- endif -%}
+            {%- if block.settings.link != blank -%}</a>{%- endif -%}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+
+    <div class="hero-dots" data-hero-dots></div>
+  {%- endif -%}
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const slides = document.querySelectorAll('#heroSlideshow .hero-slide');
-  const dotsContainer = document.getElementById('heroDots');
-  const totalSlides = slides.length;
-  let currentSlide = 0;
-  const duration = {{ section.settings.slide_duration | default: 4 }} * 1000;
-  let slideTimer;
-  let gifDuration = 0;
-  const GIF_INDEX = 4;
+(function() {
+  var root = document.getElementById('HeroSlideshow-{{ section.id }}');
+  if (!root) return;
+  var slides = root.querySelectorAll('.hero-slide');
+  var dotsContainer = root.querySelector('[data-hero-dots]');
+  if (!slides.length || !dotsContainer) return;
 
-  // Create dots
-  for (let i = 0; i < totalSlides; i++) {
-    const dot = document.createElement('div');
-    dot.classList.add('hero-dot');
-    if (i === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => goToSlide(i));
+  var current = 0;
+  var total = slides.length;
+  var duration = {{ section.settings.slide_duration | default: 4 }} * 1000;
+  var timer;
+
+  for (var i = 0; i < total; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+    (function(idx) {
+      dot.addEventListener('click', function() { goTo(idx); });
+    })(i);
     dotsContainer.appendChild(dot);
   }
-
-  const dots = document.querySelectorAll('.hero-dot');
+  var dots = dotsContainer.querySelectorAll('.hero-dot');
 
   function updateDots() {
-    dots.forEach((dot, index) => {
-      dot.classList.toggle('active', index === currentSlide);
-    });
+    dots.forEach(function(d, idx) { d.classList.toggle('active', idx === current); });
   }
 
-  function goToSlide(index) {
-    slides[currentSlide].classList.remove('active');
-    currentSlide = index;
-    slides[currentSlide].classList.add('active');
-    updateDots();
-    clearTimeout(slideTimer);
-    slideTimer = setTimeout(nextSlide, duration);
-  }
+  function activate(idx) {
+    slides.forEach(function(s) { s.classList.remove('active'); });
+    slides[idx].classList.add('active');
 
-  // Show first slide
-  if (slides.length > 0) {
-    slides[0].classList.add('active');
-  }
-
-  function getGifDuration(imgElement) {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.src = imgElement.src;
-      img.onload = function() {
-        resolve(3000);
-      };
-      img.onerror = function() {
-        resolve(duration);
-      };
-    });
-  }
-
-  async function nextSlide() {
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % totalSlides;
-    slides[currentSlide].classList.add('active');
-    updateDots();
-
-    if (slideTimer) {
-      clearTimeout(slideTimer);
+    var v = slides[idx].querySelector('video');
+    if (v) {
+      try { v.currentTime = 0; v.play(); } catch (e) {}
     }
+    slides.forEach(function(s, i) {
+      if (i !== idx) {
+        var other = s.querySelector('video');
+        if (other) { try { other.pause(); } catch (e) {} }
+      }
+    });
 
-    if (currentSlide === GIF_INDEX) {
-      const gifImg = slides[currentSlide].querySelector('img');
-      const gifDuration = await getGifDuration(gifImg);
-      slideTimer = setTimeout(nextSlide, gifDuration + 1000);
+    current = idx;
+    updateDots();
+  }
+
+  function goTo(idx) {
+    clearTimeout(timer);
+    activate(idx);
+    schedule();
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    var slide = slides[current];
+    var vid = slide.querySelector('video');
+    if (vid && !vid.paused) {
+      var waitFor = isFinite(vid.duration) && vid.duration > 0 ? vid.duration * 1000 : duration;
+      timer = setTimeout(next, Math.max(2000, waitFor));
     } else {
-      slideTimer = setTimeout(nextSlide, duration);
+      timer = setTimeout(next, duration);
     }
   }
 
-  slideTimer = setTimeout(nextSlide, duration);
-});
+  function next() {
+    activate((current + 1) % total);
+    schedule();
+  }
+
+  schedule();
+})();
 </script>

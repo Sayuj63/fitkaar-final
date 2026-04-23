@@ -98,18 +98,28 @@
         "reel_2": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/IMG_2890.MOV",
             "link": ""
           }
         },
         "reel_3": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/IMG_2894.MOV",
+            "link": ""
+          }
+        },
+        "reel_hNhN4K": {
+          "type": "reel",
+          "settings": {
+            "video": "shopify://files/videos/IMG_2892.MOV",
             "link": ""
           }
         },
         "reel_4": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/IMG_2896.MOV",
             "link": ""
           }
         }
@@ -119,6 +129,7 @@
         "reel_1",
         "reel_2",
         "reel_3",
+        "reel_hNhN4K",
         "reel_4"
       ],
       "settings": {

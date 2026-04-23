@@ -27,7 +27,7 @@
       "settings": {
         "slide_duration": 4,
         "desktop_height": 100,
-        "mobile_height": 60
+        "mobile_aspect": "1/1"
       }
     },
     "cta_double": {
@@ -81,6 +81,13 @@
     "reels": {
       "type": "reels-carousel",
       "blocks": {
+        "reel_zRez7H": {
+          "type": "reel",
+          "settings": {
+            "video": "shopify://files/videos/IMG_2888.MOV",
+            "link": ""
+          }
+        },
         "reel_1": {
           "type": "reel",
           "settings": {
@@ -107,6 +114,7 @@
         }
       },
       "block_order": [
+        "reel_zRez7H",
         "reel_1",
         "reel_2",
         "reel_3",

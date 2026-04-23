@@ -91,6 +91,7 @@
         "reel_1": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/IMG_2891.MOV",
             "link": ""
           }
         },

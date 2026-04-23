@@ -1525,9 +1525,11 @@
               <label class="unit-size-row">
                 <span class="unit-size-row__label" x-text="'Unit ' + (idx + 1)"></span>
                 <select :value="size" @change="setUnitSize(idx, $event.target.value)">
-                  <template x-for="sv in availableSizesForType" :key="sv">
-                    <option :value="sv" x-text="sv"></option>
-                  </template>
+                  {% if size_opt %}
+                    {% for value in size_opt.values %}
+                      <option value="{{ value }}" :hidden="!isSizeAvailable('{{ value }}')">{{ value }}</option>
+                    {% endfor %}
+                  {% endif %}
                 </select>
               </label>
             </template>
@@ -1679,7 +1681,10 @@
           Returns & Refunds
         </div>
         <p>
-          As we are a customisable clothing brand, even our existing designs offer fit and colour customisation. Due to this, we do not offer returns or exchanges.
+          As we are a customisable clothing brand, each product is uniquely manufactured for every individual order. Hence, we do not offer any returns or exchanges.
+        </p>
+        <p>
+          We ensure that all products adhere to the provided size chart. In case of any queries or concerns regarding sizing or your order, our team will be happy to assist you.
           {% if section.settings.returns_policy_url != blank %}
             For more details, please refer to our <a href="{{ section.settings.returns_policy_url }}">Returns & Refunds Policy</a> page.
           {% endif %}

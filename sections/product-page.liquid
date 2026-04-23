@@ -1338,10 +1338,37 @@
                   {% when 'beige' %}{% assign swatch_color = '#f5f5dc' %}
                   {% when 'red' %}{% assign swatch_color = '#dc2626' %}
                   {% when 'blue' %}{% assign swatch_color = '#2563eb' %}
+                  {% when 'royal blue' %}{% assign swatch_color = '#1d4ed8' %}
+                  {% when 'sky blue' or 'light blue' %}{% assign swatch_color = '#7dd3fc' %}
+                  {% when 'baby blue' %}{% assign swatch_color = '#bfdbfe' %}
+                  {% when 'teal' %}{% assign swatch_color = '#0f766e' %}
                   {% when 'brown' %}{% assign swatch_color = '#5C4033' %}
+                  {% when 'tan' %}{% assign swatch_color = '#d2b48c' %}
                   {% when 'navy' or 'navy blue' %}{% assign swatch_color = '#000c5b' %}
                   {% when 'bottle green' %}{% assign swatch_color = '#006A4E' %}
+                  {% when 'olive' or 'olive green' %}{% assign swatch_color = '#556b2f' %}
+                  {% when 'green' %}{% assign swatch_color = '#16a34a' %}
+                  {% when 'mint' or 'mint green' %}{% assign swatch_color = '#a7f3d0' %}
                   {% when 'grey' or 'gray' %}{% assign swatch_color = '#6b7280' %}
+                  {% when 'light grey' or 'light gray' %}{% assign swatch_color = '#d1d5db' %}
+                  {% when 'charcoal' %}{% assign swatch_color = '#374151' %}
+                  {% when 'pink' %}{% assign swatch_color = '#ec4899' %}
+                  {% when 'hot pink' %}{% assign swatch_color = '#db2777' %}
+                  {% when 'baby pink' or 'light pink' %}{% assign swatch_color = '#fbcfe8' %}
+                  {% when 'peach' %}{% assign swatch_color = '#fcd5ce' %}
+                  {% when 'coral' %}{% assign swatch_color = '#ff7f50' %}
+                  {% when 'orange' %}{% assign swatch_color = '#f97316' %}
+                  {% when 'mustard' %}{% assign swatch_color = '#d4a017' %}
+                  {% when 'yellow' %}{% assign swatch_color = '#facc15' %}
+                  {% when 'purple' %}{% assign swatch_color = '#7c3aed' %}
+                  {% when 'lavender' %}{% assign swatch_color = '#c4b5fd' %}
+                  {% when 'maroon' %}{% assign swatch_color = '#7f1d1d' %}
+                  {% when 'wine' %}{% assign swatch_color = '#601c34' %}
+                  {% when 'cream' %}{% assign swatch_color = '#fffdd0' %}
+                  {% when 'ivory' %}{% assign swatch_color = '#fffff0' %}
+                  {% else %}
+                    {% comment %}Multi-word or unknown colour: strip spaces so CSS doesn't break{% endcomment %}
+                    {% assign swatch_color = value_lower | replace: ' ', '' %}
                 {% endcase %}
                 
                 <div
@@ -2117,13 +2144,25 @@
         ]
       },
 
+      normalizeType(type) {
+        if (!type) return 'Regular Tee';
+        const t = String(type).toLowerCase().trim();
+        if (t.includes('hoodie')) return 'Hoodie';
+        if (t.includes('sweatshirt')) return 'Sweatshirt';
+        if (t.includes('boxy') || t === 'vest') return 'Boxy Vest';
+        if (t.includes('cropped')) return 'Cropped Tee';
+        if (t.includes('oversized')) return 'Oversized Tee';
+        if (t.includes('regular') || t.includes('t-shirt') || t.includes('tshirt') || t === 'tee' || t === 'tees') return 'Regular Tee';
+        return 'Regular Tee';
+      },
+
       get descriptionLines() {
-        return this.descriptionsByType[this.selectedType]
+        return this.descriptionsByType[this.normalizeType(this.selectedType)]
             || this.descriptionsByType['Regular Tee'];
       },
 
       get feelFitLines() {
-        return this.feelFitByType[this.selectedType]
+        return this.feelFitByType[this.normalizeType(this.selectedType)]
             || this.feelFitByType['Regular Tee'];
       },
 

@@ -16,6 +16,7 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/5_home_page_mobile.png",
+            "image_mobile": "shopify://shop_images/heroine_1080_1.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
@@ -27,7 +28,7 @@
       "settings": {
         "slide_duration": 4,
         "desktop_height": 100,
-        "mobile_height": 60
+        "mobile_aspect": "1/1"
       }
     },
     "cta_double": {
@@ -81,35 +82,55 @@
     "reels": {
       "type": "reels-carousel",
       "blocks": {
+        "reel_zRez7H": {
+          "type": "reel",
+          "settings": {
+            "video": "shopify://files/videos/IMG_2888.MOV",
+            "link": ""
+          }
+        },
         "reel_1": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/IMG_2891.MOV",
             "link": ""
           }
         },
         "reel_2": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/IMG_2890.MOV",
             "link": ""
           }
         },
         "reel_3": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/IMG_2894.MOV",
+            "link": ""
+          }
+        },
+        "reel_hNhN4K": {
+          "type": "reel",
+          "settings": {
+            "video": "shopify://files/videos/IMG_2892.MOV",
             "link": ""
           }
         },
         "reel_4": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/IMG_2896.MOV",
             "link": ""
           }
         }
       },
       "block_order": [
+        "reel_zRez7H",
         "reel_1",
         "reel_2",
         "reel_3",
+        "reel_hNhN4K",
         "reel_4"
       ],
       "settings": {

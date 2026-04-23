@@ -38,12 +38,19 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
   top: 0;
   left: 0;
+  display: block;
+}
+
+.creative-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
 }
 
 @media (max-width: 768px) {
@@ -658,19 +665,52 @@
   <!-- Creative Section - Full Width Slideshow -->
   <div class="process-creative">
     <div class="creative-wrapper">
-      {% if section.settings.banner_image_1 %}
-        <img
-          src="{{ section.settings.banner_image_1 | image_url: width: 1600 }}"
-          alt="Banner 1"
-          class="creative-image active"
-        >
+      {% if section.settings.banner_image_1 != blank or section.settings.banner_image_1_mobile != blank %}
+        {%- assign b1_desktop = section.settings.banner_image_1 | default: section.settings.banner_image_1_mobile -%}
+        {%- assign b1_mobile = section.settings.banner_image_1_mobile | default: section.settings.banner_image_1 -%}
+        <picture class="creative-image active">
+          <source
+            media="(max-width: 768px)"
+            srcset="{{ b1_mobile | image_url: width: 600 }} 600w,
+                    {{ b1_mobile | image_url: width: 900 }} 900w,
+                    {{ b1_mobile | image_url: width: 1200 }} 1200w"
+            sizes="100vw">
+          <img
+            src="{{ b1_desktop | image_url: width: 1600 }}"
+            srcset="{{ b1_desktop | image_url: width: 800 }} 800w,
+                    {{ b1_desktop | image_url: width: 1200 }} 1200w,
+                    {{ b1_desktop | image_url: width: 1600 }} 1600w,
+                    {{ b1_desktop | image_url: width: 2000 }} 2000w"
+            sizes="100vw"
+            alt="Banner 1"
+            loading="eager"
+            fetchpriority="high"
+            width="{{ b1_desktop.width }}"
+            height="{{ b1_desktop.height }}">
+        </picture>
       {% endif %}
-      {% if section.settings.banner_image_2 %}
-        <img
-          src="{{ section.settings.banner_image_2 | image_url: width: 1600 }}"
-          alt="Banner 2"
-          class="creative-image"
-        >
+      {% if section.settings.banner_image_2 != blank or section.settings.banner_image_2_mobile != blank %}
+        {%- assign b2_desktop = section.settings.banner_image_2 | default: section.settings.banner_image_2_mobile -%}
+        {%- assign b2_mobile = section.settings.banner_image_2_mobile | default: section.settings.banner_image_2 -%}
+        <picture class="creative-image">
+          <source
+            media="(max-width: 768px)"
+            srcset="{{ b2_mobile | image_url: width: 600 }} 600w,
+                    {{ b2_mobile | image_url: width: 900 }} 900w,
+                    {{ b2_mobile | image_url: width: 1200 }} 1200w"
+            sizes="100vw">
+          <img
+            src="{{ b2_desktop | image_url: width: 1600 }}"
+            srcset="{{ b2_desktop | image_url: width: 800 }} 800w,
+                    {{ b2_desktop | image_url: width: 1200 }} 1200w,
+                    {{ b2_desktop | image_url: width: 1600 }} 1600w,
+                    {{ b2_desktop | image_url: width: 2000 }} 2000w"
+            sizes="100vw"
+            alt="Banner 2"
+            loading="lazy"
+            width="{{ b2_desktop.width }}"
+            height="{{ b2_desktop.height }}">
+        </picture>
       {% endif %}
     </div>
   </div>
@@ -1343,14 +1383,36 @@
   "name": "Process Page",
   "settings": [
     {
+      "type": "header",
+      "content": "Banner Image 1"
+    },
+    {
       "type": "image_picker",
       "id": "banner_image_1",
-      "label": "Banner Image 1"
+      "label": "Desktop image",
+      "info": "Landscape image for laptop / desktop."
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image_1_mobile",
+      "label": "Mobile image",
+      "info": "Square (1:1) or portrait image for phones. If empty, desktop image is used."
+    },
+    {
+      "type": "header",
+      "content": "Banner Image 2"
     },
     {
       "type": "image_picker",
       "id": "banner_image_2",
-      "label": "Banner Image 2"
+      "label": "Desktop image",
+      "info": "Landscape image for laptop / desktop."
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image_2_mobile",
+      "label": "Mobile image",
+      "info": "Square (1:1) or portrait image for phones. If empty, desktop image is used."
     },
     {
       "type": "text",

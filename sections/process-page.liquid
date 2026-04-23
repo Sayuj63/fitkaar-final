@@ -276,6 +276,9 @@
 .form-label span.required {
   color: #e53935;
   margin-left: 2px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .form-input, .form-select, .form-textarea {
@@ -370,8 +373,9 @@
   background: none;
   border: 1px solid #e53935;
   color: #e53935;
-  padding: 4px 12px;
-  font-size: 0.8rem;
+  padding: 5px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
   font-family: 'Outfit', sans-serif;
   transition: all 0.3s;
@@ -740,7 +744,7 @@
           <strong>Thanks!</strong> Your custom order request has been sent. We'll be in touch shortly.
         </div>
       {% elsif form.errors %}
-        <div style="background: #ffebee; color: #c62828; padding: 15px; margin-bottom: 20px; border: 1px solid #ffcdd2;">
+        <div style="background: #ffebee; color: #c62828; padding: 15px; margin-bottom: 20px; border: 1px solid #ffcdd2; font-size: 1.05rem;">
           <strong>Error:</strong> Please check the form and try again.
         </div>
       {% endif %}

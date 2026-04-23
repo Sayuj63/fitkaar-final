@@ -34,6 +34,35 @@
   height: 100%;
 }
 
+.creative-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.creative-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 0;
+}
+
+.creative-dot.active {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.creative-dot:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 .creative-image {
   position: absolute;
   width: 100%;
@@ -57,6 +86,14 @@
   .process-creative {
     aspect-ratio: 4 / 5;
     max-height: none;
+  }
+  .creative-dots {
+    bottom: 20px;
+    gap: 8px;
+  }
+  .creative-dot {
+    width: 8px;
+    height: 8px;
   }
 }
 
@@ -712,6 +749,7 @@
             height="{{ b2_desktop.height }}">
         </picture>
       {% endif %}
+      <div class="creative-dots" data-creative-dots></div>
     </div>
   </div>
 
@@ -774,7 +812,7 @@
 
   <div class="process-header">
     <h1 class="process-title">GET YOUR CUSTOMISED</h1>
-    <p class="process-subtitle">Fill out the details below! So we can create something unique for you.</p>
+    <p class="process-subtitle">Fill out the details below! So we can create something unique for you!</p>
   </div>
 
   <div class="process-form-container">
@@ -1231,15 +1269,44 @@
 (function() {
   // Slideshow for creative section
   const images = document.querySelectorAll('.creative-image');
+  const dotsContainer = document.querySelector('[data-creative-dots]');
   let currentSlide = 0;
+  let slideTimer;
 
-  if (images.length > 1) {
-    setInterval(() => {
-      images[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + 1) % images.length;
-      images[currentSlide].classList.add('active');
+  function goToSlide(index) {
+    images[currentSlide].classList.remove('active');
+    currentSlide = index;
+    images[currentSlide].classList.add('active');
+    if (dotsContainer) {
+      dotsContainer.querySelectorAll('.creative-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === currentSlide);
+      });
+    }
+  }
+
+  function startAutoplay() {
+    if (images.length <= 1) return;
+    clearInterval(slideTimer);
+    slideTimer = setInterval(() => {
+      goToSlide((currentSlide + 1) % images.length);
     }, 4000);
   }
+
+  if (images.length > 1 && dotsContainer) {
+    images.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'creative-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      dot.addEventListener('click', () => {
+        goToSlide(i);
+        startAutoplay();
+      });
+      dotsContainer.appendChild(dot);
+    });
+  }
+
+  startAutoplay();
 
   const DESIGN_FEE = {{ section.settings.design_fee_amount | default: 499 }};
   let productCount = 1;

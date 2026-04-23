@@ -1327,7 +1327,7 @@
         <!-- Color Option (Swatches) -->
         {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
           <div class="variant-section">
-            <div class="variant-label">{{ option.name }}: <span x-text="selectedColor">{{ option.selected_value }}</span></div>
+            <div class="variant-label">{{ option.name }}: <span x-text="selectedColor">{% case option.position %}{% when 1 %}{{ default_variant.option1 }}{% when 2 %}{{ default_variant.option2 }}{% when 3 %}{{ default_variant.option3 }}{% endcase %}</span></div>
             <div class="color-swatches">
               {% for value in option.values %}
                 {% assign value_lower = value | downcase %}
@@ -1386,7 +1386,7 @@
         <!-- Type Option (Special Cards) -->
         {% elsif option_name_lower contains 'type' %}
           <div class="variant-section">
-            <div class="variant-label">{{ option.name }}: <span x-text="selectedType">{{ option.selected_value }}</span></div>
+            <div class="variant-label">{{ option.name }}: <span x-text="selectedType">{% case option.position %}{% when 1 %}{{ default_variant.option1 }}{% when 2 %}{{ default_variant.option2 }}{% when 3 %}{{ default_variant.option3 }}{% endcase %}</span></div>
             <div class="type-options">
               {% for value in option.values %}
                 {% assign value_lower = value | downcase %}
@@ -1424,7 +1424,7 @@
         {% elsif option_name_lower contains 'size' %}
           <div class="variant-section">
             <div class="variant-label size-label-row">
-              <span>{{ option.name }}: <span x-text="selectedSize">{{ option.selected_value }}</span></span>
+              <span>{{ option.name }}: <span x-text="selectedSize">{% case option.position %}{% when 1 %}{{ default_variant.option1 }}{% when 2 %}{{ default_variant.option2 }}{% when 3 %}{{ default_variant.option3 }}{% endcase %}</span></span>
               <button class="sizing-guide-link" @click="sizeChartOpen = true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -1439,12 +1439,13 @@
                 <button
                   class="size-btn"
                   :class="{ 'active': selectedSize === '{{ value }}' }"
+                  x-show="isSizeAvailable('{{ value }}')"
                   @click="selectSize('{{ value }}')"
                 >{{ value }}</button>
               {% endfor %}
             </div>
           </div>
-        
+
         <!-- Other Options (Generic Buttons) -->
         {% else %}
           <div class="variant-section">
@@ -1524,11 +1525,9 @@
               <label class="unit-size-row">
                 <span class="unit-size-row__label" x-text="'Unit ' + (idx + 1)"></span>
                 <select :value="size" @change="setUnitSize(idx, $event.target.value)">
-                  {% if size_opt %}
-                    {% for value in size_opt.values %}
-                      <option value="{{ value }}">{{ value }}</option>
-                    {% endfor %}
-                  {% endif %}
+                  <template x-for="sv in availableSizesForType" :key="sv">
+                    <option :value="sv" x-text="sv"></option>
+                  </template>
                 </select>
               </label>
             </template>
@@ -1981,11 +1980,51 @@
           {% assign type_opt = option %}
         {% endif %}
       {% endfor %}
-      
-      selectedColor: '{{ color_opt.selected_value | default: color_opt.values[0] | default: '' }}',
-      selectedSize: '{{ size_opt.selected_value | default: size_opt.values[0] | default: '' }}',
-      selectedType: '{{ type_opt.selected_value | default: type_opt.values[0] | default: '' }}',
-      selectedVariantId: {{ product.selected_or_first_available_variant.id }},
+
+      {% comment %}
+        Pick the cheapest available variant as the default so the product page's
+        opening price matches the "from" price shown on the collection card.
+        If the URL has ?variant= (product.selected_variant), honour that instead.
+      {% endcomment %}
+      {% assign cheapest_variant = nil %}
+      {% for v in product.variants %}
+        {% if v.available %}
+          {% if cheapest_variant == nil or v.price < cheapest_variant.price %}
+            {% assign cheapest_variant = v %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      {% assign default_variant = product.selected_variant | default: cheapest_variant | default: product.selected_or_first_available_variant %}
+
+      {%- assign default_color = '' -%}
+      {%- assign default_size = '' -%}
+      {%- assign default_type = '' -%}
+      {%- if color_opt -%}
+        {%- case color_opt.position -%}
+          {%- when 1 -%}{%- assign default_color = default_variant.option1 -%}
+          {%- when 2 -%}{%- assign default_color = default_variant.option2 -%}
+          {%- when 3 -%}{%- assign default_color = default_variant.option3 -%}
+        {%- endcase -%}
+      {%- endif -%}
+      {%- if size_opt -%}
+        {%- case size_opt.position -%}
+          {%- when 1 -%}{%- assign default_size = default_variant.option1 -%}
+          {%- when 2 -%}{%- assign default_size = default_variant.option2 -%}
+          {%- when 3 -%}{%- assign default_size = default_variant.option3 -%}
+        {%- endcase -%}
+      {%- endif -%}
+      {%- if type_opt -%}
+        {%- case type_opt.position -%}
+          {%- when 1 -%}{%- assign default_type = default_variant.option1 -%}
+          {%- when 2 -%}{%- assign default_type = default_variant.option2 -%}
+          {%- when 3 -%}{%- assign default_type = default_variant.option3 -%}
+        {%- endcase -%}
+      {%- endif -%}
+
+      selectedColor: {{ default_color | default: '' | json }},
+      selectedSize: {{ default_size | default: '' | json }},
+      selectedType: {{ default_type | default: '' | json }},
+      selectedVariantId: {{ default_variant.id }},
 
       // Variants JSON
       variants: {{ product.variants | json }},
@@ -2235,15 +2274,36 @@
         return this.availableColorsForType.includes(color);
       },
 
+      // Available sizes for the currently selected type
+      get availableSizesForType() {
+        if (!this.selectedType) return [];
+        const sizes = new Set();
+        this.variants.forEach(v => {
+          const opts = [v.option1, v.option2, v.option3];
+          if (!opts.includes(this.selectedType)) return;
+          if (!v.available) return;
+          {% if size_opt %}
+            {% for sv in size_opt.values %}
+              if (opts.includes({{ sv | json }})) sizes.add({{ sv | json }});
+            {% endfor %}
+          {% endif %}
+        });
+        return Array.from(sizes);
+      },
+
+      isSizeAvailable(size) {
+        return this.availableSizesForType.includes(size);
+      },
+
       // Current variant price getter
       get currentVariantPrice() {
         const variant = this.variants.find(v => v.id === this.selectedVariantId);
-        return variant ? variant.price : {{ product.selected_or_first_available_variant.price }};
+        return variant ? variant.price : {{ default_variant.price }};
       },
 
       get currentVariantComparePrice() {
         const variant = this.variants.find(v => v.id === this.selectedVariantId);
-        return variant ? (variant.compare_at_price || variant.price) : ({{ product.selected_or_first_available_variant.compare_at_price | default: product.selected_or_first_available_variant.price }});
+        return variant ? (variant.compare_at_price || variant.price) : ({{ default_variant.compare_at_price | default: default_variant.price }});
       },
 
       // Variant Methods
@@ -2297,6 +2357,11 @@
           // Auto-select first available colour if current colour isn't available for this type
           if (!this.availableColorsForType.includes(this.selectedColor)) {
             this.selectedColor = this.availableColorsForType[0] || this.selectedColor;
+          }
+
+          // Auto-select first available size if current size isn't available for this type
+          if (!this.availableSizesForType.includes(this.selectedSize)) {
+            this.selectedSize = this.availableSizesForType[0] || this.selectedSize;
           }
 
           this.updateVariant();

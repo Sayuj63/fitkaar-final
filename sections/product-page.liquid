@@ -429,35 +429,6 @@
     gap: 12px;
   }
 
-  @media (max-width: 768px) {
-    .type-options {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-    .type-option {
-      padding: 10px 6px;
-      gap: 4px;
-      border-radius: 10px;
-    }
-    .type-icon {
-      width: 26px;
-      height: 26px;
-    }
-    .type-name {
-      font-size: 0.62rem;
-      letter-spacing: 0.02em;
-    }
-  }
-
-  @media (max-width: 380px) {
-    .type-option {
-      padding: 8px 4px;
-    }
-    .type-name {
-      font-size: 0.55rem;
-    }
-  }
-
   .type-option {
     display: flex;
     flex-direction: column;
@@ -511,6 +482,53 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+  }
+
+  /* Mobile: apparel types in a single horizontal row that shrinks to fit
+     the viewport, no matter how many options exist. Flex with flex:1 1 0
+     and min-width:0 lets each card take an equal share and shrink below
+     its content. Placed AFTER the base rules so these overrides win. */
+  @media (max-width: 768px) {
+    .type-options {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+    }
+    .type-option {
+      flex: 1 1 0;
+      min-width: 0;
+      width: auto;
+      padding: 8px 4px;
+      gap: 4px;
+      border-radius: 8px;
+      border-width: 1.5px;
+    }
+    .type-icon {
+      width: 22px;
+      height: 22px;
+    }
+    .type-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .type-icon-img {
+      width: 20px;
+      height: 20px;
+    }
+    .type-name {
+      font-size: 0.55rem;
+      letter-spacing: 0.02em;
+      line-height: 1.15;
+      word-break: break-word;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .type-options { gap: 4px; }
+    .type-option { padding: 6px 3px; border-radius: 6px; }
+    .type-icon { width: 18px; height: 18px; }
+    .type-icon-img { width: 16px; height: 16px; }
+    .type-name { font-size: 0.5rem; }
   }
 
   /* Pincode Checker */

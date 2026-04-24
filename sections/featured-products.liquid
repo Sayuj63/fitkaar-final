@@ -68,13 +68,43 @@
   font-weight: 600;
   color: #000c5b;
 }
+
+@media (max-width: 767px) {
+  .bestseller-grid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* let the strip bleed to the screen edge while keeping the section padded */
+    margin: 0 -1rem;
+    padding: 4px 1rem 4px;
+  }
+  .bestseller-grid::-webkit-scrollbar { display: none; }
+
+  .bestseller-card {
+    flex: 0 0 45%;
+    scroll-snap-align: start;
+  }
+  .bestseller-image {
+    margin-bottom: 0.6rem;
+  }
+  .bestseller-title {
+    font-size: 0.82rem;
+    margin-bottom: 0.25rem;
+  }
+  .bestseller-price {
+    font-size: 0.9rem;
+  }
+}
 </style>
 
 <section class="py-16 bg-white">
   <div class="container">
     <h2 class="text-center text-4xl font-bold mb-12 uppercase" style="color: var(--color-primary); font-family: var(--font-heading);">{{ section.settings.title }}</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="bestseller-grid md:grid md:grid-cols-4 md:gap-6">
       {% assign collection = section.settings.collection %}
       {% if collection != blank %}
         {% for product in collection.products limit: 8 %}

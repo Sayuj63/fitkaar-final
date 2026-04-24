@@ -191,7 +191,19 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+  }
+
+  .product-card-image .pc-img--secondary {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+
+  @media (hover: hover) {
+    .product-card:hover .pc-img--primary { opacity: 0; }
+    .product-card:hover .pc-img--secondary { opacity: 1; }
   }
 
   .product-card:hover .product-card-image img {
@@ -285,8 +297,17 @@
     border-color: var(--color-primary, #000c5b);
   }
 
+  @media (max-width: 768px) {
+    .product-card-info { padding: 10px 10px 12px; }
+    .product-card-type { width: 24px; height: 24px; padding: 3px; }
+    .product-card-types { gap: 5px; margin-top: 6px; }
+    .color-dot { width: 12px; height: 12px; border-width: 1px; }
+    .product-card-colors { gap: 4px; margin-top: 6px; }
+  }
+
   @media (max-width: 480px) {
-    .product-card-type { width: 28px; height: 28px; }
+    .product-card-type { width: 22px; height: 22px; padding: 2px; }
+    .color-dot { width: 11px; height: 11px; }
   }
 
   .empty-collection {
@@ -821,12 +842,30 @@
               <div class="product-card-image">
                 {% if product.featured_image != blank %}
                   <img
+                    class="pc-img pc-img--primary"
                     src="{{ product.featured_image | image_url: width: 600 }}"
                     alt="{{ product.featured_image.alt | default: product.title | escape }}"
                     loading="lazy"
                     width="600"
                     height="800"
                   >
+                  {%- assign secondary_image = nil -%}
+                  {%- for img in product.images -%}
+                    {%- if img.id != product.featured_image.id -%}
+                      {%- assign secondary_image = img -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {% if secondary_image %}
+                    <img
+                      class="pc-img pc-img--secondary"
+                      src="{{ secondary_image | image_url: width: 600 }}"
+                      alt="{{ product.title | escape }}"
+                      loading="lazy"
+                      width="600"
+                      height="800"
+                    >
+                  {% endif %}
                 {% else %}
                   <svg viewBox="0 0 600 800" style="background:#f0f0f0;width:100%;height:100%;">
                     <text x="50%" y="50%" text-anchor="middle" fill="#999" font-size="20">No Image</text>

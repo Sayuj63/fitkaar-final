@@ -430,13 +430,30 @@
 
   @media (max-width: 768px) {
     .type-options {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .type-option {
+      padding: 10px 6px;
+      gap: 4px;
+      border-radius: 10px;
+    }
+    .type-icon {
+      width: 26px;
+      height: 26px;
+    }
+    .type-name {
+      font-size: 0.62rem;
+      letter-spacing: 0.02em;
     }
   }
 
-  @media (max-width: 480px) {
-    .type-options {
-      grid-template-columns: 1fr;
+  @media (max-width: 380px) {
+    .type-option {
+      padding: 8px 4px;
+    }
+    .type-name {
+      font-size: 0.55rem;
     }
   }
 
@@ -1090,12 +1107,39 @@
       gap: 8px;
     }
 
+    .product-info-section {
+      align-items: center;
+      text-align: center;
+    }
+
     .product-title {
       font-size: 1.5rem;
     }
 
+    .product-price-section {
+      align-items: center;
+    }
+
     .product-price {
       font-size: 1.5rem;
+      justify-content: center;
+    }
+
+    .variant-section {
+      width: 100%;
+    }
+
+    .variant-label {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .size-options {
+      justify-content: center;
+    }
+
+    .color-swatches {
+      justify-content: center;
     }
 
     .secondary-actions {
@@ -1734,11 +1778,33 @@
   }
 
   .pdp-strip__grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* bleed to screen edge so 3rd card peeks */
+    margin: 0 -20px;
+    padding: 4px 20px;
   }
-  @media (min-width: 700px)  { .pdp-strip__grid { grid-template-columns: repeat(3, 1fr); } }
+  .pdp-strip__grid::-webkit-scrollbar { display: none; }
+  .pdp-strip__grid .pdp-card {
+    flex: 0 0 45%;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 700px) {
+    .pdp-strip__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      overflow: visible;
+      margin: 0;
+      padding: 0;
+    }
+    .pdp-strip__grid .pdp-card { flex: initial; }
+  }
   @media (min-width: 1024px) { .pdp-strip__grid { grid-template-columns: repeat(5, 1fr); } }
 
   .pdp-card {

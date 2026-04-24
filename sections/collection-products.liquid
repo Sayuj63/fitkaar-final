@@ -297,17 +297,54 @@
     border-color: var(--color-primary, #000c5b);
   }
 
+  .product-card-more { display: none; }
+
   @media (max-width: 768px) {
     .product-card-info { padding: 10px 10px 12px; }
-    .product-card-type { width: 24px; height: 24px; padding: 3px; }
-    .product-card-types { gap: 5px; margin-top: 6px; }
+    .product-card-type { width: 22px; height: 22px; padding: 2px; }
     .color-dot { width: 12px; height: 12px; border-width: 1px; }
-    .product-card-colors { gap: 4px; margin-top: 6px; }
+
+    /* Flatten apparel + colour rows into one no-wrap chip row on mobile */
+    .product-card-options {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .product-card-options .product-card-types,
+    .product-card-options .product-card-colors {
+      display: contents;
+    }
+    .product-card-options .product-card-type,
+    .product-card-options .color-dot {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+    .pc-hide-mobile { display: none !important; }
+    .product-card-more {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 11px;
+      border: 1px solid #d4d4d4;
+      background: #fff;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #555;
+      flex: 0 0 auto;
+      line-height: 1;
+    }
   }
 
-  @media (max-width: 480px) {
-    .product-card-type { width: 22px; height: 22px; padding: 2px; }
+  @media (max-width: 380px) {
+    .product-card-type { width: 20px; height: 20px; padding: 2px; }
     .color-dot { width: 11px; height: 11px; }
+    .product-card-options { gap: 5px; }
   }
 
   .empty-collection {
@@ -896,34 +933,6 @@
                   {%- endif -%}
                 {%- endfor -%}
 
-                {%- if type_option and type_option.values.size > 0 -%}
-                  <div class="product-card-types" aria-label="Available apparel types">
-                    {%- for value in type_option.values -%}
-                      {%- assign value_lower = value | downcase | strip -%}
-                      {%- assign icon_url = '' -%}
-                      {%- case value_lower -%}
-                        {%- when 'hoodie' -%}
-                          {%- assign icon_url = 'Sweatshirts.PNG' | asset_url -%}
-                        {%- when 'boxy vest', 'vest' -%}
-                          {%- assign icon_url = 'Boxy vests .PNG' | asset_url -%}
-                        {%- when 'regular tee', 't-shirt', 'tshirt', 'tee' -%}
-                          {%- assign icon_url = 'Regular tshirt .PNG' | asset_url -%}
-                        {%- when 'sweatshirt' -%}
-                          {%- assign icon_url = 'Sweatshirts.PNG' | asset_url -%}
-                        {%- when 'oversized tee', 'oversized' -%}
-                          {%- assign icon_url = 'Oversized tees.PNG' | asset_url -%}
-                        {%- when 'cropped tee', 'cropped' -%}
-                          {%- assign icon_url = 'Cropped tee .PNG' | asset_url -%}
-                        {%- else -%}
-                          {%- assign icon_url = 'Regular tshirt .PNG' | asset_url -%}
-                      {%- endcase -%}
-                      <span class="product-card-type" title="{{ value | escape }}" aria-label="{{ value | escape }}">
-                        <img src="{{ icon_url }}" alt="{{ value | escape }}" loading="lazy">
-                      </span>
-                    {%- endfor -%}
-                  </div>
-                {%- endif -%}
-
                 {%- assign color_option = nil -%}
                 {%- for opt in product.options_with_values -%}
                   {%- assign opt_name_lower = opt.name | downcase -%}
@@ -933,41 +942,97 @@
                   {%- endif -%}
                 {%- endfor -%}
 
-                {%- if color_option and color_option.values.size > 0 -%}
-                  <div class="product-card-colors">
-                    {% for color in color_option.values limit: 6 %}
-                      {%- assign color_lower = color | downcase | strip -%}
-                      {%- case color_lower -%}
-                        {%- when 'black' -%}{% assign swatch = '#000' %}
-                        {%- when 'white' -%}{% assign swatch = '#fff' %}
-                        {%- when 'beige' -%}{% assign swatch = '#f5f5dc' %}
-                        {%- when 'red' -%}{% assign swatch = '#dc2626' %}
-                        {%- when 'blue' -%}{% assign swatch = '#2563eb' %}
-                        {%- when 'navy' -%}{% assign swatch = '#000c5b' %}
-                        {%- when 'grey', 'gray' -%}{% assign swatch = '#888' %}
-                        {%- when 'bottle green' -%}{% assign swatch = '#0b6e4f' %}
-                        {%- when 'green' -%}{% assign swatch = '#16a34a' %}
-                        {%- when 'olive' -%}{% assign swatch = '#6b7f36' %}
-                        {%- when 'mustard' -%}{% assign swatch = '#d5a021' %}
-                        {%- when 'yellow' -%}{% assign swatch = '#facc15' %}
-                        {%- when 'pink' -%}{% assign swatch = '#ec4899' %}
-                        {%- when 'purple' -%}{% assign swatch = '#7c3aed' %}
-                        {%- when 'lavender' -%}{% assign swatch = '#c4b5fd' %}
-                        {%- when 'maroon' -%}{% assign swatch = '#7f1d1d' %}
-                        {%- when 'brown' -%}{% assign swatch = '#6b4226' %}
-                        {%- when 'orange' -%}{% assign swatch = '#f97316' %}
-                        {%- when 'sky blue', 'light blue' -%}{% assign swatch = '#7dd3fc' %}
-                        {%- when 'cream' -%}{% assign swatch = '#fffbe6' %}
-                        {%- when 'lilac' -%}{% assign swatch = '#b19cd9' %}
-                        {%- else -%}{% assign swatch = color_lower | replace: ' ', '' %}
-                      {%- endcase -%}
-                      <span class="color-dot"
-                            title="{{ color | escape }}"
-                            aria-label="{{ color | escape }}"
-                            style="background-color:{{ swatch }};{% if color_lower == 'white' or color_lower == 'cream' %}border-color:#ddd;{% endif %}"></span>
-                    {% endfor %}
-                  </div>
+                {%- assign apparel_count = 0 -%}
+                {%- if type_option and type_option.values.size > 0 -%}
+                  {%- assign apparel_count = type_option.values.size -%}
                 {%- endif -%}
+                {%- assign color_count_full = 0 -%}
+                {%- if color_option and color_option.values.size > 0 -%}
+                  {%- assign color_count_full = color_option.values.size -%}
+                {%- endif -%}
+                {%- assign mobile_budget = 6 -%}
+                {%- assign mobile_total = apparel_count | plus: color_count_full -%}
+                {%- assign mobile_overflow = 0 -%}
+                {%- if mobile_total > mobile_budget -%}
+                  {%- assign mobile_overflow = mobile_total | minus: mobile_budget -%}
+                {%- endif -%}
+                {%- assign pcidx = 0 -%}
+
+                <div class="product-card-options">
+                  {%- if type_option and type_option.values.size > 0 -%}
+                    <div class="product-card-types" aria-label="Available apparel types">
+                      {%- for value in type_option.values -%}
+                        {%- assign value_lower = value | downcase | strip -%}
+                        {%- assign icon_url = '' -%}
+                        {%- case value_lower -%}
+                          {%- when 'hoodie' -%}
+                            {%- assign icon_url = 'Sweatshirts.PNG' | asset_url -%}
+                          {%- when 'boxy vest', 'vest' -%}
+                            {%- assign icon_url = 'Boxy vests .PNG' | asset_url -%}
+                          {%- when 'regular tee', 't-shirt', 'tshirt', 'tee' -%}
+                            {%- assign icon_url = 'Regular tshirt .PNG' | asset_url -%}
+                          {%- when 'sweatshirt' -%}
+                            {%- assign icon_url = 'Sweatshirts.PNG' | asset_url -%}
+                          {%- when 'oversized tee', 'oversized' -%}
+                            {%- assign icon_url = 'Oversized tees.PNG' | asset_url -%}
+                          {%- when 'cropped tee', 'cropped' -%}
+                            {%- assign icon_url = 'Cropped tee .PNG' | asset_url -%}
+                          {%- else -%}
+                            {%- assign icon_url = 'Regular tshirt .PNG' | asset_url -%}
+                        {%- endcase -%}
+                        {%- assign hide_mobile = '' -%}
+                        {%- if pcidx >= mobile_budget -%}{%- assign hide_mobile = ' pc-hide-mobile' -%}{%- endif -%}
+                        <span class="product-card-type{{ hide_mobile }}" title="{{ value | escape }}" aria-label="{{ value | escape }}">
+                          <img src="{{ icon_url }}" alt="{{ value | escape }}" loading="lazy">
+                        </span>
+                        {%- assign pcidx = pcidx | plus: 1 -%}
+                      {%- endfor -%}
+                    </div>
+                  {%- endif -%}
+
+                  {%- if color_option and color_option.values.size > 0 -%}
+                    <div class="product-card-colors">
+                      {% for color in color_option.values limit: 6 %}
+                        {%- assign color_lower = color | downcase | strip -%}
+                        {%- case color_lower -%}
+                          {%- when 'black' -%}{% assign swatch = '#000' %}
+                          {%- when 'white' -%}{% assign swatch = '#fff' %}
+                          {%- when 'beige' -%}{% assign swatch = '#f5f5dc' %}
+                          {%- when 'red' -%}{% assign swatch = '#dc2626' %}
+                          {%- when 'blue' -%}{% assign swatch = '#2563eb' %}
+                          {%- when 'navy' -%}{% assign swatch = '#000c5b' %}
+                          {%- when 'grey', 'gray' -%}{% assign swatch = '#888' %}
+                          {%- when 'bottle green' -%}{% assign swatch = '#0b6e4f' %}
+                          {%- when 'green' -%}{% assign swatch = '#16a34a' %}
+                          {%- when 'olive' -%}{% assign swatch = '#6b7f36' %}
+                          {%- when 'mustard' -%}{% assign swatch = '#d5a021' %}
+                          {%- when 'yellow' -%}{% assign swatch = '#facc15' %}
+                          {%- when 'pink' -%}{% assign swatch = '#ec4899' %}
+                          {%- when 'purple' -%}{% assign swatch = '#7c3aed' %}
+                          {%- when 'lavender' -%}{% assign swatch = '#c4b5fd' %}
+                          {%- when 'maroon' -%}{% assign swatch = '#7f1d1d' %}
+                          {%- when 'brown' -%}{% assign swatch = '#6b4226' %}
+                          {%- when 'orange' -%}{% assign swatch = '#f97316' %}
+                          {%- when 'sky blue', 'light blue' -%}{% assign swatch = '#7dd3fc' %}
+                          {%- when 'cream' -%}{% assign swatch = '#fffbe6' %}
+                          {%- when 'lilac' -%}{% assign swatch = '#b19cd9' %}
+                          {%- else -%}{% assign swatch = color_lower | replace: ' ', '' %}
+                        {%- endcase -%}
+                        {%- assign hide_mobile = '' -%}
+                        {%- if pcidx >= mobile_budget -%}{%- assign hide_mobile = ' pc-hide-mobile' -%}{%- endif -%}
+                        <span class="color-dot{{ hide_mobile }}"
+                              title="{{ color | escape }}"
+                              aria-label="{{ color | escape }}"
+                              style="background-color:{{ swatch }};{% if color_lower == 'white' or color_lower == 'cream' %}border-color:#ddd;{% endif %}"></span>
+                        {%- assign pcidx = pcidx | plus: 1 -%}
+                      {% endfor %}
+                    </div>
+                  {%- endif -%}
+
+                  {%- if mobile_overflow > 0 -%}
+                    <span class="product-card-more" aria-label="{{ mobile_overflow }} more options">+{{ mobile_overflow }}</span>
+                  {%- endif -%}
+                </div>
               </div>
             </a>
           </article>

@@ -63,22 +63,6 @@
         "collection": "tshirt"
       }
     },
-    "testimonials_carousel_Lx9p4g": {
-      "type": "testimonials-carousel",
-      "settings": {
-        "title": "Hear it from our customers",
-        "bg_color": "#f8f8f8",
-        "speed": 50,
-        "image_1": "shopify://shop_images/Reviews_3.png",
-        "image_2": "shopify://shop_images/Reviews_10.png",
-        "image_3": "shopify://shop_images/Reviews_7.png",
-        "image_4": "shopify://shop_images/Reviews_9.png",
-        "image_5": "shopify://shop_images/Reviews_6.png",
-        "image_6": "shopify://shop_images/Reviews_8.png",
-        "image_7": "shopify://shop_images/Reviews_2.png",
-        "image_8": "shopify://shop_images/Reviews_11.png"
-      }
-    },
     "reels": {
       "type": "reels-carousel",
       "blocks": {
@@ -134,7 +118,23 @@
         "reel_4"
       ],
       "settings": {
-        "title": "AS SEEN ON REELS"
+        "title": "WE LOVE MAKING YOU SMILE <3"
+      }
+    },
+    "testimonials_carousel_Lx9p4g": {
+      "type": "testimonials-carousel",
+      "settings": {
+        "title": "Hear it from our customers",
+        "bg_color": "#f8f8f8",
+        "speed": 50,
+        "image_1": "shopify://shop_images/Reviews_3.png",
+        "image_2": "shopify://shop_images/Reviews_10.png",
+        "image_3": "shopify://shop_images/Reviews_7.png",
+        "image_4": "shopify://shop_images/Reviews_9.png",
+        "image_5": "shopify://shop_images/Reviews_6.png",
+        "image_6": "shopify://shop_images/Reviews_8.png",
+        "image_7": "shopify://shop_images/Reviews_2.png",
+        "image_8": "shopify://shop_images/Reviews_11.png"
       }
     }
   },
@@ -143,7 +143,7 @@
     "cta_double",
     "interactive_builder",
     "best_sellers",
-    "testimonials_carousel_Lx9p4g",
-    "reels"
+    "reels",
+    "testimonials_carousel_Lx9p4g"
   ]
 }

@@ -42,12 +42,24 @@
   padding: 0;
 }
 
+html {
+  /* Prevent horizontal scroll leaks on mobile. `clip` is preferred where
+     supported because (unlike `hidden`) it doesn't create a new scroll
+     containing block, so position: sticky keeps working on ancestors. */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
 body {
   font-family: var(--font-body);
   color: var(--color-text);
   background-color: var(--color-background);
   line-height: 1.5;
   overflow-x: hidden;
+  overflow-x: clip;
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
 }
 
 h1, h2, h3, h4, h5, h6 {

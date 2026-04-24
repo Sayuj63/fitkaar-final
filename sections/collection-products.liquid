@@ -820,6 +820,11 @@
         <div class="filter-panel" id="FilterPanel" aria-hidden="true">
           <div class="filter-groups">
             {%- for filter in collection.filters -%}
+              {%- assign filter_label_lower = filter.label | downcase -%}
+              {%- comment %} Everything's always in stock — hide the availability filter. {% endcomment -%}
+              {%- if filter_label_lower contains 'availab' or filter_label_lower contains 'stock' -%}
+                {%- continue -%}
+              {%- endif -%}
               <div class="filter-group">
                 <details {% if filter.active_values.size > 0 or filter.type == 'price_range' and filter.min_value.value or filter.max_value.value %}open{% endif %}>
                   <summary>{{ filter.label }}</summary>
@@ -843,20 +848,64 @@
                       </div>
 
                     {%- when 'price_range' -%}
-                      <div class="filter-price">
-                        <input type="number"
-                               name="{{ filter.min_value.param_name }}"
-                               placeholder="Min ₹"
-                               min="0"
-                               max="{{ filter.range_max | divided_by: 100 }}"
-                               value="{% if filter.min_value.value %}{{ filter.min_value.value | divided_by: 100 }}{% endif %}">
-                        <span>—</span>
-                        <input type="number"
-                               name="{{ filter.max_value.param_name }}"
-                               placeholder="Max ₹"
-                               min="0"
-                               max="{{ filter.range_max | divided_by: 100 }}"
-                               value="{% if filter.max_value.value %}{{ filter.max_value.value | divided_by: 100 }}{% endif %}">
+                      {%- assign range_max_rupees = filter.range_max | divided_by: 100 -%}
+                      {%- assign current_min_rupees = 0 -%}
+                      {%- if filter.min_value.value -%}
+                        {%- assign current_min_rupees = filter.min_value.value | divided_by: 100 -%}
+                      {%- endif -%}
+                      {%- assign current_max_rupees = range_max_rupees -%}
+                      {%- if filter.max_value.value -%}
+                        {%- assign current_max_rupees = filter.max_value.value | divided_by: 100 -%}
+                      {%- endif -%}
+
+                      <div class="filter-price-slider" data-price-slider data-price-max="{{ range_max_rupees }}">
+                        <div class="filter-price-headline">The highest price is ₹{{ range_max_rupees }}</div>
+
+                        <div class="filter-price-track">
+                          <div class="filter-price-rail"></div>
+                          <div class="filter-price-fill" data-price-fill></div>
+                          <input type="range"
+                                 class="filter-price-range filter-price-range--min"
+                                 min="0"
+                                 max="{{ range_max_rupees }}"
+                                 step="1"
+                                 value="{{ current_min_rupees }}"
+                                 aria-label="Minimum price"
+                                 data-price-range-min>
+                          <input type="range"
+                                 class="filter-price-range filter-price-range--max"
+                                 min="0"
+                                 max="{{ range_max_rupees }}"
+                                 step="1"
+                                 value="{{ current_max_rupees }}"
+                                 aria-label="Maximum price"
+                                 data-price-range-max>
+                        </div>
+
+                        <div class="filter-price-inputs">
+                          <label class="filter-price-input-wrap">
+                            <span class="filter-price-prefix">₹</span>
+                            <input type="number"
+                                   name="{{ filter.min_value.param_name }}"
+                                   min="0"
+                                   max="{{ range_max_rupees }}"
+                                   step="1"
+                                   placeholder="0"
+                                   value="{% if filter.min_value.value %}{{ current_min_rupees }}{% endif %}"
+                                   data-price-num-min>
+                          </label>
+                          <label class="filter-price-input-wrap">
+                            <span class="filter-price-prefix">₹</span>
+                            <input type="number"
+                                   name="{{ filter.max_value.param_name }}"
+                                   min="0"
+                                   max="{{ range_max_rupees }}"
+                                   step="1"
+                                   placeholder="{{ range_max_rupees }}"
+                                   value="{% if filter.max_value.value %}{{ current_max_rupees }}{% endif %}"
+                                   data-price-num-max>
+                          </label>
+                        </div>
                       </div>
                   {%- endcase -%}
                 </details>

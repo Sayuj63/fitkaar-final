@@ -12,7 +12,17 @@
     "contact": {
       "type": "contact-page",
       "settings": {
-        "title": "Let's Talk"
+        "title": "Let's Talk",
+        "whatsapp_number": "+91 93544 78146",
+        "email_address": "fitkaarclothing@gmail.com",
+        "customer_service_hours": "Monday - Friday: 10:00 AM - 6:00 PM\nSaturday: 10:00 AM - 2:00 PM",
+        "social_whatsapp": "https://wa.me/919354478146",
+        "social_instagram": "https://www.instagram.com/fitkaar.clothing?igsh=MWtldTZsbmd3bm5lOA%3D%3D&utm_source=qr",
+        "social_facebook": "https://www.facebook.com/profile.php?id=61573260115347",
+        "social_youtube": "https://youtube.com/@fitkaarclothing?si=-6ORjjTlb-T_dAcx",
+        "social_linkedin": "https://www.linkedin.com/company/fitkaar/",
+        "social_website": "",
+        "social_blog": ""
       }
     }
   },

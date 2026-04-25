@@ -11,7 +11,14 @@
   "sections": {
     "main": {
       "type": "product-page",
-      "settings": {}
+      "settings": {
+        "free_tshirt_threshold": "4000",
+        "first_order_discount": "10",
+        "model_size": "M",
+        "support_email": "fitkaarclothing@gmail.com",
+        "returns_policy_url": "",
+        "customise_url": "shopify://pages/process"
+      }
     }
   },
   "order": [

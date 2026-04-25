@@ -52,7 +52,7 @@
     "interactive_builder": {
       "type": "interactive-builder",
       "settings": {
-        "title": "All your favs in one!",
+        "title": "Click the elements below!",
         "male_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/male_model.png?v=1766327145",
         "female_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/female_model.png?v=1766327146",
         "sticker_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/football_sticker.png?v=1766327144",

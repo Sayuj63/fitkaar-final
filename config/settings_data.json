@@ -15,6 +15,8 @@
         "settings": {
           "text": "Free Shipping On All Orders!",
           "highlight_text": "",
+          "separator": "✦",
+          "speed": 40,
           "bg_color": "#000c5b",
           "text_color": "#ffffff"
         }
@@ -29,7 +31,7 @@
           "m1": "main-menu",
           "m2": "",
           "m3": "",
-          "ig": "https://www.instagram.com/glade.loft/",
+          "ig": "https://www.instagram.com/fitkaar.clothing?igsh=MWtldTZsbmd3bm5lOA%3D%3D&utm_source=qr",
           "li": "",
           "yt": "",
           "website": "",

@@ -12,10 +12,18 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
+        "image_slide_erWQHt": {
+          "type": "image_slide",
+          "settings": {
+            "image": "shopify://shop_images/just_checking_1.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
         "image_slide_xefXph": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/5_home_page_mobile.png",
+            "image": "shopify://shop_images/heroine_1080_1_8c5db702-9439-4ab2-8abd-b4c4c7a232ec.png",
             "image_mobile": "shopify://shop_images/heroine_1080_1.png",
             "alt": "Fitkaar hero slide",
             "link": "shopify://collections"
@@ -23,10 +31,11 @@
         }
       },
       "block_order": [
+        "image_slide_erWQHt",
         "image_slide_xefXph"
       ],
       "settings": {
-        "slide_duration": 4,
+        "slide_duration": 2,
         "desktop_height": 100,
         "mobile_aspect": "1/1"
       }

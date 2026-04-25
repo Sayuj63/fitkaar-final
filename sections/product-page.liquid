@@ -1397,7 +1397,7 @@
                 {% assign swatch_color = value_lower %}
                 {% case value_lower %}
                   {% when 'black' %}{% assign swatch_color = '#000000' %}
-                  {% when 'white' %}{% assign swatch_color = '#ffffff' %}
+                  {% when 'white' %}{% assign swatch_color = '#f0f0f0' %}
                   {% when 'beige' %}{% assign swatch_color = '#e4d5b4' %}
                   {% when 'red' %}{% assign swatch_color = '#dc2626' %}
                   {% when 'blue' %}{% assign swatch_color = '#2563eb' %}
@@ -1428,7 +1428,7 @@
                   {% when 'maroon' %}{% assign swatch_color = '#7f1d1d' %}
                   {% when 'wine' %}{% assign swatch_color = '#601c34' %}
                   {% when 'cream' %}{% assign swatch_color = '#fffdd0' %}
-                  {% when 'ivory' %}{% assign swatch_color = '#fffff0' %}
+                  {% when 'off white' %}{% assign swatch_color = '#fffff0' %}
                   {% else %}
                     {% comment %}Multi-word or unknown colour: strip spaces so CSS doesn't break{% endcomment %}
                     {% assign swatch_color = value_lower | replace: ' ', '' %}

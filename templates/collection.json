@@ -1,8 +1,29 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "collection-products",
-      "settings": {}
+      "settings": {
+        "show_categories": true,
+        "cat_1_name": "Food & Drinks",
+        "cat_1_link": "shopify://collections/food",
+        "cat_2_name": "Cropped Tee",
+        "cat_2_link": "",
+        "cat_3_name": "Boxy Vest",
+        "cat_3_link": "",
+        "cat_4_name": "Sweatshirt",
+        "cat_4_link": "",
+        "cat_5_name": "Hoodie",
+        "cat_5_link": ""
+      }
     }
   },
   "order": [

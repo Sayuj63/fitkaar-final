@@ -13,7 +13,9 @@
       "type": "process-page",
       "settings": {
         "banner_image_1": "shopify://shop_images/Home_page_3.png",
+        "banner_image_1_mobile": "shopify://shop_images/heroine_1080_2.png",
         "banner_image_2": "shopify://shop_images/Home_page_2.png",
+        "banner_image_2_mobile": "shopify://shop_images/heroine_1080_3.png",
         "title": "Custom Order Process",
         "subtitle": "Fill out the details below so we can create something unique for you.",
         "design_fee_amount": 400

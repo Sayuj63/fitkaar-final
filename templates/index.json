@@ -12,27 +12,62 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
-        "image_slide_erWQHt": {
+        "image_slide_9pCETf": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/just_checking_1.png",
+            "image": "shopify://shop_images/17_67723bd6-fd47-4d95-99f6-069a9fa1a3ff.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
         },
-        "image_slide_xefXph": {
+        "image_slide_6AAgrL": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/heroine_1080_1_8c5db702-9439-4ab2-8abd-b4c4c7a232ec.png",
-            "image_mobile": "shopify://shop_images/heroine_1080_1.png",
+            "image": "shopify://shop_images/2_98b56f21-4e56-4ce9-96be-86b35f99644d.png",
             "alt": "Fitkaar hero slide",
-            "link": "shopify://collections"
+            "link": ""
+          }
+        },
+        "image_slide_pmhwJn": {
+          "type": "image_slide",
+          "settings": {
+            "image": "shopify://shop_images/4_c6b6f635-c416-4554-b1a1-e519dbc0ef5f.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "image_slide_Q6Gbhh": {
+          "type": "image_slide",
+          "settings": {
+            "image": "shopify://shop_images/3_f10f6b5e-ca2d-4ae1-8ded-4434e1908119.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "image_slide_tYGLwM": {
+          "type": "image_slide",
+          "settings": {
+            "image": "shopify://shop_images/15_f08d6a53-aee6-4536-a2ab-8f97307ba401.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "image_slide_4HMtTN": {
+          "type": "image_slide",
+          "settings": {
+            "image": "shopify://shop_images/5_f779fbd5-1500-4e6a-a8f9-7efba50cc458.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
           }
         }
       },
       "block_order": [
-        "image_slide_erWQHt",
-        "image_slide_xefXph"
+        "image_slide_9pCETf",
+        "image_slide_6AAgrL",
+        "image_slide_pmhwJn",
+        "image_slide_Q6Gbhh",
+        "image_slide_tYGLwM",
+        "image_slide_4HMtTN"
       ],
       "settings": {
         "slide_duration": 2,

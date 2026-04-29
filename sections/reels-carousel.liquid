@@ -52,16 +52,16 @@
 <style>
 .marquee-container {
   overflow: hidden;
-  white-space: nowrap;
   position: relative;
 }
 
 .marquee-content {
-  display: inline-flex;
+  display: flex;
   animation: marquee 30s linear infinite;
+  width: max-content;
 }
 
-.marquee-content:hover {
+.marquee-content.is-paused {
   animation-play-state: paused;
 }
 
@@ -70,16 +70,35 @@
   100% { transform: translateX(-50%); }
 }
 
-/* Mobile specific - enable auto-scroll marquee */
+/* Mobile: switch from marquee to swipeable strip */
 @media (max-width: 768px) {
+  .marquee-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .marquee-container::-webkit-scrollbar { display: none; }
   .marquee-content {
-    animation: marquee 5s linear infinite;
+    /* Mobile: animation OFF so swipe works (#8). User can still re-enable in section CSS. */
+    animation: none;
+    gap: 12px;
+    padding: 0 16px;
+    width: max-content;
     display: flex;
-    gap: 1rem;
   }
   .reel-item {
-    flex: 0 0 200px; /* Fixed width for mobile items */
+    flex: 0 0 75%;
+    width: 75% !important;
+    height: auto !important;
+    aspect-ratio: 9 / 16;
+    scroll-snap-align: center;
   }
+}
+
+.reel-item {
+  position: relative;
 }
 
 .reel-item video,
@@ -90,27 +109,18 @@
   display: block;
 }
 
+.reel-item video::-webkit-media-controls,
+.reel-item video::-webkit-media-controls-panel,
+.reel-item video::-webkit-media-controls-play-button,
+.reel-item video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+}
+
 .reel-item .reel-media {
   position: absolute;
   inset: 0;
-}
-
-.reel-play-icon {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0);
-  transition: background 0.25s ease;
-  pointer-events: none;
-}
-.reel-item:hover .reel-play-icon {
-  background: rgba(0,0,0,0.2);
-}
-.reel-play-icon svg {
-  opacity: 0.9;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
 }
 
 .reels-section {
@@ -120,16 +130,34 @@
 }
 .reels-section .reels-heading {
   margin-bottom: 18px;
+  text-align: center;
+  font-family: var(--font-heading, 'League Spartan', sans-serif);
+  color: var(--color-primary, #000c5b);
+  font-weight: 900;
+  letter-spacing: 2px;
+  word-spacing: 5px;
+  text-transform: uppercase;
+  font-size: 42px;
+  padding: 0 20px;
 }
 @media (max-width: 768px) {
   .reels-section { padding: 14px 0 18px; }
-  .reels-section .reels-heading { margin-bottom: 14px; }
+  .reels-section .reels-heading {
+    margin-bottom: 14px;
+    font-size: 32px;
+    letter-spacing: 1px;
+  }
+}
+@media (max-width: 480px) {
+  .reels-section .reels-heading {
+    font-size: 24px;
+  }
 }
 </style>
 
 <section class="reels-section">
   {% if section.settings.title != blank %}
-    <h2 class="reels-heading text-center text-3xl font-bold uppercase" style="font-family: var(--font-heading); color: var(--color-primary, #000c5b);">{{ section.settings.title }}</h2>
+    <h2 class="reels-heading">{{ section.settings.title }}</h2>
   {% endif %}
 
   <div class="marquee-container w-full">
@@ -151,7 +179,10 @@
                   muted
                   loop
                   playsinline
-                  preload="metadata"
+                  autoplay
+                  preload="auto"
+                  disablepictureinpicture
+                  controlslist="nodownload nofullscreen noremoteplayback"
                   {% if poster_url != '' %}poster="{{ poster_url }}"{% endif %}
                   data-reel-video>
                   {%- for source in block.settings.video.sources -%}
@@ -163,9 +194,6 @@
               {%- else -%}
                 {{ 'image' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover opacity-50' }}
               {%- endif -%}
-            </div>
-            <div class="reel-play-icon">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
             </div>
           {%- endcapture -%}
 
@@ -198,15 +226,26 @@
 
 <script>
 (function() {
+  var supportsIO = 'IntersectionObserver' in window;
+  var observer = supportsIO ? new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var v = entry.target.querySelector('[data-reel-video]');
+      if (!v) return;
+      if (entry.isIntersecting) {
+        v.play().catch(function(){});
+      } else {
+        v.pause();
+      }
+    });
+  }, { threshold: 0.25 }) : null;
+
   document.querySelectorAll('[data-reel]').forEach(function(card) {
-    var video = card.querySelector('[data-reel-video]');
-    if (!video) return;
-    card.addEventListener('mouseenter', function() { video.play().catch(function(){}); });
-    card.addEventListener('mouseleave', function() { video.pause(); });
-    card.addEventListener('touchstart', function() {
-      if (video.paused) video.play().catch(function(){});
-      else video.pause();
-    }, { passive: true });
+    var v = card.querySelector('[data-reel-video]');
+    if (!v) return;
+    // Force-attempt autoplay on load (muted+playsinline allow it on iOS/Android)
+    var tryPlay = function() { v.play().catch(function(){}); };
+    if (v.readyState >= 2) tryPlay(); else v.addEventListener('loadeddata', tryPlay, { once: true });
+    if (observer) observer.observe(card);
   });
 })();
 </script>

@@ -1,0 +1,167 @@
+{% comment %}
+  Wishlist page — renders client-side from localStorage via assets/wishlist.js
+{% endcomment %}
+
+<style>
+  .fk-wl-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 20px 80px;
+  }
+  .fk-wl-page__header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .fk-wl-page__title {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-primary, #000c5b);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  .fk-wl-page__sub {
+    color: #666;
+    font-size: 1rem;
+  }
+
+  #FkWishlistGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (min-width: 768px) {
+    #FkWishlistGrid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  }
+  @media (min-width: 1024px) {
+    #FkWishlistGrid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .fk-wl-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .fk-wl-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  }
+  .fk-wl-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .fk-wl-card__image {
+    aspect-ratio: 3 / 4;
+    background: #f5f5f5;
+    overflow: hidden;
+  }
+  .fk-wl-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .fk-wl-noimg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 0.85rem;
+  }
+  .fk-wl-card__info { padding: 12px 14px 16px; }
+  .fk-wl-card__title {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    line-height: 1.3;
+    color: #000;
+  }
+  .fk-wl-card__price {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-primary, #000c5b);
+  }
+  .fk-wl-card__remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ec4899;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    z-index: 5;
+  }
+  .fk-wl-card__remove:hover { transform: scale(1.05); }
+
+  #FkWishlistEmpty {
+    text-align: center;
+    padding: 60px 20px;
+    display: none;
+  }
+  #FkWishlistEmpty svg {
+    width: 64px;
+    height: 64px;
+    color: #ec4899;
+    opacity: 0.4;
+    margin-bottom: 16px;
+  }
+  #FkWishlistEmpty h3 {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 1.4rem;
+    color: #333;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+  #FkWishlistEmpty p { color: #666; margin: 0 0 24px; }
+  #FkWishlistEmpty a {
+    display: inline-block;
+    padding: 12px 28px;
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 6px;
+    text-transform: uppercase;
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<section class="fk-wl-page">
+  <header class="fk-wl-page__header">
+    <h1 class="fk-wl-page__title">Your Wishlist</h1>
+    <p class="fk-wl-page__sub">Saved on this device — your favourites are right here.</p>
+  </header>
+
+  <div id="FkWishlistGrid"></div>
+
+  <div id="FkWishlistEmpty">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    <h3>Your wishlist is empty</h3>
+    <p>Tap the heart on any product to save it here.</p>
+    <a href="/collections/all">Start shopping</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Wishlist Page",
+  "settings": [],
+  "presets": [{ "name": "Wishlist Page" }]
+}
+{% endschema %}

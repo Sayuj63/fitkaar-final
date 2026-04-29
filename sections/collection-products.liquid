@@ -4,13 +4,25 @@
   "settings": [
     {
       "type": "header",
+      "content": "Hero Banner (#4)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hero",
+      "label": "Show collection hero banner",
+      "info": "Uses the collection's image from Shopify admin. 1:1 on mobile, horizontal on desktop.",
+      "default": true
+    },
+    {
+      "type": "header",
       "content": "Category Circles (top of page)"
     },
     {
       "type": "checkbox",
       "id": "show_categories",
       "label": "Show category circles",
-      "default": true
+      "info": "Each category now has its own page — circles are off by default.",
+      "default": false
     },
     {
       "type": "header",
@@ -149,6 +161,63 @@
     margin: 0 auto;
   }
 
+  /* #4: Collection hero banner */
+  .collection-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 5;
+    margin: 0 0 40px;
+    overflow: hidden;
+    border-radius: 0;
+    background: var(--color-primary, #000c5b);
+  }
+  .collection-hero img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .collection-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,12,91,0.10) 0%, rgba(0,12,91,0.55) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 24px;
+    color: #fff;
+  }
+  .collection-hero__title {
+    font-family: var(--font-heading);
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    color: #fff;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.3);
+  }
+  .collection-hero__sub {
+    color: #fff;
+    font-size: 1rem;
+    max-width: 700px;
+    margin: 0 auto;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  @media (max-width: 768px) {
+    .collection-hero {
+      aspect-ratio: 1 / 1;          /* 1:1 on mobile per #4 */
+      margin: 0 -20px 30px;
+      width: calc(100% + 40px);
+    }
+    .collection-hero__title { font-size: 1.8rem; }
+    .collection-hero__sub { font-size: 0.85rem; }
+  }
+
   .products-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -186,6 +255,32 @@
     overflow: hidden;
     background: #f5f5f5;
   }
+
+  /* #15 wishlist heart on collection cards */
+  .pc-card-heart {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    color: #4b5563;
+    transition: transform 0.15s ease, color 0.2s ease;
+  }
+  .pc-card-heart:hover { transform: scale(1.08); }
+  .pc-card-heart svg { width: 16px; height: 16px; }
+  .pc-card-heart .heart-filled { display: none; }
+  .pc-card-heart.is-active { color: #ec4899; }
+  .pc-card-heart.is-active .heart-outline { display: none; }
+  .pc-card-heart.is-active .heart-filled { display: block; }
 
   .product-card-image img {
     width: 100%;
@@ -291,6 +386,7 @@
     height: 100%;
     object-fit: contain;
     display: block;
+    filter: brightness(0);  /* new white icons → black on the card */
   }
 
   .product-card:hover .product-card-type {
@@ -764,12 +860,32 @@
       {%- endif -%}
     {%- endif -%}
 
-    <div class="collection-header">
-      <h1 class="collection-title">{{ collection.title | default: 'All Products' }}</h1>
-      {% if collection.description != blank %}
-        <p class="collection-description">{{ collection.description }}</p>
-      {% endif %}
-    </div>
+    {%- comment -%} #4: Collection hero (uses collection.image set in Shopify Admin → Collections → Image) {%- endcomment -%}
+    {%- if section.settings.show_hero and collection.image != blank -%}
+      <div class="collection-hero">
+        <img src="{{ collection.image | image_url: width: 1800 }}"
+             srcset="{{ collection.image | image_url: width: 800 }} 800w,
+                     {{ collection.image | image_url: width: 1200 }} 1200w,
+                     {{ collection.image | image_url: width: 1800 }} 1800w"
+             sizes="100vw"
+             alt="{{ collection.title | escape }}"
+             loading="eager"
+             fetchpriority="high">
+        <div class="collection-hero__overlay">
+          <h1 class="collection-hero__title">{{ collection.title | default: 'Shop' }}</h1>
+          {% if collection.description != blank %}
+            <p class="collection-hero__sub">{{ collection.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="collection-header">
+        <h1 class="collection-title">{{ collection.title | default: 'All Products' }}</h1>
+        {% if collection.description != blank %}
+          <p class="collection-description">{{ collection.description }}</p>
+        {% endif %}
+      </div>
+    {%- endif -%}
 
     {%- assign has_filters = false -%}
     {%- if collection.filters.size > 0 -%}{%- assign has_filters = true -%}{%- endif -%}
@@ -949,8 +1065,10 @@
       {%- endif -%}
     </form>
 
+    {%- comment -%} #21: paginate so we can infinite-scroll page by page {%- endcomment -%}
+    {% paginate collection.products by 24 %}
     {% if collection.products.size > 0 %}
-      <div class="products-grid">
+      <div class="products-grid" id="ProductsGrid" data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}">
         {% for product in collection.products %}
           <article class="product-card">
             <a href="{{ product.url }}" class="product-card-link">
@@ -990,6 +1108,20 @@
                 {% if product.compare_at_price > product.price %}
                   <span class="product-card-badge">Sale</span>
                 {% endif %}
+
+                {%- comment -%} #15 wishlist heart on each collection card {%- endcomment -%}
+                <button type="button" class="pc-card-heart"
+                  data-wishlist-heart
+                  data-wishlist-id="{{ product.id }}"
+                  data-wishlist-handle="{{ product.handle }}"
+                  data-wishlist-url="{{ product.url }}"
+                  data-wishlist-title="{{ product.title | escape }}"
+                  data-wishlist-price="{{ product.price }}"
+                  data-wishlist-image="{{ product.featured_image | image_url: width: 500 }}"
+                  aria-label="Add to wishlist">
+                  <svg class="heart-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <svg class="heart-filled" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
               </div>
 
               <div class="product-card-info">
@@ -1044,19 +1176,19 @@
                         {%- assign icon_url = '' -%}
                         {%- case value_lower -%}
                           {%- when 'hoodie' -%}
-                            {%- assign icon_url = 'Sweatshirts.PNG' | asset_url -%}
+                            {%- assign icon_url = 'HOODIE.png' | asset_url -%}
                           {%- when 'boxy vest', 'vest' -%}
-                            {%- assign icon_url = 'Boxy vests .PNG' | asset_url -%}
+                            {%- assign icon_url = 'BOXY VEST.png' | asset_url -%}
                           {%- when 'regular tee', 't-shirt', 'tshirt', 'tee' -%}
-                            {%- assign icon_url = 'Regular tshirt .PNG' | asset_url -%}
+                            {%- assign icon_url = 'REGULAR TSHIRT.png' | asset_url -%}
                           {%- when 'sweatshirt' -%}
-                            {%- assign icon_url = 'Sweatshirts.PNG' | asset_url -%}
+                            {%- assign icon_url = 'SWEATSHIRT.png' | asset_url -%}
                           {%- when 'oversized tee', 'oversized' -%}
-                            {%- assign icon_url = 'Oversized tees.PNG' | asset_url -%}
+                            {%- assign icon_url = 'OVERSIZED TEE.png' | asset_url -%}
                           {%- when 'cropped tee', 'cropped' -%}
-                            {%- assign icon_url = 'Cropped tee .PNG' | asset_url -%}
+                            {%- assign icon_url = 'CROPPED TEE.png' | asset_url -%}
                           {%- else -%}
-                            {%- assign icon_url = 'Regular tshirt .PNG' | asset_url -%}
+                            {%- assign icon_url = 'REGULAR TSHIRT.png' | asset_url -%}
                         {%- endcase -%}
                         {%- assign hide_mobile = '' -%}
                         {%- if pcidx >= mobile_budget -%}{%- assign hide_mobile = ' pc-hide-mobile' -%}{%- endif -%}
@@ -1116,6 +1248,11 @@
           </article>
         {% endfor %}
       </div>
+
+      {%- comment -%} #21: sentinel element used by IntersectionObserver to load next page {%- endcomment -%}
+      <div id="InfiniteScrollSentinel" data-page-count="{{ paginate.pages }}" data-current-page="{{ paginate.current_page }}" style="height: 40px; margin: 24px 0;"></div>
+      <div id="InfiniteScrollLoader" style="display: none; text-align: center; padding: 30px 20px; color: var(--color-primary); font-weight: 600; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;">Loading more…</div>
+      <div id="InfiniteScrollEnd" style="display: none; text-align: center; padding: 24px 20px; color: #9ca3af; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">— You've reached the end —</div>
     {% else %}
       <div class="empty-collection">
         <h2>No products found</h2>
@@ -1123,6 +1260,7 @@
         <a href="{{ collection.url }}">Clear filters</a>
       </div>
     {% endif %}
+    {% endpaginate %}
   </div>
 </section>
 
@@ -1145,5 +1283,84 @@
   if (sort) {
     sort.addEventListener('change', function() { form.submit(); });
   }
+})();
+
+/* #21: Infinite scroll for products grid */
+(function() {
+  var grid = document.getElementById('ProductsGrid');
+  var sentinel = document.getElementById('InfiniteScrollSentinel');
+  var loader = document.getElementById('InfiniteScrollLoader');
+  var endMsg = document.getElementById('InfiniteScrollEnd');
+  if (!grid || !sentinel) return;
+
+  var nextUrl = grid.getAttribute('data-next-url') || '';
+  var loading = false;
+
+  function loadNext() {
+    if (loading || !nextUrl) {
+      if (!nextUrl && endMsg) endMsg.style.display = 'block';
+      return;
+    }
+    loading = true;
+    if (loader) loader.style.display = 'block';
+
+    fetch(nextUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(function(r) { return r.text(); })
+      .then(function(html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var nextGrid = doc.getElementById('ProductsGrid');
+        var nextSent = doc.getElementById('InfiniteScrollSentinel');
+        if (nextGrid) {
+          var newCards = nextGrid.querySelectorAll('.product-card');
+          newCards.forEach(function(card) { grid.appendChild(card); });
+        }
+        nextUrl = nextGrid ? (nextGrid.getAttribute('data-next-url') || '') : '';
+        loading = false;
+        if (loader) loader.style.display = 'none';
+        if (!nextUrl && endMsg) endMsg.style.display = 'block';
+
+        // Re-bind wishlist hearts on newly inserted cards
+        if (window.FkWishlist) {
+          document.querySelectorAll('[data-wishlist-heart]:not([data-wishlist-bound])').forEach(function(el) {
+            el.setAttribute('data-wishlist-bound', '1');
+            el.addEventListener('click', function(e) {
+              e.preventDefault(); e.stopPropagation();
+              window.FkWishlist.toggle({
+                id:     el.getAttribute('data-wishlist-id'),
+                handle: el.getAttribute('data-wishlist-handle') || '',
+                url:    el.getAttribute('data-wishlist-url') || '',
+                title:  el.getAttribute('data-wishlist-title') || '',
+                price:  parseInt(el.getAttribute('data-wishlist-price') || '0', 10) || 0,
+                image:  el.getAttribute('data-wishlist-image') || ''
+              });
+              document.querySelectorAll('[data-wishlist-heart]').forEach(function(h) {
+                h.classList.toggle('is-active', window.FkWishlist.has(h.getAttribute('data-wishlist-id')));
+              });
+            });
+            el.classList.toggle('is-active', window.FkWishlist.has(el.getAttribute('data-wishlist-id')));
+          });
+        }
+      })
+      .catch(function() {
+        loading = false;
+        if (loader) loader.style.display = 'none';
+      });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) loadNext(); });
+    }, { rootMargin: '400px' });
+    io.observe(sentinel);
+  } else {
+    // Fallback: scroll listener
+    window.addEventListener('scroll', function() {
+      if (!nextUrl || loading) return;
+      var rect = sentinel.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 400) loadNext();
+    });
+  }
+
+  if (!nextUrl && endMsg) endMsg.style.display = 'block';
 })();
 </script>

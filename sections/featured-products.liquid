@@ -37,17 +37,97 @@
 
 .bestseller-image {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;       /* PC: tighter square so cards aren't oversized */
   background-color: #f5f5f5;
   margin-bottom: 1rem;
   overflow: hidden;
+  position: relative; /* #59: hover 2nd image */
 }
+
+@media (max-width: 767px) {
+  .bestseller-image {
+    aspect-ratio: 3 / 4;     /* Mobile: keep portrait — that look the user called perfect */
+  }
+}
+
+/* #15: card heart toggle */
+.fk-card-heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  color: #4b5563;
+  transition: transform 0.15s ease, color 0.2s ease;
+}
+.fk-card-heart:hover { transform: scale(1.08); }
+.fk-card-heart svg { width: 18px; height: 18px; }
+.fk-card-heart .heart-filled { display: none; }
+.fk-card-heart.is-active { color: #ec4899; }
+.fk-card-heart.is-active .heart-outline { display: none; }
+.fk-card-heart.is-active .heart-filled { display: block; }
 
 .bestseller-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.45s ease;
+}
+
+/* #59: PC hover swap to 2nd image */
+.bestseller-image img.alt-image {
+  opacity: 0;
+}
+@media (hover: hover) {
+  .bestseller-card:hover .bestseller-image img.alt-image {
+    opacity: 1;
+  }
+}
+
+/* #29: apparel + colour swatches on the card */
+.bestseller-swatches {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.bestseller-swatches__group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.bestseller-color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.bestseller-color-dot--white { border-color: #cbd5e1; }
+.bestseller-apparel-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.85;
+  filter: brightness(0);  /* new white-on-transparent icons → black on the card */
+}
+.bestseller-swatches__more {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-left: 2px;
 }
 
 .bestseller-info {
@@ -55,17 +135,18 @@
 }
 
 .bestseller-title {
-  font-size: 1rem;
+  font-size: 0.92rem;       /* #6: tighten PC typography to match clean mobile look */
   font-weight: 700;
   font-family: var(--font-heading);
   color: #000;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   text-transform: uppercase;
+  line-height: 1.25;
 }
 
 .bestseller-price {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #000c5b;
 }
 
@@ -108,13 +189,114 @@
       {% assign collection = section.settings.collection %}
       {% if collection != blank %}
         {% for product in collection.products limit: 8 %}
+          {%- comment -%} #29: collect colours + apparel types from variants {%- endcomment -%}
+          {%- assign card_colors = '' -%}
+          {%- assign card_types = '' -%}
+          {%- for opt in product.options_with_values -%}
+            {%- assign opt_lower = opt.name | downcase -%}
+            {%- if opt_lower contains 'colour' or opt_lower contains 'color' -%}
+              {%- for v in opt.values -%}{%- assign card_colors = card_colors | append: v | append: ',' -%}{%- endfor -%}
+            {%- elsif opt_lower contains 'type' -%}
+              {%- for v in opt.values -%}{%- assign card_types = card_types | append: v | append: ',' -%}{%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign color_list = card_colors | split: ',' -%}
+          {%- assign type_list = card_types | split: ',' -%}
+          {%- assign second_image = product.images[1] | default: product.featured_image -%}
+
+          {%- comment -%} #24: show price of variant whose featured image is the card cover, fall back to product.price (min) {%- endcomment -%}
+          {%- assign cover_variant = nil -%}
+          {%- for v in product.variants -%}
+            {%- if v.featured_image and v.featured_image.id == product.featured_image.id -%}
+              {%- assign cover_variant = v -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign display_price = product.price -%}
+          {%- if cover_variant -%}{%- assign display_price = cover_variant.price -%}{%- endif -%}
+
           <a href="{{ product.url }}" class="bestseller-card">
             <div class="bestseller-image">
               <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title }}">
+              {%- if second_image and second_image.id != product.featured_image.id -%}
+                <img src="{{ second_image | image_url: width: 400 }}" alt="{{ product.title }}" class="alt-image" loading="lazy">
+              {%- endif -%}
+              {%- comment -%} #15 wishlist heart on each card {%- endcomment -%}
+              <button type="button" class="fk-card-heart"
+                data-wishlist-heart
+                data-wishlist-id="{{ product.id }}"
+                data-wishlist-handle="{{ product.handle }}"
+                data-wishlist-url="{{ product.url }}"
+                data-wishlist-title="{{ product.title | escape }}"
+                data-wishlist-price="{{ product.price }}"
+                data-wishlist-image="{{ product.featured_image | image_url: width: 500 }}"
+                aria-label="Add to wishlist">
+                <svg class="heart-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <svg class="heart-filled" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </button>
             </div>
             <div class="bestseller-info">
               <h3 class="bestseller-title">{{ product.title }}</h3>
-              <p class="bestseller-price">₹{{ product.price | divided_by: 100 }}/-</p>
+              <p class="bestseller-price">₹{{ display_price | divided_by: 100 }}/-</p>
+
+              {%- if color_list.size > 0 or type_list.size > 0 -%}
+                <div class="bestseller-swatches">
+                  {%- if type_list.size > 0 -%}
+                    <span class="bestseller-swatches__group">
+                      {%- for t in type_list limit: 3 -%}
+                        {%- assign t_lower = t | downcase -%}
+                        {%- assign icon_src = 'REGULAR TSHIRT.png' -%}
+                        {%- case t_lower -%}
+                          {%- when 'hoodie' -%}{%- assign icon_src = 'HOODIE.png' -%}
+                          {%- when 'sweatshirt' -%}{%- assign icon_src = 'SWEATSHIRT.png' -%}
+                          {%- when 'boxy vest' -%}{%- assign icon_src = 'BOXY VEST.png' -%}
+                          {%- when 'oversized tee' -%}{%- assign icon_src = 'OVERSIZED TEE.png' -%}
+                          {%- when 'cropped tee' -%}{%- assign icon_src = 'CROPPED TEE.png' -%}
+                          {%- else -%}{%- assign icon_src = 'REGULAR TSHIRT.png' -%}
+                        {%- endcase -%}
+                        <img src="{{ icon_src | asset_url }}" alt="{{ t }}" class="bestseller-apparel-icon" title="{{ t }}">
+                      {%- endfor -%}
+                    </span>
+                  {%- endif -%}
+
+                  {%- if color_list.size > 0 -%}
+                    <span class="bestseller-swatches__group">
+                      {%- for c in color_list limit: 5 -%}
+                        {%- assign c_lower = c | downcase -%}
+                        {%- assign dot_color = c_lower -%}
+                        {%- case c_lower -%}
+                          {%- when 'black' -%}{%- assign dot_color = '#000000' -%}
+                          {%- when 'white' -%}{%- assign dot_color = '#ffffff' -%}
+                          {%- when 'navy' -%}{%- assign dot_color = '#000c5b' -%}
+                          {%- when 'navy blue' -%}{%- assign dot_color = '#000c5b' -%}
+                          {%- when 'brown' -%}{%- assign dot_color = '#5C4033' -%}
+                          {%- when 'beige' -%}{%- assign dot_color = '#f5f5dc' -%}
+                          {%- when 'red' -%}{%- assign dot_color = '#dc2626' -%}
+                          {%- when 'blue' -%}{%- assign dot_color = '#2563eb' -%}
+                          {%- when 'green' -%}{%- assign dot_color = '#16a34a' -%}
+                          {%- when 'pink' -%}{%- assign dot_color = '#ec4899' -%}
+                          {%- when 'yellow' -%}{%- assign dot_color = '#facc15' -%}
+                          {%- when 'orange' -%}{%- assign dot_color = '#f97316' -%}
+                          {%- when 'purple' -%}{%- assign dot_color = '#7c3aed' -%}
+                          {%- when 'grey' -%}{%- assign dot_color = '#6b7280' -%}
+                          {%- when 'gray' -%}{%- assign dot_color = '#6b7280' -%}
+                          {%- when 'maroon' -%}{%- assign dot_color = '#7f1d1d' -%}
+                          {%- when 'cream' -%}{%- assign dot_color = '#fffdd0' -%}
+                          {%- when 'olive' -%}{%- assign dot_color = '#556b2f' -%}
+                          {%- when 'teal' -%}{%- assign dot_color = '#0f766e' -%}
+                          {%- when 'mustard' -%}{%- assign dot_color = '#d4a017' -%}
+                          {%- when 'lavender' -%}{%- assign dot_color = '#c4b5fd' -%}
+                          {%- else -%}{%- assign dot_color = c_lower | replace: ' ', '' -%}
+                        {%- endcase -%}
+                        <span class="bestseller-color-dot{%- if c_lower == 'white' %} bestseller-color-dot--white{%- endif -%}" style="background-color: {{ dot_color }};" title="{{ c }}"></span>
+                      {%- endfor -%}
+                      {%- if color_list.size > 5 -%}
+                        <span class="bestseller-swatches__more">+{{ color_list.size | minus: 5 }}</span>
+                      {%- endif -%}
+                    </span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
             </div>
           </a>
         {% endfor %}

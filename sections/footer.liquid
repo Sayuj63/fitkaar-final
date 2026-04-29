@@ -169,6 +169,26 @@
     stroke: var(--color-primary, #000c5b);
   }
 
+  /* #17: newsletter post-submit message */
+  .fk-footer__newsletter-msg {
+    width: 100%;
+    flex-basis: 100%;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-secondary, 'Raleway', sans-serif);
+    text-align: center;
+  }
+  .fk-footer__newsletter-msg--ok {
+    background: rgba(113, 182, 200, 0.15);
+    color: var(--color-secondary, #71b6c8);
+  }
+  .fk-footer__newsletter-msg--err {
+    background: rgba(220, 38, 38, 0.15);
+    color: #fecaca;
+  }
+
   /* Row 2 - Social Icons & Tagline */
   .fk-footer__row-2 {
     display: flex;
@@ -270,6 +290,7 @@
     .fk-footer__row-1 {
       flex-direction: column;
       gap: 28px;
+      align-items: center;
     }
     .fk-footer__logo img {
       width: 140px;
@@ -277,17 +298,24 @@
     .fk-footer__menu-col {
       flex-wrap: wrap;
       gap: 28px;
+      justify-content: center;
+      width: 100%;
     }
     .fk-footer__menu-group {
       min-width: 120px;
     }
     .fk-footer__row-2 {
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       gap: 24px;
+      text-align: center;
     }
     .fk-footer__tagline {
       font-size: 24px;
+      text-align: center;
+    }
+    .fk-footer__socials {
+      justify-content: center;
     }
     .fk-footer__socials svg {
       width: 22px;
@@ -295,9 +323,28 @@
     }
     .fk-footer__logo-col {
       max-width: 100%;
+      width: 100%;
+      align-self: center;
+      align-items: center;
+    }
+    .fk-footer__brand-tagline {
+      text-align: center;
     }
     .fk-footer__brand-tagline .fk-footer__brand-line {
       white-space: normal;
+    }
+    .fk-footer__newsletter-col {
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+    }
+    .fk-footer__newsletter-text {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .fk-footer__form {
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 </style>
@@ -328,12 +375,11 @@
               <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {% endfor %}
           {% else %}
-            <li><a href="/pages/contact">Contact us</a></li>
+            <li><a href="/pages/contact-us">Contact us</a></li>
             <li><a href="/pages/faqs">FAQs</a></li>
-            <li><a href="/policies">Policies</a></li>
-            <li><a href="/policies/terms-of-service">Terms & Conditions</a></li>
+            <li><a href="/pages/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/pages/terms-conditions">Terms & Conditions</a></li>
             <li><a href="/pages/about-us">About us</a></li>
-            <li><a href="#newsletter">Newsletter</a></li>
           {% endif %}
         </ul>
       </div>
@@ -348,11 +394,8 @@
             {% endfor %}
           {% else %}
             <li><a href="/">Home</a></li>
+            <li><a href="/pages/process">Customise</a></li>
             <li><a href="/collections/all">Shop</a></li>
-            <li><a href="/collections/best-sellers">Best Sellers</a></li>
-            <li><a href="/pages/custom-orders">Custom Orders</a></li>
-            <li><a href="/pages/bulk-orders">Bulk / Corporate Orders</a></li>
-            <li><a href="/collections">Collections</a></li>
             <li><a href="/collections/gift-cards">Gift Cards</a></li>
           {% endif %}
         </ul>
@@ -381,9 +424,8 @@
       <h4 class="fk-footer__newsletter-heading">WE'VE GOT YOU COVERED:</h4>
       <p class="fk-footer__newsletter-text">Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops.</p>
 
-      <form class="fk-footer__form" action="{{ routes.root_url }}" method="post" id="footer-newsletter">
-        <input type="hidden" name="form_type" value="customer">
-        <input type="hidden" name="utf8" value="✓">
+      {% form 'customer', id: 'footer-newsletter', class: 'fk-footer__form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
         <input
           type="email"
           name="contact[email]"
@@ -397,7 +439,13 @@
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
         </button>
-      </form>
+
+        {%- if form.posted_successfully? -%}
+          <p class="fk-footer__newsletter-msg fk-footer__newsletter-msg--ok">Thanks! You're on the list ✨</p>
+        {%- elsif form.errors -%}
+          <p class="fk-footer__newsletter-msg fk-footer__newsletter-msg--err">{{ form.errors | default_errors }}</p>
+        {%- endif -%}
+      {% endform %}
     </div>
 
   </div>

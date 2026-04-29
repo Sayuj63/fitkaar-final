@@ -1,0 +1,165 @@
+{% comment %}
+  Public FAQs page (#11). 5 categories — Orders, Returns & Exchanges, Customisation/Bulk,
+  Payments, Products & Sizing. Content sourced from WhatsApp doc — auto-generated 2026-04-29.
+{% endcomment %}
+
+<style>
+  .faqs-page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+    font-family: var(--font-body, 'Helvetica Neue', sans-serif);
+    color: #1f2937;
+  }
+  .faqs-page__hero { text-align: center; margin-bottom: 40px; }
+  .faqs-page h1 {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--color-primary, #000c5b);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    letter-spacing: 0.04em;
+  }
+  .faqs-page__sub { color: #6b7280; font-size: 0.95rem; margin: 0; }
+  .faqs-page__group { margin-bottom: 38px; }
+  .faqs-page__group-title {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 1.1rem;
+    color: var(--color-primary, #000c5b);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-secondary, #71b6c8);
+  }
+  .faqs-page__list { display: flex; flex-direction: column; gap: 8px; }
+  .faqs-page__item {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 14px 18px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .faqs-page__item[open] {
+    border-color: var(--color-primary, #000c5b);
+    box-shadow: 0 4px 12px rgba(0, 12, 91, 0.08);
+  }
+  .faqs-page__item summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--color-primary, #000c5b);
+    font-size: 0.96rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .faqs-page__item summary::-webkit-details-marker { display: none; }
+  .faqs-page__item summary::after {
+    content: "+";
+    font-size: 1.3rem;
+    color: var(--color-secondary, #71b6c8);
+    transition: transform 0.25s;
+  }
+  .faqs-page__item[open] summary::after { content: "−"; color: var(--color-primary, #000c5b); }
+  .faqs-page__item p {
+    margin: 12px 0 0;
+    color: #444;
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+  .faqs-page__item a { color: var(--color-primary, #000c5b); text-decoration: underline; }
+  @media (max-width: 640px) {
+    .faqs-page { padding: 36px 16px 60px; }
+    .faqs-page h1 { font-size: 1.7rem; }
+    .faqs-page__item summary { font-size: 0.9rem; }
+  }
+</style>
+
+<section class="faqs-page">
+  <header class="faqs-page__hero">
+    <h1>Frequently Asked Questions</h1>
+    <p class="faqs-page__sub">Everything you need to know — orders, customisation, payments, sizing.</p>
+  </header>
+
+  <div class="faqs-page__group">
+    <h2 class="faqs-page__group-title">Orders</h2>
+    <div class="faqs-page__list">
+      <details class="faqs-page__item"><summary>Can I modify my order after placing it?</summary><p>No. Orders cannot be modified once placed, as they are processed immediately.</p></details>
+      <details class="faqs-page__item"><summary>Can I cancel my order?</summary><p>No. Orders cannot be cancelled once confirmed.</p></details>
+      <details class="faqs-page__item"><summary>What are the shipping timelines?</summary><p>Usually the process takes around 10-15 days, however it may vary depending upon the delivery location. We'll share the Estimated Delivery Date (EDD) once the order has been dispatched!</p></details>
+      <details class="faqs-page__item"><summary>Do you deliver PAN India?</summary><p>Yes, we ship across India and shipping is on us, no hidden delivery charges.</p></details>
+      <details class="faqs-page__item"><summary>What if I'm facing an issue with delivery?</summary><p>In such cases, you can reach out to us via Email or Whatsapp and our team will look into it!</p></details>
+      <details class="faqs-page__item"><summary>Do you ship internationally?</summary><p>International shipping is not available at the moment.</p></details>
+      <details class="faqs-page__item"><summary>Can you not include the price tag as this is a gift for someone?</summary><p>For gift orders, invoice and product tags cannot be removed. All shipments are dispatched in standard packaging as per company policy.</p></details>
+    </div>
+  </div>
+
+  <div class="faqs-page__group">
+    <h2 class="faqs-page__group-title">Returns &amp; Exchanges</h2>
+    <div class="faqs-page__list">
+      <details class="faqs-page__item"><summary>Do you offer returns or exchanges on orders?</summary><p>Since each piece at Fitkaar is custom-made to your specifications, every product is uniquely created for you. For this reason, we do not offer returns or exchanges. However, all our products are made true to the provided size chart. If you need any assistance or have concerns regarding sizing or your order, our team is always here to help.</p></details>
+      <details class="faqs-page__item"><summary>What if I receive a wrong or defective product?</summary><p>In such cases, we'd require a clear unboxing video and clear photos of the defective or incorrect product for verification. Our team would be happy to provide a resolution for the same!</p></details>
+    </div>
+  </div>
+
+  <div class="faqs-page__group">
+    <h2 class="faqs-page__group-title">Customisation, Bulk Orders &amp; More</h2>
+    <div class="faqs-page__list">
+      <details class="faqs-page__item"><summary>How does customisation work?</summary><p>Complete the form with your ideas, inspirations, favourite details, or references you want on your apparel. Our team designs the product based on your brief and only once it is approved by you, we begin the production process.</p></details>
+      <details class="faqs-page__item"><summary>Does the price depend on the size of the print? Can I customise both the front and back of the apparel?</summary><p>No, we offer the same price regardless of the print size! Just mention your requirements in the brief and our team will design accordingly.<br><em>Note: Cropped tees only have front customisation.</em></p></details>
+      <details class="faqs-page__item"><summary>What products can be customised? Are the products unisex?</summary><p>All our products including t-shirts, cropped tees, boxy vests, sweatshirts and hoodies are 100% customisable with multiple colour options available! All our products are unisex except for the cropped tees.</p></details>
+      <details class="faqs-page__item"><summary>Do you accept bulk orders?</summary><p>We take bulk orders for corporate gifting, college merch, wedding and other events, or anything else you have in mind. Kindly reach out to us on WhatsApp for the same!</p></details>
+      <details class="faqs-page__item"><summary>What if I don't like the design and want to make changes in it?</summary><p>No worries at all! We accommodate up to two rounds of changes, as long as the design brief is the same to make sure you're happy with the final design. Do keep in mind that multiple revisions may naturally extend the delivery timeline slightly.</p></details>
+      <details class="faqs-page__item"><summary>What is the ₹400/- design advance and is it refundable?</summary><p>To begin your order and start designing, we take a small non-refundable advance of ₹400/- per design, which is adjusted in your final product price and is not an additional or hidden charge. The design advance covers the time, energy and creativity that goes into the process!</p></details>
+      <details class="faqs-page__item"><summary>When do I pay the balance amount?</summary><p>The balance amount for each product is payable after the design has been approved by you. Once the balance payment has been completed, we initiate printing.</p></details>
+      <details class="faqs-page__item"><summary>How long does my order take to arrive?</summary><p>We are a customised clothing brand, and every piece is made exclusively for each customer. Usually the process takes around 10-15 days, however it may vary depending upon the number of changes along with the delivery location! We'll share a clearer ETA once your design is approved.</p></details>
+      <details class="faqs-page__item"><summary>What file formats should I send for references?</summary><p>JPG, PNG or HEIC works the best. If your file is too large to upload, you can simply send it to us on WhatsApp!</p></details>
+      <details class="faqs-page__item"><summary>Can I order a single piece or is there a minimum quantity?</summary><p>You can order a single piece, there's no minimum order quantity.</p></details>
+      <details class="faqs-page__item"><summary>Who can I gift this to?</summary><p>Honestly, anyone. Yourself, your parents, grandparents, your partner, best friends, siblings, or whoever comes to your mind, we've got something for everyone!</p></details>
+      <details class="faqs-page__item"><summary>What if I have multiple orders?</summary><p>You can fill out separate forms for each design. In case you'd like the same design, you can add up to 5 products in the same form itself. For larger quantities, you can reach out to us on WhatsApp!</p></details>
+    </div>
+  </div>
+
+  <div class="faqs-page__group">
+    <h2 class="faqs-page__group-title">Payments</h2>
+    <div class="faqs-page__list">
+      <details class="faqs-page__item"><summary>What payment methods do you accept?</summary><p>We accept online payments via UPI, debit cards, credit cards, net banking, and wallets.</p></details>
+      <details class="faqs-page__item"><summary>Is Cash on Delivery (COD) available?</summary><p>Since all our products are custom-made, we currently do not offer COD.</p></details>
+      <details class="faqs-page__item"><summary>What if my payment fails?</summary><p>If a payment fails, please check with your bank or payment provider before retrying.</p></details>
+      <details class="faqs-page__item"><summary>Is my payment secure?</summary><p>Yes. All payments are processed through Razorpay, which is a secure and encrypted payment gateway.</p></details>
+      <details class="faqs-page__item"><summary>Are there any hidden charges?</summary><p>No. There are no hidden charges. All prices are inclusive of taxes. We offer FREE shipping on all orders!</p></details>
+    </div>
+  </div>
+
+  <div class="faqs-page__group">
+    <h2 class="faqs-page__group-title">Products &amp; Sizing</h2>
+    <div class="faqs-page__list">
+      <details class="faqs-page__item"><summary>How do I choose the right size?</summary><p>Our size charts have instructions which will help you pick the right size. If unsure, we recommend choosing one size up.</p></details>
+      <details class="faqs-page__item"><summary>Where can I find details of the product?</summary><p>Fit and fabric information, along with care instructions are mentioned on the respective product pages.</p></details>
+      <details class="faqs-page__item"><summary>Will the print fade away after washing?</summary><p>While no print is truly permanent forever, you don't have to worry, our prints are super durable and made to last through frequent wears and washes. They won't peel or fade easily as long as you follow normal care instructions.</p></details>
+    </div>
+  </div>
+</section>
+
+<script>
+  // One open at a time within each group
+  document.querySelectorAll('.faqs-page__group').forEach(function(group) {
+    var items = group.querySelectorAll('.faqs-page__item');
+    items.forEach(function(it) {
+      it.addEventListener('toggle', function() {
+        if (it.open) items.forEach(function(o) { if (o !== it) o.open = false; });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "FAQs",
+  "settings": [],
+  "presets": [{ "name": "FAQs" }]
+}
+{% endschema %}

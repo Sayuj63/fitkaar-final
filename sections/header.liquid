@@ -11,60 +11,314 @@
 }
 {% endschema %}
 
-<header class="site-header" style="background: #fff; padding: 15px 0; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 50;" x-data="{ mobileMenuOpen: false }">
-  <div class="container flex justify-between items-center">
-    
-    <!-- Mobile Hamburger Button -->
-    <button type="button" class="md:hidden p-2 -ml-2" @click="mobileMenuOpen = !mobileMenuOpen">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
+<header class="site-header" style="background: #fff; padding: 12px 0; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 50; color: var(--color-primary);" x-data="{ mobileMenuOpen: false, shopOpen: false }">
+  <div class="container fk-header-row">
 
-    <!-- Logo -->
-    <div class="logo">
-      <a href="/" class="flex items-center gap-4">
+    <!-- LEFT: hamburger + small logo image (mobile) | full logo (desktop) -->
+    <div class="fk-header-left">
+      <button type="button" class="md:hidden p-2 -ml-2 fk-header-burger" @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Open menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- Mobile-only: just the circular logo image -->
+      <a href="/" class="fk-mobile-logo" aria-label="Fitkaar home">
+        <img src="{{ 'image copy 5.png' | asset_url }}" alt="Fitkaar" style="height: 34px; width: auto; object-fit: contain;">
+      </a>
+
+      <!-- Desktop-only: image + FITKAAR wordmark -->
+      <a href="/" class="hidden md:flex items-center gap-4" style="text-decoration: none;">
         <img src="{{ 'image copy 5.png' | asset_url }}" alt="Fitkaar Logo" style="height: 50px; width: auto; object-fit: contain;">
-        <span class="h2" style="font-family: var(--font-heading); font-size: 30px; font-weight: 700; color: var(--color-primary); margin: 0;">FITKAAR™</span>
+        <span class="h2" style="font-family: var(--font-heading); font-size: 30px; font-weight: 700; color: var(--color-primary); margin: 0; text-decoration: none;">FITKAAR™</span>
       </a>
     </div>
 
-    <!-- Navigation (Desktop) -->
-    <nav class="hidden md:flex gap-8">
-      {% for link in linklists.main-menu.links %}
-        {% assign link_title_lower = link.title | downcase %}
-        {% unless link_title_lower contains 'about' %}
-          <a href="{{ link.url }}" class="text-base hover:text-primary uppercase font-bold" style="font-family: var(--font-heading); color: #000; text-decoration: none;">{{ link.title }}</a>
-        {% endunless %}
-      {% endfor %}
-      <a href="/pages/about-us" class="text-base hover:text-primary uppercase font-bold" style="font-family: var(--font-heading); color: #000; text-decoration: none;">About Us</a>
+    <!-- CENTER (mobile only): FITKAAR wordmark, absolutely centered -->
+    <a href="/" class="md:hidden fk-header-center" style="text-decoration: none;" aria-label="Fitkaar home">
+      <span style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--color-primary); letter-spacing: 1px;">FITKAAR</span>
+    </a>
+
+    <!-- DESKTOP NAV (hardcoded order: HOME → CUSTOMISE → SHOP → ABOUT → CONTACT) -->
+    <nav class="hidden md:flex gap-8 fk-desktop-nav">
+      <a href="/" class="fk-nav-link">Home</a>
+      <a href="/pages/process" class="fk-nav-link">Customise</a>
+
+      <!-- #2: SHOP dropdown (hover on desktop) -->
+      <div class="fk-shop-trigger" @mouseenter="shopOpen = true" @mouseleave="shopOpen = false">
+        <a href="/collections/all" class="fk-nav-link fk-shop-link">
+          Shop
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left: 4px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </a>
+        <div class="fk-shop-dropdown" x-show="shopOpen" x-transition.opacity.duration.150ms style="display: none;">
+          <div class="fk-shop-col">
+            <div class="fk-shop-col-head">Essentials</div>
+            <a href="/collections/everyday">Everyday</a>
+            <a href="/collections/your-aesthetic">Your Aesthetic</a>
+            <a href="/collections/basics">Basics</a>
+          </div>
+          <div class="fk-shop-col">
+            <div class="fk-shop-col-head">Themes</div>
+            <a href="/collections/only-at-fitkaar">Only at Fitkaar</a>
+            <a href="/collections/food-and-drinks">Food &amp; Drinks</a>
+            <a href="/collections/sports-and-fitness">Sports &amp; Fitness</a>
+            <a href="/collections/work-and-hobbies">Work &amp; Hobbies</a>
+          </div>
+          <div class="fk-shop-col">
+            <div class="fk-shop-col-head">Vibes</div>
+            <a href="/collections/couples">Couples</a>
+            <a href="/collections/matching">Matching</a>
+            <a href="/collections/pun-intended">Pun Intended</a>
+            <a href="/collections/zodiac-signs">Zodiac Signs</a>
+            <a href="/pages/process" class="fk-shop-col-cta">Bulk orders →</a>
+          </div>
+        </div>
+      </div>
+
+      <a href="/pages/about-us" class="fk-nav-link">About Us</a>
+      <a href="/pages/contact-us" class="fk-nav-link">Contact</a>
     </nav>
 
-    <!-- Icons -->
-    <div class="header-icons flex gap-4 items-center">
-      <a href="/search" class="icon-search">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <!-- RIGHT: icons (search, login, wishlist, cart) -->
+    <div class="header-icons fk-header-right">
+      <button type="button" class="icon-search" aria-label="Search" onclick="window.__fkOpenSearch && window.__fkOpenSearch()" style="background: none; border: none; padding: 0; cursor: pointer; display: inline-flex; align-items: center; color: var(--color-primary);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <a href="/account/login" class="icon-login" aria-label="Account">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
 
-      <!-- Wishlist Icon -->
       <a href="/pages/wishlist" class="icon-wishlist" aria-label="Wishlist">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
 
-      <!-- Cart Icon with Alpine.js logic for count -->
-      <a href="/cart" class="icon-cart relative" id="cart-icon-bubble">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" fill="currentColor"/><path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" fill="currentColor"/><path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="cart-count-bubble cart-count" style="background-color: var(--color-secondary); color: white; position: absolute; top: -8px; right: -8px; border-radius: 50%; width: 20px; height: 20px; display: {% if cart.item_count > 0 %}flex{% else %}none{% endif %}; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">
+      <a href="/cart" class="icon-cart relative" id="cart-icon-bubble" aria-label="Cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" fill="currentColor"/><path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" fill="currentColor"/><path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="cart-count-bubble cart-count" style="background-color: var(--color-secondary); color: white; position: absolute; top: -8px; right: -8px; border-radius: 50%; width: 18px; height: 18px; display: {% if cart.item_count > 0 %}flex{% else %}none{% endif %}; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">
           {{ cart.item_count }}
         </div>
       </a>
     </div>
+
   </div>
 
 
 
 
   <style>
+    /* 3-column header row layout */
+    .fk-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      gap: 12px;
+    }
+    .fk-header-left,
+    .fk-header-right {
+      display: flex;
+      align-items: center;
+    }
+    .fk-header-left { gap: 8px; }
+
+    /* Mobile-only circular logo — hidden on desktop. !important beats any inline display. */
+    .fk-mobile-logo {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    @media (min-width: 768px) {
+      .fk-mobile-logo { display: none !important; }
+    }
+
+    .header-icons.fk-header-right { gap: 14px; color: var(--color-primary); }
+    .header-icons a {
+      color: var(--color-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-icons a svg { color: var(--color-primary); }
+    .fk-header-burger { color: var(--color-primary); }
+
+    @media (max-width: 767px) {
+      .fk-header-center {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .header-icons.fk-header-right { gap: 10px; }
+      .header-icons a svg { width: 20px; height: 20px; }
+    }
+
+    @media (min-width: 768px) {
+      .fk-header-center { display: none; }
+    }
+
+    /* #2: Shared nav-link styling */
+    .fk-nav-link {
+      font-family: var(--font-heading);
+      color: #000;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+    }
+    .fk-nav-link:hover { color: var(--color-secondary, #71b6c8); }
+
+    /* #2: Shop hover dropdown (desktop) */
+    .fk-shop-trigger { position: relative; }
+    .fk-shop-link { cursor: pointer; }
+    .fk-shop-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 18px 40px rgba(0, 12, 91, 0.10);
+      padding: 22px 28px;
+      display: flex !important;
+      gap: 36px;
+      min-width: 540px;
+      z-index: 100;
+    }
+    .fk-shop-dropdown[style*="display: none"] { display: none !important; }
+    .fk-shop-dropdown::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 0;
+      right: 0;
+      height: 12px;
+    }
+    .fk-shop-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 140px;
+    }
+    .fk-shop-col-head {
+      font-family: var(--font-heading);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--color-secondary, #71b6c8);
+      text-transform: uppercase;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 4px;
+    }
+    .fk-shop-col a {
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: #1f2937;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .fk-shop-col a:hover { color: var(--color-primary, #000c5b); }
+    .fk-shop-col-cta {
+      font-weight: 700 !important;
+      color: var(--color-primary, #000c5b) !important;
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* #2 Mobile drawer Shop expandable + bottom socials */
+    .fk-mob-shop-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+    }
+    .fk-mob-shop-toggle svg { transition: transform 0.25s; }
+    .fk-mob-shop-toggle.is-open svg { transform: rotate(180deg); }
+    .fk-mob-shop-sub {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      margin: 8px 0 0 8px;
+      padding: 10px 0 6px 14px;
+      border-left: 2px solid #e5e7eb;
+    }
+    .fk-mob-shop-sub.is-open { display: flex; }
+    .fk-mob-shop-sub a {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #374151;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    .fk-mob-shop-sub a:hover { color: var(--color-primary, #000c5b); }
+    .fk-mob-shop-subhead {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--color-secondary, #71b6c8);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 8px 0 4px;
+    }
+
+    .fk-mob-bottom {
+      border-top: 1px solid #f3f4f6;
+      padding: 18px 24px;
+      background: #fafbff;
+    }
+    .fk-mob-bottom__login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 999px;
+      text-decoration: none;
+      color: #111;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+    .fk-mob-bottom__login svg { width: 18px; height: 18px; }
+    .fk-mob-bottom__socials {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      align-items: center;
+    }
+    .fk-mob-bottom__socials a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-secondary, #71b6c8);
+      transition: transform 0.18s, color 0.2s, border-color 0.2s;
+    }
+    .fk-mob-bottom__socials a:hover {
+      transform: translateY(-2px);
+      color: var(--color-primary, #000c5b);
+      border-color: var(--color-primary, #000c5b);
+    }
+    .fk-mob-bottom__socials svg { width: 18px; height: 18px; }
+
     /* Custom Slide Animation Classes */
     .mobile-menu-overlay {
       position: fixed;
@@ -135,33 +389,72 @@
          
          <!-- Header inside Menu -->
          <div class="flex justify-between items-center p-6 border-b border-gray-100 bg-white">
-            <span class="h2" style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--color-primary);">FITKAAR</span>
-            
-            <button @click="mobileMenuOpen = false" class="p-2 -mr-2 text-black hover:opacity-70 transition-opacity">
+            <span style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--color-primary); text-decoration: none;">FITKAAR</span>
+
+            <button @click="mobileMenuOpen = false" class="p-2 -mr-2 hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
          </div>
 
-         <!-- Navigation Links -->
-         <nav class="flex flex-col flex-1 p-6 gap-6 overflow-y-auto bg-white">
-            {% for link in linklists.main-menu.links %}
-              {% assign link_title_lower = link.title | downcase %}
-              {% unless link_title_lower contains 'about' %}
-                <a href="{{ link.url }}" 
-                   class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors"
-                   style="font-family: var(--font-heading); letter-spacing: 1px;">
-                   {{ link.title }}
-                </a>
-              {% endunless %}
-            {% endfor %}
-            <a href="/pages/about-us" 
-               class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors"
-               style="font-family: var(--font-heading); letter-spacing: 1px;">
-               About Us
-            </a>
+         <!-- Navigation Links (HOME → CUSTOMISE → SHOP → ABOUT → CONTACT) -->
+         <nav class="flex flex-col flex-1 p-6 gap-6 overflow-y-auto bg-white" x-data="{ mobShopOpen: false }">
+            <a href="/" class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors" style="font-family: var(--font-heading); letter-spacing: 1px;">Home</a>
+            <a href="/pages/process" class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors" style="font-family: var(--font-heading); letter-spacing: 1px;">Customise</a>
+
+            <!-- #2 Shop expandable -->
+            <div>
+              <button type="button" class="fk-mob-shop-toggle text-2xl font-bold uppercase text-black hover:text-secondary transition-colors"
+                      :class="{ 'is-open': mobShopOpen }"
+                      @click="mobShopOpen = !mobShopOpen"
+                      style="font-family: var(--font-heading); letter-spacing: 1px;">
+                <span>Shop</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="fk-mob-shop-sub" :class="{ 'is-open': mobShopOpen }">
+                <div class="fk-mob-shop-subhead">Essentials</div>
+                <a href="/collections/everyday">Everyday</a>
+                <a href="/collections/your-aesthetic">Your Aesthetic</a>
+                <a href="/collections/basics">Basics</a>
+                <div class="fk-mob-shop-subhead" style="margin-top: 14px;">Themes</div>
+                <a href="/collections/only-at-fitkaar">Only at Fitkaar</a>
+                <a href="/collections/food-and-drinks">Food &amp; Drinks</a>
+                <a href="/collections/sports-and-fitness">Sports &amp; Fitness</a>
+                <a href="/collections/work-and-hobbies">Work &amp; Hobbies</a>
+                <a href="/collections/couples">Couples</a>
+                <a href="/collections/matching">Matching</a>
+                <a href="/collections/pun-intended">Pun Intended</a>
+                <a href="/collections/zodiac-signs">Zodiac Signs</a>
+                <a href="/pages/process" style="color: var(--color-primary); font-weight: 800;">Bulk orders →</a>
+              </div>
+            </div>
+
+            <a href="/pages/about-us" class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors" style="font-family: var(--font-heading); letter-spacing: 1px;">About Us</a>
+            <a href="/pages/contact-us" class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors" style="font-family: var(--font-heading); letter-spacing: 1px;">Contact</a>
          </nav>
+
+         <!-- #2 Bottom: Login + Social icons -->
+         <div class="fk-mob-bottom">
+           <a href="/account/login" class="fk-mob-bottom__login">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+             Login / Register
+           </a>
+           <div class="fk-mob-bottom__socials">
+             <a href="https://instagram.com/fitkaarclothing" target="_blank" rel="noopener" aria-label="Instagram">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+             </a>
+             <a href="https://facebook.com/fitkaarclothing" target="_blank" rel="noopener" aria-label="Facebook">
+               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+             </a>
+             <a href="https://wa.me/919354478146" target="_blank" rel="noopener" aria-label="WhatsApp">
+               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.423-8.452z"/></svg>
+             </a>
+             <a href="https://youtube.com/@fitkaarclothing" target="_blank" rel="noopener" aria-label="YouTube">
+               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+             </a>
+           </div>
+         </div>
     </div>
   </div>
 </header>

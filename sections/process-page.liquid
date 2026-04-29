@@ -23,7 +23,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   max-height: 700px;
-  margin-bottom: 3rem;
+  margin-bottom: 1.25rem; /* #41+42: was 3rem — tighten gap above products */
   overflow: hidden;
   background: #faf9f7;
 }
@@ -104,17 +104,20 @@
 /* Product Pricing Boxes Section */
 .process-products-showcase {
   max-width: 1200px;
-  margin: 0 auto 3rem;
-  padding: 2rem 5%;
+  margin: 0 auto 1.25rem; /* #41+42: was 3rem */
+  padding: 0.5rem 5% 1rem; /* #41+42: was 2rem */
   position: relative;
 }
 
 .products-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1.5rem;
-  justify-items: center;
-  margin-bottom: 2rem;
+  display: flex;            /* #41+42: flex so the last row centers when count isn't 5 */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem 1.5rem;
+  margin-bottom: 1rem;       /* #41+42: was 2rem */
+}
+.products-grid .product-box {
+  flex: 0 0 calc((100% - 4 * 1.5rem) / 5); /* 5 per row on desktop */
 }
 
 /* Product Box */
@@ -122,7 +125,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem; /* #41+42: was 1rem — tighten image↔price */
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -256,7 +259,7 @@
 /* Header */
 .process-header {
   text-align: center;
-  padding: 1rem 1rem 2rem;
+  padding: 0.5rem 1rem 1rem; /* #41+42: was 1rem 1rem 2rem */
 }
 
 .process-title {
@@ -266,15 +269,15 @@
   letter-spacing: 0.05em;
   color: #000c5b;
   text-transform: uppercase;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem; /* #41+42: was 0.5rem */
   text-align: center;
 }
 
 .process-subtitle {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: #666;
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto 0.25rem; /* #41+42: tighten before form */
 }
 
 /* Form Container */
@@ -613,9 +616,9 @@
 
 /* Products Responsive */
 @media (max-width: 1024px) {
-  .products-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+  .products-grid { gap: 1.25rem; }
+  .products-grid .product-box {
+    flex: 0 0 calc((100% - 2 * 1.25rem) / 3); /* 3 per row on tablet */
   }
 
   .product-box-image {
@@ -631,8 +634,10 @@
 
 @media (max-width: 768px) {
   .products-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem 0.75rem;
+    gap: 1rem 0.75rem;
+  }
+  .products-grid .product-box {
+    flex: 0 0 calc((100% - 2 * 0.75rem) / 3);
   }
 
   .product-box-image {
@@ -654,8 +659,10 @@
 
 @media (max-width: 480px) {
   .products-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem 0.5rem;
+    gap: 0.85rem 0.5rem;
+  }
+  .products-grid .product-box {
+    flex: 0 0 calc((100% - 2 * 0.5rem) / 3);
   }
 
   .product-box-image {
@@ -695,6 +702,128 @@
   .product-block {
     padding: 15px;
   }
+}
+
+/* #48: Order confirmation block */
+.proceed-confirm {
+  background: linear-gradient(135deg, #ecfdf5 0%, #fff 100%);
+  border: 1px solid #a7f3d0;
+  border-radius: 12px;
+  padding: 32px 24px 28px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.proceed-confirm__check {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #d1fae5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.proceed-confirm__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  color: #000c5b;
+  margin: 0 0 8px;
+}
+.proceed-confirm__msg {
+  font-size: 1rem;
+  color: #2e7d32;
+  margin: 0 0 18px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.proceed-confirm__wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.proceed-confirm__wa:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35); }
+.proceed-confirm__again {
+  display: inline-block;
+  padding: 8px 16px;
+  color: #000c5b;
+  text-decoration: underline;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+.proceed-confirm__hint {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: 8px 0 0;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* #61: Proceed note */
+.proceed-note {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding: 12px 16px;
+  background: #fff8e7;
+  border-left: 3px solid #f5a623;
+  font-size: 0.88rem;
+  color: #5a4a1f;
+  line-height: 1.5;
+  border-radius: 4px;
+}
+
+/* #62: Restore-progress prompt */
+.restore-progress-banner {
+  display: none;
+  background: linear-gradient(135deg, #d5e8f2 0%, #fff 100%);
+  border: 1px solid #a8d4e8;
+  padding: 14px 18px;
+  margin-bottom: 1.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #000c5b;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.restore-progress-banner.active { display: flex; }
+.restore-progress-banner__actions { display: flex; gap: 8px; }
+.restore-progress-banner button {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  border: 1px solid #000c5b;
+  background: transparent;
+  color: #000c5b;
+  transition: background 0.2s;
+}
+.restore-progress-banner button.primary {
+  background: #000c5b;
+  color: #fff;
+}
+.restore-progress-banner button.primary:hover { background: #1a2980; }
+.restore-progress-banner button:hover:not(.primary) { background: rgba(0,12,91,0.05); }
+
+/* #63: disabled add-product styles */
+.add-product-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: #aaa;
+  color: #888;
 }
 </style>
 
@@ -818,8 +947,21 @@
   <div class="process-form-container">
     {% form 'contact' %}
       {% if form.posted_successfully? %}
-        <div style="background: #e8f5e9; color: #2e7d32; padding: 15px; margin-bottom: 20px; text-align: center; border: 1px solid #c8e6c9;">
-          <strong>Thanks!</strong> Your custom order request has been sent. We'll be in touch shortly.
+        <!-- #48: Order confirmation block — WhatsApp link + fill-another CTA -->
+        <div class="proceed-confirm">
+          <div class="proceed-confirm__check">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <h3 class="proceed-confirm__title">Order Received!</h3>
+          <p class="proceed-confirm__msg">We share the design drafts via WhatsApp, kindly click the link below!</p>
+          <a href="{{ section.settings.whatsapp_link | default: 'https://wa.me/919354478146' }}" target="_blank" rel="noopener" class="proceed-confirm__wa">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+              <path d="M20.52 3.449A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.423-8.452zM12.05 21.746h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.825 9.825 0 0 1 6.994 2.898 9.821 9.821 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.888 9.884z"/>
+            </svg>
+            Open WhatsApp Chat
+          </a>
+          <a href="/pages/process" class="proceed-confirm__again">+ Fill another form</a>
+          <p class="proceed-confirm__hint">Once we have your design draft ready, we'll request the design fee on WhatsApp.</p>
         </div>
       {% elsif form.errors %}
         <div style="background: #ffebee; color: #c62828; padding: 15px; margin-bottom: 20px; border: 1px solid #ffcdd2; font-size: 1.05rem;">
@@ -871,6 +1013,15 @@
           <option value="Non-binary">Non-binary</option>
           <option value="Prefer not to say">Prefer not to say</option>
         </select>
+      </div>
+
+      <!-- #62: Restore-progress banner (shown via JS if saved data exists) -->
+      <div class="restore-progress-banner" id="restoreProgressBanner">
+        <span>We saved your progress from last time. Restore it?</span>
+        <div class="restore-progress-banner__actions">
+          <button type="button" class="primary" onclick="restoreFormProgress()">Restore</button>
+          <button type="button" onclick="discardFormProgress()">Start fresh</button>
+        </div>
       </div>
 
       <!-- Product Blocks Container -->
@@ -1095,6 +1246,9 @@
         </div>
       </div>
 
+      <!-- #61: Pre-Proceed note — once submitted, no edits possible -->
+      <p class="proceed-note">Kindly note: once the form is submitted, we won't be able to make any changes or add new details. Please ensure all information is included beforehand.</p>
+
       <button type="submit" class="submit-btn">Proceed</button>
     {% endform %}
   </div>
@@ -1106,53 +1260,73 @@
 
     <div class="process-faq-list">
       <details class="process-faq">
-        <summary>How does the customisation process work?</summary>
-        <p>Share your design brief and references via this form along with a ₹400/- per design advance. We send a draft based on your brief, incorporate any changes you want, and begin production once you approve the final design.</p>
+        <summary>How does customisation work?</summary>
+        <p>Complete the form with your ideas, inspirations, favourite details, or references you want on your apparel. Our team designs the product based on your brief and only once it is approved by you, we begin the production process.</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>Does the price depend on the size of the print? Can I customise both the front and back of the apparel?</summary>
+        <p>No, we offer the same price regardless of the print size! Just mention your requirements in the brief and our team will design accordingly.<br><em>Note: Cropped tees only have front customisation.</em></p>
       </details>
 
       <details class="process-faq">
         <summary>What is the ₹400/- design advance and is it refundable?</summary>
-        <p>₹400/- per design is a non-refundable advance paid to start designing. It is fully adjusted in your final product price once you approve the design and confirm the order.</p>
+        <p>To begin your order and start designing, we take a small non-refundable advance of ₹400/- per design, which is adjusted in your final product price and is not an additional or hidden charge. The design advance covers the time, energy and creativity that goes into the process!</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>What products can be customised? Are the products unisex?</summary>
+        <p>All our products including t-shirts, cropped tees, boxy vests, sweatshirts and hoodies are 100% customisable with multiple colour options available! All our products are unisex except for the cropped tees.</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>What if I don't like the design and want to make changes in it?</summary>
+        <p>No worries at all! We accommodate up to two rounds of changes, as long as the design brief is the same to make sure you're happy with the final design. Do keep in mind that multiple revisions may naturally extend the delivery timeline slightly.</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>What if I have multiple orders?</summary>
+        <p>You can fill out separate forms for each design. In case you'd like the same design, you can add up to 5 products in the same form itself. For larger quantities, you can reach out to us on WhatsApp!</p>
       </details>
 
       <details class="process-faq">
         <summary>When do I pay the balance amount?</summary>
-        <p>The balance amount for each product is payable only after the design is finalised and you've approved the draft we share.</p>
-      </details>
-
-      <details class="process-faq">
-        <summary>Can I change the design after seeing the draft?</summary>
-        <p>Yes — we'll happily accommodate changes based on your feedback. Do keep in mind that multiple revisions may slightly extend the delivery timeline.</p>
-      </details>
-
-      <details class="process-faq">
-        <summary>How long does my order take to arrive?</summary>
-        <p>Typically 7–14 working days from the day the design is finalised, depending on apparel type and quantity. We'll share a clearer ETA once your design is approved.</p>
-      </details>
-
-      <details class="process-faq">
-        <summary>Do you ship pan-India?</summary>
-        <p>Yes, we ship across India and shipping is on us — no hidden delivery charges.</p>
-      </details>
-
-      <details class="process-faq">
-        <summary>Are the listed prices inclusive of design, print and GST?</summary>
-        <p>Yes. The price you see for each apparel already includes designing, printing, shipping and GST. No hidden charges — same price irrespective of the design.</p>
-      </details>
-
-      <details class="process-faq">
-        <summary>What file formats should I send for references?</summary>
-        <p>JPG, PNG or PDF works best. If your file is too large to upload, email it to <a href="mailto:fitkaarclothing@gmail.com">fitkaarclothing@gmail.com</a> and we'll pick it up from there.</p>
+        <p>The balance amount for each product is payable after the design has been approved by you. Once the balance payment has been completed, we initiate printing.</p>
       </details>
 
       <details class="process-faq">
         <summary>Can I order a single piece or is there a minimum quantity?</summary>
-        <p>You can order a single piece — there's no minimum order quantity for custom designs.</p>
+        <p>You can order a single piece, there's no minimum order quantity.</p>
       </details>
 
       <details class="process-faq">
-        <summary>Do you offer returns or exchanges on custom orders?</summary>
-        <p>Since every order is custom-designed to your brief, we don't offer returns or exchanges once production begins. That's exactly why we share a draft for approval first.</p>
+        <summary>How long does my order take to arrive?</summary>
+        <p>We are a customised clothing brand, and every piece is made exclusively for each customer. Usually the process takes around 10-15 days, however it may vary depending upon the number of changes along with the delivery location! We'll share a clearer ETA once your design is approved.</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>Do you ship pan-India? Is Cash on Delivery (COD) available?</summary>
+        <p>Yes, we ship across India and shipping is on us, no hidden delivery charges. Since all our products are custom-made, we currently do not offer COD.</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>What file formats should I send for references?</summary>
+        <p>JPG, PNG or HEIC works the best. If your file is too large to upload, you can simply send it to us on WhatsApp!</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>Do you offer returns or exchanges on orders?</summary>
+        <p>Since each piece at Fitkaar is custom-made to your specifications, every product is uniquely created for you. For this reason, we do not offer returns or exchanges. However, all our products are made true to the provided size chart. If you need any assistance or have concerns regarding sizing or your order, our team is always here to help.</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>Who can I gift this to?</summary>
+        <p>Honestly, anyone. Yourself, your parents, grandparents, your partner, best friends, siblings, or whoever comes to your mind, we've got something for everyone!</p>
+      </details>
+
+      <details class="process-faq">
+        <summary>Do you accept bulk orders?</summary>
+        <p>We take bulk orders for corporate gifting, college merch, wedding and other events, or anything else you have in mind. Kindly reach out to us on WhatsApp for the same!</p>
       </details>
     </div>
   </div>
@@ -1353,9 +1527,35 @@
     });
   }
 
+  // #63: Block adding a new product until the previous one is filled
+  function isProductBlockComplete(block) {
+    if (!block) return false;
+    var requiredFields = block.querySelectorAll('select[required], input[required]');
+    for (var i = 0; i < requiredFields.length; i++) {
+      if (!requiredFields[i].value || requiredFields[i].value === '') return false;
+    }
+    return true;
+  }
+
   // Add product function
   window.addProduct = function() {
     if (productCount >= MAX_PRODUCTS) return;
+
+    // #63: validate previous product is filled
+    var blocks = document.querySelectorAll('.product-block');
+    var lastBlock = blocks[blocks.length - 1];
+    if (!isProductBlockComplete(lastBlock)) {
+      alert('Please fill out the current product (apparel + size) before adding another one.');
+      // Highlight first empty field
+      var firstEmpty = lastBlock.querySelector('select[required]:invalid, input[required]:invalid');
+      if (firstEmpty) {
+        firstEmpty.style.borderColor = '#e53935';
+        firstEmpty.focus();
+        setTimeout(function() { firstEmpty.style.borderColor = ''; }, 2500);
+      }
+      return;
+    }
+
     productCount++;
 
     var container = document.getElementById('productBlocksContainer');
@@ -1383,13 +1583,18 @@
         '<label class="form-label">Size <span class="required">*</span></label>' +
         '<select name="contact[product_' + productCount + '_size]" class="form-select" required>' +
           '<option value="" disabled selected>Pick a Size</option>' +
-          '<option value="XS">XS</option>' +
           '<option value="S">S</option>' +
           '<option value="M">M</option>' +
           '<option value="L">L</option>' +
           '<option value="XL">XL</option>' +
           '<option value="XXL">XXL</option>' +
         '</select>' +
+        {%- if section.settings.size_chart_image -%}
+        '<span class="size-chart-toggle" onclick="this.nextElementSibling.classList.toggle(\'active\')">View Size Chart</span>' +
+        '<div class="size-chart-container">' +
+          '<img src="{{ section.settings.size_chart_image | image_url: width: 600 }}" alt="Size Chart" style="max-width: 100%; border: 1px solid #ddd;">' +
+        '</div>' +
+        {%- endif -%}
       '</div>';
 
     container.appendChild(block);
@@ -1441,6 +1646,146 @@
     var count = document.querySelectorAll('.product-block').length;
     btn.disabled = count >= MAX_PRODUCTS;
     btn.textContent = count >= MAX_PRODUCTS ? 'Maximum 5 products reached' : '+ Add Another Product (up to 5)';
+  }
+
+  /* ==================================================================
+     #62: Save form progress to localStorage so users can resume later.
+     Saves on every change. Prompts to restore on next visit.
+     ================================================================== */
+  var STORAGE_KEY = 'fitkaar:processFormState';
+  var SAVE_DEBOUNCE = 400;
+  var saveTimer;
+
+  function snapshotForm() {
+    var form = document.querySelector('.process-form-container form');
+    if (!form) return null;
+    var data = {};
+    var fields = form.querySelectorAll('input, select, textarea');
+    fields.forEach(function(f) {
+      // Skip files (can't be persisted)
+      if (f.type === 'file') return;
+      if (!f.name) return;
+      data[f.name] = f.value;
+    });
+    data.__productCount = document.querySelectorAll('.product-block').length;
+    data.__savedAt = Date.now();
+    return data;
+  }
+
+  function debounceSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() {
+      var snap = snapshotForm();
+      if (!snap) return;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(snap)); } catch (e) {}
+    }, SAVE_DEBOUNCE);
+  }
+
+  function loadSavedSnapshot() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      var data = JSON.parse(raw);
+      // Expire after 7 days
+      if (data.__savedAt && (Date.now() - data.__savedAt) > 7 * 24 * 60 * 60 * 1000) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
+      return data;
+    } catch (e) { return null; }
+  }
+
+  window.discardFormProgress = function() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    var banner = document.getElementById('restoreProgressBanner');
+    if (banner) banner.classList.remove('active');
+  };
+
+  window.restoreFormProgress = function() {
+    var data = loadSavedSnapshot();
+    if (!data) return;
+
+    // Recreate the right number of product blocks first
+    var targetCount = parseInt(data.__productCount || 1, 10);
+    while (document.querySelectorAll('.product-block').length < targetCount && productCount < MAX_PRODUCTS) {
+      // bypass the validation since we trust the saved data
+      productCount++;
+      var container = document.getElementById('productBlocksContainer');
+      var block = document.createElement('div');
+      block.className = 'product-block';
+      block.dataset.product = productCount;
+      block.innerHTML =
+        '<div class="product-block-header">' +
+          '<span class="product-block-title">Product ' + productCount + '</span>' +
+          '<button type="button" class="remove-product-btn" onclick="removeProduct(this)">Remove</button>' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label class="form-label">Choice of Apparel <span class="required">*</span></label>' +
+          '<select name="contact[product_' + productCount + '_apparel]" class="form-select apparel-select" data-product="' + productCount + '" required>' +
+            '<option value="" disabled selected>Select Apparel Type</option>' +
+            '<option value="Cropped Tee">Cropped Tee (Only front printing)</option>' +
+            '<option value="Regular Tee">Regular Tee</option>' +
+            '<option value="Oversized Tee">Oversized Tee</option>' +
+            '<option value="Boxy Vest">Boxy Vest</option>' +
+            '<option value="Sweatshirt">Sweatshirt</option>' +
+            '<option value="Hoodie">Hoodie</option>' +
+          '</select>' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label class="form-label">Size <span class="required">*</span></label>' +
+          '<select name="contact[product_' + productCount + '_size]" class="form-select" required>' +
+            '<option value="" disabled selected>Pick a Size</option>' +
+            '<option value="S">S</option>' +
+            '<option value="M">M</option>' +
+            '<option value="L">L</option>' +
+            '<option value="XL">XL</option>' +
+            '<option value="XXL">XXL</option>' +
+          '</select>' +
+        '</div>';
+      container.appendChild(block);
+    }
+
+    // Now populate field values
+    var form = document.querySelector('.process-form-container form');
+    if (form) {
+      Object.keys(data).forEach(function(name) {
+        if (name.indexOf('__') === 0) return;
+        var field = form.querySelector('[name="' + name.replace(/"/g, '\\"') + '"]');
+        if (field && field.type !== 'file') field.value = data[name];
+      });
+    }
+
+    updatePriceBreakdown();
+    updateFee();
+    updateAddButton();
+
+    var banner = document.getElementById('restoreProgressBanner');
+    if (banner) banner.classList.remove('active');
+  };
+
+  // Hook saving on every input change
+  document.addEventListener('input', function(e) {
+    if (e.target.closest('.process-form-container')) debounceSave();
+  });
+  document.addEventListener('change', function(e) {
+    if (e.target.closest('.process-form-container')) debounceSave();
+  });
+
+  // On load, prompt to restore if we have saved data
+  document.addEventListener('DOMContentLoaded', function() {
+    var saved = loadSavedSnapshot();
+    if (saved) {
+      var banner = document.getElementById('restoreProgressBanner');
+      if (banner) banner.classList.add('active');
+    }
+  });
+
+  // Clear saved data on successful submit
+  var formEl = document.querySelector('.process-form-container form');
+  if (formEl) {
+    formEl.addEventListener('submit', function() {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    });
   }
 })();
 </script>
@@ -1503,6 +1848,12 @@
       "id": "design_fee_amount",
       "label": "Design Fee per Product (INR)",
       "default": 499
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_link",
+      "label": "WhatsApp link (post-submit)",
+      "info": "Used in the order confirmation block to share design drafts."
     }
   ],
   "presets": [

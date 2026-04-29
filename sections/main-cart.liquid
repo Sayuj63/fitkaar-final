@@ -298,6 +298,152 @@
   }
   .continue-shopping-btn:hover { background: #333; }
 
+  /* #64: Rewards progress bar */
+  .rewards-bar {
+    background: linear-gradient(135deg, #fff8e7 0%, #fff 100%);
+    border: 1px solid #f0e6d0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+  }
+  .rewards-bar__msg {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    color: #5a4a1f;
+    font-weight: 600;
+  }
+  .rewards-bar__msg strong { color: var(--color-primary, #000c5b); }
+  .rewards-bar__track {
+    width: 100%;
+    height: 6px;
+    background: #f3e8c4;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .rewards-bar__fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-secondary, #71b6c8) 0%, var(--color-primary, #000c5b) 100%);
+    border-radius: 999px;
+    transition: width 0.5s ease;
+  }
+
+  /* #64: You may also like in cart */
+  .cart-recommendations {
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid #f3f4f6;
+  }
+  .cart-recommendations__title {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--color-primary, #000c5b);
+    margin: 0 0 14px;
+    letter-spacing: 0.05em;
+  }
+  .cart-recommendations__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (min-width: 640px) {
+    .cart-recommendations__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .rec-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #f3f4f6;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .rec-card:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
+  .rec-card__img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: #f5f5f5;
+    overflow: hidden;
+  }
+  .rec-card__img img { width: 100%; height: 100%; object-fit: cover; }
+  .rec-card__info { padding: 8px 10px 10px; }
+  .rec-card__title {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+    line-height: 1.2;
+    color: #000;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .rec-card__price {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-primary, #000c5b);
+  }
+
+  /* #55: Coupon code section */
+  .coupon-section {
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px dashed #d1d5db;
+    border-radius: 8px;
+  }
+  .coupon-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #4b5563;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .coupon-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .coupon-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .coupon-input:focus {
+    outline: none;
+    border-color: var(--color-primary, #000c5b);
+    box-shadow: 0 0 0 3px rgba(0, 12, 91, 0.08);
+  }
+  .coupon-btn {
+    padding: 10px 18px;
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .coupon-btn:hover { background: #000940; }
+  .coupon-hint {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+  .coupon-hint.coupon-error { color: #dc2626; font-weight: 600; }
+
   /* Size Chart */
   .size-chart-section {
     border: 1px solid #e0e0e0;
@@ -379,13 +525,26 @@
 </style>
 
 <div class="cart-container" x-data="cartPage()">
-  <h1 class="cart-title">YOUR CART</h1>
+  <h1 class="cart-title">YOUR FIT-KART</h1>
 
   <template x-if="itemCount > 0">
     <div class="cart-layout">
-      
+
       <!-- Cart Items List (Left Column) -->
       <div class="cart-items-section">
+        <!-- #64: Rewards progress bar -->
+        <div class="rewards-bar" x-show="totalPrice > 0" x-cloak>
+          <p class="rewards-bar__msg" x-show="totalPrice/100 < 4000">
+            Spend ₹<strong x-text="(4000 - totalPrice/100).toFixed(0)"></strong> more to get a <strong>FREE T-shirt</strong>!
+          </p>
+          <p class="rewards-bar__msg" x-show="totalPrice/100 >= 4000" style="color: #2e7d32;">
+            🎉 You've unlocked a <strong>FREE T-shirt</strong>!
+          </p>
+          <div class="rewards-bar__track">
+            <div class="rewards-bar__fill" :style="`width: ${Math.min(100, (totalPrice/100)/4000*100)}%`"></div>
+          </div>
+        </div>
+
         <!-- Header Row (Desktop Only) -->
         <div class="cart-items-header">
           <div class="cart-header-product">Product</div>
@@ -449,6 +608,24 @@
             <div class="items-total-price" x-text="formatMoney(item.original_line_price)"></div>
           </div>
         </template>
+
+        <!-- #64: You may also like -->
+        <div class="cart-recommendations" x-show="recommendations.length > 0" x-cloak>
+          <h3 class="cart-recommendations__title">You may also like</h3>
+          <div class="cart-recommendations__grid">
+            <template x-for="r in recommendations" :key="r.id">
+              <a :href="r.url" class="rec-card">
+                <div class="rec-card__img">
+                  <img :src="r.featured_image" :alt="r.title">
+                </div>
+                <div class="rec-card__info">
+                  <div class="rec-card__title" x-text="r.title"></div>
+                  <div class="rec-card__price" x-text="'₹' + Math.round(r.price/100) + '/-'"></div>
+                </div>
+              </a>
+            </template>
+          </div>
+        </div>
       </div>
 
       <!-- Order Summary (Right Column) -->
@@ -462,12 +639,27 @@
            </div>
            
            <p class="summary-note">Inclusive of taxes and free shipping</p>
-           
+
+           <!-- #55: Coupon Code (applies at checkout) -->
+           <div class="coupon-section" x-data="{ code: '', error: '' }">
+             <label class="coupon-label">Have a coupon code?</label>
+             <div class="coupon-input-row">
+               <input type="text" x-model="code" placeholder="Enter code" class="coupon-input" autocapitalize="characters" spellcheck="false">
+               <button type="button" class="coupon-btn" @click="
+                 if (!code.trim()) { error = 'Please enter a code'; return; }
+                 window.location.href = '/checkout?discount=' + encodeURIComponent(code.trim())
+               ">Apply</button>
+             </div>
+             <p class="coupon-hint" x-show="!error">Code is applied on the checkout page.</p>
+             <p class="coupon-hint coupon-error" x-show="error" x-text="error"></p>
+           </div>
+
+
            <!-- Checkout Actions -->
            <form action="{{ routes.cart_url }}" method="post">
-             <button 
-               type="submit" 
-               name="checkout" 
+             <button
+               type="submit"
+               name="checkout"
                class="checkout-btn"
                :disabled="loading"
              >
@@ -475,67 +667,6 @@
                <span x-show="loading" class="loading-spinner"></span>
              </button>
            </form>
-
-           <!-- Size Chart -->
-           <div class="size-chart-section">
-             <button class="size-chart-toggle" :class="{ 'open': sizeChartOpen }" @click="sizeChartOpen = !sizeChartOpen">
-               <span>Size Chart</span>
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                 <polyline points="6 9 12 15 18 9"></polyline>
-               </svg>
-             </button>
-             <div class="size-chart-content" :class="{ 'open': sizeChartOpen }">
-               <ul class="size-chart-notes">
-                 <li>All measurements are in inches</li>
-                 <li>Measurements shown are of the apparel itself and not body or chest size</li>
-                 <li><strong>How to measure:</strong> Lay the garment flat on a surface. Measure from shoulder to shoulder for width, from underarm to underarm for chest width, and from the highest point of the shoulder to the hem for length. Compare these measurements with a similar T-shirt you already own for best fit.</li>
-                 <li>Model is wearing size M</li>
-                 <li><strong>If you are confused about your size, we recommend choosing a bigger size</strong></li>
-               </ul>
-               <table class="size-chart-table">
-                 <thead>
-                   <tr>
-                     <th>Size</th>
-                     <th>Chest (in)</th>
-                     <th>Length (in)</th>
-                     <th>Shoulder (in)</th>
-                   </tr>
-                 </thead>
-                 <tbody>
-                   <tr>
-                     <td>S</td>
-                     <td>38</td>
-                     <td>26</td>
-                     <td>17</td>
-                   </tr>
-                   <tr>
-                     <td>M</td>
-                     <td>40</td>
-                     <td>27</td>
-                     <td>18</td>
-                   </tr>
-                   <tr>
-                     <td>L</td>
-                     <td>42</td>
-                     <td>28</td>
-                     <td>19</td>
-                   </tr>
-                   <tr>
-                     <td>XL</td>
-                     <td>44</td>
-                     <td>29</td>
-                     <td>20</td>
-                   </tr>
-                   <tr>
-                     <td>XXL</td>
-                     <td>46</td>
-                     <td>30</td>
-                     <td>21</td>
-                   </tr>
-                 </tbody>
-               </table>
-             </div>
-           </div>
         </div>
       </div>
     
@@ -564,10 +695,43 @@
       loading: false,
       initialLoading: true,
       sizeChartOpen: false,
+      recommendations: [],
 
       init() {
         // Fetch cart data on load to ensure fresh state
         this.fetchCart();
+        this.fetchRecommendations();
+      },
+
+      async fetchRecommendations() {
+        try {
+          // Try Shopify's recommendations endpoint first (needs a product context — fall back to bestsellers)
+          const r = await fetch('/collections/best-sellers/products.json?limit=6');
+          if (r.ok) {
+            const d = await r.json();
+            this.recommendations = (d.products || []).slice(0, 6).map(p => ({
+              id: p.id,
+              url: '/products/' + p.handle,
+              title: p.title,
+              price: (p.variants && p.variants[0] && p.variants[0].price) ? Math.round(parseFloat(p.variants[0].price) * 100) : 0,
+              featured_image: (p.images && p.images[0] && p.images[0].src) || ''
+            }));
+            return;
+          }
+        } catch (e) {}
+        try {
+          const r2 = await fetch('/collections/all/products.json?limit=6');
+          if (r2.ok) {
+            const d2 = await r2.json();
+            this.recommendations = (d2.products || []).slice(0, 6).map(p => ({
+              id: p.id,
+              url: '/products/' + p.handle,
+              title: p.title,
+              price: (p.variants && p.variants[0] && p.variants[0].price) ? Math.round(parseFloat(p.variants[0].price) * 100) : 0,
+              featured_image: (p.images && p.images[0] && p.images[0].src) || ''
+            }));
+          }
+        } catch (e) {}
       },
 
       fetchCart() {

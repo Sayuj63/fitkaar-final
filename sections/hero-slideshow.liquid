@@ -242,6 +242,16 @@
     max-height: none;
     aspect-ratio: {{ section.settings.mobile_aspect | default: '1/1' | replace: '/', ' / ' }};
   }
+  #HeroSlideshow-{{ section.id }} .hero-slide,
+  #HeroSlideshow-{{ section.id }} .hero-slide picture,
+  #HeroSlideshow-{{ section.id }} .hero-slide img,
+  #HeroSlideshow-{{ section.id }} .hero-slide video {
+    object-fit: contain;
+    background-color: #ffffff;
+  }
+  #HeroSlideshow-{{ section.id }} {
+    background-color: #ffffff;
+  }
   #HeroSlideshow-{{ section.id }} .hero-dots {
     bottom: 20px;
     gap: 8px;

@@ -144,46 +144,47 @@
   color: #000c5b;
 }
 
-@media (max-width: 767px) {
-  .bestseller-grid {
-    display: flex;
-    gap: 14px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    /* let the strip bleed to the screen edge while keeping the section padded */
-    margin: 0 -1rem;
-    padding: 4px 1rem 4px;
-  }
-  .bestseller-grid::-webkit-scrollbar { display: none; }
+/* SAME LAYOUT on every screen: horizontal scroll strip — kills the desktop
+   grid entirely. !important wins over Tailwind's `md:grid`, `md:grid-cols-4`. */
+.bestseller-grid,
+.bestseller-grid.md\:grid {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  grid-template-columns: none !important;
+  gap: 14px !important;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* bleed to screen edge so the next card peeks */
+  margin: 0 -1rem;
+  padding: 4px 1rem 4px;
+}
+.bestseller-grid::-webkit-scrollbar { display: none; }
 
-  .bestseller-card {
-    flex: 0 0 45%;
-    scroll-snap-align: start;
-  }
-  .bestseller-image {
-    margin-bottom: 0.6rem;
-  }
-  .bestseller-title {
-    font-size: 0.82rem;
-    margin-bottom: 0.25rem;
-  }
-  .bestseller-price {
-    font-size: 0.9rem;
-  }
+.bestseller-card {
+  flex: 0 0 45%;
+  scroll-snap-align: start;
 }
 
-/* Desktop: tighter cards so the image height feels right (not oversized).
-   Constrains the 4-col grid to ~1080px max so each card is ~245px wide
-   with a 3:4 image of ~325px tall — matches the mobile rhythm. */
+/* Mobile typography */
+@media (max-width: 767px) {
+  .bestseller-image { margin-bottom: 0.6rem; }
+  .bestseller-title { font-size: 0.82rem; margin-bottom: 0.25rem; }
+  .bestseller-price { font-size: 0.9rem; }
+}
+
+/* Desktop: same strip, but cards are smaller fraction of viewport so 4-5 fit at once */
 @media (min-width: 768px) {
+  .bestseller-card { flex: 0 0 22%; }
+  .bestseller-grid,
   .bestseller-grid.md\:grid {
-    max-width: 1080px;
-    margin-left: auto;
-    margin-right: auto;
-    gap: 1.25rem !important;
+    margin: 0;
+    padding: 4px 0 4px;
   }
+}
+@media (min-width: 1200px) {
+  .bestseller-card { flex: 0 0 18%; }   /* 5 cards visible on wide screens */
 }
 </style>
 

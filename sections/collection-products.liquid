@@ -1133,48 +1133,27 @@
               <div class="product-card-info">
                 <h3 class="product-card-title">{{ product.title }}</h3>
 
-                {%- comment -%} #39: derive MRP from cover variant's apparel type {%- endcomment -%}
+                {%- comment -%} Price uses cover variant's price + compare_at_price (admin-driven) {%- endcomment -%}
                 {%- assign card_cover_variant = nil -%}
                 {%- for vv in product.variants -%}
                   {%- if vv.featured_image and vv.featured_image.id == product.featured_image.id -%}
                     {%- assign card_cover_variant = vv -%}{%- break -%}
                   {%- endif -%}
                 {%- endfor -%}
-                {%- assign card_cover_type = '' -%}
-                {%- for opt in product.options_with_values -%}
-                  {%- assign opt_lower_x = opt.name | downcase -%}
-                  {%- if opt_lower_x contains 'type' or opt_lower_x contains 'apparel' -%}
-                    {%- if card_cover_variant -%}
-                      {%- case opt.position -%}
-                        {%- when 1 -%}{%- assign card_cover_type = card_cover_variant.option1 -%}
-                        {%- when 2 -%}{%- assign card_cover_type = card_cover_variant.option2 -%}
-                        {%- when 3 -%}{%- assign card_cover_type = card_cover_variant.option3 -%}
-                      {%- endcase -%}
-                    {%- else -%}
-                      {%- assign card_cover_type = opt.values | first -%}
-                    {%- endif -%}
-                  {%- endif -%}
-                {%- endfor -%}
-                {%- assign card_type_lower = card_cover_type | downcase | strip -%}
-                {%- assign card_mrp = 0 -%}
-                {%- case card_type_lower -%}
-                  {%- when 'cropped tee', 'cropped' -%}{%- assign card_mrp = 99900 -%}
-                  {%- when 'regular tee', 't-shirt', 'tshirt', 'tee' -%}{%- assign card_mrp = 129900 -%}
-                  {%- when 'oversized tee', 'oversized' -%}{%- assign card_mrp = 129900 -%}
-                  {%- when 'boxy vest', 'vest' -%}{%- assign card_mrp = 139900 -%}
-                  {%- when 'sweatshirt' -%}{%- assign card_mrp = 169900 -%}
-                  {%- when 'hoodie' -%}{%- assign card_mrp = 199900 -%}
-                {%- endcase -%}
                 {%- assign card_actual_price = product.price -%}
-                {%- if card_cover_variant -%}{%- assign card_actual_price = card_cover_variant.price -%}{%- endif -%}
-                {%- assign best_compare = product.compare_at_price -%}
-                {%- if card_mrp > best_compare -%}{%- assign best_compare = card_mrp -%}{%- endif -%}
+                {%- assign card_compare_price = product.compare_at_price -%}
+                {%- if card_cover_variant -%}
+                  {%- assign card_actual_price = card_cover_variant.price -%}
+                  {%- if card_cover_variant.compare_at_price -%}
+                    {%- assign card_compare_price = card_cover_variant.compare_at_price -%}
+                  {%- endif -%}
+                {%- endif -%}
 
                 <div class="product-card-price">
                   <span>₹{{ card_actual_price | divided_by: 100 }}/-</span>
-                  {% if best_compare > card_actual_price %}
-                    <span class="compare-price">₹{{ best_compare | divided_by: 100 }}/-</span>
-                    <span class="card-off-pct">{{ best_compare | minus: card_actual_price | times: 100 | divided_by: best_compare }}% OFF</span>
+                  {% if card_compare_price and card_compare_price > card_actual_price %}
+                    <span class="compare-price">₹{{ card_compare_price | divided_by: 100 }}/-</span>
+                    <span class="card-off-pct">{{ card_compare_price | minus: card_actual_price | times: 100 | divided_by: card_compare_price }}% OFF</span>
                   {% endif %}
                 </div>
 

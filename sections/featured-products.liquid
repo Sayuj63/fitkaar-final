@@ -236,32 +236,13 @@
             {%- endif -%}
           {%- endfor -%}
           {%- assign display_price = product.price -%}
-          {%- if cover_variant -%}{%- assign display_price = cover_variant.price -%}{%- endif -%}
-
-          {%- comment -%} #39: MRP strikethrough by apparel type — figure out the cover's "Type" option {%- endcomment -%}
-          {%- assign cover_type = type_list | first | default: '' -%}
+          {%- assign display_compare = product.compare_at_price -%}
           {%- if cover_variant -%}
-            {%- for opt in product.options_with_values -%}
-              {%- assign opt_lower_x = opt.name | downcase -%}
-              {%- if opt_lower_x contains 'type' or opt_lower_x contains 'apparel' -%}
-                {%- case opt.position -%}
-                  {%- when 1 -%}{%- assign cover_type = cover_variant.option1 -%}
-                  {%- when 2 -%}{%- assign cover_type = cover_variant.option2 -%}
-                  {%- when 3 -%}{%- assign cover_type = cover_variant.option3 -%}
-                {%- endcase -%}
-              {%- endif -%}
-            {%- endfor -%}
+            {%- assign display_price = cover_variant.price -%}
+            {%- if cover_variant.compare_at_price -%}
+              {%- assign display_compare = cover_variant.compare_at_price -%}
+            {%- endif -%}
           {%- endif -%}
-          {%- assign type_mrp_lower = cover_type | downcase | strip -%}
-          {%- assign card_mrp = 0 -%}
-          {%- case type_mrp_lower -%}
-            {%- when 'cropped tee', 'cropped' -%}{%- assign card_mrp = 99900 -%}
-            {%- when 'regular tee', 't-shirt', 'tshirt', 'tee' -%}{%- assign card_mrp = 129900 -%}
-            {%- when 'oversized tee', 'oversized' -%}{%- assign card_mrp = 129900 -%}
-            {%- when 'boxy vest', 'vest' -%}{%- assign card_mrp = 139900 -%}
-            {%- when 'sweatshirt' -%}{%- assign card_mrp = 169900 -%}
-            {%- when 'hoodie' -%}{%- assign card_mrp = 199900 -%}
-          {%- endcase -%}
 
           <a href="{{ product.url }}" class="bestseller-card">
             <div class="bestseller-image">
@@ -287,9 +268,9 @@
               <h3 class="bestseller-title">{{ product.title }}</h3>
               <p class="bestseller-price">
                 <span>₹{{ display_price | divided_by: 100 }}/-</span>
-                {%- if card_mrp > display_price -%}
-                  <span class="bestseller-price__mrp">₹{{ card_mrp | divided_by: 100 }}/-</span>
-                  <span class="bestseller-price__off">{{ card_mrp | minus: display_price | times: 100 | divided_by: card_mrp }}% OFF</span>
+                {%- if display_compare and display_compare > display_price -%}
+                  <span class="bestseller-price__mrp">₹{{ display_compare | divided_by: 100 }}/-</span>
+                  <span class="bestseller-price__off">{{ display_compare | minus: display_price | times: 100 | divided_by: display_compare }}% OFF</span>
                 {%- endif -%}
               </p>
 

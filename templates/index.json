@@ -12,33 +12,10 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
-        "image_slide_3NH6gx": {
-          "type": "image_slide",
-          "settings": {
-            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_2.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
-        "image_slide_pBd739": {
-          "type": "image_slide",
-          "settings": {
-            "image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_3.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
-        "image_slide_tMnk9z": {
-          "type": "image_slide",
-          "settings": {
-            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_4.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
         "video_slide_fmigQ8": {
           "type": "video_slide",
           "settings": {
+            "video": "shopify://files/videos/IMG_3096.mov",
             "video_mobile": "shopify://files/videos/IMG_3087.mp4",
             "autoplay": true,
             "loop": true,
@@ -46,34 +23,11 @@
             "link": ""
           }
         },
-        "image_slide_fUniNg": {
-          "type": "image_slide",
-          "settings": {
-            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_5.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
-        "image_slide_DqXCVV": {
-          "type": "image_slide",
-          "settings": {
-            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_7.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
-        "image_slide_7aBWNM": {
-          "type": "image_slide",
-          "settings": {
-            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_6.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
         "image_slide_FATcgp": {
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/2_e044e0fe-4bef-4abf-85ac-f940088fb234.png",
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_2.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
@@ -82,6 +36,7 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/Heroine_Creatives_11.png",
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_3.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
@@ -90,6 +45,7 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/3_9acaa7f2-1405-483c-a3e6-b7c5b9dbb69d.png",
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_4.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
@@ -98,6 +54,7 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/6_018e33c2-a9d3-4d45-850b-db5f9261763b.png",
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_5.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
@@ -106,6 +63,7 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/15_f08d6a53-aee6-4536-a2ab-8f97307ba401.png",
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_7.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
@@ -114,19 +72,14 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/5_cf5789fd-9554-4a1b-ba34-9a4179bdad6c.png",
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_6.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
         }
       },
       "block_order": [
-        "image_slide_3NH6gx",
-        "image_slide_pBd739",
-        "image_slide_tMnk9z",
         "video_slide_fmigQ8",
-        "image_slide_fUniNg",
-        "image_slide_DqXCVV",
-        "image_slide_7aBWNM",
         "image_slide_FATcgp",
         "image_slide_kRjTJX",
         "image_slide_VAQ3d7",

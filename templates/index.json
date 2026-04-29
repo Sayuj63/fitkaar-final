@@ -12,6 +12,64 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
+        "video_slide_BzBYCN": {
+          "type": "video_slide",
+          "settings": {
+            "video_mobile": "shopify://files/videos/IMG_3087.mp4",
+            "autoplay": true,
+            "loop": true,
+            "alt": "Fitkaar hero video",
+            "link": ""
+          }
+        },
+        "image_slide_3NH6gx": {
+          "type": "image_slide",
+          "settings": {
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_2.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "image_slide_pBd739": {
+          "type": "image_slide",
+          "settings": {
+            "image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_3.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "image_slide_tMnk9z": {
+          "type": "image_slide",
+          "settings": {
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_4.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "image_slide_fUniNg": {
+          "type": "image_slide",
+          "settings": {
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_5.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "image_slide_DqXCVV": {
+          "type": "image_slide",
+          "settings": {
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_7.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "image_slide_7aBWNM": {
+          "type": "image_slide",
+          "settings": {
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_6.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
         "image_slide_FATcgp": {
           "type": "image_slide",
           "settings": {
@@ -62,6 +120,13 @@
         }
       },
       "block_order": [
+        "video_slide_BzBYCN",
+        "image_slide_3NH6gx",
+        "image_slide_pBd739",
+        "image_slide_tMnk9z",
+        "image_slide_fUniNg",
+        "image_slide_DqXCVV",
+        "image_slide_7aBWNM",
         "image_slide_FATcgp",
         "image_slide_kRjTJX",
         "image_slide_VAQ3d7",

@@ -1,0 +1,324 @@
+{% comment %}
+  Bulk Orders page — hero creative + editable copy + WhatsApp CTA.
+  No products listed. Linked to from the SHOP dropdown ("Bulk orders → ").
+{% endcomment %}
+
+<style>
+  .bulk-page {
+    background: #fff;
+    padding-bottom: 60px;
+  }
+
+  /* HERO */
+  .bulk-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    background: var(--color-primary, #000c5b);
+    overflow: hidden;
+  }
+  .bulk-hero img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .bulk-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 12, 91, 0.10) 0%, rgba(0, 12, 91, 0.55) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+  .bulk-hero__title {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+    line-height: 1.05;
+  }
+  @media (max-width: 768px) {
+    .bulk-hero {
+      aspect-ratio: 1 / 1;       /* 1:1 on mobile */
+    }
+  }
+
+  /* BODY */
+  .bulk-body {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 50px 24px 30px;
+    font-family: var(--font-body, 'Helvetica Neue', sans-serif);
+    color: #1f2937;
+    line-height: 1.75;
+    font-size: 1.05rem;
+  }
+  .bulk-body__lead {
+    font-size: 1.15rem;
+    color: var(--color-primary, #000c5b);
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 30px;
+  }
+  .bulk-body__rt {
+    /* Rich-text content rendered via Shopify's WYSIWYG */
+  }
+  .bulk-body__rt p { margin: 0 0 18px; }
+  .bulk-body__rt h2,
+  .bulk-body__rt h3 {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    color: var(--color-primary, #000c5b);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 28px 0 12px;
+  }
+  .bulk-body__rt h2 { font-size: 1.5rem; }
+  .bulk-body__rt h3 { font-size: 1.15rem; }
+  .bulk-body__rt ul,
+  .bulk-body__rt ol {
+    padding-left: 22px;
+    margin: 0 0 18px;
+  }
+  .bulk-body__rt li { margin-bottom: 6px; }
+  .bulk-body__rt a {
+    color: var(--color-primary, #000c5b);
+    text-decoration: underline;
+  }
+  .bulk-body__rt strong { color: #111; }
+
+  /* CTA — WhatsApp + secondary */
+  .bulk-cta {
+    max-width: 880px;
+    margin: 8px auto 0;
+    padding: 0 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+  }
+  .bulk-cta__primary,
+  .bulk-cta__secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.92rem;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .bulk-cta__primary {
+    background: #25D366;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.30);
+  }
+  .bulk-cta__primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(37, 211, 102, 0.40);
+  }
+  .bulk-cta__secondary {
+    background: transparent;
+    color: var(--color-primary, #000c5b);
+    border: 1.5px solid var(--color-primary, #000c5b);
+  }
+  .bulk-cta__secondary:hover {
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+    transform: translateY(-3px);
+  }
+  .bulk-cta svg { width: 22px; height: 22px; }
+
+  .bulk-cta__hint {
+    margin-top: 18px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 480px) {
+    .bulk-body { padding: 32px 18px 20px; font-size: 0.98rem; }
+    .bulk-body__lead { font-size: 1.02rem; }
+    .bulk-cta__primary, .bulk-cta__secondary {
+      padding: 12px 22px;
+      font-size: 0.85rem;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<section class="bulk-page">
+  <!-- HERO -->
+  <div class="bulk-hero">
+    {%- if section.settings.hero_image != blank -%}
+      {%- if section.settings.hero_image_mobile != blank -%}
+        <picture>
+          <source media="(max-width: 768px)"
+                  srcset="{{ section.settings.hero_image_mobile | image_url: width: 600 }} 600w,
+                          {{ section.settings.hero_image_mobile | image_url: width: 900 }} 900w,
+                          {{ section.settings.hero_image_mobile | image_url: width: 1200 }} 1200w"
+                  sizes="100vw">
+          <img src="{{ section.settings.hero_image | image_url: width: 1800 }}"
+               srcset="{{ section.settings.hero_image | image_url: width: 1200 }} 1200w,
+                       {{ section.settings.hero_image | image_url: width: 1800 }} 1800w,
+                       {{ section.settings.hero_image | image_url: width: 2400 }} 2400w"
+               sizes="100vw"
+               alt="{{ section.settings.title | default: 'Bulk Orders' | escape }}"
+               loading="eager"
+               fetchpriority="high">
+        </picture>
+      {%- else -%}
+        <img src="{{ section.settings.hero_image | image_url: width: 1800 }}"
+             srcset="{{ section.settings.hero_image | image_url: width: 800 }} 800w,
+                     {{ section.settings.hero_image | image_url: width: 1200 }} 1200w,
+                     {{ section.settings.hero_image | image_url: width: 1800 }} 1800w,
+                     {{ section.settings.hero_image | image_url: width: 2400 }} 2400w"
+             sizes="100vw"
+             alt="{{ section.settings.title | default: 'Bulk Orders' | escape }}"
+             loading="eager"
+             fetchpriority="high">
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if section.settings.show_title_overlay and section.settings.title != blank -%}
+      <div class="bulk-hero__overlay">
+        <h1 class="bulk-hero__title">{{ section.settings.title }}</h1>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <!-- BODY (editable rich text) -->
+  <div class="bulk-body">
+    {%- if section.settings.lead_text != blank -%}
+      <p class="bulk-body__lead">{{ section.settings.lead_text }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <div class="bulk-body__rt">{{ section.settings.body }}</div>
+    {%- endif -%}
+  </div>
+
+  <!-- CTA -->
+  <div class="bulk-cta">
+    <a href="{{ section.settings.whatsapp_link | default: 'https://wa.me/919354478146' }}"
+       target="_blank" rel="noopener"
+       class="bulk-cta__primary">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20.52 3.449A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.423-8.452zM12.05 21.746h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.825 9.825 0 0 1 6.994 2.898 9.821 9.821 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.888 9.884z"/>
+      </svg>
+      {{ section.settings.whatsapp_button_text | default: 'Chat on WhatsApp' }}
+    </a>
+
+    {%- if section.settings.secondary_cta_text != blank and section.settings.secondary_cta_link != blank -%}
+      <a href="{{ section.settings.secondary_cta_link }}" class="bulk-cta__secondary">
+        {{ section.settings.secondary_cta_text }}
+      </a>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.below_cta_hint != blank -%}
+    <p class="bulk-cta__hint">{{ section.settings.below_cta_hint }}</p>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Bulk Orders Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image (desktop)",
+      "info": "Wide / horizontal creative — fills the hero section."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_mobile",
+      "label": "Hero image (mobile)",
+      "info": "Optional. 1:1 square works best. If empty, desktop image is used."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title_overlay",
+      "label": "Overlay title on hero",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title (overlaid on hero)",
+      "default": "BULK ORDERS"
+    },
+    {
+      "type": "header",
+      "content": "Body"
+    },
+    {
+      "type": "text",
+      "id": "lead_text",
+      "label": "Intro line (1 sentence)",
+      "default": "Custom Fitkaar pieces for your team, college fest, wedding squad, or anything in between."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body content (editable rich text)",
+      "default": "<p>We take bulk orders for <strong>corporate gifting, college merch, weddings, events, and more</strong>. Tell us what you're planning and we'll design something just for you.</p><p>Quote includes:</p><ul><li>Custom design tailored to your brand or theme</li><li>Multiple apparel options (tees, hoodies, sweatshirts, vests)</li><li>All sizes, all colours</li><li>Shipping included anywhere in India</li></ul><p>Reach out to us on WhatsApp with your idea, quantity, and timeline — we'll send a custom quote within 24 hours.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_link",
+      "label": "WhatsApp link",
+      "info": "e.g. https://wa.me/919876543210?text=Hi%20Fitkaar"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_button_text",
+      "label": "WhatsApp button label",
+      "default": "Chat on WhatsApp"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_text",
+      "label": "Secondary button label (optional)",
+      "default": "Email us"
+    },
+    {
+      "type": "url",
+      "id": "secondary_cta_link",
+      "label": "Secondary button link",
+      "info": "e.g. mailto:fitkaarclothing@gmail.com or a contact-us URL"
+    },
+    {
+      "type": "text",
+      "id": "below_cta_hint",
+      "label": "Hint below the buttons",
+      "default": "We typically respond within 24 hours."
+    }
+  ],
+  "presets": [
+    { "name": "Bulk Orders Page" }
+  ]
+}
+{% endschema %}

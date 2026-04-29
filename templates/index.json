@@ -20,10 +20,10 @@
             "link": ""
           }
         },
-        "image_slide_WE3FLx": {
+        "image_slide_kRjTJX": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/4_ed0d2c7c-7ed4-4fa0-92ff-ae54d6936d02.png",
+            "image": "shopify://shop_images/Heroine_Creatives_11.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
@@ -63,7 +63,7 @@
       },
       "block_order": [
         "image_slide_FATcgp",
-        "image_slide_WE3FLx",
+        "image_slide_kRjTJX",
         "image_slide_VAQ3d7",
         "image_slide_Qyqigc",
         "image_slide_AmJpyz",

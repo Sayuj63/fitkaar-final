@@ -12,17 +12,6 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
-        "video_slide_fmigQ8": {
-          "type": "video_slide",
-          "settings": {
-            "video": "shopify://files/videos/IMG_3096.mov",
-            "video_mobile": "shopify://files/videos/IMG_3087.mp4",
-            "autoplay": true,
-            "loop": true,
-            "alt": "Fitkaar hero video",
-            "link": ""
-          }
-        },
         "image_slide_FATcgp": {
           "type": "image_slide",
           "settings": {
@@ -47,6 +36,17 @@
             "image": "shopify://shop_images/3_9acaa7f2-1405-483c-a3e6-b7c5b9dbb69d.png",
             "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_-_4.png",
             "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
+        "video_slide_fmigQ8": {
+          "type": "video_slide",
+          "settings": {
+            "video": "shopify://files/videos/IMG_3096.mov",
+            "video_mobile": "shopify://files/videos/IMG_3087.mp4",
+            "autoplay": true,
+            "loop": true,
+            "alt": "Fitkaar hero video",
             "link": ""
           }
         },
@@ -79,10 +79,10 @@
         }
       },
       "block_order": [
-        "video_slide_fmigQ8",
         "image_slide_FATcgp",
         "image_slide_kRjTJX",
         "image_slide_VAQ3d7",
+        "video_slide_fmigQ8",
         "image_slide_Qyqigc",
         "image_slide_AmJpyz",
         "image_slide_cCwNJw"

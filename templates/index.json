@@ -12,39 +12,39 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
-        "image_slide_zWjCHq": {
+        "image_slide_FATcgp": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/2_84987437-9f8c-42d8-ba5e-75c8f06cfc47.png",
+            "image": "shopify://shop_images/2_e044e0fe-4bef-4abf-85ac-f940088fb234.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
         },
-        "image_slide_VTmrhM": {
+        "image_slide_WE3FLx": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/4_317a649b-b113-479c-bfae-d2299940a844.png",
+            "image": "shopify://shop_images/4_ed0d2c7c-7ed4-4fa0-92ff-ae54d6936d02.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
         },
-        "image_slide_PiY6ag": {
+        "image_slide_VAQ3d7": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/3_5bdad23b-d1e8-4d65-a079-2e67e1cf9b41.png",
+            "image": "shopify://shop_images/3_9acaa7f2-1405-483c-a3e6-b7c5b9dbb69d.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
         },
-        "image_slide_9pCETf": {
+        "image_slide_Qyqigc": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/17_67723bd6-fd47-4d95-99f6-069a9fa1a3ff.png",
+            "image": "shopify://shop_images/6_018e33c2-a9d3-4d45-850b-db5f9261763b.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
         },
-        "image_slide_tYGLwM": {
+        "image_slide_AmJpyz": {
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/15_f08d6a53-aee6-4536-a2ab-8f97307ba401.png",
@@ -52,22 +52,22 @@
             "link": ""
           }
         },
-        "image_slide_4HMtTN": {
+        "image_slide_cCwNJw": {
           "type": "image_slide",
           "settings": {
-            "image": "shopify://shop_images/5_f779fbd5-1500-4e6a-a8f9-7efba50cc458.png",
+            "image": "shopify://shop_images/5_cf5789fd-9554-4a1b-ba34-9a4179bdad6c.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }
         }
       },
       "block_order": [
-        "image_slide_zWjCHq",
-        "image_slide_VTmrhM",
-        "image_slide_PiY6ag",
-        "image_slide_9pCETf",
-        "image_slide_tYGLwM",
-        "image_slide_4HMtTN"
+        "image_slide_FATcgp",
+        "image_slide_WE3FLx",
+        "image_slide_VAQ3d7",
+        "image_slide_Qyqigc",
+        "image_slide_AmJpyz",
+        "image_slide_cCwNJw"
       ],
       "settings": {
         "slide_duration": 2,

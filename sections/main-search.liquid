@@ -1,0 +1,448 @@
+{% comment %}
+  Search results page — branded, matches collection-products grid styling.
+{% endcomment %}
+
+<style>
+  .search-page {
+    padding: 40px 0 80px;
+    background: #fff;
+  }
+
+  .search-page .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Header */
+  .search-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .search-header__title {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--color-primary, #000c5b);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+  }
+  .search-header__count {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .search-header__count strong {
+    color: var(--color-primary, #000c5b);
+    font-weight: 700;
+  }
+
+  /* Search input bar — re-search from results page */
+  .search-form {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    max-width: 640px;
+    margin: 0 auto 32px;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    padding: 8px 8px 8px 18px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-form:focus-within {
+    border-color: var(--color-primary, #000c5b);
+    box-shadow: 0 0 0 3px rgba(0, 12, 91, 0.08);
+  }
+  .search-form svg.icon-search {
+    color: #6b7280;
+    flex-shrink: 0;
+  }
+  .search-form input[type="search"] {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 10px 12px;
+    font-size: 1rem;
+    color: #111;
+    font-family: inherit;
+  }
+  .search-form button[type="submit"] {
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .search-form button[type="submit"]:hover { background: #000940; }
+
+  /* Suggested chips */
+  .search-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 0 0 28px;
+  }
+  .search-suggestions__label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6b7280;
+    letter-spacing: 0.08em;
+    align-self: center;
+  }
+  .search-chip {
+    padding: 7px 16px;
+    background: #f3f4f6;
+    border-radius: 999px;
+    text-decoration: none;
+    color: #1f2937;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+  }
+  .search-chip:hover {
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+  }
+
+  /* Results grid — same card pattern as /collections */
+  .search-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .search-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  }
+  @media (min-width: 1024px) {
+    .search-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .search-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .search-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  }
+  .search-card__image {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+  .search-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .search-card:hover .search-card__image img { transform: scale(1.04); }
+  .search-card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .search-card__info {
+    padding: 12px 14px 16px;
+  }
+  .search-card__title {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    line-height: 1.25;
+  }
+  .search-card__price {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--color-primary, #000c5b);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .search-card__price-mrp {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    text-decoration: line-through;
+    font-weight: 500;
+  }
+  .search-card__price-off {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #dc2626;
+  }
+
+  /* Empty state */
+  .search-empty {
+    text-align: center;
+    padding: 70px 20px 50px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .search-empty svg {
+    width: 56px;
+    height: 56px;
+    color: #d1d5db;
+    margin-bottom: 18px;
+  }
+  .search-empty h3 {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 1.4rem;
+    color: #111;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+  .search-empty p {
+    color: #6b7280;
+    margin: 0 0 22px;
+    line-height: 1.6;
+  }
+  .search-empty__cta {
+    display: inline-flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .search-empty__btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: transform 0.15s, background 0.2s;
+  }
+  .search-empty__btn--primary {
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+  }
+  .search-empty__btn--primary:hover { transform: translateY(-2px); background: #000940; }
+  .search-empty__btn--secondary {
+    background: transparent;
+    color: var(--color-primary, #000c5b);
+    border: 1.5px solid var(--color-primary, #000c5b);
+  }
+  .search-empty__btn--secondary:hover { background: var(--color-primary, #000c5b); color: #fff; }
+
+  /* Pagination */
+  .search-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+  }
+  .search-pagination a,
+  .search-pagination span {
+    padding: 8px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #1f2937;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .search-pagination a:hover { border-color: var(--color-primary, #000c5b); }
+  .search-pagination span[aria-current="page"] {
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+    border-color: var(--color-primary, #000c5b);
+  }
+
+  @media (max-width: 480px) {
+    .search-page { padding: 24px 0 60px; }
+    .search-header__title { font-size: 1.6rem; }
+    .search-form { padding: 6px 6px 6px 14px; }
+    .search-form input[type="search"] { font-size: 0.95rem; }
+    .search-form button[type="submit"] { padding: 8px 16px; font-size: 0.78rem; }
+  }
+</style>
+
+<section class="search-page">
+  <div class="container">
+
+    <!-- Header -->
+    <header class="search-header">
+      <h1 class="search-header__title">
+        {%- if search.terms != blank -%}
+          Search results
+        {%- else -%}
+          Search
+        {%- endif -%}
+      </h1>
+      {%- if search.terms != blank -%}
+        <p class="search-header__count">
+          {%- if search.results_count > 0 -%}
+            <strong>{{ search.results_count }}</strong> {% if search.results_count == 1 %}result{% else %}results{% endif %} for "<strong>{{ search.terms }}</strong>"
+          {%- else -%}
+            No results for "<strong>{{ search.terms }}</strong>"
+          {%- endif -%}
+        </p>
+      {%- else -%}
+        <p class="search-header__count">Find tees, hoodies, sweatshirts, gift cards and more.</p>
+      {%- endif -%}
+    </header>
+
+    <!-- Search bar -->
+    <form action="{{ routes.search_url }}" method="get" class="search-form" role="search">
+      <svg class="icon-search" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search for tees, hoodies, gifts…" autofocus>
+      <input type="hidden" name="type" value="product">
+      <button type="submit">Search</button>
+    </form>
+
+    <!-- Suggestion chips -->
+    <div class="search-suggestions">
+      <span class="search-suggestions__label">Try:</span>
+      <a href="{{ routes.search_url }}?q=hoodie&type=product" class="search-chip">Hoodie</a>
+      <a href="{{ routes.search_url }}?q=tee&type=product" class="search-chip">Tee</a>
+      <a href="{{ routes.search_url }}?q=sweatshirt&type=product" class="search-chip">Sweatshirt</a>
+      <a href="/collections/best-sellers" class="search-chip">Bestsellers</a>
+      <a href="/pages/process" class="search-chip">Customise</a>
+    </div>
+
+    {%- if search.performed and search.results_count > 0 -%}
+
+      {% paginate search.results by 24 %}
+        <div class="search-grid">
+          {%- for item in search.results -%}
+            {%- comment -%} Only render product results — search may also include articles/pages {%- endcomment -%}
+            {%- if item.object_type == 'product' -%}
+              {%- assign p = item -%}
+              {%- assign p_cover = nil -%}
+              {%- for vv in p.variants -%}
+                {%- if vv.featured_image and vv.featured_image.id == p.featured_image.id -%}
+                  {%- assign p_cover = vv -%}{%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- assign p_actual = p.price -%}
+              {%- assign p_compare = p.compare_at_price -%}
+              {%- if p_cover -%}
+                {%- assign p_actual = p_cover.price -%}
+                {%- if p_cover.compare_at_price -%}
+                  {%- assign p_compare = p_cover.compare_at_price -%}
+                {%- endif -%}
+              {%- endif -%}
+
+              <a href="{{ p.url }}" class="search-card">
+                <div class="search-card__image">
+                  {%- if p.featured_image != blank -%}
+                    <img src="{{ p.featured_image | image_url: width: 600 }}"
+                         alt="{{ p.featured_image.alt | default: p.title | escape }}"
+                         loading="lazy">
+                  {%- else -%}
+                    <svg viewBox="0 0 600 800" style="background:#f0f0f0;width:100%;height:100%;">
+                      <text x="50%" y="50%" text-anchor="middle" fill="#999" font-size="20">No image</text>
+                    </svg>
+                  {%- endif -%}
+                  {%- if p_compare and p_compare > p_actual -%}
+                    <span class="search-card__badge">Sale</span>
+                  {%- endif -%}
+                </div>
+                <div class="search-card__info">
+                  <h3 class="search-card__title">{{ p.title }}</h3>
+                  <div class="search-card__price">
+                    <span>₹{{ p_actual | divided_by: 100 }}/-</span>
+                    {%- if p_compare and p_compare > p_actual -%}
+                      <span class="search-card__price-mrp">₹{{ p_compare | divided_by: 100 }}/-</span>
+                      <span class="search-card__price-off">{{ p_compare | minus: p_actual | times: 100 | divided_by: p_compare }}% OFF</span>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="search-pagination" role="navigation" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}">← Prev</a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}">{{ part.title }}</a>
+              {%- else -%}
+                <span aria-current="{% if part.title == paginate.current_page %}page{% endif %}">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}">Next →</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {% endpaginate %}
+
+    {%- elsif search.performed -%}
+
+      <!-- Empty state — searched but no results -->
+      <div class="search-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="M21 21l-4.35-4.35"></path>
+        </svg>
+        <h3>Nothing matched that search</h3>
+        <p>We couldn't find anything for "<strong>{{ search.terms }}</strong>". Try a different keyword, or design something custom — we make it from scratch.</p>
+        <div class="search-empty__cta">
+          <a href="/collections/all" class="search-empty__btn search-empty__btn--secondary">Browse everything</a>
+          <a href="/pages/process" class="search-empty__btn search-empty__btn--primary">Customise yours</a>
+        </div>
+      </div>
+
+    {%- else -%}
+
+      <!-- No search performed yet — show recommendations -->
+      <div class="search-empty">
+        <h3>What are you looking for?</h3>
+        <p>Type a keyword above, or pick a suggestion to start browsing.</p>
+        <div class="search-empty__cta">
+          <a href="/collections/all" class="search-empty__btn search-empty__btn--secondary">All Products</a>
+          <a href="/pages/process" class="search-empty__btn search-empty__btn--primary">Customise yours</a>
+        </div>
+      </div>
+
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "settings": [],
+  "presets": [{ "name": "Search Results" }]
+}
+{% endschema %}

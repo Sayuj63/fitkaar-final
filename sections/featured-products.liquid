@@ -142,6 +142,22 @@
   font-size: 0.95rem;
   font-weight: 700;
   color: #000c5b;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.bestseller-price__mrp {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  text-decoration: line-through;
+  font-weight: 500;
+}
+.bestseller-price__off {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #dc2626;
+  letter-spacing: 0.02em;
 }
 
 /* SAME LAYOUT on every screen: horizontal scroll strip — kills the desktop
@@ -222,6 +238,31 @@
           {%- assign display_price = product.price -%}
           {%- if cover_variant -%}{%- assign display_price = cover_variant.price -%}{%- endif -%}
 
+          {%- comment -%} #39: MRP strikethrough by apparel type — figure out the cover's "Type" option {%- endcomment -%}
+          {%- assign cover_type = type_list | first | default: '' -%}
+          {%- if cover_variant -%}
+            {%- for opt in product.options_with_values -%}
+              {%- assign opt_lower_x = opt.name | downcase -%}
+              {%- if opt_lower_x contains 'type' or opt_lower_x contains 'apparel' -%}
+                {%- case opt.position -%}
+                  {%- when 1 -%}{%- assign cover_type = cover_variant.option1 -%}
+                  {%- when 2 -%}{%- assign cover_type = cover_variant.option2 -%}
+                  {%- when 3 -%}{%- assign cover_type = cover_variant.option3 -%}
+                {%- endcase -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- assign type_mrp_lower = cover_type | downcase | strip -%}
+          {%- assign card_mrp = 0 -%}
+          {%- case type_mrp_lower -%}
+            {%- when 'cropped tee', 'cropped' -%}{%- assign card_mrp = 99900 -%}
+            {%- when 'regular tee', 't-shirt', 'tshirt', 'tee' -%}{%- assign card_mrp = 129900 -%}
+            {%- when 'oversized tee', 'oversized' -%}{%- assign card_mrp = 129900 -%}
+            {%- when 'boxy vest', 'vest' -%}{%- assign card_mrp = 139900 -%}
+            {%- when 'sweatshirt' -%}{%- assign card_mrp = 169900 -%}
+            {%- when 'hoodie' -%}{%- assign card_mrp = 199900 -%}
+          {%- endcase -%}
+
           <a href="{{ product.url }}" class="bestseller-card">
             <div class="bestseller-image">
               <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title }}">
@@ -244,7 +285,13 @@
             </div>
             <div class="bestseller-info">
               <h3 class="bestseller-title">{{ product.title }}</h3>
-              <p class="bestseller-price">₹{{ display_price | divided_by: 100 }}/-</p>
+              <p class="bestseller-price">
+                <span>₹{{ display_price | divided_by: 100 }}/-</span>
+                {%- if card_mrp > display_price -%}
+                  <span class="bestseller-price__mrp">₹{{ card_mrp | divided_by: 100 }}/-</span>
+                  <span class="bestseller-price__off">{{ card_mrp | minus: display_price | times: 100 | divided_by: card_mrp }}% OFF</span>
+                {%- endif -%}
+              </p>
 
               {%- if color_list.size > 0 or type_list.size > 0 -%}
                 <div class="bestseller-swatches">

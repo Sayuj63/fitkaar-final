@@ -274,6 +274,18 @@
     font-size: 1.25rem;
     margin-left: 12px;
   }
+  .product-price .discount-pct {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 3px 10px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+    vertical-align: middle;
+  }
 
   .price-note {
     font-size: 0.875rem;
@@ -1449,7 +1461,8 @@
       <div class="product-price-section">
         <div class="product-price">
           <span x-text="'Rs. ' + (currentVariantPrice / 100).toFixed(2)"></span>
-          <span class="compare-price" x-show="currentVariantComparePrice > currentVariantPrice" x-text="'Rs. ' + (currentVariantComparePrice / 100).toFixed(2)"></span>
+          <span class="compare-price" x-show="effectiveComparePrice > currentVariantPrice" x-text="'Rs. ' + (effectiveComparePrice / 100).toFixed(2)"></span>
+          <span class="discount-pct" x-show="effectiveComparePrice > currentVariantPrice" x-text="Math.round((1 - currentVariantPrice / effectiveComparePrice) * 100) + '% OFF'"></span>
         </div>
         <p class="price-note">Inclusive of all taxes and free shipping</p>
       </div>
@@ -2073,6 +2086,15 @@
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--color-primary, #000c5b);
+    display: inline-flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+  .pdp-card__mrp {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    text-decoration: line-through;
+    font-weight: 500;
   }
 
   .pdp-strip--hidden { display: none; }
@@ -2128,9 +2150,49 @@
                   {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg w-full h-full' }}
                 {%- endif -%}
               </div>
+              {%- comment -%} #39: pdp-card MRP strikethrough by apparel type of cover variant {%- endcomment -%}
+              {%- assign p_cover = nil -%}
+              {%- for vv in p.variants -%}
+                {%- if vv.featured_image and vv.featured_image.id == p.featured_image.id -%}
+                  {%- assign p_cover = vv -%}{%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- assign p_cover_type = '' -%}
+              {%- for opt in p.options_with_values -%}
+                {%- assign opt_l = opt.name | downcase -%}
+                {%- if opt_l contains 'type' or opt_l contains 'apparel' -%}
+                  {%- if p_cover -%}
+                    {%- case opt.position -%}
+                      {%- when 1 -%}{%- assign p_cover_type = p_cover.option1 -%}
+                      {%- when 2 -%}{%- assign p_cover_type = p_cover.option2 -%}
+                      {%- when 3 -%}{%- assign p_cover_type = p_cover.option3 -%}
+                    {%- endcase -%}
+                  {%- else -%}
+                    {%- assign p_cover_type = opt.values | first -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- assign pct_lower = p_cover_type | downcase | strip -%}
+              {%- assign p_mrp = 0 -%}
+              {%- case pct_lower -%}
+                {%- when 'cropped tee', 'cropped' -%}{%- assign p_mrp = 99900 -%}
+                {%- when 'regular tee', 't-shirt', 'tshirt', 'tee' -%}{%- assign p_mrp = 129900 -%}
+                {%- when 'oversized tee', 'oversized' -%}{%- assign p_mrp = 129900 -%}
+                {%- when 'boxy vest', 'vest' -%}{%- assign p_mrp = 139900 -%}
+                {%- when 'sweatshirt' -%}{%- assign p_mrp = 169900 -%}
+                {%- when 'hoodie' -%}{%- assign p_mrp = 199900 -%}
+              {%- endcase -%}
+              {%- assign p_actual = p.price -%}
+              {%- if p_cover -%}{%- assign p_actual = p_cover.price -%}{%- endif -%}
+
               <div class="pdp-card__info">
                 <h3 class="pdp-card__title">{{ p.title }}</h3>
-                <div class="pdp-card__price">₹{{ p.price | divided_by: 100 }}/-</div>
+                <div class="pdp-card__price">
+                  <span>₹{{ p_actual | divided_by: 100 }}/-</span>
+                  {%- if p_mrp > p_actual -%}
+                    <span class="pdp-card__mrp">₹{{ p_mrp | divided_by: 100 }}/-</span>
+                  {%- endif -%}
+                </div>
                 {%- if rcc_list.size > 0 or rct_list.size > 0 -%}
                   <div class="pdp-card__swatches">
                     {%- for t in rct_list limit: 2 -%}
@@ -2666,6 +2728,30 @@
       get currentVariantComparePrice() {
         const variant = this.variants.find(v => v.id === this.selectedVariantId);
         return variant ? (variant.compare_at_price || variant.price) : ({{ default_variant.compare_at_price | default: default_variant.price }});
+      },
+
+      // #39: MRP per apparel type (paise). User-supplied list — Cropped Tee 999,
+      // T-shirt 1299, Boxy Vest 1399, Sweatshirt 1699, Hoodie 1999. Used as
+      // strikethrough whenever it's higher than the variant's own price.
+      mrpsByType: {
+        'Cropped Tee':  99900,
+        'Cropped':      99900,
+        'Regular Tee':  129900,
+        'T-shirt':      129900,
+        'Tshirt':       129900,
+        'Tee':          129900,
+        'Oversized Tee':129900,
+        'Oversized':    129900,
+        'Boxy Vest':    139900,
+        'Vest':         139900,
+        'Sweatshirt':   169900,
+        'Hoodie':       199900
+      },
+
+      get effectiveComparePrice() {
+        const variantCompare = this.currentVariantComparePrice;
+        const typeMrp = this.mrpsByType[this.selectedType] || 0;
+        return Math.max(typeMrp, variantCompare);
       },
 
       // Variant Methods

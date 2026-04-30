@@ -12,7 +12,9 @@
     "main": {
       "type": "collection-products",
       "settings": {
+        "show_hero": true,
         "show_categories": true,
+        "cat_1_image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_52b9b010-2989-4bf4-8842-535bb6fe3b37.png",
         "cat_1_name": "Food & Drinks",
         "cat_1_link": "shopify://collections/food",
         "cat_2_name": "Cropped Tee",

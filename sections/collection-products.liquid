@@ -10,7 +10,14 @@
       "type": "checkbox",
       "id": "show_hero",
       "label": "Show collection hero banner",
-      "info": "Uses the collection's image from Shopify admin. 1:1 on mobile, horizontal on desktop.",
+      "info": "Upload an image in Shopify Admin: Products → Collections → open this collection → Image (sidebar). Mobile 1:1 fit; desktop wide banner.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hero_fallback_first_product",
+      "label": "Hero: use first product image if collection has no image",
+      "info": "When the collection has no Image set, uses the first product’s featured image so a hero still appears. Turn off to show only the text title until you upload a collection image.",
       "default": true
     },
     {
@@ -21,8 +28,8 @@
       "type": "checkbox",
       "id": "show_categories",
       "label": "Show category circles",
-      "info": "Each category now has its own page — circles are off by default.",
-      "default": false
+      "info": "Only on the All products collection (/collections/all). Hidden on other collections (e.g. basics).",
+      "default": true
     },
     {
       "type": "header",
@@ -37,7 +44,7 @@
       "type": "text",
       "id": "cat_1_name",
       "label": "Name",
-      "default": "Regular Tee"
+      "default": "Essentials"
     },
     {
       "type": "url",
@@ -57,7 +64,7 @@
       "type": "text",
       "id": "cat_2_name",
       "label": "Name",
-      "default": "Cropped Tee"
+      "default": "Only at Fitkaar"
     },
     {
       "type": "url",
@@ -77,7 +84,7 @@
       "type": "text",
       "id": "cat_3_name",
       "label": "Name",
-      "default": "Boxy Vest"
+      "default": "Food & Drinks"
     },
     {
       "type": "url",
@@ -97,7 +104,7 @@
       "type": "text",
       "id": "cat_4_name",
       "label": "Name",
-      "default": "Sweatshirt"
+      "default": "Sports & Fitness"
     },
     {
       "type": "url",
@@ -117,11 +124,91 @@
       "type": "text",
       "id": "cat_5_name",
       "label": "Name",
-      "default": "Hoodie"
+      "default": "Work & Hobbies"
     },
     {
       "type": "url",
       "id": "cat_5_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Circle 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "cat_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "cat_6_name",
+      "label": "Name",
+      "default": "Couples"
+    },
+    {
+      "type": "url",
+      "id": "cat_6_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Circle 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "cat_7_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "cat_7_name",
+      "label": "Name",
+      "default": "Matching"
+    },
+    {
+      "type": "url",
+      "id": "cat_7_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Circle 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "cat_8_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "cat_8_name",
+      "label": "Name",
+      "default": "Pun Intended"
+    },
+    {
+      "type": "url",
+      "id": "cat_8_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Circle 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "cat_9_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "cat_9_name",
+      "label": "Name",
+      "default": "Zodiac Signs"
+    },
+    {
+      "type": "url",
+      "id": "cat_9_link",
       "label": "Link"
     }
   ]
@@ -161,7 +248,7 @@
     margin: 0 auto;
   }
 
-  /* #4: Collection hero banner */
+  /* Collection hero: wide horizontal on desktop; 1:1 on phone with contain so artwork fits like homepage */
   .collection-hero {
     position: relative;
     width: 100%;
@@ -170,6 +257,9 @@
     overflow: hidden;
     border-radius: 0;
     background: var(--color-primary, #000c5b);
+  }
+  .collection-hero--creative {
+    background: #ffffff;
   }
   .collection-hero img {
     position: absolute;
@@ -210,9 +300,14 @@
   }
   @media (max-width: 768px) {
     .collection-hero {
-      aspect-ratio: 1 / 1;          /* 1:1 on mobile per #4 */
+      aspect-ratio: 1 / 1;
       margin: 0 -20px 30px;
       width: calc(100% + 40px);
+    }
+    /* Full artwork visible on phone — letterboxing on brand white */
+    .collection-hero--creative img {
+      object-fit: contain;
+      object-position: center;
     }
     .collection-hero__title { font-size: 1.8rem; }
     .collection-hero__sub { font-size: 0.85rem; }
@@ -476,13 +571,29 @@
     border-radius: 8px;
   }
 
-  /* Category circles — mirrors the style used on the process page */
+  /* Category circles — one horizontal scroller everywhere (~6 “slots” wide → 9 items need a short scroll) */
   .category-circles {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1.5rem;
-    justify-items: center;
+    --cc-gap: 1.25rem;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: var(--cc-gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
     margin: 8px 0 40px;
+    padding: 4px 2px 14px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 12, 91, 0.35) transparent;
+  }
+  .category-circles::-webkit-scrollbar {
+    height: 7px;
+  }
+  .category-circles::-webkit-scrollbar-thumb {
+    background: rgba(0, 12, 91, 0.35);
+    border-radius: 999px;
   }
 
   .category-circle {
@@ -493,6 +604,13 @@
     text-decoration: none;
     color: inherit;
     transition: transform 0.3s ease;
+    box-sizing: border-box;
+    /* Six slots across the container → ~6 visible; 9 items extend past → horizontal scroll */
+    flex: 0 0 calc((100% - 5 * var(--cc-gap)) / 6);
+    width: calc((100% - 5 * var(--cc-gap)) / 6);
+    max-width: 200px;
+    min-width: 140px;
+    scroll-snap-align: start;
   }
 
   .category-circle:hover {
@@ -500,8 +618,9 @@
   }
 
   .category-circle-image {
-    width: 180px;
-    height: 180px;
+    width: 100%;
+    aspect-ratio: 1;
+    height: auto;
     border-radius: 50%;
     overflow: hidden;
     background-color: #f5f5f5;
@@ -518,59 +637,64 @@
 
   .category-circle-name {
     font-family: var(--font-heading);
-    font-size: 0.95rem;
+    font-size: clamp(0.65rem, 1.1vw, 0.95rem);
     font-weight: 700;
     text-align: center;
     color: var(--color-primary, #000c5b);
     text-transform: uppercase;
-    max-width: 160px;
-    line-height: 1.3;
-    letter-spacing: 0.05em;
+    width: 100%;
+    line-height: 1.25;
+    letter-spacing: 0.04em;
   }
 
-  @media (max-width: 900px) {
-    .category-circles { gap: 1rem; }
-    .category-circle-image { width: 130px; height: 130px; }
-    .category-circle-name { font-size: 0.8rem; }
+  @media (max-width: 1100px) {
+    .category-circles { --cc-gap: 1rem; }
+    .category-circle {
+      min-width: 120px;
+      max-width: 180px;
+    }
   }
 
-  /* On mobile, categories become a horizontal snap-scroll strip so the
-     grid never exceeds the viewport width (fixes page-level side-scroll) */
+  /* Phone: tighter chips + edge bleed; hide thin scrollbar */
   @media (max-width: 768px) {
     .category-circles {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 16px;
-      justify-items: initial;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
+      --cc-gap: 14px;
       scrollbar-width: none;
-      /* bleed to screen edge so users see a peek of the next circle */
       margin: 8px -20px 32px;
-      padding: 4px 20px;
+      padding: 4px 20px 12px;
+      scroll-padding-inline: 20px;
     }
-    .category-circles::-webkit-scrollbar { display: none; }
+    .category-circles::-webkit-scrollbar {
+      display: none;
+      height: 0;
+    }
 
     .category-circle {
-      flex: 0 0 40%;
-      scroll-snap-align: start;
-      max-width: 140px;
+      flex: 0 0 auto;
+      width: 108px;
+      min-width: unset;
+      max-width: 108px;
     }
 
     .category-circle-image {
-      width: 110px;
-      height: 110px;
+      aspect-ratio: 1;
+      width: 100%;
     }
 
     .category-circle-name {
-      font-size: 0.75rem;
+      font-size: 0.68rem;
       letter-spacing: 0.03em;
     }
   }
 
   @media (max-width: 400px) {
-    .category-circle-image { width: 96px; height: 96px; }
+    .category-circle {
+      width: 96px;
+      max-width: 96px;
+    }
+    .category-circle-name {
+      font-size: 0.65rem;
+    }
   }
 
   /* Filter + Sort toolbar */
@@ -826,9 +950,46 @@
 
 <section class="collection-page">
   <div class="container">
-    {%- if section.settings.show_categories -%}
+    {%- liquid
+      assign hero_img = collection.image
+      if hero_img == blank and section.settings.hero_fallback_first_product and collection.products_count > 0
+        assign fp = collection.products.first
+        if fp.featured_image != blank
+          assign hero_img = fp.featured_image
+        endif
+      endif
+    -%}
+    {%- comment -%} Hero: collection.image from Admin, or optional first-product fallback {%- endcomment -%}
+    {%- if section.settings.show_hero and hero_img != blank -%}
+      <div class="collection-hero collection-hero--creative{% if collection.image == blank and hero_img != blank %} collection-hero--fallback{% endif %}">
+        <img src="{{ hero_img | image_url: width: 1800 }}"
+             srcset="{{ hero_img | image_url: width: 800 }} 800w,
+                     {{ hero_img | image_url: width: 1200 }} 1200w,
+                     {{ hero_img | image_url: width: 1800 }} 1800w"
+             sizes="100vw"
+             alt="{{ collection.title | escape }}"
+             loading="eager"
+             fetchpriority="high">
+        <div class="collection-hero__overlay">
+          <h1 class="collection-hero__title">{{ collection.title | default: 'Shop' }}</h1>
+          {% if collection.description != blank %}
+            <p class="collection-hero__sub">{{ collection.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="collection-header">
+        <h1 class="collection-title">{{ collection.title | default: 'All Products' }}</h1>
+        {% if collection.description != blank %}
+          <p class="collection-description">{{ collection.description }}</p>
+        {% endif %}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Category circles: only on All products — not on /collections/basics etc. {%- endcomment -%}
+    {%- if section.settings.show_categories and collection.handle == 'all' -%}
       {%- assign has_any_circle = false -%}
-      {%- for i in (1..5) -%}
+      {%- for i in (1..9) -%}
         {%- assign img_key  = 'cat_' | append: i | append: '_image' -%}
         {%- assign name_key = 'cat_' | append: i | append: '_name' -%}
         {%- assign img  = section.settings[img_key] -%}
@@ -840,7 +1001,7 @@
 
       {%- if has_any_circle -%}
         <div class="category-circles">
-          {%- for i in (1..5) -%}
+          {%- for i in (1..9) -%}
             {%- assign img_key  = 'cat_' | append: i | append: '_image' -%}
             {%- assign name_key = 'cat_' | append: i | append: '_name' -%}
             {%- assign link_key = 'cat_' | append: i | append: '_link' -%}
@@ -864,33 +1025,6 @@
           {%- endfor -%}
         </div>
       {%- endif -%}
-    {%- endif -%}
-
-    {%- comment -%} #4: Collection hero (uses collection.image set in Shopify Admin → Collections → Image) {%- endcomment -%}
-    {%- if section.settings.show_hero and collection.image != blank -%}
-      <div class="collection-hero">
-        <img src="{{ collection.image | image_url: width: 1800 }}"
-             srcset="{{ collection.image | image_url: width: 800 }} 800w,
-                     {{ collection.image | image_url: width: 1200 }} 1200w,
-                     {{ collection.image | image_url: width: 1800 }} 1800w"
-             sizes="100vw"
-             alt="{{ collection.title | escape }}"
-             loading="eager"
-             fetchpriority="high">
-        <div class="collection-hero__overlay">
-          <h1 class="collection-hero__title">{{ collection.title | default: 'Shop' }}</h1>
-          {% if collection.description != blank %}
-            <p class="collection-hero__sub">{{ collection.description }}</p>
-          {% endif %}
-        </div>
-      </div>
-    {%- else -%}
-      <div class="collection-header">
-        <h1 class="collection-title">{{ collection.title | default: 'All Products' }}</h1>
-        {% if collection.description != blank %}
-          <p class="collection-description">{{ collection.description }}</p>
-        {% endif %}
-      </div>
     {%- endif -%}
 
     {%- assign has_filters = false -%}

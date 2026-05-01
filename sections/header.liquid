@@ -11,12 +11,17 @@
 }
 {% endschema %}
 
-<header class="site-header" style="background: #fff; padding: 12px 0; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 50; color: var(--color-primary);" x-data="{ mobileMenuOpen: false, shopOpen: false }">
+<header
+  class="site-header"
+  style="background: #fff; padding: 12px 0; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 50; color: var(--color-primary);"
+  x-data="{ mobileMenuOpen: false, shopOpen: false, mobNavPage: 'main', mobAccE: false, mobAccT: false, mobAccV: false, cartDrawerOpen: false, cartLoading: false, cartMini: null, syncBodyScroll() { document.body.style.overflow = (this.mobileMenuOpen || this.cartDrawerOpen) ? 'hidden' : ''; }, closeMobileMenu() { this.mobileMenuOpen = false; this.mobNavPage = 'main'; this.mobAccE = false; this.mobAccT = false; this.mobAccV = false; this.syncBodyScroll(); }, openShopPanel() { this.mobNavPage = 'shop'; }, backToMainNav() { this.mobNavPage = 'main'; this.mobAccE = false; this.mobAccT = false; this.mobAccV = false; }, async refreshCartDrawer() { this.cartLoading = true; try { const r = await fetch('/cart.js'); this.cartMini = await r.json(); } catch (e) { this.cartMini = null; } finally { this.cartLoading = false; } }, async openCartDrawer() { if (window.__fkCloseSearch) window.__fkCloseSearch(); this.mobileMenuOpen = false; this.cartDrawerOpen = true; this.syncBodyScroll(); await this.refreshCartDrawer(); }, closeCartDrawer() { this.cartDrawerOpen = false; this.syncBodyScroll(); }, cartIconClick(e) { if (window.matchMedia('(max-width: 767px)').matches) { e.preventDefault(); this.openCartDrawer(); } }, formatCartMoney(cents) { if (window.Shopify && typeof Shopify.formatMoney === 'function') return Shopify.formatMoney(cents); const n = (Number(cents) || 0) / 100; return '₹' + n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }); } }"
+  @cart:updated.window="if (cartDrawerOpen) refreshCartDrawer()"
+>
   <div class="container fk-header-row">
 
     <!-- LEFT: hamburger + small logo image (mobile) | full logo (desktop) -->
     <div class="fk-header-left">
-      <button type="button" class="md:hidden p-2 -ml-2 fk-header-burger" @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Open menu">
+      <button type="button" class="md:hidden p-2 -ml-2 fk-header-burger" @click="mobileMenuOpen = !mobileMenuOpen; cartDrawerOpen = false; if (mobileMenuOpen) { mobNavPage = 'main'; mobAccE = false; mobAccT = false; mobAccV = false } syncBodyScroll()" aria-label="Open menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -56,21 +61,21 @@
             <a href="/collections/everyday">Everyday</a>
             <a href="/collections/your-aesthetic">Your Aesthetic</a>
             <a href="/collections/basics">Basics</a>
+            <a href="/collections/only-at-fitkaar">Only At Fitkaar</a>
           </div>
           <div class="fk-shop-col">
-            <div class="fk-shop-col-head">Themes</div>
-            <a href="/collections/only-at-fitkaar">Only at Fitkaar</a>
+            <div class="fk-shop-col-head">Collections</div>
             <a href="/collections/food-and-drinks">Food &amp; Drinks</a>
             <a href="/collections/sports-and-fitness">Sports &amp; Fitness</a>
             <a href="/collections/work-and-hobbies">Work &amp; Hobbies</a>
-          </div>
-          <div class="fk-shop-col">
-            <div class="fk-shop-col-head">Vibes</div>
-            <a href="/collections/couples">Couples</a>
-            <a href="/collections/matching">Matching</a>
             <a href="/collections/pun-intended">Pun Intended</a>
             <a href="/collections/zodiac-signs">Zodiac Signs</a>
-            <a href="/pages/bulk-orders" class="fk-shop-col-cta">Bulk orders →</a>
+          </div>
+          <div class="fk-shop-col">
+            <div class="fk-shop-col-head">Fav People</div>
+            <a href="/collections/matching">Matching</a>
+            <a href="/collections/couples">Couples</a>
+            <a href="/pages/bulk-orders" class="fk-shop-col-cta">Bulk Orders</a>
           </div>
         </div>
       </div>
@@ -93,7 +98,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
 
-      <a href="/cart" class="icon-cart relative" id="cart-icon-bubble" aria-label="Cart">
+      <a href="{{ routes.cart_url }}" class="icon-cart relative" id="cart-icon-bubble" aria-label="Cart" @click="cartIconClick($event)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" fill="currentColor"/><path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" fill="currentColor"/><path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div class="cart-count-bubble cart-count" style="background-color: var(--color-secondary); color: white; position: absolute; top: -8px; right: -8px; border-radius: 50%; width: 18px; height: 18px; display: {% if cart.item_count > 0 %}flex{% else %}none{% endif %}; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">
           {{ cart.item_count }}
@@ -107,6 +112,8 @@
 
 
   <style>
+    [x-cloak] { display: none !important; }
+
     /* 3-column header row layout */
     .fk-header-row {
       display: flex;
@@ -230,44 +237,214 @@
       letter-spacing: 0.04em;
     }
 
-    /* #2 Mobile drawer Shop expandable + bottom socials */
-    .fk-mob-shop-toggle {
+    /* Mobile drawer: 50% left overlay + slide panels */
+    /* Teleported to body — escapes sticky header stacking; scrim dims full viewport */
+    .fk-mob-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10020;
+      background: rgba(0, 0, 0, 0.52);
+      isolation: isolate;
+    }
+    .fk-mob-drawer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      min-width: 260px;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100dvh;
+      background: #fff;
+      box-shadow: 12px 0 40px rgba(0, 12, 91, 0.18);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateX(0);
+      min-height: 0;
+    }
+    .fk-mob-drawer-hd {
+      flex-shrink: 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .fk-mob-min-h-0 { min-height: 0; }
+    .fk-mob-slide {
+      display: flex;
+      width: 200%;
+      height: 100%;
+      flex: 1;
+      min-height: 0;
+      transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform;
+    }
+    .fk-mob-slide--shop {
+      transform: translateX(-50%);
+    }
+    .fk-mob-slide-panel {
+      flex: 0 0 50%;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background: #fff;
+      overflow: hidden;
+    }
+    /* Scroll all Shop accordions — flex child must shrink so overflow-y works */
+    .fk-mob-shop-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+    }
+    .fk-mob-nav-link {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #111;
+      text-decoration: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      display: block;
+      padding: 0.35rem 0;
+      line-height: 1.25;
+      transition: color 0.2s ease;
+    }
+    .fk-mob-nav-link:hover,
+    .fk-mob-nav-link:focus-visible {
+      color: var(--color-secondary, #71b6c8);
+      outline: none;
+    }
+    .fk-mob-shop-row {
       width: 100%;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0.35rem 0;
       background: none;
       border: none;
-      padding: 0;
       cursor: pointer;
       text-align: left;
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #111;
     }
-    .fk-mob-shop-toggle svg { transition: transform 0.25s; }
-    .fk-mob-shop-toggle.is-open svg { transform: rotate(180deg); }
-    .fk-mob-shop-sub {
-      display: none;
+    .fk-mob-shop-row svg {
+      flex-shrink: 0;
+      color: var(--color-primary);
+      transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .fk-mob-acc {
+      border-bottom: 1px solid #eef0f4;
+    }
+    .fk-mob-acc:last-of-type { border-bottom: none; }
+    .fk-mob-acc-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-secondary, #71b6c8);
+    }
+    .fk-mob-acc-trigger:hover { color: var(--color-primary); }
+    .fk-mob-acc-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1.5px solid #d1d5db;
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--color-primary);
+      transition: transform 0.25s ease, border-color 0.2s ease;
+    }
+    .fk-mob-acc-trigger[aria-expanded="true"] .fk-mob-acc-icon {
+      transform: rotate(45deg);
+      border-color: var(--color-primary);
+    }
+    .fk-mob-acc-panel {
+      overflow: hidden;
+    }
+    .fk-mob-acc-panel-inner {
+      padding-bottom: 12px;
+      display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin: 8px 0 0 8px;
-      padding: 10px 0 6px 14px;
-      border-left: 2px solid #e5e7eb;
+      gap: 10px;
     }
-    .fk-mob-shop-sub.is-open { display: flex; }
-    .fk-mob-shop-sub a {
-      font-size: 1rem;
+    .fk-mob-acc-panel a {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
       font-weight: 600;
       color: #374151;
-      text-decoration: none;
-      letter-spacing: 0.04em;
+      text-decoration: none !important;
+      padding: 4px 0 4px 4px;
+      border-left: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
     }
-    .fk-mob-shop-sub a:hover { color: var(--color-primary, #000c5b); }
-    .fk-mob-shop-subhead {
-      font-size: 0.7rem;
+    .fk-mob-acc-panel a:hover { color: var(--color-primary); border-left-color: var(--color-secondary); }
+    .fk-mob-shop-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      margin-bottom: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
       font-weight: 800;
-      color: var(--color-secondary, #71b6c8);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin: 8px 0 4px;
+      color: var(--color-primary);
+      opacity: 0.72;
+      transition: opacity 0.2s ease;
+    }
+    .fk-mob-shop-back:hover,
+    .fk-mob-shop-back:focus-visible {
+      opacity: 1;
+      outline: none;
+    }
+    .fk-mob-shop-back svg { flex-shrink: 0; }
+    .fk-mob-shop-head {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-top: 14px;
+      margin-bottom: 8px;
+    }
+    .fk-mob-bulk {
+      margin-top: 8px;
+      padding-top: 12px;
+      border-top: 1px solid #eef0f4;
+      font-weight: 800 !important;
+      color: var(--color-primary) !important;
     }
 
     .fk-mob-bottom {
@@ -319,142 +496,359 @@
     }
     .fk-mob-bottom__socials svg { width: 18px; height: 18px; }
 
-    /* Custom Slide Animation Classes */
-    .mobile-menu-overlay {
+    .fk-mob-fade {
+      transition: opacity 0.28s ease;
+    }
+
+    /* Alpine x-transition: drawer slides from left */
+    .fk-mob-drawer-enter { transition: transform 0.34s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.28s ease; }
+    .fk-mob-drawer-enter-start { transform: translateX(-100%); opacity: 0.92; }
+    .fk-mob-drawer-enter-end { transform: translateX(0); opacity: 1; }
+    .fk-mob-drawer-leave { transition: transform 0.26s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.22s ease; }
+    .fk-mob-drawer-leave-start { transform: translateX(0); opacity: 1; }
+    .fk-mob-drawer-leave-end { transform: translateX(-100%); opacity: 0.92; }
+
+    /* Mobile mini-cart (teleported) — above nav drawer */
+    .fk-cart-overlay {
       position: fixed;
+      inset: 0;
+      z-index: 10040;
+      background: rgba(0, 0, 0, 0.52);
+      isolation: isolate;
+    }
+    .fk-cart-drawer {
+      position: absolute;
       top: 0;
-      left: 0;
       right: 0;
       bottom: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 200; /* High z-index */
+      width: min(92vw, 420px);
+      max-width: 100%;
+      background: #fff;
+      box-shadow: -12px 0 40px rgba(0, 12, 91, 0.15);
       display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
-    
-    .mobile-menu-panel {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      min-height: 100vh;
-      background-color: #ffffff;
-      z-index: 201;
-      will-change: transform;
+    .fk-cart-drawer-hd {
+      flex-shrink: 0;
+      border-bottom: 1px solid #f3f4f6;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
+    .fk-cart-drawer-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin: 0;
+    }
+    .fk-cart-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.25rem;
+      min-height: 0;
+    }
+    .fk-cart-line {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f3f4f6;
+      text-decoration: none;
+      color: inherit;
+    }
+    .fk-cart-line:last-child { border-bottom: none; }
+    .fk-cart-line img {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #f3f4f6;
+      flex-shrink: 0;
+    }
+    .fk-cart-line-meta { flex: 1; min-width: 0; }
+    .fk-cart-line-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #111;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .fk-cart-line-variant {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .fk-cart-line-price {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 6px;
+      color: var(--color-primary);
+    }
+    .fk-cart-empty {
+      text-align: center;
+      padding: 2rem 0;
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+    .fk-cart-footer {
+      flex-shrink: 0;
+      padding: 1rem 1.25rem 1.25rem;
+      border-top: 1px solid #f3f4f6;
+      background: #fafbff;
+    }
+    .fk-cart-subtotal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      color: var(--color-primary);
+    }
+    .fk-cart-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .fk-cart-btn {
+      display: block;
+      text-align: center;
+      padding: 14px 16px;
+      border-radius: 999px;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .fk-cart-btn--primary {
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+    }
+    .fk-cart-btn--ghost {
+      background: #fff;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+    .fk-cart-btn:hover { opacity: 0.92; }
 
-    /* Transition Utilities */
-    .slide-transition {
-      transition: transform 0.3s ease-in-out !important;
-    }
-    
-    .slide-closed {
-      transform: translateX(-100%) !important;
-    }
-    
-    .slide-open {
-      transform: translateX(0) !important;
-    }
-    
-    .fade-transition {
-      transition: opacity 0.3s linear !important;
-    }
-    
-    .fade-in {
-      opacity: 1 !important;
-    }
-    
-    .fade-out {
-      opacity: 0 !important;
-    }
+    .fk-cart-drawer-enter { transition: transform 0.34s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.26s ease; }
+    .fk-cart-drawer-enter-start { transform: translateX(100%); opacity: 0.9; }
+    .fk-cart-drawer-enter-end { transform: translateX(0); opacity: 1; }
+    .fk-cart-drawer-leave { transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.22s ease; }
+    .fk-cart-drawer-leave-start { transform: translateX(0); opacity: 1; }
+    .fk-cart-drawer-leave-end { transform: translateX(100%); opacity: 0.9; }
   </style>
 
-  <!-- Mobile Menu Drawer (Full Screen, Left Slide) -->
-  <div class="mobile-menu-overlay md:hidden" x-show="mobileMenuOpen" style="display: none;" 
-       x-transition:enter="fade-transition" 
-       x-transition:enter-start="fade-out" 
-       x-transition:enter-end="fade-in" 
-       x-transition:leave="fade-transition" 
-       x-transition:leave-start="fade-in" 
-       x-transition:leave-end="fade-out">
-     
-    <!-- White Background Panel (Full Screen) -->
-    <div class="mobile-menu-panel flex flex-col"
-         x-show="mobileMenuOpen"
-         x-transition:enter="slide-transition" 
-         x-transition:enter-start="slide-closed" 
-         x-transition:enter-end="slide-open" 
-         x-transition:leave="slide-transition" 
-         x-transition:leave-start="slide-open" 
-         x-transition:leave-end="slide-closed">
-         
-         <!-- Header inside Menu -->
-         <div class="flex justify-between items-center p-6 border-b border-gray-100 bg-white">
-            <span style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--color-primary); text-decoration: none;">FITKAAR</span>
+  <template x-teleport="body">
+  <!-- Mobile: 50% left drawer + dimmed backdrop; Shop = sliding sub-panel + accordions -->
+  <div
+    class="fk-mob-overlay md:hidden"
+    x-show="mobileMenuOpen"
+    style="display: none;"
+    x-transition.opacity.duration.280ms
+    @click.self="closeMobileMenu()"
+    @keydown.escape.window="closeMobileMenu()"
+  >
+    <aside
+      class="fk-mob-drawer flex flex-col"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu"
+      @click.stop
+      x-show="mobileMenuOpen"
+      style="display: none;"
+      x-transition:enter="fk-mob-drawer-enter"
+      x-transition:enter-start="fk-mob-drawer-enter-start"
+      x-transition:enter-end="fk-mob-drawer-enter-end"
+      x-transition:leave="fk-mob-drawer-leave"
+      x-transition:leave-start="fk-mob-drawer-leave-start"
+      x-transition:leave-end="fk-mob-drawer-leave-end"
+    >
+      <div class="flex justify-between items-center p-6 bg-white fk-mob-drawer-hd">
+        <span style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--color-primary); text-decoration: none !important;">FITKAAR</span>
+        <button type="button" @click="closeMobileMenu()" class="p-2 -mr-2 hover:opacity-70 transition-opacity" style="color: var(--color-primary);" aria-label="Close menu">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
 
-            <button @click="mobileMenuOpen = false" class="p-2 -mr-2 hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+      <div class="fk-mob-slide flex flex-1 fk-mob-min-h-0" :class="{ 'fk-mob-slide--shop': mobNavPage === 'shop' }">
+        <!-- Panel A: main links -->
+        <div class="fk-mob-slide-panel">
+          <nav class="flex flex-col flex-1 p-6 gap-4 overflow-y-auto fk-mob-min-h-0">
+            <a href="/" class="fk-mob-nav-link" @click="closeMobileMenu()">Home</a>
+            <a href="/pages/process" class="fk-mob-nav-link" @click="closeMobileMenu()">Customise</a>
+
+            <button type="button" class="fk-mob-shop-row" @click="openShopPanel()" aria-label="Shop categories">
+              <span>Shop</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-         </div>
 
-         <!-- Navigation Links (HOME → CUSTOMISE → SHOP → ABOUT → CONTACT) -->
-         <nav class="flex flex-col flex-1 p-6 gap-6 overflow-y-auto bg-white" x-data="{ mobShopOpen: false }">
-            <a href="/" class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors" style="font-family: var(--font-heading); letter-spacing: 1px;">Home</a>
-            <a href="/pages/process" class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors" style="font-family: var(--font-heading); letter-spacing: 1px;">Customise</a>
+            <a href="/pages/about-us" class="fk-mob-nav-link" @click="closeMobileMenu()">About Us</a>
+            <a href="/pages/contact-us" class="fk-mob-nav-link" @click="closeMobileMenu()">Contact</a>
+          </nav>
 
-            <!-- #2 Shop expandable -->
-            <div>
-              <button type="button" class="fk-mob-shop-toggle text-2xl font-bold uppercase text-black hover:text-secondary transition-colors"
-                      :class="{ 'is-open': mobShopOpen }"
-                      @click="mobShopOpen = !mobShopOpen"
-                      style="font-family: var(--font-heading); letter-spacing: 1px;">
-                <span>Shop</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <div class="fk-mob-bottom" style="flex-shrink: 0;">
+            <a href="/account/login" class="fk-mob-bottom__login" @click="closeMobileMenu()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Login / Register
+            </a>
+            <div class="fk-mob-bottom__socials">
+              <a href="https://instagram.com/fitkaarclothing" target="_blank" rel="noopener" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </a>
+              <a href="https://facebook.com/fitkaarclothing" target="_blank" rel="noopener" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href="https://wa.me/919354478146" target="_blank" rel="noopener" aria-label="WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.423-8.452z"/></svg>
+              </a>
+              <a href="https://youtube.com/@fitkaarclothing" target="_blank" rel="noopener" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel B: Shop (slide-in) -->
+        <div class="fk-mob-slide-panel">
+          <div class="fk-mob-shop-scroll flex flex-col p-6 fk-mob-min-h-0" style="padding-top: 1rem;">
+            <button type="button" class="fk-mob-shop-back" @click="backToMainNav()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Back
+            </button>
+            <div class="fk-mob-shop-head">Shop</div>
+
+            <div class="fk-mob-acc">
+              <button type="button" class="fk-mob-acc-trigger" @click="mobAccE = !mobAccE" :aria-expanded="mobAccE">
+                <span>Essentials</span>
+                <span class="fk-mob-acc-icon" aria-hidden="true">+</span>
               </button>
-              <div class="fk-mob-shop-sub" :class="{ 'is-open': mobShopOpen }">
-                <div class="fk-mob-shop-subhead">Essentials</div>
-                <a href="/collections/everyday">Everyday</a>
-                <a href="/collections/your-aesthetic">Your Aesthetic</a>
-                <a href="/collections/basics">Basics</a>
-                <div class="fk-mob-shop-subhead" style="margin-top: 14px;">Themes</div>
-                <a href="/collections/only-at-fitkaar">Only at Fitkaar</a>
-                <a href="/collections/food-and-drinks">Food &amp; Drinks</a>
-                <a href="/collections/sports-and-fitness">Sports &amp; Fitness</a>
-                <a href="/collections/work-and-hobbies">Work &amp; Hobbies</a>
-                <a href="/collections/couples">Couples</a>
-                <a href="/collections/matching">Matching</a>
-                <a href="/collections/pun-intended">Pun Intended</a>
-                <a href="/collections/zodiac-signs">Zodiac Signs</a>
-                <a href="/pages/bulk-orders" style="color: var(--color-primary); font-weight: 800;">Bulk orders →</a>
+              <div class="fk-mob-acc-panel" x-show="mobAccE" x-transition.opacity.duration.220ms style="display: none;">
+                <div class="fk-mob-acc-panel-inner">
+                  <a href="/collections/everyday" @click="closeMobileMenu()">Everyday</a>
+                  <a href="/collections/your-aesthetic" @click="closeMobileMenu()">Your Aesthetic</a>
+                  <a href="/collections/basics" @click="closeMobileMenu()">Basics</a>
+                  <a href="/collections/only-at-fitkaar" @click="closeMobileMenu()">Only At Fitkaar</a>
+                </div>
               </div>
             </div>
 
-            <a href="/pages/about-us" class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors" style="font-family: var(--font-heading); letter-spacing: 1px;">About Us</a>
-            <a href="/pages/contact-us" class="text-2xl font-bold uppercase text-black hover:text-secondary transition-colors" style="font-family: var(--font-heading); letter-spacing: 1px;">Contact</a>
-         </nav>
+            <div class="fk-mob-acc">
+              <button type="button" class="fk-mob-acc-trigger" @click="mobAccT = !mobAccT" :aria-expanded="mobAccT">
+                <span>Collections</span>
+                <span class="fk-mob-acc-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="fk-mob-acc-panel" x-show="mobAccT" x-transition.opacity.duration.220ms style="display: none;">
+                <div class="fk-mob-acc-panel-inner">
+                  <a href="/collections/food-and-drinks" @click="closeMobileMenu()">Food &amp; Drinks</a>
+                  <a href="/collections/sports-and-fitness" @click="closeMobileMenu()">Sports &amp; Fitness</a>
+                  <a href="/collections/work-and-hobbies" @click="closeMobileMenu()">Work &amp; Hobbies</a>
+                  <a href="/collections/pun-intended" @click="closeMobileMenu()">Pun Intended</a>
+                  <a href="/collections/zodiac-signs" @click="closeMobileMenu()">Zodiac Signs</a>
+                </div>
+              </div>
+            </div>
 
-         <!-- #2 Bottom: Login + Social icons -->
-         <div class="fk-mob-bottom">
-           <a href="/account/login" class="fk-mob-bottom__login">
-             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-             Login / Register
-           </a>
-           <div class="fk-mob-bottom__socials">
-             <a href="https://instagram.com/fitkaarclothing" target="_blank" rel="noopener" aria-label="Instagram">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-             </a>
-             <a href="https://facebook.com/fitkaarclothing" target="_blank" rel="noopener" aria-label="Facebook">
-               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-             </a>
-             <a href="https://wa.me/919354478146" target="_blank" rel="noopener" aria-label="WhatsApp">
-               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.423-8.452z"/></svg>
-             </a>
-             <a href="https://youtube.com/@fitkaarclothing" target="_blank" rel="noopener" aria-label="YouTube">
-               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-             </a>
-           </div>
-         </div>
-    </div>
+            <div class="fk-mob-acc">
+              <button type="button" class="fk-mob-acc-trigger" @click="mobAccV = !mobAccV" :aria-expanded="mobAccV">
+                <span>Fav People</span>
+                <span class="fk-mob-acc-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="fk-mob-acc-panel" x-show="mobAccV" x-transition.opacity.duration.220ms style="display: none;">
+                <div class="fk-mob-acc-panel-inner">
+                  <a href="/collections/matching" @click="closeMobileMenu()">Matching</a>
+                  <a href="/collections/couples" @click="closeMobileMenu()">Couples</a>
+                  <a href="/pages/bulk-orders" class="fk-mob-bulk" @click="closeMobileMenu()">Bulk Orders</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
+  </template>
+
+  <template x-teleport="body">
+  <div
+    class="fk-cart-overlay md:hidden"
+    x-show="cartDrawerOpen"
+    style="display: none;"
+    x-transition.opacity.duration.280ms
+    @click.self="closeCartDrawer()"
+    @keydown.escape.window="closeCartDrawer()"
+  >
+    <aside
+      class="fk-cart-drawer flex flex-col"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Cart"
+      @click.stop
+      x-show="cartDrawerOpen"
+      style="display: none;"
+      x-transition:enter="fk-cart-drawer-enter"
+      x-transition:enter-start="fk-cart-drawer-enter-start"
+      x-transition:enter-end="fk-cart-drawer-enter-end"
+      x-transition:leave="fk-cart-drawer-leave"
+      x-transition:leave-start="fk-cart-drawer-leave-start"
+      x-transition:leave-end="fk-cart-drawer-leave-end"
+    >
+      <div class="fk-cart-drawer-hd">
+        <h2 class="fk-cart-drawer-title">Your cart</h2>
+        <button type="button" class="p-2 -mr-2 hover:opacity-70 transition-opacity" style="color: var(--color-primary);" @click="closeCartDrawer()" aria-label="Close cart">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="fk-cart-drawer-body">
+        <p x-show="cartLoading" x-cloak class="fk-cart-empty" style="padding: 2rem;">Loading…</p>
+        <p x-show="!cartLoading && cartMini && cartMini.item_count === 0" x-cloak class="fk-cart-empty">Your cart is empty.</p>
+        <div x-show="!cartLoading && cartMini && cartMini.item_count > 0" x-cloak>
+          <template x-for="(item, idx) in cartMini.items" :key="item.key || idx">
+            <a :href="item.url" class="fk-cart-line" @click="closeCartDrawer()">
+              <img :src="(item.featured_image && item.featured_image.url) ? item.featured_image.url : (item.image || '')" :alt="item.product_title" width="72" height="72" loading="lazy">
+              <div class="fk-cart-line-meta">
+                <span class="fk-cart-line-title" x-text="item.product_title"></span>
+                <span class="fk-cart-line-variant" x-show="item.variant_title && item.variant_title !== 'Default Title'" x-text="item.variant_title"></span>
+                <div class="fk-cart-line-price">
+                  <span x-text="'Qty ' + item.quantity + ' · '"></span>
+                  <span x-text="formatCartMoney(item.final_line_price)"></span>
+                </div>
+              </div>
+            </a>
+          </template>
+        </div>
+      </div>
+
+      <div class="fk-cart-footer" x-show="!cartLoading && cartMini && cartMini.item_count > 0" style="display: none;">
+        <div class="fk-cart-subtotal">
+          <span>Subtotal</span>
+          <span x-text="cartMini ? formatCartMoney(cartMini.total_price) : ''"></span>
+        </div>
+        <div class="fk-cart-actions">
+          <a href="{{ routes.cart_url }}" class="fk-cart-btn fk-cart-btn--ghost" @click="closeCartDrawer()">View full cart</a>
+          <a href="/checkout" class="fk-cart-btn fk-cart-btn--primary">Checkout</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+  </template>
 </header>

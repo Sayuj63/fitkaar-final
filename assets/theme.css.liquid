@@ -192,9 +192,9 @@ img, svg {
   letter-spacing: 1px;
 }
 
-/* Hero */
+/* Hero — desktop defaults; mobile overrides below so aspect-ratio / section CSS wins */
 .hero-slideshow {
-  height: 90vh; /* Increased height */
+  height: 90vh;
   min-height: 700px;
   background: #000;
 }
@@ -309,8 +309,11 @@ svg.placeholder-svg {
 
 /* Mobile specific fixes */
 @media (max-width: 767px) {
+  /* Let hero-slideshow section control height (aspect-ratio). Avoid 700px min-height + fixed height causing huge letterboxing with global styles. */
   .hero-slideshow {
-    height: 500px;
+    height: auto;
+    min-height: 0;
+    max-height: none;
   }
   .hidden { display: none; }
   

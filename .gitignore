@@ -4,7 +4,7 @@ node_modules
 .shopify
 
 # Local-only references (PDFs, oversized videos) — not part of the theme
-.references/
+
 Website Changes*.pdf
 fitkaar changes*.pdf
 *.tmp

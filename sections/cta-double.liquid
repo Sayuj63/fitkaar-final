@@ -31,7 +31,7 @@
 }
 {% endschema %}
 
-<div class="container py-10">
+<div class="container fk-cta-double-wrap">
   <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
     <!-- Customize Card -->
     <a href="{{ section.settings.link_1 | default: '/pages/process' }}" class="cta-card cta-card-customise">
@@ -54,6 +54,18 @@
 </div>
 
 <style>
+/* Tighter vertical spacing on mobile — less white gap between sections */
+.fk-cta-double-wrap {
+  padding-top: 1rem;
+  padding-bottom: 1.5rem;
+}
+@media (min-width: 768px) {
+  .fk-cta-double-wrap {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+}
+
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 20px rgba(0, 12, 91, 0.3);

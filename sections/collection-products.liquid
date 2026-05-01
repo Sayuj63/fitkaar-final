@@ -792,6 +792,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
+    align-items: start;
   }
 
   .filter-group details {
@@ -1081,7 +1082,17 @@
               {%- if filter_label_lower contains 'availab' or filter_label_lower contains 'stock' -%}
                 {%- continue -%}
               {%- endif -%}
-              <div class="filter-group">
+              {%- assign filter_order = 50 -%}
+              {%- if filter.type == 'price_range' -%}
+                {%- assign filter_order = 1 -%}
+              {%- elsif filter_label_lower contains 'gender' or filter_label_lower contains 'men' or filter_label_lower contains 'women' -%}
+                {%- assign filter_order = 2 -%}
+              {%- elsif filter_label_lower contains 'type' or filter_label_lower contains 'apparel' or filter_label_lower contains 'product' or filter_label_lower contains 'category' -%}
+                {%- assign filter_order = 3 -%}
+              {%- elsif filter_label_lower contains 'color' or filter_label_lower contains 'colour' -%}
+                {%- assign filter_order = 4 -%}
+              {%- endif -%}
+              <div class="filter-group" style="order: {{ filter_order }}">
                 <details {% if filter.active_values.size > 0 or filter.type == 'price_range' and filter.min_value.value or filter.max_value.value %}open{% endif %}>
                   <summary>{{ filter.label }}</summary>
 
@@ -1330,23 +1341,22 @@
                     <div class="product-card-types" aria-label="Available apparel types">
                       {%- for value in type_option.values -%}
                         {%- assign value_lower = value | downcase | strip -%}
-                        {%- assign icon_url = '' -%}
-                        {%- case value_lower -%}
-                          {%- when 'hoodie' -%}
-                            {%- assign icon_url = 'HOODIE.png' | asset_url -%}
-                          {%- when 'boxy vest', 'vest' -%}
-                            {%- assign icon_url = 'BOXY VEST.png' | asset_url -%}
-                          {%- when 'regular tee', 't-shirt', 'tshirt', 'tee' -%}
-                            {%- assign icon_url = 'REGULAR TSHIRT.png' | asset_url -%}
-                          {%- when 'sweatshirt' -%}
-                            {%- assign icon_url = 'SWEATSHIRT.png' | asset_url -%}
-                          {%- when 'oversized tee', 'oversized' -%}
-                            {%- assign icon_url = 'OVERSIZED TEE.png' | asset_url -%}
-                          {%- when 'cropped tee', 'cropped' -%}
-                            {%- assign icon_url = 'CROPPED TEE.png' | asset_url -%}
-                          {%- else -%}
-                            {%- assign icon_url = 'REGULAR TSHIRT.png' | asset_url -%}
-                        {%- endcase -%}
+                        {%- assign icon_url = 'REGULAR TSHIRT.png' | asset_url -%}
+                        {%- if value_lower contains 'hoodie' -%}
+                          {%- assign icon_url = 'HOODIE.png' | asset_url -%}
+                        {%- elsif value_lower contains 'boxy' or value_lower == 'vest' -%}
+                          {%- assign icon_url = 'BOXY VEST.png' | asset_url -%}
+                        {%- elsif value_lower contains 'sweatshirt' -%}
+                          {%- assign icon_url = 'SWEATSHIRT.png' | asset_url -%}
+                        {%- elsif value_lower contains 'cropped' -%}
+                          {%- assign icon_url = 'CROPPED TEE.png' | asset_url -%}
+                        {%- elsif value_lower contains 'oversized' -%}
+                          {%- assign icon_url = 'OVERSIZED TEE.png' | asset_url -%}
+                        {%- elsif value_lower contains 'regular' -%}
+                          {%- assign icon_url = 'REGULAR TSHIRT.png' | asset_url -%}
+                        {%- elsif value_lower contains 'tshirt' or value_lower contains 't-shirt' or value_lower contains 'tee' -%}
+                          {%- assign icon_url = 'REGULAR TSHIRT.png' | asset_url -%}
+                        {%- endif -%}
                         {%- assign hide_mobile = '' -%}
                         {%- if pcidx >= mobile_budget -%}{%- assign hide_mobile = ' pc-hide-mobile' -%}{%- endif -%}
                         <span class="product-card-type{{ hide_mobile }}" title="{{ value | escape }}" aria-label="{{ value | escape }}">

@@ -344,7 +344,22 @@
   .variant-section {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Space for colour name labels (::after sits below swatches) so SIZE row doesn't overlap */
+  .variant-section:has(.color-swatches) {
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+  }
+  .color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 28px;
+    margin-bottom: 4px;
   }
 
   .variant-label {
@@ -354,12 +369,6 @@
     text-transform: uppercase;
     color: #000;
     margin-bottom: 8px;
-  }
-
-  .color-swatches {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
   }
 
   .color-swatch {
@@ -445,9 +454,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 8px;
-    padding: 16px 12px;
+    padding: 14px 10px 12px;
     border: 2px solid #ddd;
     border-radius: 12px;
     background: #fff;
@@ -455,6 +464,8 @@
     transition: all 0.3s ease;
     text-align: center;
     width: 100%;
+    min-height: 104px;
+    box-sizing: border-box;
   }
 
   .type-option:hover {
@@ -469,22 +480,24 @@
   }
 
   .type-icon {
-    width: 32px;
-    height: 32px;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .type-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 42px;
+    height: 42px;
     color: currentColor;
   }
 
   .type-icon-img {
-    width: 28px;
-    height: 28px;
+    width: 52px;
+    height: 52px;
+    max-width: 85%;
+    max-height: 56%;
     object-fit: contain;
   }
 
@@ -496,39 +509,40 @@
     letter-spacing: 0.5px;
   }
 
-  /* Mobile: apparel types in a single horizontal row that shrinks to fit
-     the viewport, no matter how many options exist. Flex with flex:1 1 0
-     and min-width:0 lets each card take an equal share and shrink below
-     its content. Placed AFTER the base rules so these overrides win. */
+  /* Mobile: 3-column square-ish tiles (readable icons); wraps to more rows */
   @media (max-width: 768px) {
     .type-options {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 6px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
     }
     .type-option {
-      flex: 1 1 0;
       min-width: 0;
-      width: auto;
-      padding: 8px 4px;
-      gap: 4px;
-      border-radius: 8px;
+      width: 100%;
+      aspect-ratio: 1;
+      max-height: none;
+      padding: 10px 6px;
+      gap: 6px;
+      border-radius: 10px;
       border-width: 1.5px;
+      justify-content: center;
     }
     .type-icon {
-      width: 22px;
-      height: 22px;
+      width: 44px;
+      height: 44px;
     }
     .type-icon svg {
-      width: 18px;
-      height: 18px;
+      width: 36px;
+      height: 36px;
     }
     .type-icon-img {
-      width: 20px;
-      height: 20px;
+      width: 40px;
+      height: 40px;
+      max-width: 88%;
+      max-height: 58%;
     }
     .type-name {
-      font-size: 0.55rem;
+      font-size: 0.58rem;
       letter-spacing: 0.02em;
       line-height: 1.15;
       word-break: break-word;
@@ -536,11 +550,11 @@
   }
 
   @media (max-width: 380px) {
-    .type-options { gap: 4px; }
-    .type-option { padding: 6px 3px; border-radius: 6px; }
-    .type-icon { width: 18px; height: 18px; }
-    .type-icon-img { width: 16px; height: 16px; }
-    .type-name { font-size: 0.5rem; }
+    .type-options { gap: 6px; }
+    .type-option { padding: 8px 4px; border-radius: 8px; }
+    .type-icon { width: 38px; height: 38px; }
+    .type-icon-img { width: 34px; height: 34px; max-height: 56%; }
+    .type-name { font-size: 0.52rem; }
   }
 
   /* Pincode Checker */
@@ -968,6 +982,16 @@
   .details-section {
     border-top: 1px solid #e0e0e0;
     padding-top: 32px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .details-section .accordion-content,
+  .details-section .accordion-content ul {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .accordion-item {
@@ -1180,13 +1204,13 @@
 
     .variant-section {
       width: 100%;
-      gap: 10px;
+      gap: 18px;
     }
 
     .variant-label {
       justify-content: flex-start;
       text-align: left;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     /* #37b: sizing-guide row now inline with size label, like PC */
@@ -1208,18 +1232,6 @@
     .color-swatches {
       justify-content: left;
     }
-
-    /* #37c: smaller apparel boxes so more fit per row */
-    .type-options {
-      gap: 5px;
-    }
-    .type-option {
-      padding: 6px 3px !important;
-      gap: 3px !important;
-    }
-    .type-icon { width: 20px !important; height: 20px !important; }
-    .type-icon-img { width: 18px !important; height: 18px !important; }
-    .type-name { font-size: 0.5rem !important; }
 
     /* #26: Share + Wishlist in the SAME row on mobile (was column) */
     .secondary-actions {
@@ -1554,23 +1566,24 @@
                   data-type-name="{{ value }}"
                 >
                   <div class="type-icon">
-                    {%- comment -%} #40 + #60: switched to the new white-on-transparent icons. CSS filter:brightness(0) makes them black on the default white card; filter is removed on .active so they show as white on the navy selection. {%- endcomment -%}
-                    {% case value_lower %}
-                      {% when 'hoodie' %}
-                        <img src="{{ 'HOODIE.png' | asset_url }}" alt="Hoodie" class="type-icon-img">
-                      {% when 'boxy vest' or 'vest' %}
-                        <img src="{{ 'BOXY VEST.png' | asset_url }}" alt="Boxy Vest" class="type-icon-img">
-                      {% when 'regular tee' or 't-shirt' or 'tshirt' %}
-                        <img src="{{ 'REGULAR TSHIRT.png' | asset_url }}" alt="Regular Tee" class="type-icon-img">
-                      {% when 'sweatshirt' %}
-                        <img src="{{ 'SWEATSHIRT.png' | asset_url }}" alt="Sweatshirt" class="type-icon-img">
-                      {% when 'oversized tee' or 'oversized' %}
-                        <img src="{{ 'OVERSIZED TEE.png' | asset_url }}" alt="Oversized Tee" class="type-icon-img">
-                      {% when 'cropped tee' or 'cropped' %}
-                        <img src="{{ 'CROPPED TEE.png' | asset_url }}" alt="Cropped Tee" class="type-icon-img">
-                      {% else %}
-                        <img src="{{ 'REGULAR TSHIRT.png' | asset_url }}" alt="{{ value }}" class="type-icon-img">
-                    {% endcase %}
+                    {%- comment -%} Icons: order matters — oversized/cropped before generic "tee". Names like "Regular Tshirt" / "Oversized Tshirt" use substring checks. {%- endcomment -%}
+                    {%- if value_lower contains 'hoodie' -%}
+                      <img src="{{ 'HOODIE.png' | asset_url }}" alt="" class="type-icon-img">
+                    {%- elsif value_lower contains 'boxy' or value_lower == 'vest' -%}
+                      <img src="{{ 'BOXY VEST.png' | asset_url }}" alt="" class="type-icon-img">
+                    {%- elsif value_lower contains 'sweatshirt' -%}
+                      <img src="{{ 'SWEATSHIRT.png' | asset_url }}" alt="" class="type-icon-img">
+                    {%- elsif value_lower contains 'cropped' -%}
+                      <img src="{{ 'CROPPED TEE.png' | asset_url }}" alt="" class="type-icon-img">
+                    {%- elsif value_lower contains 'oversized' -%}
+                      <img src="{{ 'OVERSIZED TEE.png' | asset_url }}" alt="" class="type-icon-img">
+                    {%- elsif value_lower contains 'regular' -%}
+                      <img src="{{ 'REGULAR TSHIRT.png' | asset_url }}" alt="" class="type-icon-img">
+                    {%- elsif value_lower contains 'tshirt' or value_lower contains 't-shirt' or value_lower contains 'tee' -%}
+                      <img src="{{ 'REGULAR TSHIRT.png' | asset_url }}" alt="" class="type-icon-img">
+                    {%- else -%}
+                      <img src="{{ 'REGULAR TSHIRT.png' | asset_url }}" alt="{{ value | escape }}" class="type-icon-img">
+                    {%- endif -%}
                   </div>
                   <span class="type-name">{{ value }}</span>
                 </div>
@@ -1582,8 +1595,8 @@
         {% elsif option_name_lower contains 'size' %}
           <div class="variant-section">
             <div class="variant-label size-label-row">
-              <span>{{ option.name }}: <span x-text="selectedSize">{% case option.position %}{% when 1 %}{{ default_variant.option1 }}{% when 2 %}{{ default_variant.option2 }}{% when 3 %}{{ default_variant.option3 }}{% endcase %}</span></span>
-              <button class="sizing-guide-link" @click="sizeChartOpen = true">
+              <span class="size-heading-text" x-text="sizeOptionName + ': ' + (selectedSize != null && selectedSize !== '' ? selectedSize : '')">{{ option.name }}: {% case option.position %}{% when 1 %}{{ default_variant.option1 }}{% when 2 %}{{ default_variant.option2 }}{% when 3 %}{{ default_variant.option3 }}{% endcase %}</span>
+              <button type="button" class="sizing-guide-link" @click="sizeChartOpen = true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                   <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
@@ -1593,19 +1606,35 @@
               </button>
             </div>
             <div class="size-options">
-              {%- comment -%} #27: Force order S M L XL XXL XXXL — XS skipped (coming later) {%- endcomment -%}
-              {%- assign size_order = 'S,M,L,XL,XXL,XXXL,FREE SIZE,FREE' | split: ',' -%}
+              {%- comment -%} Display order + XS; any extra sizes (e.g. custom) appended. Availability still from variants (Alpine). {%- endcomment -%}
+              {%- assign size_order = 'XS,S,M,L,XL,XXL,XXXL,4XL,5XL,FREE SIZE,FREE' | split: ',' -%}
               {%- for ordered in size_order -%}
                 {%- for value in option.values -%}
                   {%- if value == ordered -%}
                     <button
+                      type="button"
                       class="size-btn"
-                      :class="{ 'active': selectedSize === '{{ value }}' }"
-                      x-show="isSizeAvailable('{{ value }}')"
-                      @click="selectSize('{{ value }}')"
+                      :class="{ 'active': sizeMatchesSelected({{ value | json }}) }"
+                      x-show="isSizeAvailable({{ value | json }})"
+                      @click.prevent.stop="selectSize({{ value | json }})"
                     >{{ value }}</button>
                   {%- endif -%}
                 {%- endfor -%}
+              {%- endfor -%}
+              {%- for value in option.values -%}
+                {%- assign listed = false -%}
+                {%- for ordered in size_order -%}
+                  {%- if ordered == value -%}{%- assign listed = true -%}{%- endif -%}
+                {%- endfor -%}
+                {%- unless listed -%}
+                  <button
+                    type="button"
+                    class="size-btn"
+                    :class="{ 'active': sizeMatchesSelected({{ value | json }}) }"
+                    x-show="isSizeAvailable({{ value | json }})"
+                    @click.prevent.stop="selectSize({{ value | json }})"
+                  >{{ value }}</button>
+                {%- endunless -%}
               {%- endfor -%}
             </div>
           </div>
@@ -1671,7 +1700,7 @@
                 <select :value="size" @change="setUnitSize(idx, $event.target.value)">
                   {% if size_opt %}
                     {% for value in size_opt.values %}
-                      <option value="{{ value }}" :hidden="!isSizeAvailable('{{ value }}')">{{ value }}</option>
+                      <option value="{{ value | escape }}" :disabled="!isSizeAvailable({{ value | json }})">{{ value | escape }}</option>
                     {% endfor %}
                   {% endif %}
                 </select>
@@ -1738,7 +1767,7 @@
             </svg>
             Customise
           </a>
-          <p class="customise-note">Didn't find what you're looking for? We can design something just for YOU at no extra cost!</p>
+          <p class="customise-note">Anything on a tee? We can design something just for YOU at no extra cost!</p>
         {% endif %}
 
         {%- comment -%} #25 NEW ORDER: Offers + Pincode now appear AFTER all action buttons {%- endcomment -%}
@@ -1766,7 +1795,7 @@
         <div class="pincode-section">
           <div class="pincode-title">Pincode Checker</div>
           <p class="pincode-description">
-            Use this to check whether delivery is available at your pincode. Please note that delivery may not be available in select or smaller areas. This tool is only to check serviceability and does not provide delivery date estimates.
+            Please use this to check whether delivery is available at your pincode.
           </p>
           <div class="pincode-input-group">
             <input
@@ -2179,13 +2208,13 @@
                     {%- for t in rct_list limit: 2 -%}
                       {%- assign t_lower = t | downcase -%}
                       {%- assign icon_src = 'REGULAR TSHIRT.png' -%}
-                      {%- case t_lower -%}
-                        {%- when 'hoodie' -%}{%- assign icon_src = 'HOODIE.png' -%}
-                        {%- when 'sweatshirt' -%}{%- assign icon_src = 'SWEATSHIRT.png' -%}
-                        {%- when 'boxy vest' -%}{%- assign icon_src = 'BOXY VEST.png' -%}
-                        {%- when 'oversized tee' -%}{%- assign icon_src = 'OVERSIZED TEE.png' -%}
-                        {%- when 'cropped tee' -%}{%- assign icon_src = 'CROPPED TEE.png' -%}
-                      {%- endcase -%}
+                      {%- if t_lower contains 'hoodie' -%}{%- assign icon_src = 'HOODIE.png' -%}
+                      {%- elsif t_lower contains 'sweatshirt' -%}{%- assign icon_src = 'SWEATSHIRT.png' -%}
+                      {%- elsif t_lower contains 'boxy' or t_lower == 'vest' -%}{%- assign icon_src = 'BOXY VEST.png' -%}
+                      {%- elsif t_lower contains 'cropped' -%}{%- assign icon_src = 'CROPPED TEE.png' -%}
+                      {%- elsif t_lower contains 'oversized' -%}{%- assign icon_src = 'OVERSIZED TEE.png' -%}
+                      {%- elsif t_lower contains 'regular' or t_lower contains 'tee' or t_lower contains 'tshirt' or t_lower contains 't-shirt' -%}{%- assign icon_src = 'REGULAR TSHIRT.png' -%}
+                      {%- endif -%}
                       <img src="{{ icon_src | asset_url }}" alt="{{ t }}" class="pdp-card__apparel-icon" title="{{ t }}">
                     {%- endfor -%}
                     {%- for c in rcc_list limit: 4 -%}
@@ -2359,14 +2388,11 @@
       // Computed: Size chart image for the currently selected type
       get sizeChartImage() {
         if (!this.selectedType) return null;
-        console.log('Looking for size chart. Type:', this.selectedType);
-        console.log('All image alts:', this.allImages.map(img => img.alt));
         const found = this.allImages.find(img => {
           if (!img.alt) return false;
           const alt = img.alt.toLowerCase();
           return alt.includes('size chart') && alt.includes(this.selectedType.toLowerCase());
         }) || null;
-        console.log('Found:', found);
         return found;
       },
 
@@ -2426,6 +2452,7 @@
         {%- endcase -%}
       {%- endif -%}
 
+      sizeOptionName: {% if size_opt %}{{ size_opt.name | json }}{% else %}'Size'{% endif %},
       selectedColor: {{ default_color | default: '' | json }},
       selectedSize: {{ default_size | default: '' | json }},
       selectedType: {{ default_type | default: '' | json }},
@@ -2441,6 +2468,9 @@
       unitSizes: [],
 
       initUnitSizes() {
+        this.selectedColor = this.normOpt(this.selectedColor);
+        this.selectedSize = this.normOpt(this.selectedSize);
+        this.selectedType = this.normOpt(this.selectedType);
         this.unitSizes = [this.selectedSize];
         this.$watch('quantity', (newQty) => {
           const qty = Math.max(1, parseInt(newQty, 10) || 1);
@@ -2466,12 +2496,22 @@
       },
 
       findVariantIdForSize(size) {
-        const variant = this.variants.find(v => {
-          const options = [v.option1, v.option2, v.option3].filter(Boolean);
-          const selected = [this.selectedColor, size, this.selectedType].filter(Boolean);
-          return selected.every(sel => options.includes(sel));
+        const want = this.normOpt(size);
+        const pick = (availOnly) => this.variants.find(v => {
+          if (availOnly && !v.available) return false;
+          {% if color_opt %}
+          if (this.normOpt(v.option{{ color_opt.position }}) !== this.normOpt(this.selectedColor)) return false;
+          {% endif %}
+          {% if type_opt %}
+          if (this.normOpt(v.option{{ type_opt.position }}) !== this.normOpt(this.selectedType)) return false;
+          {% endif %}
+          {% if size_opt %}
+          return this.normOpt(v.option{{ size_opt.position }}) === want;
+          {% endif %}
+          return false;
         });
-        return variant ? variant.id : null;
+        const hit = pick(true) || pick(false);
+        return hit ? hit.id : null;
       },
 
       buildCartItems() {
@@ -2657,47 +2697,81 @@
         }
       },
 
-      // Available colours for the currently selected type
+      /**
+       * Availability uses real Shopify option positions (option1/2/3), not a fixed [color,size,type] order.
+       * Also supports products with no Type option (selectedType empty).
+       */
       get availableColorsForType() {
-        if (!this.selectedType) return [];
+        {% if color_opt %}
         const colors = new Set();
         this.variants.forEach(v => {
-          const opts = [v.option1, v.option2, v.option3];
-          if (opts.includes(this.selectedType) && v.available) {
-            // Find the colour option value
-            {% if color_opt %}
-              {% for cv in color_opt.values %}
-                if (opts.includes('{{ cv }}')) colors.add('{{ cv }}');
-              {% endfor %}
-            {% endif %}
-          }
+          if (!v.available) return;
+          {% if type_opt %}
+          if (this.normOpt(v.option{{ type_opt.position }}) !== this.normOpt(this.selectedType)) return;
+          {% endif %}
+          {% if size_opt %}
+          if (this.normOpt(v.option{{ size_opt.position }}) !== this.normOpt(this.selectedSize)) return;
+          {% endif %}
+          const c = v.option{{ color_opt.position }};
+          if (c) colors.add(c);
         });
         return Array.from(colors);
+        {% else %}
+        return [];
+        {% endif %}
       },
 
       isColorAvailable(color) {
-        return this.availableColorsForType.includes(color);
+        const n = this.normOpt(color);
+        return this.availableColorsForType.some(c => this.normOpt(c) === n);
       },
 
-      // Available sizes for the currently selected type
       get availableSizesForType() {
-        if (!this.selectedType) return [];
+        {% if size_opt %}
         const sizes = new Set();
         this.variants.forEach(v => {
-          const opts = [v.option1, v.option2, v.option3];
-          if (!opts.includes(this.selectedType)) return;
           if (!v.available) return;
-          {% if size_opt %}
-            {% for sv in size_opt.values %}
-              if (opts.includes({{ sv | json }})) sizes.add({{ sv | json }});
-            {% endfor %}
+          {% if type_opt %}
+          if (this.normOpt(v.option{{ type_opt.position }}) !== this.normOpt(this.selectedType)) return;
           {% endif %}
+          {% if color_opt %}
+          if (this.normOpt(v.option{{ color_opt.position }}) !== this.normOpt(this.selectedColor)) return;
+          {% endif %}
+          const sz = v.option{{ size_opt.position }};
+          if (sz) sizes.add(sz);
         });
         return Array.from(sizes);
+        {% else %}
+        return [];
+        {% endif %}
       },
 
       isSizeAvailable(size) {
-        return this.availableSizesForType.includes(size);
+        const n = this.normOpt(size);
+        return this.availableSizesForType.some(s => this.normOpt(s) === n);
+      },
+
+      /** Trim / normalize option strings so "XL " === "XL" and clicks match Shopify JSON */
+      normOpt(val) {
+        if (val === undefined || val === null) return '';
+        return String(val).trim();
+      },
+
+      sizeMatchesSelected(val) {
+        return this.normOpt(this.selectedSize) === this.normOpt(val);
+      },
+
+      variantMatchesSelections(v) {
+        {% if color_opt %}
+        if (this.normOpt(v.option{{ color_opt.position }}) !== this.normOpt(this.selectedColor)) return false;
+        {% endif %}
+        {% if size_opt %}
+        if (this.normOpt(v.option{{ size_opt.position }}) !== this.normOpt(this.selectedSize)) return false;
+        {% endif %}
+        {% if type_opt %}
+        if (this.normOpt(v.option{{ type_opt.position }}) !== this.normOpt(this.selectedType)) return false;
+        {% endif %}
+        return true;
       },
 
       // Current variant price getter
@@ -2725,7 +2799,13 @@
         // 2. JUMP & DISSOLVE in next frame
         requestAnimationFrame(() => {
           this.selectedColor = color;
+          if (!this.availableSizesForType.some(s => this.normOpt(s) === this.normOpt(this.selectedSize))) {
+            this.selectedSize = this.normOpt(this.availableSizesForType[0]) || this.selectedSize;
+          }
           this.updateVariant();
+          if (this.quantity > 1) {
+            this.unitSizes = Array.from({ length: this.quantity }, () => this.selectedSize);
+          }
 
           // Reset to first slide since visibleImages will now show filtered results
           this.currentSlide = 0;
@@ -2746,7 +2826,7 @@
       },
 
       selectSize(size) {
-        this.selectedSize = size;
+        this.selectedSize = this.normOpt(size);
         this.updateVariant();
       },
 
@@ -2765,16 +2845,19 @@
           this.selectedType = type;
 
           // Auto-select first available colour if current colour isn't available for this type
-          if (!this.availableColorsForType.includes(this.selectedColor)) {
-            this.selectedColor = this.availableColorsForType[0] || this.selectedColor;
+          if (!this.availableColorsForType.some(c => this.normOpt(c) === this.normOpt(this.selectedColor))) {
+            this.selectedColor = this.normOpt(this.availableColorsForType[0]) || this.selectedColor;
           }
 
           // Auto-select first available size if current size isn't available for this type
-          if (!this.availableSizesForType.includes(this.selectedSize)) {
-            this.selectedSize = this.availableSizesForType[0] || this.selectedSize;
+          if (!this.availableSizesForType.some(s => this.normOpt(s) === this.normOpt(this.selectedSize))) {
+            this.selectedSize = this.normOpt(this.availableSizesForType[0]) || this.selectedSize;
           }
 
           this.updateVariant();
+          if (this.quantity > 1) {
+            this.unitSizes = Array.from({ length: this.quantity }, () => this.selectedSize);
+          }
 
           // Reset to first slide since visibleImages will now show filtered results
           this.currentSlide = 0;
@@ -2795,14 +2878,22 @@
       },
 
       updateVariant() {
-        const variant = this.variants.find(v => {
-          const options = [v.option1, v.option2, v.option3].filter(Boolean);
-          const selected = [this.selectedColor, this.selectedSize, this.selectedType].filter(Boolean);
-          return selected.every(sel => options.includes(sel));
-        });
-
+        let variant = this.variants.find(v => this.variantMatchesSelections(v) && v.available)
+          || this.variants.find(v => this.variantMatchesSelections(v));
+        if (!variant) {
+          variant = this.variants.find(v => v.available);
+        }
         if (variant) {
           this.selectedVariantId = variant.id;
+          {% if color_opt %}
+          this.selectedColor = this.normOpt(variant.option{{ color_opt.position }});
+          {% endif %}
+          {% if size_opt %}
+          this.selectedSize = this.normOpt(variant.option{{ size_opt.position }});
+          {% endif %}
+          {% if type_opt %}
+          this.selectedType = this.normOpt(variant.option{{ type_opt.position }});
+          {% endif %}
           window.history.replaceState({}, '', `${this.productUrl}?variant=${variant.id}`);
         }
       },

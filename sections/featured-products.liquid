@@ -281,14 +281,14 @@
                       {%- for t in type_list limit: 3 -%}
                         {%- assign t_lower = t | downcase -%}
                         {%- assign icon_src = 'REGULAR TSHIRT.png' -%}
-                        {%- case t_lower -%}
-                          {%- when 'hoodie' -%}{%- assign icon_src = 'HOODIE.png' -%}
-                          {%- when 'sweatshirt' -%}{%- assign icon_src = 'SWEATSHIRT.png' -%}
-                          {%- when 'boxy vest' -%}{%- assign icon_src = 'BOXY VEST.png' -%}
-                          {%- when 'oversized tee' -%}{%- assign icon_src = 'OVERSIZED TEE.png' -%}
-                          {%- when 'cropped tee' -%}{%- assign icon_src = 'CROPPED TEE.png' -%}
-                          {%- else -%}{%- assign icon_src = 'REGULAR TSHIRT.png' -%}
-                        {%- endcase -%}
+                        {%- if t_lower contains 'hoodie' -%}{%- assign icon_src = 'HOODIE.png' -%}
+                        {%- elsif t_lower contains 'sweatshirt' -%}{%- assign icon_src = 'SWEATSHIRT.png' -%}
+                        {%- elsif t_lower contains 'boxy' or t_lower == 'vest' -%}{%- assign icon_src = 'BOXY VEST.png' -%}
+                        {%- elsif t_lower contains 'cropped' -%}{%- assign icon_src = 'CROPPED TEE.png' -%}
+                        {%- elsif t_lower contains 'oversized' -%}{%- assign icon_src = 'OVERSIZED TEE.png' -%}
+                        {%- elsif t_lower contains 'regular' -%}{%- assign icon_src = 'REGULAR TSHIRT.png' -%}
+                        {%- elsif t_lower contains 'tshirt' or t_lower contains 't-shirt' or t_lower contains 'tee' -%}{%- assign icon_src = 'REGULAR TSHIRT.png' -%}
+                        {%- endif -%}
                         <img src="{{ icon_src | asset_url }}" alt="{{ t }}" class="bestseller-apparel-icon" title="{{ t }}">
                       {%- endfor -%}
                     </span>

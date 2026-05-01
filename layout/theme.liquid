@@ -48,39 +48,46 @@
       <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
     </ul>
 
-    <!-- #16: Search overlay -->
+    <!-- #16: Search overlay — right drawer (mobile + desktop) -->
     <div class="fk-search-overlay" id="fkSearchOverlay" hidden>
-      <div class="fk-search-panel">
-        <button type="button" class="fk-search-close" aria-label="Close search" onclick="window.__fkCloseSearch && window.__fkCloseSearch()">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <form action="/search" method="get" class="fk-search-form">
-          <svg class="fk-search-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <input
-            type="search"
-            name="q"
-            id="fkSearchInput"
-            placeholder="Search for sweatshirts, hoodies, tees…"
-            autocomplete="off"
-            spellcheck="false"
-          >
-          <input type="hidden" name="type" value="product">
-        </form>
-
-        <div class="fk-search-section">
-          <h4 class="fk-search-heading">Popular Searches</h4>
-          <div class="fk-search-chips">
-            <a href="/search?q=women&type=product" class="fk-search-chip">Women</a>
-            <a href="/search?q=men&type=product" class="fk-search-chip">Men</a>
-            <a href="/collections/all?sort_by=created-descending" class="fk-search-chip">New Arrivals</a>
-            <a href="/collections/all?sort_by=price-descending" class="fk-search-chip">Premium</a>
-            <a href="/collections/best-sellers" class="fk-search-chip">Bestsellers</a>
+      <div class="fk-search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="fk-search-panel__scroll">
+          <div class="fk-search-top">
+            <form action="/search" method="get" class="fk-search-form">
+              <svg class="fk-search-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <input
+                type="search"
+                name="q"
+                id="fkSearchInput"
+                placeholder="Search for sweatshirts, hoodies, tees…"
+                autocomplete="off"
+                spellcheck="false"
+              >
+              <input type="hidden" name="type" value="product">
+            </form>
+            <button type="button" class="fk-search-close" aria-label="Close search" onclick="window.__fkCloseSearch && window.__fkCloseSearch()">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
           </div>
-        </div>
 
-        <div class="fk-search-section">
-          <h4 class="fk-search-heading" id="fkSearchResultsHeading">Top Products</h4>
-          <div class="fk-search-results" id="fkSearchResults"></div>
+          <div class="fk-search-section">
+            <h4 class="fk-search-heading">Popular Searches</h4>
+            <div class="fk-search-chips">
+              <a href="/search?q=women&type=product" class="fk-search-chip">Women</a>
+              <a href="/search?q=men&type=product" class="fk-search-chip">Men</a>
+              <a href="/collections/all?sort_by=created-descending" class="fk-search-chip">New Arrivals</a>
+              <a href="/collections/all?sort_by=price-descending" class="fk-search-chip">Premium</a>
+              <a href="/collections/best-sellers" class="fk-search-chip">Bestsellers</a>
+            </div>
+          </div>
+
+          <div class="fk-search-section">
+            <h4 class="fk-search-heading" id="fkSearchResultsHeading">Top Products</h4>
+            <div class="fk-search-results" id="fkSearchResults"></div>
+            <div class="fk-search-see-all" id="fkSearchSeeAll" hidden>
+              <a href="/search" class="fk-search-see-all__link" id="fkSearchSeeAllLink">See all results</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -89,52 +96,68 @@
       .fk-search-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0, 12, 91, 0.55);
-        backdrop-filter: blur(2px);
         z-index: 9998;
         display: flex;
-        align-items: flex-start;
-        justify-content: center;
+        justify-content: flex-end;
+        align-items: stretch;
+        padding: 0;
+        overflow: hidden;
+        pointer-events: none;
         opacity: 0;
         transition: opacity 0.22s ease;
-        padding: 20px;
-        overflow-y: auto;
+        background: rgba(0, 12, 91, 0.45);
+        backdrop-filter: blur(2px);
       }
       .fk-search-overlay[hidden] { display: none; }
-      .fk-search-overlay.is-visible { opacity: 1; }
+      .fk-search-overlay.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      html.fk-search-open,
+      html.fk-search-open body {
+        overflow: hidden;
+        touch-action: none;
+      }
       .fk-search-panel {
         position: relative;
-        width: 100%;
-        max-width: 720px;
+        width: min(100vw, 440px);
+        height: 100%;
+        max-height: 100dvh;
         background: #fff;
-        border-radius: 18px;
-        padding: 22px 22px 26px;
-        margin-top: 80px;
-        box-shadow: 0 30px 60px rgba(0, 12, 91, 0.35);
-        transform: translateY(-12px);
-        transition: transform 0.25s ease;
+        box-shadow: -12px 0 40px rgba(0, 12, 91, 0.18);
+        transform: translateX(100%);
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
       }
-      .fk-search-overlay.is-visible .fk-search-panel { transform: translateY(0); }
-      .fk-search-close {
-        position: absolute;
-        top: 12px;
-        right: 14px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #4b5563;
-        padding: 4px;
+      .fk-search-overlay.is-visible .fk-search-panel { transform: translateX(0); }
+      @media (min-width: 900px) {
+        .fk-search-panel { width: min(520px, 42vw); }
       }
-      .fk-search-close:hover { color: #000; }
+      .fk-search-panel__scroll {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 18px 18px 28px;
+      }
+      .fk-search-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e5e7eb;
+      }
       .fk-search-form {
+        flex: 1;
         display: flex;
         align-items: center;
         gap: 10px;
         padding: 8px 12px;
         border: 1px solid #d1d5db;
         border-radius: 10px;
-        margin: 8px 0 22px;
         background: #fafafa;
+        min-width: 0;
       }
       .fk-search-icon { color: #6b7280; flex-shrink: 0; }
       #fkSearchInput {
@@ -146,13 +169,26 @@
         color: #111;
         padding: 8px 4px;
         font-family: inherit;
+        min-width: 0;
       }
-      .fk-search-section { margin-top: 20px; }
+      .fk-search-close {
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #4b5563;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .fk-search-close:hover { color: #000; }
+      .fk-search-section { margin-top: 22px; }
       .fk-search-heading {
         font-family: var(--font-heading, 'League Spartan', sans-serif);
-        font-size: 0.78rem;
+        font-size: 0.72rem;
         font-weight: 700;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
         color: #6b7280;
         margin: 0 0 12px;
@@ -163,80 +199,128 @@
         gap: 8px;
       }
       .fk-search-chip {
-        padding: 8px 16px;
-        background: #f3f4f6;
+        padding: 8px 14px;
+        background: #fff;
+        border: 1px solid #d1d5db;
         border-radius: 999px;
         text-decoration: none;
-        color: #1f2937;
-        font-size: 0.82rem;
+        color: #111;
+        font-size: 0.78rem;
         font-weight: 600;
-        transition: background 0.2s, color 0.2s;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
       }
       .fk-search-chip:hover {
         background: var(--color-primary, #000c5b);
+        border-color: var(--color-primary, #000c5b);
         color: #fff;
       }
       .fk-search-results {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 10px;
       }
-      @media (min-width: 600px) {
-        .fk-search-results { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      @media (min-width: 900px) {
+        .fk-search-results {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 16px 12px;
+        }
       }
-      .fk-search-result {
-        display: flex;
-        gap: 10px;
-        padding: 8px;
-        border-radius: 10px;
+      .fk-search-card {
+        display: block;
         text-decoration: none;
         color: inherit;
-        transition: background 0.2s;
-        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        transition: opacity 0.2s;
       }
-      .fk-search-result:hover { background: #fafbff; border-color: #e0e7ff; }
-      .fk-search-result__img {
-        flex: 0 0 64px;
-        width: 64px;
-        height: 80px;
-        background: #f5f5f5;
-        border-radius: 6px;
+      .fk-search-card:hover { opacity: 0.92; }
+      .fk-search-card__media {
+        position: relative;
+        aspect-ratio: 3 / 4;
+        background: #f3f4f6;
+        border-radius: 8px;
         overflow: hidden;
       }
-      .fk-search-result__img img { width: 100%; height: 100%; object-fit: cover; }
-      .fk-search-result__info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-width: 0;
+      .fk-search-card__media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
       }
-      .fk-search-result__title {
+      .fk-search-card__badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: #dc2626;
+        color: #fff;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        padding: 4px 8px;
+        border-radius: 2px;
+        line-height: 1;
+      }
+      .fk-search-card__body {
+        padding-top: 10px;
+      }
+      .fk-search-card__title {
         font-family: var(--font-heading, 'League Spartan', sans-serif);
-        font-size: 0.78rem;
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
-        margin: 0 0 4px;
-        color: #000;
+        line-height: 1.35;
+        margin: 0 0 6px;
+        color: #111;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
       }
-      .fk-search-result__price {
-        font-size: 0.78rem;
+      .fk-search-card__prices {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 6px;
+        font-size: 0.72rem;
+      }
+      .fk-search-card__compare {
+        color: #9ca3af;
+        text-decoration: line-through;
+        font-weight: 500;
+      }
+      .fk-search-card__price {
+        font-weight: 800;
+        color: #111;
+      }
+      .fk-search-card__price--sale { color: #dc2626; }
+      .fk-search-see-all {
+        margin-top: 18px;
+        text-align: center;
+      }
+      .fk-search-see-all__link {
+        display: inline-block;
+        font-family: var(--font-heading, 'League Spartan', sans-serif);
+        font-size: 0.82rem;
         font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
         color: var(--color-primary, #000c5b);
+        text-decoration: underline;
+        text-underline-offset: 3px;
       }
+      .fk-search-see-all__link:hover { color: var(--color-secondary, #71b6c8); }
       .fk-search-empty {
         padding: 16px 0;
         font-size: 0.85rem;
         color: #6b7280;
         text-align: center;
+        grid-column: 1 / -1;
       }
 
-      @media (max-width: 600px) {
-        .fk-search-panel { margin-top: 60px; padding: 18px 16px 20px; }
+      @media (max-width: 599px) {
+        .fk-search-panel__scroll { padding: 14px 14px 24px; }
         #fkSearchInput { font-size: 0.95rem; }
-        .fk-search-result__img { flex-basis: 56px; width: 56px; height: 70px; }
       }
     </style>
 
@@ -246,12 +330,120 @@
         var input = document.getElementById('fkSearchInput');
         var resultsEl = document.getElementById('fkSearchResults');
         var headingEl = document.getElementById('fkSearchResultsHeading');
+        var seeAllEl = document.getElementById('fkSearchSeeAll');
+        var seeAllLink = document.getElementById('fkSearchSeeAllLink');
         if (!overlay || !input || !resultsEl) return;
 
         var debounceTimer;
-        var TOP_PRODUCTS_FALLBACK = []; // populated by Shopify recommendations on first open
+        var TOP_PRODUCTS_FALLBACK = [];
+
+        function escapeHtml(s) {
+          return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+        }
+        function escapeAttr(s) {
+          return escapeHtml(s).replace(/'/g, '&#39;');
+        }
+
+        function variant0(p) {
+          return p.variants && p.variants[0] ? p.variants[0] : null;
+        }
+        /** Predictive search returns formatted strings; products.json uses variant decimals or cents */
+        function moneyDisplay(p) {
+          var cur = p.price;
+          if (cur != null && typeof cur === 'string' && /₹|Rs\.|INR/i.test(cur)) return cur;
+          var n = p.price_min != null ? p.price_min : p.price_max;
+          if (typeof n === 'number' && n > 0) {
+            var rupees = n >= 1000 ? n / 100 : n;
+            return '₹' + (Math.abs(rupees - Math.round(rupees)) < 0.01 ? Math.round(rupees) : rupees.toFixed(2));
+          }
+          var v = variant0(p);
+          if (v && v.price != null && v.price !== '') {
+            var pr = parseFloat(String(v.price).replace(/,/g, ''));
+            if (!isNaN(pr)) return '₹' + (Number.isInteger(pr) ? pr : pr.toFixed(2));
+          }
+          return '';
+        }
+        function compareDisplay(p) {
+          var c = p.compare_at_price_min != null ? p.compare_at_price_min : p.compare_at_price_max;
+          if (c == null && p.compare_at_price != null) c = p.compare_at_price;
+          if (typeof c === 'string' && c !== '') return c;
+          if (typeof c === 'number' && c > 0) {
+            var rupees = c >= 1000 ? c / 100 : c;
+            return '₹' + (Math.abs(rupees - Math.round(rupees)) < 0.01 ? Math.round(rupees) : rupees.toFixed(2));
+          }
+          var v = variant0(p);
+          if (v && v.compare_at_price != null && v.compare_at_price !== '') {
+            var cp = parseFloat(String(v.compare_at_price).replace(/,/g, ''));
+            if (!isNaN(cp)) return '₹' + (Number.isInteger(cp) ? cp : cp.toFixed(2));
+          }
+          return '';
+        }
+        function salePercent(p) {
+          var cmpStr = compareDisplay(p);
+          var prStr = moneyDisplay(p);
+          var cmp = parseFloat(String(cmpStr).replace(/[^\d.]/g, ''));
+          var pr = parseFloat(String(prStr).replace(/[^\d.]/g, ''));
+          if (!cmp || !pr || cmp <= pr) return null;
+          return Math.round((1 - pr / cmp) * 100);
+        }
+        function productImageUrl(p) {
+          var fi = p.featured_image;
+          if (fi && typeof fi === 'object' && fi.url) return fi.url;
+          if (typeof fi === 'string') return fi;
+          if (fi && fi.src) return fi.src;
+          return p.image || '';
+        }
+
+        function renderCard(p) {
+          var title = p.title || '';
+          var url = p.url || ('/products/' + (p.handle || ''));
+          var img = productImageUrl(p);
+          var priceStr = moneyDisplay(p);
+          var compareStr = compareDisplay(p);
+          var sale = salePercent(p);
+          var showCompare = compareStr && priceStr && compareStr !== priceStr;
+          var pct = sale != null && sale > 0 ? sale : null;
+
+          return '<a href="' + escapeAttr(url) + '" class="fk-search-card">' +
+            '<div class="fk-search-card__media">' +
+              (pct != null ? '<span class="fk-search-card__badge">SAVE ' + pct + '%</span>' : '') +
+              (img ? '<img src="' + escapeAttr(img) + '" alt="' + escapeAttr(title) + '" loading="lazy">' : '') +
+            '</div>' +
+            '<div class="fk-search-card__body">' +
+              '<div class="fk-search-card__title">' + escapeHtml(title) + '</div>' +
+              '<div class="fk-search-card__prices">' +
+                (showCompare ? '<span class="fk-search-card__compare">' + escapeHtml(compareStr) + '</span>' : '') +
+                '<span class="fk-search-card__price' + (showCompare ? ' fk-search-card__price--sale' : '') + '">' + escapeHtml(priceStr) + '</span>' +
+              '</div>' +
+            '</div>' +
+          '</a>';
+        }
+
+        function setSeeAll(query) {
+          if (!seeAllEl || !seeAllLink) return;
+          if (query && query.length) {
+            seeAllEl.hidden = false;
+            seeAllLink.href = '/search?q=' + encodeURIComponent(query) + '&type=product';
+          } else {
+            seeAllEl.hidden = true;
+          }
+        }
+
+        function renderResults(products, query) {
+          setSeeAll(query || '');
+          if (!products || products.length === 0) {
+            resultsEl.innerHTML = '<div class="fk-search-empty">No products found. Try a different search or browse collections.</div>';
+            return;
+          }
+          resultsEl.innerHTML = products.map(renderCard).join('');
+        }
 
         function open() {
+          document.documentElement.classList.add('fk-search-open');
           overlay.hidden = false;
           requestAnimationFrame(function() {
             overlay.classList.add('is-visible');
@@ -261,7 +453,8 @@
         }
         function close() {
           overlay.classList.remove('is-visible');
-          setTimeout(function() { overlay.hidden = true; }, 220);
+          document.documentElement.classList.remove('fk-search-open');
+          setTimeout(function() { overlay.hidden = true; }, 280);
         }
         window.__fkOpenSearch = open;
         window.__fkCloseSearch = close;
@@ -272,57 +465,34 @@
           if (e.key === 'Escape' && !overlay.hidden) close();
         });
 
-        function renderResults(products, isPredictive) {
-          if (!products || products.length === 0) {
-            resultsEl.innerHTML = '<div class="fk-search-empty">No products found. Try a different search.</div>';
-            return;
-          }
-          resultsEl.innerHTML = products.map(function(p) {
-            var title = p.title || '';
-            var url = p.url || ('/products/' + (p.handle || ''));
-            var img = (p.featured_image && p.featured_image.url) || p.featured_image || p.image || '';
-            var price = (typeof p.price === 'number') ? ('₹' + Math.round(p.price / 100) + '/-')
-                       : (p.price_min ? '₹' + Math.round(p.price_min / 100) + '/-' : '');
-            return '<a href="' + escapeAttr(url) + '" class="fk-search-result">' +
-              (img ? '<div class="fk-search-result__img"><img src="' + escapeAttr(img) + '" alt="' + escapeAttr(title) + '"></div>'
-                   : '<div class="fk-search-result__img"></div>') +
-              '<div class="fk-search-result__info">' +
-                '<div class="fk-search-result__title">' + escapeHtml(title) + '</div>' +
-                (price ? '<div class="fk-search-result__price">' + price + '</div>' : '') +
-              '</div>' +
-            '</a>';
-          }).join('');
-        }
-
         function loadTopProducts() {
-          // Use bestsellers collection as default top products
-          fetch('/collections/best-sellers/products.json?limit=6')
+          fetch('/collections/best-sellers/products.json?limit=8')
             .then(function(r) { return r.ok ? r.json() : { products: [] }; })
             .then(function(d) {
               TOP_PRODUCTS_FALLBACK = d.products || [];
-              if (input.value.length === 0) {
+              if (input.value.trim().length === 0) {
                 headingEl.textContent = 'Top Products';
-                renderResults(TOP_PRODUCTS_FALLBACK);
+                renderResults(TOP_PRODUCTS_FALLBACK, '');
               }
             })
             .catch(function() {
-              fetch('/collections/all/products.json?limit=6')
+              fetch('/collections/all/products.json?limit=8')
                 .then(function(r) { return r.ok ? r.json() : { products: [] }; })
                 .then(function(d) {
                   TOP_PRODUCTS_FALLBACK = d.products || [];
-                  if (input.value.length === 0) renderResults(TOP_PRODUCTS_FALLBACK);
+                  if (input.value.trim().length === 0) renderResults(TOP_PRODUCTS_FALLBACK, '');
                 })
                 .catch(function() {});
             });
         }
 
         function predictiveSearch(q) {
-          fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=6')
+          fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=10')
             .then(function(r) { return r.ok ? r.json() : { resources: { results: { products: [] } } }; })
             .then(function(d) {
               var products = (d && d.resources && d.resources.results && d.resources.results.products) || [];
               headingEl.textContent = 'Search results for "' + q + '"';
-              renderResults(products, true);
+              renderResults(products, q);
             })
             .catch(function() {});
         }
@@ -332,10 +502,10 @@
           clearTimeout(debounceTimer);
           if (q.length === 0) {
             headingEl.textContent = 'Top Products';
-            renderResults(TOP_PRODUCTS_FALLBACK);
+            renderResults(TOP_PRODUCTS_FALLBACK, '');
             return;
           }
-          debounceTimer = setTimeout(function() { predictiveSearch(q); }, 250);
+          debounceTimer = setTimeout(function() { predictiveSearch(q); }, 200);
         });
       })();
     </script>
@@ -514,7 +684,7 @@
           if (!once(STATE_KEYS.welcome)) return;
           show(
             '<span class="fk-popup-emoji">🎁</span>' +
-            '<h3>EVER LOVED SOMETHING SO MUCH YOU WANTED TO WEAR IT?</h3>' +
+            '<h3>Anything on a tee?</h3>' +
             '<p>That\'s exactly what we do.</p>' +
             '<div class="fk-popup-discount">FLAT 10% OFF</div>' +
             '<p>on your first order!</p>' +
@@ -528,7 +698,7 @@
         function popupFormLeave() {
           if (!once(STATE_KEYS.formLeave)) return;
           show(
-            '<h3>STUCK MIDWAY?</h3>' +
+            '<h3>Left too early!!</h3>' +
             '<p>Happens to the best of us.<br>Take a look at what else we\'ve got.</p>' +
             '<div class="fk-popup-actions">' +
               '<a class="fk-popup-cta" href="/collections/all">Explore other options</a>' +
@@ -541,10 +711,10 @@
         function popupShopLeave() {
           if (!once(STATE_KEYS.shopLeave)) return;
           show(
-            '<h3>DIDN\'T FIND WHAT YOU\'RE LOOKING FOR?</h3>' +
+            '<h3>Anything on a tee?</h3>' +
             '<p>We can design something just for you<br>at no extra cost.</p>' +
             '<div class="fk-popup-actions">' +
-              '<a class="fk-popup-cta" href="/pages/process">Customise Now</a>' +
+              '<a class="fk-popup-cta" href="/pages/process">Customise now</a>' +
               '<button class="fk-popup-cta-secondary" onclick="window.__fkClosePopup()">Maybe later</button>' +
             '</div>'
           );
@@ -554,9 +724,9 @@
         function popupCartAbandon() {
           if (!once(STATE_KEYS.cartLeave)) return;
           show(
-            '<img class="fk-popup-mascot" src="{{ "cart pop up.png" | asset_url }}" alt="Don\'t abandon me">' +
-            '<h3>pleaseeeeee<br>DON\'T ABANDON ME</h3>' +
-            '<p class="small-line">take me home with you :(</p>' +
+            '<img class="fk-popup-mascot" src="{{ "cart pop up.png" | asset_url }}" alt="Left too early">' +
+            '<h3>Left too early!!</h3>' +
+            '<p class="small-line">Take us home with you :)</p>' +
             '<div class="fk-popup-actions">' +
               '<a class="fk-popup-cta" href="/checkout">Checkout</a>' +
               '<button class="fk-popup-cta-secondary" onclick="window.__fkClosePopup()">Abandon</button>' +
@@ -641,7 +811,7 @@
       // Tab title blink when user switches away (#57) — references bonkerscorner pattern
       (function() {
         var originalTitle = document.title;
-        var awayMessages = ['left too early!!', "🥺 we're here for you ;)"];
+        var awayMessages = ['Left too early!!', 'Anything on a tee?'];
         var idx = 0;
         var blinkTimer = null;
 

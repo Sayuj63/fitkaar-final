@@ -290,7 +290,11 @@
     .fk-footer__row-1 {
       flex-direction: column;
       gap: 28px;
-      align-items: center;
+      align-items: flex-start;
+    }
+    .fk-footer__logo-col {
+      align-self: center;
+      width: 100%;
     }
     .fk-footer__logo img {
       width: 140px;
@@ -298,11 +302,13 @@
     .fk-footer__menu-col {
       flex-wrap: wrap;
       gap: 28px;
-      justify-content: center;
+      justify-content: flex-start;
+      align-content: flex-start;
       width: 100%;
     }
     .fk-footer__menu-group {
       min-width: 120px;
+      text-align: left;
     }
     .fk-footer__row-2 {
       flex-direction: column;
@@ -377,8 +383,8 @@
           {% else %}
             <li><a href="/pages/contact-us">Contact us</a></li>
             <li><a href="/pages/faqs">FAQs</a></li>
-            <li><a href="/pages/privacy-policy">Privacy Policy</a></li>
-            <li><a href="/pages/terms-conditions">Terms & Conditions</a></li>
+            <li><a href="/pages/privacy-policy">Policies</a></li>
+            <li><a href="/pages/terms-conditions">Terms & conditions</a></li>
             <li><a href="/pages/about-us">About us</a></li>
           {% endif %}
         </ul>
@@ -394,9 +400,12 @@
             {% endfor %}
           {% else %}
             <li><a href="/">Home</a></li>
-            <li><a href="/pages/process">Customise</a></li>
             <li><a href="/collections/all">Shop</a></li>
-            <li><a href="/collections/gift-cards">Gift Cards</a></li>
+            <li><a href="/collections/best-sellers">Best sellers</a></li>
+            <li><a href="/pages/process">Custom orders</a></li>
+            <li><a href="/pages/bulk-orders">Bulk orders</a></li>
+            <li><a href="/collections/all">Collections</a></li>
+            <li><a href="/collections/gift-cards">Gift card</a></li>
           {% endif %}
         </ul>
       </div>
@@ -410,9 +419,9 @@
               <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {% endfor %}
           {% else %}
-            <li><a href="/account">My Account</a></li>
-            <li><a href="/account/login">Login / Register</a></li>
-            <li><a href="/account/orders">Order History</a></li>
+            <li><a href="/account">My account</a></li>
+            <li><a href="/account/login">Login / register</a></li>
+            <li><a href="/account/orders">Order history</a></li>
             <li><a href="/pages/wishlist">Wishlist</a></li>
           {% endif %}
         </ul>

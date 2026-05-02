@@ -143,8 +143,8 @@
 
 <div class="announcement-bar announcement-bar-gradient" style="position: relative; z-index: 50; padding: 8px 0;">
   <div class="announcement-marquee">
-    <div class="announcement-track">
-      {%- for i in (1..8) -%}
+    <div class="announcement-track" id="announcement-track">
+      {%- for i in (1..2) -%}
         <span class="announcement-item">
           {{ rendered_text }}
           <span class="sep" aria-hidden="true">{{ separator }}</span>
@@ -153,3 +153,18 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    function restartMarquee() {
+      var track = document.getElementById('announcement-track');
+      if (!track) return;
+      track.style.animation = 'none';
+      track.offsetHeight; // force reflow
+      track.style.animation = '';
+    }
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) restartMarquee();
+    });
+  })();
+</script>

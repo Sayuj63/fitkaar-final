@@ -698,38 +698,38 @@
       recommendations: [],
 
       init() {
-        // Fetch cart data on load to ensure fresh state
         this.fetchCart();
-        this.fetchRecommendations();
       },
 
-      async fetchRecommendations() {
+      async fetchRecommendations(productId) {
+        const cartIds = new Set(this.items.map(i => i.product_id));
+        const mapProduct = p => ({
+          id: p.id,
+          url: '/products/' + p.handle,
+          title: p.title,
+          price: (p.variants && p.variants[0]) ? Math.round(parseFloat(p.variants[0].price) * 100) : 0,
+          featured_image: (p.images && p.images[0]) ? p.images[0].src : ''
+        });
+        const pick = (arr) => arr.filter(p => !cartIds.has(p.id)).slice(0, 6).map(mapProduct);
+
+        // 1. Shopify native recommendations API (seeded by first cart product)
+        if (productId) {
+          try {
+            const r = await fetch(`/recommendations/products.json?product_id=${productId}&limit=9`);
+            if (r.ok) {
+              const d = await r.json();
+              const recs = pick(d.products || []);
+              if (recs.length > 0) { this.recommendations = recs; return; }
+            }
+          } catch (e) {}
+        }
+
+        // 2. Fall back to /collections/all
         try {
-          // Try Shopify's recommendations endpoint first (needs a product context — fall back to bestsellers)
-          const r = await fetch('/collections/best-sellers/products.json?limit=6');
-          if (r.ok) {
-            const d = await r.json();
-            this.recommendations = (d.products || []).slice(0, 6).map(p => ({
-              id: p.id,
-              url: '/products/' + p.handle,
-              title: p.title,
-              price: (p.variants && p.variants[0] && p.variants[0].price) ? Math.round(parseFloat(p.variants[0].price) * 100) : 0,
-              featured_image: (p.images && p.images[0] && p.images[0].src) || ''
-            }));
-            return;
-          }
-        } catch (e) {}
-        try {
-          const r2 = await fetch('/collections/all/products.json?limit=6');
+          const r2 = await fetch('/collections/all/products.json?limit=12');
           if (r2.ok) {
             const d2 = await r2.json();
-            this.recommendations = (d2.products || []).slice(0, 6).map(p => ({
-              id: p.id,
-              url: '/products/' + p.handle,
-              title: p.title,
-              price: (p.variants && p.variants[0] && p.variants[0].price) ? Math.round(parseFloat(p.variants[0].price) * 100) : 0,
-              featured_image: (p.images && p.images[0] && p.images[0].src) || ''
-            }));
+            this.recommendations = pick(d2.products || []);
           }
         } catch (e) {}
       },
@@ -742,9 +742,9 @@
             this.itemCount = cart.item_count;
             this.totalPrice = cart.total_price;
             this.initialLoading = false;
-            
-            // Update cart bubble count in header if it exists
             this.updateHeaderCartCount(cart.item_count);
+            const firstProductId = cart.items && cart.items[0] ? cart.items[0].product_id : null;
+            this.fetchRecommendations(firstProductId);
           })
           .catch(error => console.error('Error fetching cart:', error));
       },

@@ -928,7 +928,7 @@
     <div class="no-hidden-charges-banner">
       <div class="no-hidden-charges-marquee">
         <div class="no-hidden-charges-track">
-          {%- for i in (1..8) -%}
+          {%- for i in (1..2) -%}
             <span class="no-hidden-charges-item">
               No hidden charges | Same price irrespective of the design!
               <span class="sep" aria-hidden="true">✦</span>
@@ -942,6 +942,16 @@
   <div class="process-header">
     <h1 class="process-title">GET YOURS CUSTOMISED</h1>
     <p class="process-subtitle">Fill out the details below so we can create something unique for you!</p>
+  </div>
+
+  <div class="container" style="max-width:780px;margin:0 auto 1.5rem;padding:0 1rem;">
+    <div class="restore-progress-banner" id="restoreProgressBanner">
+      <span>We saved your progress from last time. Restore it?</span>
+      <div class="restore-progress-banner__actions">
+        <button type="button" class="primary" onclick="restoreFormProgress()">Restore</button>
+        <button type="button" onclick="discardFormProgress()">Start fresh</button>
+      </div>
+    </div>
   </div>
 
   <div class="process-form-container">
@@ -1013,15 +1023,6 @@
           <option value="Non-binary">Non-binary</option>
           <option value="Prefer not to say">Prefer not to say</option>
         </select>
-      </div>
-
-      <!-- #62: Restore-progress banner (shown via JS if saved data exists) -->
-      <div class="restore-progress-banner" id="restoreProgressBanner">
-        <span>We saved your progress from last time. Restore it?</span>
-        <div class="restore-progress-banner__actions">
-          <button type="button" class="primary" onclick="restoreFormProgress()">Restore</button>
-          <button type="button" onclick="discardFormProgress()">Start fresh</button>
-        </div>
       </div>
 
       <!-- Product Blocks Container -->

@@ -6,6 +6,12 @@
       "type": "image_picker",
       "id": "logo",
       "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "free_gift_variant_id",
+      "label": "Free Gift Variant ID",
+      "info": "Shopify variant ID of the free T-shirt product (must be priced ₹0 in admin). Leave blank to disable auto-add."
     }
   ]
 }
@@ -14,8 +20,8 @@
 <header
   class="site-header"
   style="background: #fff; padding: 12px 0; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 50; color: var(--color-primary);"
-  x-data="{ mobileMenuOpen: false, shopOpen: false, mobNavPage: 'main', mobAccE: false, mobAccT: false, mobAccV: false, cartDrawerOpen: false, cartLoading: false, cartMini: null, syncBodyScroll() { document.body.style.overflow = (this.mobileMenuOpen || this.cartDrawerOpen) ? 'hidden' : ''; }, closeMobileMenu() { this.mobileMenuOpen = false; this.mobNavPage = 'main'; this.mobAccE = false; this.mobAccT = false; this.mobAccV = false; this.syncBodyScroll(); }, openShopPanel() { this.mobNavPage = 'shop'; }, backToMainNav() { this.mobNavPage = 'main'; this.mobAccE = false; this.mobAccT = false; this.mobAccV = false; }, async refreshCartDrawer() { this.cartLoading = true; try { const r = await fetch('/cart.js'); this.cartMini = await r.json(); } catch (e) { this.cartMini = null; } finally { this.cartLoading = false; } }, async openCartDrawer() { if (window.__fkCloseSearch) window.__fkCloseSearch(); this.mobileMenuOpen = false; this.cartDrawerOpen = true; this.syncBodyScroll(); await this.refreshCartDrawer(); }, closeCartDrawer() { this.cartDrawerOpen = false; this.syncBodyScroll(); }, cartIconClick(e) { if (window.matchMedia('(max-width: 767px)').matches) { e.preventDefault(); this.openCartDrawer(); } }, formatCartMoney(cents) { if (window.Shopify && typeof Shopify.formatMoney === 'function') return Shopify.formatMoney(cents); const n = (Number(cents) || 0) / 100; return '₹' + n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }); } }"
-  @cart:updated.window="if (cartDrawerOpen) refreshCartDrawer()"
+  x-data="{ mobileMenuOpen: false, shopOpen: false, mobNavPage: 'main', mobAccE: false, mobAccT: false, mobAccV: false, cartDrawerOpen: false, cartLoading: false, cartMini: null, drawerRecs: [], freeGiftManaging: false, syncBodyScroll() { document.body.style.overflow = (this.mobileMenuOpen || this.cartDrawerOpen) ? 'hidden' : ''; }, closeMobileMenu() { this.mobileMenuOpen = false; this.mobNavPage = 'main'; this.mobAccE = false; this.mobAccT = false; this.mobAccV = false; this.syncBodyScroll(); }, openShopPanel() { this.mobNavPage = 'shop'; }, backToMainNav() { this.mobNavPage = 'main'; this.mobAccE = false; this.mobAccT = false; this.mobAccV = false; }, async refreshCartDrawer() { this.cartLoading = true; try { const r = await fetch('/cart.js'); this.cartMini = await r.json(); } catch (e) { this.cartMini = null; } finally { this.cartLoading = false; } }, async openCartDrawer() { if (window.__fkCloseSearch) window.__fkCloseSearch(); this.mobileMenuOpen = false; this.cartDrawerOpen = true; this.syncBodyScroll(); await this.refreshCartDrawer(); await this.manageFreeGift(); this.fetchDrawerRecs(); }, closeCartDrawer() { this.cartDrawerOpen = false; this.syncBodyScroll(); }, cartIconClick(e) { e.preventDefault(); this.openCartDrawer(); }, async onCartUpdated() { if (!this.cartDrawerOpen) return; await this.refreshCartDrawer(); await this.manageFreeGift(); this.fetchDrawerRecs(); }, async manageFreeGift() { const variantId = Number('{{ section.settings.free_gift_variant_id | default: 0 }}'); if (!variantId || this.freeGiftManaging || !this.cartMini) return; this.freeGiftManaging = true; try { const threshold = 400000; const giftItem = this.cartMini.items.find(i => i.variant_id == variantId); const nonGiftTotal = this.cartMini.items.filter(i => i.variant_id != variantId).reduce((s, i) => s + i.final_line_price, 0); if (nonGiftTotal >= threshold && !giftItem) { await fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: variantId, quantity: 1, properties: { _free_gift: 'yes' } }) }); const r = await fetch('/cart.js'); this.cartMini = await r.json(); } else if (nonGiftTotal < threshold && giftItem) { await fetch('/cart/change.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: giftItem.key, quantity: 0 }) }); const r = await fetch('/cart.js'); this.cartMini = await r.json(); } } finally { this.freeGiftManaging = false; } }, async fetchDrawerRecs() { if (!this.cartMini || !this.cartMini.items || !this.cartMini.items.length) return; const productId = this.cartMini.items[0].product_id; const cartIds = new Set(this.cartMini.items.map(i => i.product_id)); const map = p => ({ id: p.id, url: '/products/' + p.handle, title: p.title, price: p.variants && p.variants[0] ? Math.round(parseFloat(p.variants[0].price) * 100) : 0, img: p.images && p.images[0] ? p.images[0].src : '' }); try { const r = await fetch('/recommendations/products.json?product_id=' + productId + '&limit=8'); if (r.ok) { const d = await r.json(); const recs = (d.products || []).filter(p => !cartIds.has(p.id)).slice(0, 4); if (recs.length) { this.drawerRecs = recs.map(map); return; } } } catch(e) {} try { const r2 = await fetch('/collections/all/products.json?limit=12'); if (r2.ok) { const d2 = await r2.json(); this.drawerRecs = (d2.products || []).filter(p => !cartIds.has(p.id)).slice(0, 4).map(map); } } catch(e) {} }, formatCartMoney(cents) { if (window.Shopify && typeof Shopify.formatMoney === 'function') return Shopify.formatMoney(cents); const n = (Number(cents) || 0) / 100; return '₹' + n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }); } }"
+  @cart:updated.window="onCartUpdated()"
 >
   <div class="container fk-header-row">
 
@@ -647,6 +653,48 @@
     .fk-cart-drawer-leave { transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.22s ease; }
     .fk-cart-drawer-leave-start { transform: translateX(0); opacity: 1; }
     .fk-cart-drawer-leave-end { transform: translateX(100%); opacity: 0.9; }
+
+    /* Free T-shirt reward bar */
+    .fk-cart-reward {
+      flex-shrink: 0;
+      padding: 10px 1.25rem 12px;
+      background: linear-gradient(135deg, #fff8e7 0%, #fff 100%);
+      border-bottom: 1px solid #f0e6d0;
+    }
+    .fk-cart-reward__msg {
+      font-size: 0.82rem;
+      color: #5a4a1f;
+      font-weight: 600;
+      margin: 0 0 8px;
+    }
+    .fk-cart-reward__msg strong { color: var(--color-primary); }
+    .fk-cart-reward__won { color: #2e7d32 !important; }
+    .fk-cart-reward__track {
+      width: 100%; height: 5px;
+      background: #f3e8c4; border-radius: 999px; overflow: hidden;
+    }
+    .fk-cart-reward__fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-secondary, #71b6c8) 0%, var(--color-primary, #000c5b) 100%);
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    /* "You may also like" in drawer */
+    .fk-cart-recs {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #f3f4f6;
+    }
+    .fk-cart-recs__title {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+    }
   </style>
 
   <template x-teleport="body">
@@ -787,7 +835,7 @@
 
   <template x-teleport="body">
   <div
-    class="fk-cart-overlay md:hidden"
+    class="fk-cart-overlay"
     x-show="cartDrawerOpen"
     style="display: none;"
     x-transition.opacity.duration.280ms
@@ -809,19 +857,36 @@
       x-transition:leave-start="fk-cart-drawer-leave-start"
       x-transition:leave-end="fk-cart-drawer-leave-end"
     >
+      <!-- Header -->
       <div class="fk-cart-drawer-hd">
         <h2 class="fk-cart-drawer-title">Your cart</h2>
-        <button type="button" class="p-2 -mr-2 hover:opacity-70 transition-opacity" style="color: var(--color-primary);" @click="closeCartDrawer()" aria-label="Close cart">
+        <button type="button" style="color: var(--color-primary); background:none; border:none; cursor:pointer; padding:4px;" @click="closeCartDrawer()" aria-label="Close cart">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
       </div>
 
+      <!-- Free T-shirt reward progress bar -->
+      <div class="fk-cart-reward" x-show="!cartLoading && cartMini && cartMini.item_count > 0" x-cloak>
+        <p class="fk-cart-reward__msg" x-show="cartMini && cartMini.total_price / 100 < 4000">
+          🎽 Spend <strong x-text="'₹' + (4000 - Math.round(cartMini.total_price / 100))"></strong> more to unlock a <strong>FREE T-shirt</strong>!
+        </p>
+        <p class="fk-cart-reward__msg fk-cart-reward__won" x-show="cartMini && cartMini.total_price / 100 >= 4000" style="display:none;">
+          🎉 You've unlocked a <strong>FREE T-shirt</strong>!
+        </p>
+        <div class="fk-cart-reward__track">
+          <div class="fk-cart-reward__fill" :style="'width:' + Math.min(100, cartMini ? Math.round(cartMini.total_price / 4000) : 0) + '%'"></div>
+        </div>
+      </div>
+
+      <!-- Body: items + "You may also like" -->
       <div class="fk-cart-drawer-body">
         <p x-show="cartLoading" x-cloak class="fk-cart-empty" style="padding: 2rem;">Loading…</p>
-        <p x-show="!cartLoading && cartMini && cartMini.item_count === 0" x-cloak class="fk-cart-empty">Your cart is empty.</p>
+        <p x-show="!cartLoading && cartMini && cartMini.item_count === 0" x-cloak class="fk-cart-empty">Your cart is empty.<br><a href="/collections/all" @click="closeCartDrawer()" style="color:var(--color-primary);font-weight:700;">Start Shopping →</a></p>
+
         <div x-show="!cartLoading && cartMini && cartMini.item_count > 0" x-cloak>
+          <!-- Cart items -->
           <template x-for="(item, idx) in cartMini.items" :key="item.key || idx">
             <a :href="item.url" class="fk-cart-line" @click="closeCartDrawer()">
               <img :src="(item.featured_image && item.featured_image.url) ? item.featured_image.url : (item.image || '')" :alt="item.product_title" width="72" height="72" loading="lazy">
@@ -835,9 +900,24 @@
               </div>
             </a>
           </template>
+
+          <!-- You may also like -->
+          <div x-show="drawerRecs.length > 0" class="fk-cart-recs" x-cloak>
+            <div class="fk-cart-recs__title">You may also like</div>
+            <template x-for="r in drawerRecs" :key="r.id">
+              <a :href="r.url" class="fk-cart-line" @click="closeCartDrawer()">
+                <img :src="r.img" :alt="r.title" width="56" height="56" style="width:56px;height:56px;border-radius:6px;object-fit:cover;background:#f3f4f6;flex-shrink:0;">
+                <div class="fk-cart-line-meta">
+                  <span class="fk-cart-line-title" x-text="r.title"></span>
+                  <div class="fk-cart-line-price" x-text="formatCartMoney(r.price)"></div>
+                </div>
+              </a>
+            </template>
+          </div>
         </div>
       </div>
 
+      <!-- Footer -->
       <div class="fk-cart-footer" x-show="!cartLoading && cartMini && cartMini.item_count > 0" style="display: none;">
         <div class="fk-cart-subtotal">
           <span>Subtotal</span>

@@ -1614,9 +1614,9 @@
                     <button
                       type="button"
                       class="size-btn"
-                      :class="{ 'active': sizeMatchesSelected({{ value | json }}) }"
-                      x-show="isSizeAvailable({{ value | json }})"
-                      @click.prevent.stop="selectSize({{ value | json }})"
+                      :class="{ 'active': sizeMatchesSelected('{{ value | escape }}') }"
+                      x-show="isSizeAvailable('{{ value | escape }}')"
+                      @click.prevent.stop="selectSize('{{ value | escape }}')"
                     >{{ value }}</button>
                   {%- endif -%}
                 {%- endfor -%}
@@ -1630,9 +1630,9 @@
                   <button
                     type="button"
                     class="size-btn"
-                    :class="{ 'active': sizeMatchesSelected({{ value | json }}) }"
-                    x-show="isSizeAvailable({{ value | json }})"
-                    @click.prevent.stop="selectSize({{ value | json }})"
+                    :class="{ 'active': sizeMatchesSelected('{{ value | escape }}') }"
+                    x-show="isSizeAvailable('{{ value | escape }}')"
+                    @click.prevent.stop="selectSize('{{ value | escape }}')"
                   >{{ value }}</button>
                 {%- endunless -%}
               {%- endfor -%}
@@ -1697,10 +1697,10 @@
             <template x-for="(size, idx) in unitSizes" :key="idx">
               <label class="unit-size-row">
                 <span class="unit-size-row__label" x-text="'Unit ' + (idx + 1)"></span>
-                <select :value="size" @change="setUnitSize(idx, $event.target.value)">
+                <select @change="setUnitSize(idx, $event.target.value)">
                   {% if size_opt %}
                     {% for value in size_opt.values %}
-                      <option value="{{ value | escape }}" :disabled="!isSizeAvailable({{ value | json }})">{{ value | escape }}</option>
+                      <option value="{{ value | escape }}" :selected="size === '{{ value | escape }}'" :disabled="!isSizeAvailable('{{ value | escape }}')">{{ value | escape }}</option>
                     {% endfor %}
                   {% endif %}
                 </select>

@@ -1,0 +1,390 @@
+{% comment %}
+  Dedicated PDP for Shopify gift card products. Variant choice uses variant IDs only (no option-string matching).
+  In admin: Product → Theme template → select "gift-card".
+{% endcomment %}
+
+<style>
+  .gift-card-section {
+    padding: 40px 0 80px;
+    background: #fff;
+    overflow-x: hidden;
+  }
+  .gift-card-section .gift-card-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  @media (min-width: 992px) {
+    .gift-card-section .gift-card-container {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+  }
+  .gift-card-gallery {
+    align-self: start;
+  }
+  .gift-card-gallery .gift-main-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 5px;
+    background: #f5f5f5;
+    display: block;
+  }
+  .gift-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .gift-card-info .product-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1.2;
+  }
+  .gift-card-info .product-price {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #000;
+  }
+  .gift-card-info .price-note {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0;
+  }
+  .gift-denom-section .gift-denom-label {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+  }
+  .gift-denom-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .gift-denom-btn {
+    min-width: 5rem;
+    padding: 10px 14px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    color: #111;
+  }
+  .gift-denom-btn:hover:not(:disabled) {
+    border-color: var(--color-primary);
+  }
+  .gift-denom-btn.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+    color: var(--color-primary);
+  }
+  .gift-denom-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .gift-card-actions .quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .gift-card-actions .quantity-label {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .gift-card-actions .quantity-controls {
+    display: flex;
+    align-items: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .gift-card-actions .quantity-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: #f5f5f5;
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+  .gift-card-actions .quantity-input {
+    width: 60px;
+    height: 44px;
+    text-align: center;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .gift-card-actions .primary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .gift-card-actions .btn-add-cart {
+    width: 100%;
+    padding: 16px 32px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .gift-card-actions .btn-add-cart:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  .gift-card-actions .btn-buy-now {
+    width: 100%;
+    padding: 16px 32px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .gift-card-desc {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #444;
+  }
+  .gift-card-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    background: #000c5b;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+</style>
+
+<section
+  class="gift-card-section"
+  x-data="giftCardPage()"
+  x-init="initFromUrl()"
+>
+  <div class="gift-card-container">
+    <div class="gift-card-gallery">
+      {% if product.featured_image %}
+        <img
+          class="gift-main-img"
+          src="{{ product.featured_image | image_url: width: 1200 }}"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+          loading="eager"
+        >
+      {% else %}
+        <div class="gift-main-img" style="display:flex;align-items:center;justify-content:center;color:#999;">No image</div>
+      {% endif %}
+    </div>
+
+    <div class="gift-card-info">
+      <h1 class="product-title">{{ product.title }}</h1>
+
+      <div class="product-price-section">
+        <div class="product-price">
+          <span x-text="formatMoney(currentVariantPrice)"></span>
+        </div>
+        <p class="price-note">Inclusive of all taxes</p>
+      </div>
+
+      <div class="gift-denom-section">
+        <div class="gift-denom-label">{{ product.options_with_values.first.name | default: 'Amount' }}</div>
+        <div class="gift-denom-grid">
+          {% for variant in product.variants %}
+            {% assign vlabel = variant.option1 | default: variant.title %}
+            <button
+              type="button"
+              class="gift-denom-btn"
+              :class="{ 'active': selectedVariantId === {{ variant.id }} }"
+              {% unless variant.available %}disabled{% endunless %}
+              @click="selectVariant({{ variant.id }})"
+            >
+              {{ vlabel }}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="gift-card-actions">
+        <div class="quantity-selector">
+          <span class="quantity-label">Quantity</span>
+          <div class="quantity-controls">
+            <button type="button" class="quantity-btn" @click="quantity > 1 ? quantity-- : null">−</button>
+            <input type="number" class="quantity-input" x-model.number="quantity" min="1" max="10">
+            <button type="button" class="quantity-btn" @click="quantity < 10 ? quantity++ : null">+</button>
+          </div>
+        </div>
+        <div class="primary-actions">
+          <button type="button" class="btn-add-cart" :disabled="busy" @click="addToCart()">Add to Cart</button>
+          <button type="button" class="btn-buy-now" :disabled="busy" @click="buyNow()">Buy It Now</button>
+        </div>
+      </div>
+
+      <div class="gift-card-desc">
+        {% if product.description != blank %}
+          {{ product.description }}
+        {% else %}
+          <p>Our gift cards are delivered via email and come with a unique code to use at checkout.</p>
+          <p><strong>Kindly note that this is a digital gift card.</strong></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="gift-card-toast" x-show="toastOpen" x-transition x-cloak x-text="toastMessage"></div>
+</section>
+
+<script>
+  function giftCardPage() {
+    return {
+      variants: {{ product.variants | json }},
+      selectedVariantId: {{ product.selected_or_first_available_variant.id }},
+      quantity: 1,
+      busy: false,
+      toastOpen: false,
+      toastMessage: '',
+
+      initFromUrl() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var v = params.get('variant');
+          if (!v) return;
+          var id = parseInt(v, 10);
+          if (!id || isNaN(id)) return;
+          if (this.variants.some(function(x) { return x.id === id; })) {
+            this.selectedVariantId = id;
+          }
+        } catch (e) {}
+      },
+
+      get currentVariantPrice() {
+        var id = this.selectedVariantId;
+        for (var i = 0; i < this.variants.length; i++) {
+          if (this.variants[i].id === id) return this.variants[i].price;
+        }
+        return 0;
+      },
+
+      formatMoney(cents) {
+        var n = (Number(cents) || 0) / 100;
+        return 'Rs. ' + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      },
+
+      selectVariant(id) {
+        this.selectedVariantId = id;
+        try {
+          var url = new URL(window.location.href);
+          url.searchParams.set('variant', String(id));
+          window.history.replaceState({}, '', url.toString());
+        } catch (e) {}
+      },
+
+      showToast(msg) {
+        this.toastMessage = msg;
+        this.toastOpen = true;
+        var self = this;
+        clearTimeout(this._toastTimer);
+        this._toastTimer = setTimeout(function() { self.toastOpen = false; }, 2800);
+      },
+
+      async addToCart() {
+        if (!window.routes || !window.routes.cart_add_url) {
+          this.showToast('Cart unavailable');
+          return;
+        }
+        this.busy = true;
+        try {
+          var res = await fetch(window.routes.cart_add_url + '.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: [{ id: this.selectedVariantId, quantity: this.quantity }]
+            })
+          });
+          if (res.ok) {
+            this.showToast('Added to cart!');
+            try {
+              var cr = await fetch('/cart.js');
+              var cart = await cr.json();
+              var el = document.querySelector('.cart-count');
+              if (el) el.textContent = cart.item_count;
+            } catch (e2) {}
+            document.dispatchEvent(new CustomEvent('cart:updated'));
+          } else {
+            var err = await res.json().catch(function() { return {}; });
+            this.showToast(err.description || 'Could not add to cart');
+          }
+        } catch (e) {
+          this.showToast('Could not add to cart');
+        }
+        this.busy = false;
+      },
+
+      async buyNow() {
+        if (!window.routes || !window.routes.cart_add_url) return;
+        this.busy = true;
+        try {
+          var res = await fetch(window.routes.cart_add_url + '.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: [{ id: this.selectedVariantId, quantity: this.quantity }]
+            })
+          });
+          if (res.ok) {
+            window.location.href = '/checkout';
+          } else {
+            var err = await res.json().catch(function() { return {}; });
+            this.showToast(err.description || 'Could not continue');
+          }
+        } catch (e) {
+          this.showToast('Could not continue');
+        }
+        this.busy = false;
+      }
+    };
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product — Gift card",
+  "tag": "section",
+  "class": "section-product-gift-card",
+  "settings": []
+}
+{% endschema %}

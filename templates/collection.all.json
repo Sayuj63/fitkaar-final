@@ -1,0 +1,37 @@
+/*
+ * Template for /collections/all — no hero banner, starts with category circles.
+ */
+{
+  "sections": {
+    "main": {
+      "type": "collection-products",
+      "settings": {
+        "show_hero": false,
+        "hero_fallback_first_product": false,
+        "show_categories": true,
+        "cat_1_image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_52b9b010-2989-4bf4-8842-535bb6fe3b37.png",
+        "cat_1_name": "Essentials",
+        "cat_1_link": "shopify://collections/everyday",
+        "cat_2_name": "Only at Fitkaar",
+        "cat_2_link": "shopify://collections/only-at-fitkaar",
+        "cat_3_name": "Food & Drinks",
+        "cat_3_link": "shopify://collections/food-and-drinks",
+        "cat_4_name": "Sports & Fitness",
+        "cat_4_link": "shopify://collections/sports-and-fitness",
+        "cat_5_name": "Work & Hobbies",
+        "cat_5_link": "shopify://collections/work-and-hobbies",
+        "cat_6_name": "Couples",
+        "cat_6_link": "shopify://collections/couples",
+        "cat_7_name": "Matching",
+        "cat_7_link": "shopify://collections/matching",
+        "cat_8_name": "Pun Intended",
+        "cat_8_link": "shopify://collections/pun-intended",
+        "cat_9_name": "Zodiac Signs",
+        "cat_9_link": "shopify://collections/zodiac-signs"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

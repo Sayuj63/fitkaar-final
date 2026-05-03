@@ -49,7 +49,9 @@
     </ul>
 
     <!-- #16: Search overlay — right drawer (mobile + desktop) -->
-    <div class="fk-search-overlay" id="fkSearchOverlay" hidden>
+    <div class="fk-search-overlay" id="fkSearchOverlay">
+      <!-- Scrim fades separately so it never makes the panel invisible during the slide -->
+      <div class="fk-search-scrim" id="fkSearchScrim"></div>
       <div class="fk-search-panel" role="dialog" aria-modal="true" aria-label="Search">
         <div class="fk-search-panel__scroll">
           <div class="fk-search-top">
@@ -62,6 +64,8 @@
                 placeholder="Search for sweatshirts, hoodies, tees…"
                 autocomplete="off"
                 spellcheck="false"
+                aria-autocomplete="list"
+                aria-controls="fkSearchSuggestions"
               >
               <input type="hidden" name="type" value="product">
             </form>
@@ -69,8 +73,10 @@
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
           </div>
+          <!-- Google-style suggestion list: shown while typing -->
+          <ul class="fk-search-suggestions" id="fkSearchSuggestions" role="listbox" aria-label="Suggestions"></ul>
 
-          <div class="fk-search-section">
+          <div class="fk-search-section fk-search-section--static">
             <h4 class="fk-search-heading">Popular Searches</h4>
             <div class="fk-search-chips">
               <a href="/search?q=women&type=product" class="fk-search-chip">Women</a>
@@ -93,24 +99,23 @@
     </div>
 
     <style>
+      /* ── Search overlay ─────────────────────────────────────────── */
+      /* The overlay is a transparent full-screen container.
+         NO opacity on it — opacity on parent makes children invisible
+         during the slide, so the user only sees a fade, not a slide. */
       .fk-search-overlay {
+        display: none;
         position: fixed;
         inset: 0;
         z-index: 9998;
-        display: flex;
         justify-content: flex-end;
         align-items: stretch;
-        padding: 0;
-        overflow: hidden;
         pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.22s ease;
-        background: rgba(0, 12, 91, 0.45);
-        backdrop-filter: blur(2px);
       }
-      .fk-search-overlay[hidden] { display: none; }
+      .fk-search-overlay.is-active {
+        display: flex;
+      }
       .fk-search-overlay.is-visible {
-        opacity: 1;
         pointer-events: auto;
       }
       html.fk-search-open,
@@ -118,19 +123,43 @@
         overflow: hidden;
         touch-action: none;
       }
+
+      /* Scrim: fades independently, position:absolute so it's out of flex flow */
+      .fk-search-scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 12, 91, 0.45);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        pointer-events: none;
+      }
+      .fk-search-overlay.is-visible .fk-search-scrim {
+        opacity: 1;
+      }
+
+      /* Panel: only transform transition, always opacity:1 — fully visible
+         during the entire slide so the user sees it come in from the right */
       .fk-search-panel {
         position: relative;
-        width: min(100vw, 440px);
+        z-index: 1;
+        /* Mobile: 90vw so the 10% scrim on the left is tappable to close */
+        width: min(90vw, 440px);
         height: 100%;
         max-height: 100dvh;
         background: #fff;
-        box-shadow: -12px 0 40px rgba(0, 12, 91, 0.18);
+        box-shadow: -16px 0 48px rgba(0, 12, 91, 0.22);
         transform: translateX(100%);
-        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.44s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
-      .fk-search-overlay.is-visible .fk-search-panel { transform: translateX(0); }
+      .fk-search-overlay.is-visible .fk-search-panel {
+        transform: translateX(0);
+      }
       @media (min-width: 900px) {
         .fk-search-panel { width: min(520px, 42vw); }
       }
@@ -318,6 +347,50 @@
         grid-column: 1 / -1;
       }
 
+      /* ── Suggestions dropdown ─────────────────────────── */
+      .fk-search-suggestions {
+        list-style: none;
+        margin: 6px 0 0;
+        padding: 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+        display: none;
+        box-shadow: 0 4px 16px rgba(0,12,91,0.08);
+      }
+      .fk-search-suggestions:not(:empty) { display: block; }
+      .fk-sugg-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 14px;
+        cursor: pointer;
+        font-size: 0.88rem;
+        color: #111;
+        font-family: inherit;
+        transition: background 0.12s;
+        border: none;
+        border-bottom: 1px solid #f3f4f6;
+        background: #fff;
+        width: 100%;
+        text-align: left;
+        text-decoration: none;
+      }
+      .fk-sugg-item:last-child { border-bottom: none; }
+      .fk-sugg-item:hover,
+      .fk-sugg-item.is-active { background: #f0f3ff; outline: none; }
+      .fk-sugg-item__icon { color: #9ca3af; flex-shrink: 0; }
+      .fk-sugg-item__text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .fk-sugg-item mark {
+        background: none;
+        color: var(--color-primary, #000c5b);
+        font-weight: 700;
+      }
+      .fk-sugg-item__arrow { color: #d1d5db; flex-shrink: 0; }
+
+      /* Hide popular chips + section headings while typing */
+      .fk-search-panel.is-typing .fk-search-section--static { display: none; }
+
       @media (max-width: 599px) {
         .fk-search-panel__scroll { padding: 14px 14px 24px; }
         #fkSearchInput { font-size: 0.95rem; }
@@ -326,39 +399,45 @@
 
     <script>
       (function() {
-        var overlay = document.getElementById('fkSearchOverlay');
-        var input = document.getElementById('fkSearchInput');
-        var resultsEl = document.getElementById('fkSearchResults');
-        var headingEl = document.getElementById('fkSearchResultsHeading');
-        var seeAllEl = document.getElementById('fkSearchSeeAll');
+        var overlay    = document.getElementById('fkSearchOverlay');
+        var panel      = overlay && overlay.querySelector('.fk-search-panel');
+        var input      = document.getElementById('fkSearchInput');
+        var suggestEl  = document.getElementById('fkSearchSuggestions');
+        var resultsEl  = document.getElementById('fkSearchResults');
+        var headingEl  = document.getElementById('fkSearchResultsHeading');
+        var seeAllEl   = document.getElementById('fkSearchSeeAll');
         var seeAllLink = document.getElementById('fkSearchSeeAllLink');
         if (!overlay || !input || !resultsEl) return;
 
         var debounceTimer;
+        var activeIdx = -1;       // keyboard-selected suggestion index
+        var lastQuery = '';
         var TOP_PRODUCTS_FALLBACK = [];
 
-        function escapeHtml(s) {
+        /* ── Helpers ──────────────────────────────────────── */
+        function esc(s) {
           return String(s == null ? '' : s)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
-        function escapeAttr(s) {
-          return escapeHtml(s).replace(/'/g, '&#39;');
+        function escAttr(s) { return esc(s).replace(/'/g, '&#39;'); }
+
+        /* Highlight the query portion in a title (case-insensitive) */
+        function highlight(title, q) {
+          if (!q) return esc(title);
+          var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+          return esc(title).replace(re, '<mark>$1</mark>');
         }
 
-        function variant0(p) {
-          return p.variants && p.variants[0] ? p.variants[0] : null;
-        }
-        /** Predictive search returns formatted strings; products.json uses variant decimals or cents */
+        function variant0(p) { return p.variants && p.variants[0] ? p.variants[0] : null; }
+
         function moneyDisplay(p) {
           var cur = p.price;
           if (cur != null && typeof cur === 'string' && /₹|Rs\.|INR/i.test(cur)) return cur;
           var n = p.price_min != null ? p.price_min : p.price_max;
           if (typeof n === 'number' && n > 0) {
-            var rupees = n >= 1000 ? n / 100 : n;
-            return '₹' + (Math.abs(rupees - Math.round(rupees)) < 0.01 ? Math.round(rupees) : rupees.toFixed(2));
+            var r = n >= 1000 ? n / 100 : n;
+            return '₹' + (Math.abs(r - Math.round(r)) < 0.01 ? Math.round(r) : r.toFixed(2));
           }
           var v = variant0(p);
           if (v && v.price != null && v.price !== '') {
@@ -372,8 +451,8 @@
           if (c == null && p.compare_at_price != null) c = p.compare_at_price;
           if (typeof c === 'string' && c !== '') return c;
           if (typeof c === 'number' && c > 0) {
-            var rupees = c >= 1000 ? c / 100 : c;
-            return '₹' + (Math.abs(rupees - Math.round(rupees)) < 0.01 ? Math.round(rupees) : rupees.toFixed(2));
+            var r = c >= 1000 ? c / 100 : c;
+            return '₹' + (Math.abs(r - Math.round(r)) < 0.01 ? Math.round(r) : r.toFixed(2));
           }
           var v = variant0(p);
           if (v && v.compare_at_price != null && v.compare_at_price !== '') {
@@ -383,14 +462,12 @@
           return '';
         }
         function salePercent(p) {
-          var cmpStr = compareDisplay(p);
-          var prStr = moneyDisplay(p);
-          var cmp = parseFloat(String(cmpStr).replace(/[^\d.]/g, ''));
-          var pr = parseFloat(String(prStr).replace(/[^\d.]/g, ''));
+          var cmp = parseFloat(String(compareDisplay(p)).replace(/[^\d.]/g, ''));
+          var pr  = parseFloat(String(moneyDisplay(p)).replace(/[^\d.]/g, ''));
           if (!cmp || !pr || cmp <= pr) return null;
           return Math.round((1 - pr / cmp) * 100);
         }
-        function productImageUrl(p) {
+        function imgUrl(p) {
           var fi = p.featured_image;
           if (fi && typeof fi === 'object' && fi.url) return fi.url;
           if (typeof fi === 'string') return fi;
@@ -398,114 +475,189 @@
           return p.image || '';
         }
 
-        function renderCard(p) {
-          var title = p.title || '';
-          var url = p.url || ('/products/' + (p.handle || ''));
-          var img = productImageUrl(p);
-          var priceStr = moneyDisplay(p);
-          var compareStr = compareDisplay(p);
-          var sale = salePercent(p);
-          var showCompare = compareStr && priceStr && compareStr !== priceStr;
-          var pct = sale != null && sale > 0 ? sale : null;
+        /* ── Suggestions ──────────────────────────────────── */
+        var SEARCH_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        var ARROW_SVG  = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-          return '<a href="' + escapeAttr(url) + '" class="fk-search-card">' +
-            '<div class="fk-search-card__media">' +
-              (pct != null ? '<span class="fk-search-card__badge">SAVE ' + pct + '%</span>' : '') +
-              (img ? '<img src="' + escapeAttr(img) + '" alt="' + escapeAttr(title) + '" loading="lazy">' : '') +
-            '</div>' +
-            '<div class="fk-search-card__body">' +
-              '<div class="fk-search-card__title">' + escapeHtml(title) + '</div>' +
-              '<div class="fk-search-card__prices">' +
-                (showCompare ? '<span class="fk-search-card__compare">' + escapeHtml(compareStr) + '</span>' : '') +
-                '<span class="fk-search-card__price' + (showCompare ? ' fk-search-card__price--sale' : '') + '">' + escapeHtml(priceStr) + '</span>' +
-              '</div>' +
-            '</div>' +
-          '</a>';
-        }
-
-        function setSeeAll(query) {
-          if (!seeAllEl || !seeAllLink) return;
-          if (query && query.length) {
-            seeAllEl.hidden = false;
-            seeAllLink.href = '/search?q=' + encodeURIComponent(query) + '&type=product';
-          } else {
-            seeAllEl.hidden = true;
-          }
-        }
-
-        function renderResults(products, query) {
-          setSeeAll(query || '');
-          if (!products || products.length === 0) {
-            resultsEl.innerHTML = '<div class="fk-search-empty">No products found. Try a different search or browse collections.</div>';
+        function renderSuggestions(products, q) {
+          if (!suggestEl) return;
+          if (!products || products.length === 0 || !q) {
+            suggestEl.innerHTML = '';
             return;
           }
-          resultsEl.innerHTML = products.map(renderCard).join('');
+          activeIdx = -1;
+          suggestEl.innerHTML = products.slice(0, 6).map(function(p, i) {
+            var title = p.title || '';
+            var url   = p.url || ('/products/' + (p.handle || ''));
+            return '<li role="option" aria-selected="false">' +
+              '<a class="fk-sugg-item" href="' + escAttr(url) + '" data-idx="' + i + '">' +
+                '<span class="fk-sugg-item__icon">' + SEARCH_SVG + '</span>' +
+                '<span class="fk-sugg-item__text">' + highlight(title, q) + '</span>' +
+                '<span class="fk-sugg-item__arrow">' + ARROW_SVG + '</span>' +
+              '</a>' +
+            '</li>';
+          }).join('');
         }
 
+        function clearSuggestions() {
+          if (suggestEl) suggestEl.innerHTML = '';
+          activeIdx = -1;
+        }
+
+        /* Keyboard nav through suggestions */
+        function moveSuggestion(dir) {
+          if (!suggestEl) return;
+          var items = suggestEl.querySelectorAll('.fk-sugg-item');
+          if (!items.length) return;
+          items[activeIdx] && items[activeIdx].classList.remove('is-active');
+          activeIdx = (activeIdx + dir + items.length + 1) % (items.length + 1) - 1;
+          if (activeIdx < 0) { input.focus(); return; }
+          if (activeIdx >= items.length) activeIdx = 0;
+          items[activeIdx].classList.add('is-active');
+          items[activeIdx].focus();
+        }
+
+        /* ── Product cards ────────────────────────────────── */
+        function setSeeAll(q) {
+          if (!seeAllEl || !seeAllLink) return;
+          seeAllEl.hidden = !q;
+          if (q) seeAllLink.href = '/search?q=' + encodeURIComponent(q) + '&type=product';
+        }
+
+        function renderCards(products, q) {
+          setSeeAll(q || '');
+          if (!products || products.length === 0) {
+            resultsEl.innerHTML = q
+              ? '<div class="fk-search-empty">No products found for "' + esc(q) + '". <a href="/search?q=' + encodeURIComponent(q) + '&type=product" style="color:var(--color-primary);text-decoration:underline;">See full results →</a></div>'
+              : '<div class="fk-search-empty">No products found.</div>';
+            return;
+          }
+          resultsEl.innerHTML = products.map(function(p) {
+            var title = p.title || '';
+            var url = p.url || ('/products/' + (p.handle || ''));
+            var img = imgUrl(p);
+            var priceStr = moneyDisplay(p);
+            var compareStr = compareDisplay(p);
+            var sale = salePercent(p);
+            var showCmp = compareStr && priceStr && compareStr !== priceStr;
+            var pct = sale != null && sale > 0 ? sale : null;
+            return '<a href="' + escAttr(url) + '" class="fk-search-card">' +
+              '<div class="fk-search-card__media">' +
+                (pct ? '<span class="fk-search-card__badge">SAVE ' + pct + '%</span>' : '') +
+                (img ? '<img src="' + escAttr(img) + '" alt="' + escAttr(title) + '" loading="lazy">' : '') +
+              '</div>' +
+              '<div class="fk-search-card__body">' +
+                '<div class="fk-search-card__title">' + esc(title) + '</div>' +
+                '<div class="fk-search-card__prices">' +
+                  (showCmp ? '<span class="fk-search-card__compare">' + esc(compareStr) + '</span>' : '') +
+                  '<span class="fk-search-card__price' + (showCmp ? ' fk-search-card__price--sale' : '') + '">' + esc(priceStr) + '</span>' +
+                '</div>' +
+              '</div>' +
+            '</a>';
+          }).join('');
+        }
+
+        /* ── Open / close ─────────────────────────────────── */
         function open() {
           document.documentElement.classList.add('fk-search-open');
-          overlay.hidden = false;
+          overlay.classList.add('is-active');
           requestAnimationFrame(function() {
-            overlay.classList.add('is-visible');
-            input.focus();
+            requestAnimationFrame(function() {
+              overlay.classList.add('is-visible');
+              input.focus();
+            });
           });
           if (resultsEl.childElementCount === 0) loadTopProducts();
         }
         function close() {
           overlay.classList.remove('is-visible');
           document.documentElement.classList.remove('fk-search-open');
-          setTimeout(function() { overlay.hidden = true; }, 280);
+          setTimeout(function() { overlay.classList.remove('is-active'); }, 440);
         }
-        window.__fkOpenSearch = open;
+        window.__fkOpenSearch  = open;
         window.__fkCloseSearch = close;
+
         overlay.addEventListener('click', function(e) {
-          if (e.target === overlay) close();
+          if (!e.target.closest('.fk-search-panel')) close();
         });
         document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && !overlay.hidden) close();
+          if (e.key === 'Escape' && overlay.classList.contains('is-active')) {
+            if (suggestEl && suggestEl.children.length) { clearSuggestions(); input.focus(); }
+            else close();
+          }
+          if (!overlay.classList.contains('is-active')) return;
+          if (e.key === 'ArrowDown') { e.preventDefault(); moveSuggestion(1); }
+          if (e.key === 'ArrowUp')   { e.preventDefault(); moveSuggestion(-1); }
         });
 
+        /* ── Top products (default state) ─────────────────── */
         function loadTopProducts() {
           fetch('/collections/best-sellers/products.json?limit=8')
             .then(function(r) { return r.ok ? r.json() : { products: [] }; })
             .then(function(d) {
               TOP_PRODUCTS_FALLBACK = d.products || [];
-              if (input.value.trim().length === 0) {
-                headingEl.textContent = 'Top Products';
-                renderResults(TOP_PRODUCTS_FALLBACK, '');
-              }
+              if (!input.value.trim()) { headingEl.textContent = 'Top Products'; renderCards(TOP_PRODUCTS_FALLBACK, ''); }
             })
             .catch(function() {
               fetch('/collections/all/products.json?limit=8')
                 .then(function(r) { return r.ok ? r.json() : { products: [] }; })
                 .then(function(d) {
                   TOP_PRODUCTS_FALLBACK = d.products || [];
-                  if (input.value.trim().length === 0) renderResults(TOP_PRODUCTS_FALLBACK, '');
-                })
-                .catch(function() {});
+                  if (!input.value.trim()) renderCards(TOP_PRODUCTS_FALLBACK, '');
+                }).catch(function() {});
             });
         }
 
+        /* ── Predictive search ────────────────────────────── */
+        /* Shopify's predictive search API — we request:
+           • resources[options][fields] = searches titles, tags, product_type, vendor
+             so "food" matches products tagged "food-and-drinks", type "Food", etc.
+           • resources[limit]=12 for more results                                    */
         function predictiveSearch(q) {
-          fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=10')
-            .then(function(r) { return r.ok ? r.json() : { resources: { results: { products: [] } } }; })
+          var url = '/search/suggest.json'
+            + '?q=' + encodeURIComponent(q)
+            + '&resources[type]=product'
+            + '&resources[limit]=12'
+            + '&resources[options][fields]=title,product_type,variants.title,tag,vendor'
+            + '&resources[options][unavailable_products]=last';
+
+          fetch(url)
+            .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(d) {
-              var products = (d && d.resources && d.resources.results && d.resources.results.products) || [];
-              headingEl.textContent = 'Search results for "' + q + '"';
-              renderResults(products, q);
+              if (!d) return;
+              var products = (d.resources && d.resources.results && d.resources.results.products) || [];
+              /* Show suggestions (name list) */
+              renderSuggestions(products, q);
+              /* Show product cards */
+              headingEl.textContent = products.length
+                ? products.length + ' result' + (products.length > 1 ? 's' : '') + ' for "' + q + '"'
+                : 'No results for "' + q + '"';
+              renderCards(products, q);
             })
             .catch(function() {});
         }
 
+        /* ── Input handler ────────────────────────────────── */
         input.addEventListener('input', function() {
           var q = input.value.trim();
           clearTimeout(debounceTimer);
+          if (panel) panel.classList.toggle('is-typing', q.length > 0);
+
           if (q.length === 0) {
+            clearSuggestions();
             headingEl.textContent = 'Top Products';
-            renderResults(TOP_PRODUCTS_FALLBACK, '');
+            renderCards(TOP_PRODUCTS_FALLBACK, '');
             return;
           }
-          debounceTimer = setTimeout(function() { predictiveSearch(q); }, 200);
+
+          lastQuery = q;
+          /* Suggestions fire immediately (feel instant like Google) */
+          debounceTimer = setTimeout(function() { predictiveSearch(q); }, 120);
+        });
+
+        /* Keep input in sync when user clicks a suggestion link */
+        suggestEl && suggestEl.addEventListener('click', function() {
+          clearSuggestions();
         });
       })();
     </script>
@@ -529,8 +681,8 @@
       .fk-popup-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0, 12, 91, 0.55);
-        backdrop-filter: blur(2px);
+        background: rgba(0, 12, 91, 0.45);
+        backdrop-filter: blur(3px);
         z-index: 10000;
         display: flex;
         align-items: center;
@@ -543,103 +695,114 @@
       .fk-popup-overlay.is-visible { opacity: 1; }
       .fk-popup {
         position: relative;
-        background: var(--color-primary, #000c5b);
-        color: #fff;
+        background: #fff;
+        color: var(--color-primary, #000c5b);
         border-radius: 18px;
-        padding: 28px 24px 26px;
-        max-width: 380px;
+        padding: 36px 28px 28px;
+        max-width: 400px;
         width: 100%;
         text-align: center;
         font-family: var(--font-heading, 'League Spartan', sans-serif);
-        box-shadow: 0 30px 60px rgba(0, 12, 91, 0.45);
+        box-shadow: 0 24px 60px rgba(0, 12, 91, 0.22);
         transform: scale(0.92);
         transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       .fk-popup-overlay.is-visible .fk-popup { transform: scale(1); }
       .fk-popup-close {
         position: absolute;
-        top: 8px;
-        right: 12px;
+        top: 10px;
+        right: 14px;
         background: none;
         border: none;
-        color: #fff;
-        font-size: 28px;
+        color: var(--color-primary, #000c5b);
+        font-size: 26px;
         cursor: pointer;
         line-height: 1;
-        opacity: 0.7;
+        opacity: 0.55;
       }
       .fk-popup-close:hover { opacity: 1; }
       .fk-popup h3 {
-        font-size: 24px;
+        font-size: 26px;
         font-weight: 900;
-        margin: 0 0 8px;
-        letter-spacing: 0.02em;
-        line-height: 1.15;
+        color: var(--color-primary, #000c5b);
+        margin: 0 0 10px;
+        letter-spacing: 0.01em;
+        line-height: 1.2;
       }
       .fk-popup p {
         font-family: var(--font-body, 'Helvetica Neue', sans-serif);
         font-size: 14px;
-        color: #bfdbe3;
-        margin: 0 0 18px;
-        line-height: 1.55;
+        color: #555;
+        margin: 0 0 20px;
+        line-height: 1.6;
       }
       .fk-popup .small-line {
         font-size: 13px;
         font-style: italic;
-        color: #bfdbe3;
-        margin-bottom: 14px;
+        color: #888;
+        margin-bottom: 6px;
+        display: block;
       }
       .fk-popup .fk-popup-actions {
         display: flex;
         gap: 10px;
         justify-content: center;
         flex-wrap: wrap;
+        margin-top: 4px;
       }
       .fk-popup .fk-popup-cta,
       .fk-popup .fk-popup-cta-secondary {
-        padding: 10px 22px;
+        padding: 11px 28px;
         border-radius: 30px;
         font-family: var(--font-heading, 'League Spartan', sans-serif);
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.04em;
         cursor: pointer;
         text-decoration: none;
-        transition: transform 0.15s ease, background 0.2s ease;
-        border: none;
+        transition: transform 0.15s ease, box-shadow 0.2s ease;
         display: inline-block;
       }
       .fk-popup .fk-popup-cta {
-        background: #fff;
-        color: var(--color-primary, #000c5b);
+        background: var(--color-primary, #000c5b);
+        color: #fff;
+        border: 2px solid var(--color-primary, #000c5b);
       }
-      .fk-popup .fk-popup-cta:hover { transform: translateY(-2px); }
+      .fk-popup .fk-popup-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,12,91,0.25); }
       .fk-popup .fk-popup-cta-secondary {
         background: transparent;
-        color: #bfdbe3;
-        border: 1px solid #71b6c8;
+        color: var(--color-primary, #000c5b);
+        border: 2px solid var(--color-primary, #000c5b);
       }
-      .fk-popup .fk-popup-cta-secondary:hover { background: rgba(255,255,255,0.08); }
-      .fk-popup .fk-popup-emoji {
-        font-size: 56px;
-        line-height: 1;
-        display: block;
-        margin: 4px 0 12px;
-      }
+      .fk-popup .fk-popup-cta-secondary:hover { background: rgba(0,12,91,0.06); }
       .fk-popup .fk-popup-mascot {
         display: block;
-        width: 130px;
+        width: 110px;
         height: auto;
-        margin: 0 auto 14px;
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
+        margin: 4px auto 14px;
       }
-      .fk-popup .fk-popup-discount {
-        font-size: 36px;
+      .fk-popup .fk-popup-discount-box {
+        display: inline-block;
+        border: 2px dashed var(--color-primary, #000c5b);
+        border-radius: 6px;
+        padding: 14px 28px 10px;
+        margin: 6px 0 22px;
+      }
+      .fk-popup .fk-popup-discount-big {
+        font-size: 30px;
         font-weight: 900;
-        color: #71b6c8;
-        margin: 4px 0 6px;
-        letter-spacing: 0.02em;
+        color: var(--color-primary, #000c5b);
+        letter-spacing: 0.04em;
+        line-height: 1;
+        display: block;
+      }
+      .fk-popup .fk-popup-discount-sub {
+        font-size: 13px;
+        font-weight: 400;
+        color: #555;
+        display: block;
+        margin-top: 5px;
+        font-family: var(--font-body, 'Helvetica Neue', sans-serif);
       }
     </style>
 
@@ -683,13 +846,14 @@
         function popupWelcome() {
           if (!once(STATE_KEYS.welcome)) return;
           show(
-            '<span class="fk-popup-emoji">🎁</span>' +
-            '<h3>Anything on a tee?</h3>' +
+            '<h3>Ever loved something so much that you wanted to wear it?</h3>' +
             '<p>That\'s exactly what we do.</p>' +
-            '<div class="fk-popup-discount">FLAT 10% OFF</div>' +
-            '<p>on your first order!</p>' +
+            '<div class="fk-popup-discount-box">' +
+              '<span class="fk-popup-discount-big">FLAT 10% OFF</span>' +
+              '<span class="fk-popup-discount-sub">on your first order</span>' +
+            '</div>' +
             '<div class="fk-popup-actions">' +
-              '<button class="fk-popup-cta" onclick="window.__fkClosePopup()">Shop now</button>' +
+              '<button class="fk-popup-cta" onclick="window.__fkClosePopup()">Shop Now</button>' +
             '</div>'
           );
         }
@@ -698,11 +862,10 @@
         function popupFormLeave() {
           if (!once(STATE_KEYS.formLeave)) return;
           show(
-            '<h3>Left too early!!</h3>' +
-            '<p>Happens to the best of us.<br>Take a look at what else we\'ve got.</p>' +
+            '<h3>Stuck midway?<br>Happens to the best of us.</h3>' +
+            '<p>Take a look at what else we\'ve got.</p>' +
             '<div class="fk-popup-actions">' +
-              '<a class="fk-popup-cta" href="/collections/all">Explore other options</a>' +
-              '<button class="fk-popup-cta-secondary" onclick="window.__fkClosePopup()">Stay here</button>' +
+              '<a class="fk-popup-cta" href="/collections/all">Shop Now</a>' +
             '</div>'
           );
         }
@@ -711,11 +874,10 @@
         function popupShopLeave() {
           if (!once(STATE_KEYS.shopLeave)) return;
           show(
-            '<h3>Anything on a tee?</h3>' +
-            '<p>We can design something just for you<br>at no extra cost.</p>' +
+            '<h3>Didn\'t find what you are looking for?</h3>' +
+            '<p>We can design something<br>just for you at no extra cost.</p>' +
             '<div class="fk-popup-actions">' +
-              '<a class="fk-popup-cta" href="/pages/process">Customise now</a>' +
-              '<button class="fk-popup-cta-secondary" onclick="window.__fkClosePopup()">Maybe later</button>' +
+              '<a class="fk-popup-cta" href="/pages/process">Customise Here</a>' +
             '</div>'
           );
         }
@@ -724,9 +886,10 @@
         function popupCartAbandon() {
           if (!once(STATE_KEYS.cartLeave)) return;
           show(
-            '<img class="fk-popup-mascot" src="{{ "cart pop up.png" | asset_url }}" alt="Left too early">' +
-            '<h3>Left too early!!</h3>' +
-            '<p class="small-line">Take us home with you :)</p>' +
+            '<span class="small-line">pleaseeeee</span>' +
+            '<h3>Don\'t abandon me</h3>' +
+            '<img class="fk-popup-mascot" src="{{ "cart pop up.png" | asset_url }}" alt="Don\'t abandon me">' +
+            '<p>take me home with you :(</p>' +
             '<div class="fk-popup-actions">' +
               '<a class="fk-popup-cta" href="/checkout">Checkout</a>' +
               '<button class="fk-popup-cta-secondary" onclick="window.__fkClosePopup()">Abandon</button>' +

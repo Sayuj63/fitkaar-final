@@ -442,6 +442,11 @@
     font-size: 0.85rem;
     font-weight: 400;
   }
+  .product-card-price .card-from {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #666;
+  }
   .product-card-price .card-off-pct {
     font-size: 0.7rem;
     font-weight: 700;
@@ -776,172 +781,322 @@
     pointer-events: none;
   }
 
-  /* Filter panel */
+  /* ── Filter Panel ─────────────────────────────── */
   .filter-panel {
     display: none;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
     margin-bottom: 24px;
-    background: #fafbfd;
+    background: #fff;
+    overflow: hidden;
   }
-
   .filter-panel.open { display: block; }
 
   .filter-groups {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    align-items: start;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    align-items: stretch;
   }
+  .filter-groups::-webkit-scrollbar { display: none; }
 
-  .filter-group details {
-    border-bottom: 1px solid #eaeaea;
-    padding-bottom: 12px;
+  .filter-group {
+    flex: 1 0 200px;
+    min-width: 180px;
+    max-width: 300px;
+    border-right: 1px solid #f0f0f0;
+    padding: 16px 18px;
   }
+  .filter-group:last-child { border-right: none; }
 
-  .filter-group summary {
-    list-style: none;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+  .filter-group__head {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-primary, #000c5b);
-    padding: 6px 0;
+    margin: 0 0 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-
-  .filter-group summary::-webkit-details-marker { display: none; }
-
-  .filter-group summary::after {
-    content: "+";
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #888;
+  .filter-group__badge {
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 2px 7px;
+    letter-spacing: 0;
+    line-height: 1.4;
   }
 
-  .filter-group details[open] summary::after { content: "−"; }
+  /* Search within filter */
+  .filter-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    background: #f9fafb;
+  }
+  .filter-search input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.82rem;
+    color: #111;
+    font-family: inherit;
+    width: 100%;
+  }
+  .filter-search svg { color: #9ca3af; flex-shrink: 0; }
 
+  /* Options list */
   .filter-options {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-top: 10px;
-    max-height: 260px;
+    gap: 1px;
+    max-height: 210px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,12,91,0.2) transparent;
   }
+  .filter-options::-webkit-scrollbar { width: 4px; }
+  .filter-options::-webkit-scrollbar-thumb { background: rgba(0,12,91,0.2); border-radius: 999px; }
 
   .filter-option {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.85rem;
-    color: #222;
+    padding: 6px 6px;
+    border-radius: 6px;
     cursor: pointer;
-    padding: 4px 2px;
+    font-size: 0.83rem;
+    color: #222;
+    transition: background 0.1s;
+    user-select: none;
   }
-
+  .filter-option:hover { background: #f5f6fa; }
+  .filter-option.is-disabled { opacity: 0.4; pointer-events: none; }
   .filter-option input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
     accent-color: var(--color-primary, #000c5b);
     cursor: pointer;
+    flex-shrink: 0;
+  }
+  .fk-opt-label { flex: 1; }
+  .fk-opt-count { color: #9ca3af; font-size: 0.73rem; flex-shrink: 0; }
+
+  /* Color swatches */
+  .filter-option--color .fk-color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0,0,0,0.12);
+    flex-shrink: 0;
+  }
+  .fk-color-dot--multi {
+    background: conic-gradient(#dc2626 0deg 60deg, #f97316 60deg 120deg, #facc15 120deg 180deg, #16a34a 180deg 240deg, #2563eb 240deg 300deg, #7c3aed 300deg 360deg) !important;
   }
 
-  .filter-option .count {
-    color: #999;
-    font-size: 0.75rem;
-    margin-left: auto;
+  /* ── Price Slider ─────────────────────────────── */
+  .fk-price-slider { padding: 4px 0 6px; }
+
+  .fk-price-display {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary, #000c5b);
+    margin-bottom: 20px;
   }
 
-  .filter-price {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-top: 10px;
+  .fk-range-wrap {
+    position: relative;
+    height: 28px;
+    margin: 0 8px;
   }
-
-  .filter-price input {
+  .fk-range-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .fk-range-fill {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: var(--color-primary, #000c5b);
+    border-radius: 999px;
+  }
+  .fk-range-input {
+    position: absolute;
+    top: 50%;
+    left: 0;
     width: 100%;
-    padding: 8px 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-family: inherit;
+    height: 4px;
+    transform: translateY(-50%);
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    pointer-events: none;
+    margin: 0;
+    padding: 0;
+    outline: none;
+  }
+  .fk-range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2.5px solid var(--color-primary, #000c5b);
+    box-shadow: 0 1px 5px rgba(0,0,0,0.18);
+    cursor: pointer;
+    pointer-events: all;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .fk-range-input::-webkit-slider-thumb:hover {
+    transform: scale(1.18);
+    box-shadow: 0 2px 8px rgba(0,12,91,0.28);
+  }
+  .fk-range-input::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2.5px solid var(--color-primary, #000c5b);
+    box-shadow: 0 1px 5px rgba(0,0,0,0.18);
+    cursor: pointer;
+    pointer-events: all;
   }
 
+  .fk-price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .fk-price-input-group {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .fk-price-input-group:focus-within { border-color: var(--color-primary, #000c5b); }
+  .fk-price-prefix {
+    padding: 7px 6px 7px 10px;
+    color: #6b7280;
+    font-size: 0.83rem;
+    background: #f9fafb;
+    border-right: 1px solid #e5e7eb;
+    font-family: inherit;
+    flex-shrink: 0;
+  }
+  .fk-price-input-group input[type="number"] {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    padding: 7px 8px;
+    font-size: 0.83rem;
+    font-family: inherit;
+    background: transparent;
+    -moz-appearance: textfield;
+  }
+  .fk-price-input-group input[type="number"]::-webkit-outer-spin-button,
+  .fk-price-input-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .fk-price-dash { color: #9ca3af; font-size: 0.85rem; flex-shrink: 0; }
+
+  /* ── Filter footer ─────────────────────────── */
   .filter-panel__footer {
     display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 18px;
-    padding-top: 16px;
-    border-top: 1px solid #eaeaea;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    border-top: 1px solid #f0f0f0;
+    background: #fafbfd;
   }
-
-  .filter-panel__footer a,
-  .filter-panel__footer button {
-    padding: 8px 18px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    border-radius: 999px;
-    cursor: pointer;
+  .filter-clear-btn {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b7280;
     text-decoration: none;
-    border: 1px solid #ddd;
-    background: #fff;
-    color: #111;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+  .filter-clear-btn:hover { color: #111; }
+  .filter-results-note {
+    font-size: 0.78rem;
+    color: #9ca3af;
   }
 
-  .filter-panel__footer .apply-btn {
+  /* Filter button badge */
+  .filter-btn-badge {
     background: var(--color-primary, #000c5b);
     color: #fff;
-    border-color: var(--color-primary, #000c5b);
+    font-size: 0.63rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 1px 6px;
+    margin-left: 4px;
+    line-height: 1.6;
+    vertical-align: middle;
+    letter-spacing: 0;
   }
 
-  /* Active filter chips */
+  /* ── Active filter chips ─────────────────────── */
   .active-filters {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
-
   .active-filter {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #f5f6fa;
-    border: 1px solid #e3e6ef;
+    gap: 5px;
+    padding: 5px 10px;
+    background: #eff1ff;
+    border: 1px solid var(--color-primary, #000c5b);
     border-radius: 999px;
-    font-size: 0.8rem;
-    color: #222;
-    text-decoration: none;
-    transition: background 0.2s ease;
-  }
-
-  .active-filter:hover { background: #ebedf4; }
-
-  .active-filter::after {
-    content: "×";
-    font-size: 1.1rem;
-    line-height: 1;
-    color: #666;
-  }
-
-  .clear-all {
+    font-size: 0.76rem;
     color: var(--color-primary, #000c5b);
-    font-weight: 700;
-    font-size: 0.8rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  .active-filter:hover { background: #dde2ff; }
+  .active-filter::after { content: "×"; font-size: 1rem; opacity: 0.65; }
+  .clear-all {
+    color: #6b7280;
+    font-size: 0.76rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     text-decoration: underline;
     align-self: center;
   }
 
+  @media (max-width: 768px) {
+    .filter-groups { flex-direction: column; overflow-x: unset; }
+    .filter-group { max-width: unset; border-right: none; border-bottom: 1px solid #f0f0f0; }
+    .filter-group:last-child { border-bottom: none; }
+  }
   @media (max-width: 640px) {
     .collection-toolbar { padding: 10px 0; }
     .toolbar-btn, .toolbar-sort select { font-size: 0.75rem; padding: 8px 14px; }
@@ -960,31 +1115,33 @@
         endif
       endif
     -%}
-    {%- comment -%} Hero: collection.image from Admin, or optional first-product fallback {%- endcomment -%}
-    {%- if section.settings.show_hero and hero_img != blank -%}
-      <div class="collection-hero collection-hero--creative{% if collection.image == blank and hero_img != blank %} collection-hero--fallback{% endif %}">
-        <img src="{{ hero_img | image_url: width: 1800 }}"
-             srcset="{{ hero_img | image_url: width: 800 }} 800w,
-                     {{ hero_img | image_url: width: 1200 }} 1200w,
-                     {{ hero_img | image_url: width: 1800 }} 1800w"
-             sizes="100vw"
-             alt="{{ collection.title | escape }}"
-             loading="eager"
-             fetchpriority="high">
-        <div class="collection-hero__overlay">
-          <h1 class="collection-hero__title">{{ collection.title | default: 'Shop' }}</h1>
+    {%- comment -%} Hero: hidden on /collections/all (category circles lead instead) {%- endcomment -%}
+    {%- if collection.handle != 'all' -%}
+      {%- if section.settings.show_hero and hero_img != blank -%}
+        <div class="collection-hero collection-hero--creative{% if collection.image == blank and hero_img != blank %} collection-hero--fallback{% endif %}">
+          <img src="{{ hero_img | image_url: width: 1800 }}"
+               srcset="{{ hero_img | image_url: width: 800 }} 800w,
+                       {{ hero_img | image_url: width: 1200 }} 1200w,
+                       {{ hero_img | image_url: width: 1800 }} 1800w"
+               sizes="100vw"
+               alt="{{ collection.title | escape }}"
+               loading="eager"
+               fetchpriority="high">
+          <div class="collection-hero__overlay">
+            <h1 class="collection-hero__title">{{ collection.title | default: 'Shop' }}</h1>
+            {% if collection.description != blank %}
+              <p class="collection-hero__sub">{{ collection.description }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {%- else -%}
+        <div class="collection-header">
+          <h1 class="collection-title">{{ collection.title | default: 'All Products' }}</h1>
           {% if collection.description != blank %}
-            <p class="collection-hero__sub">{{ collection.description }}</p>
+            <p class="collection-description">{{ collection.description }}</p>
           {% endif %}
         </div>
-      </div>
-    {%- else -%}
-      <div class="collection-header">
-        <h1 class="collection-title">{{ collection.title | default: 'All Products' }}</h1>
-        {% if collection.description != blank %}
-          <p class="collection-description">{{ collection.description }}</p>
-        {% endif %}
-      </div>
+      {%- endif -%}
     {%- endif -%}
 
     {%- comment -%} Category circles: only on All products — not on /collections/basics etc. {%- endcomment -%}
@@ -1039,6 +1196,21 @@
         <input type="hidden" name="q" value="{{ collection.current_vendor }}">
       {%- endif -%}
 
+      {%- liquid
+        assign active_filter_count = 0
+        for filter in collection.filters
+          assign active_filter_count = active_filter_count | plus: filter.active_values.size
+          if filter.type == 'price_range'
+            if filter.min_value.value
+              assign active_filter_count = active_filter_count | plus: 1
+            endif
+            if filter.max_value.value
+              assign active_filter_count = active_filter_count | plus: 1
+            endif
+          endif
+        endfor
+      -%}
+
       <div class="collection-toolbar">
         <div class="collection-toolbar__count">
           {{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}
@@ -1059,6 +1231,9 @@
                 <line x1="17" y1="16" x2="23" y2="16"></line>
               </svg>
               Filter
+              {%- if active_filter_count > 0 -%}
+                <span class="filter-btn-badge">{{ active_filter_count }}</span>
+              {%- endif -%}
             </button>
           {%- endif -%}
 
@@ -1078,111 +1253,160 @@
           <div class="filter-groups">
             {%- for filter in collection.filters -%}
               {%- assign filter_label_lower = filter.label | downcase -%}
-              {%- comment %} Everything's always in stock — hide the availability filter. {% endcomment -%}
               {%- if filter_label_lower contains 'availab' or filter_label_lower contains 'stock' -%}
                 {%- continue -%}
               {%- endif -%}
+
+              {%- assign is_price    = false -%}
+              {%- assign is_color    = false -%}
+              {%- assign is_category = false -%}
               {%- assign filter_order = 50 -%}
+
               {%- if filter.type == 'price_range' -%}
+                {%- assign is_price = true -%}
                 {%- assign filter_order = 1 -%}
-              {%- elsif filter_label_lower contains 'gender' or filter_label_lower contains 'men' or filter_label_lower contains 'women' -%}
-                {%- assign filter_order = 2 -%}
-              {%- elsif filter_label_lower contains 'type' or filter_label_lower contains 'apparel' or filter_label_lower contains 'product' or filter_label_lower contains 'category' -%}
+              {%- elsif filter_label_lower contains 'colour' or filter_label_lower contains 'color' -%}
+                {%- assign is_color = true -%}
                 {%- assign filter_order = 3 -%}
-              {%- elsif filter_label_lower contains 'color' or filter_label_lower contains 'colour' -%}
+              {%- elsif filter_label_lower contains 'type' or filter_label_lower contains 'apparel' or filter_label_lower contains 'category' -%}
+                {%- assign is_category = true -%}
+                {%- assign filter_order = 2 -%}
+              {%- elsif filter_label_lower contains 'gender' or filter_label_lower contains 'men' or filter_label_lower contains 'women' -%}
                 {%- assign filter_order = 4 -%}
               {%- endif -%}
+
               <div class="filter-group" style="order: {{ filter_order }}">
-                <details {% if filter.active_values.size > 0 or filter.type == 'price_range' and filter.min_value.value or filter.max_value.value %}open{% endif %}>
-                  <summary>{{ filter.label }}</summary>
+                <div class="filter-group__head">
+                  {{ filter.label }}
+                  {%- if filter.active_values.size > 0 -%}
+                    <span class="filter-group__badge">{{ filter.active_values.size }}</span>
+                  {%- endif -%}
+                </div>
 
-                  {%- case filter.type -%}
-                    {%- when 'list', 'boolean' -%}
-                      <div class="filter-options">
-                        {%- for value in filter.values -%}
-                          <label class="filter-option">
-                            <input type="checkbox"
-                                   name="{{ value.param_name }}"
-                                   value="{{ value.value }}"
-                                   {% if value.active %}checked{% endif %}
-                                   {% if value.count == 0 and value.active == false %}disabled{% endif %}>
-                            <span>{{ value.label }}</span>
-                            {%- if value.count and value.count > 0 -%}
-                              <span class="count">({{ value.count }})</span>
+                {%- case filter.type -%}
+                  {%- when 'list', 'boolean' -%}
+                    {%- if is_category -%}
+                      <div class="filter-search">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <input type="text" placeholder="Search…" data-filter-search aria-label="Search {{ filter.label | escape }}">
+                      </div>
+                    {%- endif -%}
+                    <div class="filter-options" data-filter-options>
+                      {%- for value in filter.values -%}
+                        {%- assign is_disabled = false -%}
+                        {%- if value.count == 0 and value.active == false -%}{%- assign is_disabled = true -%}{%- endif -%}
+                        <label class="filter-option{% if is_color %} filter-option--color{% endif %}{% if is_disabled %} is-disabled{% endif %}">
+                          <input type="checkbox"
+                                 name="{{ value.param_name }}"
+                                 value="{{ value.value }}"
+                                 {% if value.active %}checked{% endif %}
+                                 {% if is_disabled %}disabled{% endif %}
+                                 data-filter-auto-submit>
+                          {%- if is_color -%}
+                            {%- assign cl = value.label | downcase | strip -%}
+                            {%- case cl -%}
+                              {%- when 'black' -%}{%- assign sw = '#1a1a1a' -%}
+                              {%- when 'white' -%}{%- assign sw = '#f0ede8' -%}
+                              {%- when 'off white' -%}{%- assign sw = '#f5f0e8' -%}
+                              {%- when 'cream' -%}{%- assign sw = '#fffbe6' -%}
+                              {%- when 'beige' -%}{%- assign sw = '#e4d5b4' -%}
+                              {%- when 'red' -%}{%- assign sw = '#dc2626' -%}
+                              {%- when 'blue' -%}{%- assign sw = '#2563eb' -%}
+                              {%- when 'royal blue' -%}{%- assign sw = '#1d4ed8' -%}
+                              {%- when 'navy', 'navy blue' -%}{%- assign sw = '#000c5b' -%}
+                              {%- when 'grey', 'gray' -%}{%- assign sw = '#9ca3af' -%}
+                              {%- when 'charcoal' -%}{%- assign sw = '#374151' -%}
+                              {%- when 'bottle green' -%}{%- assign sw = '#0b6e4f' -%}
+                              {%- when 'green' -%}{%- assign sw = '#16a34a' -%}
+                              {%- when 'olive', 'olive green' -%}{%- assign sw = '#6b7f36' -%}
+                              {%- when 'mustard' -%}{%- assign sw = '#d5a021' -%}
+                              {%- when 'yellow' -%}{%- assign sw = '#facc15' -%}
+                              {%- when 'pink' -%}{%- assign sw = '#f472b6' -%}
+                              {%- when 'hot pink' -%}{%- assign sw = '#db2777' -%}
+                              {%- when 'baby pink', 'light pink' -%}{%- assign sw = '#fbcfe8' -%}
+                              {%- when 'purple' -%}{%- assign sw = '#7c3aed' -%}
+                              {%- when 'lavender', 'lilac' -%}{%- assign sw = '#c4b5fd' -%}
+                              {%- when 'maroon', 'wine' -%}{%- assign sw = '#7f1d1d' -%}
+                              {%- when 'brown' -%}{%- assign sw = '#6b4226' -%}
+                              {%- when 'orange' -%}{%- assign sw = '#f97316' -%}
+                              {%- when 'sky blue', 'light blue', 'baby blue' -%}{%- assign sw = '#7dd3fc' -%}
+                              {%- when 'teal' -%}{%- assign sw = '#0f766e' -%}
+                              {%- when 'mint', 'mint green' -%}{%- assign sw = '#a7f3d0' -%}
+                              {%- when 'multi', 'multicolor', 'multicolour' -%}{%- assign sw = 'multi' -%}
+                              {%- else -%}{%- assign sw = '#c8c8c8' -%}
+                            {%- endcase -%}
+                            {%- if sw == 'multi' -%}
+                              <span class="fk-color-dot fk-color-dot--multi"></span>
+                            {%- else -%}
+                              <span class="fk-color-dot" style="background:{{ sw }};{% if cl == 'white' or cl == 'off white' or cl == 'cream' %}border-color:#aaa;{% endif %}"></span>
                             {%- endif -%}
-                          </label>
-                        {%- endfor -%}
+                          {%- endif -%}
+                          <span class="fk-opt-label">{{ value.label }}</span>
+                          {%- if value.count > 0 -%}
+                            <span class="fk-opt-count">({{ value.count }})</span>
+                          {%- endif -%}
+                        </label>
+                      {%- endfor -%}
+                    </div>
+
+                  {%- when 'price_range' -%}
+                    {%- assign range_max = filter.range_max | divided_by: 100 -%}
+                    {%- assign cur_min = 0 -%}
+                    {%- if filter.min_value.value -%}{%- assign cur_min = filter.min_value.value | divided_by: 100 -%}{%- endif -%}
+                    {%- assign cur_max = range_max -%}
+                    {%- if filter.max_value.value -%}{%- assign cur_max = filter.max_value.value | divided_by: 100 -%}{%- endif -%}
+
+                    <div class="fk-price-slider" data-price-slider data-price-max="{{ range_max }}">
+                      <div class="fk-price-display">
+                        ₹<span data-price-show-min>{{ cur_min }}</span> — ₹<span data-price-show-max>{{ cur_max }}</span>
                       </div>
 
-                    {%- when 'price_range' -%}
-                      {%- assign range_max_rupees = filter.range_max | divided_by: 100 -%}
-                      {%- assign current_min_rupees = 0 -%}
-                      {%- if filter.min_value.value -%}
-                        {%- assign current_min_rupees = filter.min_value.value | divided_by: 100 -%}
-                      {%- endif -%}
-                      {%- assign current_max_rupees = range_max_rupees -%}
-                      {%- if filter.max_value.value -%}
-                        {%- assign current_max_rupees = filter.max_value.value | divided_by: 100 -%}
-                      {%- endif -%}
-
-                      <div class="filter-price-slider" data-price-slider data-price-max="{{ range_max_rupees }}">
-                        <div class="filter-price-headline">The highest price is ₹{{ range_max_rupees }}</div>
-
-                        <div class="filter-price-track">
-                          <div class="filter-price-rail"></div>
-                          <div class="filter-price-fill" data-price-fill></div>
-                          <input type="range"
-                                 class="filter-price-range filter-price-range--min"
-                                 min="0"
-                                 max="{{ range_max_rupees }}"
-                                 step="1"
-                                 value="{{ current_min_rupees }}"
-                                 aria-label="Minimum price"
-                                 data-price-range-min>
-                          <input type="range"
-                                 class="filter-price-range filter-price-range--max"
-                                 min="0"
-                                 max="{{ range_max_rupees }}"
-                                 step="1"
-                                 value="{{ current_max_rupees }}"
-                                 aria-label="Maximum price"
-                                 data-price-range-max>
+                      <div class="fk-range-wrap">
+                        <div class="fk-range-track">
+                          <div class="fk-range-fill" data-price-fill></div>
                         </div>
+                        <input type="range" class="fk-range-input"
+                               min="0" max="{{ range_max }}" step="1"
+                               value="{{ cur_min }}"
+                               aria-label="Minimum price"
+                               data-price-range-min>
+                        <input type="range" class="fk-range-input"
+                               min="0" max="{{ range_max }}" step="1"
+                               value="{{ cur_max }}"
+                               aria-label="Maximum price"
+                               data-price-range-max>
+                      </div>
 
-                        <div class="filter-price-inputs">
-                          <label class="filter-price-input-wrap">
-                            <span class="filter-price-prefix">₹</span>
-                            <input type="number"
-                                   name="{{ filter.min_value.param_name }}"
-                                   min="0"
-                                   max="{{ range_max_rupees }}"
-                                   step="1"
-                                   placeholder="0"
-                                   value="{% if filter.min_value.value %}{{ current_min_rupees }}{% endif %}"
-                                   data-price-num-min>
-                          </label>
-                          <label class="filter-price-input-wrap">
-                            <span class="filter-price-prefix">₹</span>
-                            <input type="number"
-                                   name="{{ filter.max_value.param_name }}"
-                                   min="0"
-                                   max="{{ range_max_rupees }}"
-                                   step="1"
-                                   placeholder="{{ range_max_rupees }}"
-                                   value="{% if filter.max_value.value %}{{ current_max_rupees }}{% endif %}"
-                                   data-price-num-max>
-                          </label>
+                      <div class="fk-price-inputs">
+                        <div class="fk-price-input-group">
+                          <span class="fk-price-prefix">₹</span>
+                          <input type="number"
+                                 name="{{ filter.min_value.param_name }}"
+                                 min="0" max="{{ range_max }}" step="1"
+                                 placeholder="0"
+                                 value="{% if filter.min_value.value %}{{ cur_min }}{% endif %}"
+                                 data-price-num-min>
+                        </div>
+                        <span class="fk-price-dash">—</span>
+                        <div class="fk-price-input-group">
+                          <span class="fk-price-prefix">₹</span>
+                          <input type="number"
+                                 name="{{ filter.max_value.param_name }}"
+                                 min="0" max="{{ range_max }}" step="1"
+                                 placeholder="{{ range_max }}"
+                                 value="{% if filter.max_value.value %}{{ cur_max }}{% endif %}"
+                                 data-price-num-max>
                         </div>
                       </div>
-                  {%- endcase -%}
-                </details>
+                    </div>
+                {%- endcase -%}
               </div>
             {%- endfor -%}
           </div>
 
           <div class="filter-panel__footer">
-            <a href="{{ collection.url }}">Clear all</a>
-            <button type="submit" class="apply-btn">Apply</button>
+            <a href="{{ collection.url }}" class="filter-clear-btn">Clear all filters</a>
+            <span class="filter-results-note">{{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}</span>
           </div>
         </div>
       {%- endif -%}
@@ -1278,28 +1502,41 @@
               <div class="product-card-info">
                 <h3 class="product-card-title">{{ product.title }}</h3>
 
-                {%- comment -%} Price uses cover variant's price + compare_at_price (admin-driven) {%- endcomment -%}
+                {%- comment -%}
+                  Price display logic:
+                  1. If admin has assigned a variant image matching the cover → show that variant's exact price
+                  2. Else if prices vary across types → show "From ₹X/-" (honest, not misleading)
+                  3. Else all variants same price → show the single price normally with sale badge
+                  Admin fix: Products → variant → edit → assign image. That makes step 1 work perfectly.
+                {%- endcomment -%}
                 {%- assign card_cover_variant = nil -%}
                 {%- for vv in product.variants -%}
                   {%- if vv.featured_image and vv.featured_image.id == product.featured_image.id -%}
                     {%- assign card_cover_variant = vv -%}{%- break -%}
                   {%- endif -%}
                 {%- endfor -%}
-                {%- assign card_actual_price = product.price -%}
+
+                {%- assign card_actual_price = product.price_min -%}
                 {%- assign card_compare_price = product.compare_at_price -%}
+                {%- assign card_price_is_from = false -%}
+
                 {%- if card_cover_variant -%}
                   {%- assign card_actual_price = card_cover_variant.price -%}
                   {%- if card_cover_variant.compare_at_price -%}
                     {%- assign card_compare_price = card_cover_variant.compare_at_price -%}
                   {%- endif -%}
+                {%- elsif product.price_min != product.price_max -%}
+                  {%- assign card_price_is_from = true -%}
                 {%- endif -%}
 
                 <div class="product-card-price">
-                  <span>₹{{ card_actual_price | divided_by: 100 }}/-</span>
-                  {% if card_compare_price and card_compare_price > card_actual_price %}
-                    <span class="compare-price">₹{{ card_compare_price | divided_by: 100 }}/-</span>
-                    <span class="card-off-pct">{{ card_compare_price | minus: card_actual_price | times: 100 | divided_by: card_compare_price }}% OFF</span>
-                  {% endif %}
+                  <span>{% if card_price_is_from %}<span class="card-from">From </span>{% endif %}₹{{ card_actual_price | divided_by: 100 }}/-</span>
+                  {%- unless card_price_is_from -%}
+                    {% if card_compare_price and card_compare_price > card_actual_price %}
+                      <span class="compare-price">₹{{ card_compare_price | divided_by: 100 }}/-</span>
+                      <span class="card-off-pct">{{ card_compare_price | minus: card_actual_price | times: 100 | divided_by: card_compare_price }}% OFF</span>
+                    {% endif %}
+                  {%- endunless -%}
                 </div>
 
                 {%- assign type_option = nil -%}
@@ -1374,33 +1611,39 @@
                         {%- case color_lower -%}
                           {%- when 'black' -%}{% assign swatch = '#000' %}
                           {%- when 'white' -%}{% assign swatch = '#f0f0f0' %}
+                          {%- when 'off white' -%}{% assign swatch = '#f5f0e8' %}
+                          {%- when 'cream' -%}{% assign swatch = '#fffbe6' %}
                           {%- when 'beige' -%}{% assign swatch = '#e4d5b4' %}
                           {%- when 'red' -%}{% assign swatch = '#dc2626' %}
                           {%- when 'blue' -%}{% assign swatch = '#2563eb' %}
-                          {%- when 'navy' -%}{% assign swatch = '#000c5b' %}
+                          {%- when 'royal blue' -%}{% assign swatch = '#1d4ed8' %}
+                          {%- when 'navy', 'navy blue' -%}{% assign swatch = '#000c5b' %}
                           {%- when 'grey', 'gray' -%}{% assign swatch = '#888' %}
+                          {%- when 'charcoal' -%}{% assign swatch = '#374151' %}
                           {%- when 'bottle green' -%}{% assign swatch = '#0b6e4f' %}
                           {%- when 'green' -%}{% assign swatch = '#16a34a' %}
-                          {%- when 'olive' -%}{% assign swatch = '#6b7f36' %}
+                          {%- when 'olive', 'olive green' -%}{% assign swatch = '#6b7f36' %}
                           {%- when 'mustard' -%}{% assign swatch = '#d5a021' %}
                           {%- when 'yellow' -%}{% assign swatch = '#facc15' %}
                           {%- when 'pink' -%}{% assign swatch = '#ec4899' %}
+                          {%- when 'hot pink' -%}{% assign swatch = '#db2777' %}
+                          {%- when 'baby pink', 'light pink' -%}{% assign swatch = '#fbcfe8' %}
                           {%- when 'purple' -%}{% assign swatch = '#7c3aed' %}
-                          {%- when 'lavender' -%}{% assign swatch = '#c4b5fd' %}
-                          {%- when 'maroon' -%}{% assign swatch = '#7f1d1d' %}
+                          {%- when 'lavender', 'lilac' -%}{% assign swatch = '#c4b5fd' %}
+                          {%- when 'maroon', 'wine' -%}{% assign swatch = '#7f1d1d' %}
                           {%- when 'brown' -%}{% assign swatch = '#6b4226' %}
                           {%- when 'orange' -%}{% assign swatch = '#f97316' %}
-                          {%- when 'sky blue', 'light blue' -%}{% assign swatch = '#7dd3fc' %}
-                          {%- when 'off white' -%}{% assign swatch = '#fffbe6' %}
-                          {%- when 'lilac' -%}{% assign swatch = '#b19cd9' %}
-                          {%- else -%}{% assign swatch = color_lower | replace: ' ', '' %}
+                          {%- when 'sky blue', 'light blue', 'baby blue' -%}{% assign swatch = '#7dd3fc' %}
+                          {%- when 'teal' -%}{% assign swatch = '#0f766e' %}
+                          {%- when 'mint', 'mint green' -%}{% assign swatch = '#a7f3d0' %}
+                          {%- else -%}{% assign swatch = '#c8c8c8' %}
                         {%- endcase -%}
                         {%- assign hide_mobile = '' -%}
                         {%- if pcidx >= mobile_budget -%}{%- assign hide_mobile = ' pc-hide-mobile' -%}{%- endif -%}
                         <span class="color-dot{{ hide_mobile }}"
                               title="{{ color | escape }}"
                               aria-label="{{ color | escape }}"
-                              style="background-color:{{ swatch }};{% if color_lower == 'white' or color_lower == 'cream' %}border-color:#ddd;{% endif %}"></span>
+                              style="background-color:{{ swatch }};{% if color_lower == 'white' or color_lower == 'off white' or color_lower == 'cream' %}border-color:#aaa;{% endif %}"></span>
                         {%- assign pcidx = pcidx | plus: 1 -%}
                       {% endfor %}
                     </div>
@@ -1436,20 +1679,117 @@
   var form = document.getElementById('CollectionFilterForm');
   if (!form) return;
 
+  /* ── Filter panel toggle ──────────────────────── */
   var toggleBtn = form.querySelector('[data-filter-toggle]');
-  var panel = form.querySelector('#FilterPanel');
+  var panel     = document.getElementById('FilterPanel');
   if (toggleBtn && panel) {
+    /* Auto-open if filters are active */
+    if (panel.querySelector('input[type="checkbox"]:checked')) {
+      panel.classList.add('open');
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      panel.setAttribute('aria-hidden', 'false');
+    }
     toggleBtn.addEventListener('click', function() {
       var isOpen = panel.classList.toggle('open');
-      toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      panel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      toggleBtn.setAttribute('aria-expanded', String(isOpen));
+      panel.setAttribute('aria-hidden', String(!isOpen));
     });
   }
 
+  /* ── Sort: auto-submit on change ──────────────── */
   var sort = form.querySelector('[data-sort-select]');
-  if (sort) {
-    sort.addEventListener('change', function() { form.submit(); });
-  }
+  if (sort) sort.addEventListener('change', function() { form.submit(); });
+
+  /* ── Checkboxes: auto-submit ──────────────────── */
+  form.querySelectorAll('[data-filter-auto-submit]').forEach(function(cb) {
+    cb.addEventListener('change', function() { form.submit(); });
+  });
+
+  /* ── Category search: filter visible options ──── */
+  form.querySelectorAll('[data-filter-search]').forEach(function(input) {
+    var opts = input.closest('.filter-group').querySelectorAll('[data-filter-options] .filter-option');
+    input.addEventListener('input', function() {
+      var q = this.value.toLowerCase();
+      opts.forEach(function(opt) {
+        var label = opt.querySelector('.fk-opt-label');
+        var text  = label ? label.textContent.toLowerCase() : '';
+        opt.style.display = (q && !text.includes(q)) ? 'none' : '';
+      });
+    });
+  });
+
+  /* ── Price slider ─────────────────────────────── */
+  form.querySelectorAll('[data-price-slider]').forEach(function(wrap) {
+    var maxVal   = parseInt(wrap.dataset.priceMax) || 10000;
+    var rMin     = wrap.querySelector('[data-price-range-min]');
+    var rMax     = wrap.querySelector('[data-price-range-max]');
+    var nMin     = wrap.querySelector('[data-price-num-min]');
+    var nMax     = wrap.querySelector('[data-price-num-max]');
+    var fill     = wrap.querySelector('[data-price-fill]');
+    var showMin  = wrap.querySelector('[data-price-show-min]');
+    var showMax  = wrap.querySelector('[data-price-show-max]');
+    if (!rMin || !rMax || !fill) return;
+
+    function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v | 0)); }
+
+    function paint(lo, hi) {
+      fill.style.left  = (lo / maxVal * 100) + '%';
+      fill.style.right = ((1 - hi / maxVal) * 100) + '%';
+      if (showMin) showMin.textContent = lo;
+      if (showMax) showMax.textContent = hi;
+      /* Raise z-index of min thumb when it's near max so it stays draggable */
+      rMin.style.zIndex = (lo >= maxVal - 2) ? 3 : 1;
+    }
+
+    /* Sliders → sync number inputs + display */
+    rMin.addEventListener('input', function() {
+      var lo = clamp(parseInt(rMin.value), 0, maxVal);
+      var hi = clamp(parseInt(rMax.value), 0, maxVal);
+      if (lo > hi) { lo = hi; rMin.value = lo; }
+      if (nMin) nMin.value = lo;
+      paint(lo, hi);
+    });
+    rMax.addEventListener('input', function() {
+      var lo = clamp(parseInt(rMin.value), 0, maxVal);
+      var hi = clamp(parseInt(rMax.value), 0, maxVal);
+      if (hi < lo) { hi = lo; rMax.value = hi; }
+      if (nMax) nMax.value = hi;
+      paint(lo, hi);
+    });
+
+    /* Release handle → submit */
+    rMin.addEventListener('change', function() { form.submit(); });
+    rMax.addEventListener('change', function() { form.submit(); });
+
+    /* Number inputs → sync sliders */
+    if (nMin) {
+      nMin.addEventListener('change', function() {
+        var lo = clamp(parseInt(this.value) || 0, 0, maxVal);
+        var hi = clamp(parseInt(rMax.value), 0, maxVal);
+        if (lo > hi) lo = hi;
+        this.value = lo; rMin.value = lo;
+        paint(lo, hi);
+      });
+      nMin.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); form.submit(); }
+      });
+    }
+    if (nMax) {
+      nMax.addEventListener('change', function() {
+        var hi = clamp(parseInt(this.value) || maxVal, 0, maxVal);
+        var lo = clamp(parseInt(rMin.value), 0, maxVal);
+        if (hi < lo) hi = lo;
+        this.value = hi; rMax.value = hi;
+        paint(lo, hi);
+      });
+      nMax.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); form.submit(); }
+      });
+    }
+
+    /* Initial paint on page load */
+    paint(clamp(parseInt(rMin.value), 0, maxVal), clamp(parseInt(rMax.value), 0, maxVal));
+  });
 })();
 
 /* #21: Infinite scroll for products grid */

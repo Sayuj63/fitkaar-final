@@ -63,26 +63,28 @@
         </a>
         <div class="fk-shop-dropdown" x-show="shopOpen" x-transition.opacity.duration.150ms style="display: none;">
           <a href="/collections/all" class="fk-shop-all-link">Shop All →</a>
-          <div class="fk-shop-col">
-            <div class="fk-shop-col-head">Essentials</div>
-            <a href="/collections/everyday">Everyday</a>
-            <a href="/collections/your-aesthetic">Your Aesthetic</a>
-            <a href="/collections/basics">Basics</a>
-            <a href="/collections/only-at-fitkaar">Only At Fitkaar</a>
-          </div>
-          <div class="fk-shop-col">
-            <div class="fk-shop-col-head">Collections</div>
-            <a href="/collections/food-and-drinks">Food &amp; Drinks</a>
-            <a href="/collections/sports-and-fitness">Sports &amp; Fitness</a>
-            <a href="/collections/work-and-hobbies">Work &amp; Hobbies</a>
-            <a href="/collections/pun-intended">Pun Intended</a>
-            <a href="/collections/zodiac-signs">Zodiac Signs</a>
-          </div>
-          <div class="fk-shop-col">
-            <div class="fk-shop-col-head">Fav People</div>
-            <a href="/collections/matching">Matching</a>
-            <a href="/collections/couples">Couples</a>
-            <a href="/pages/bulk-orders" class="fk-shop-col-cta">Bulk Orders</a>
+          <div class="fk-shop-cols">
+            <div class="fk-shop-col">
+              <div class="fk-shop-col-head">Essentials</div>
+              <a href="/collections/everyday">Everyday</a>
+              <a href="/collections/your-aesthetic">Your Aesthetic</a>
+              <a href="/collections/basics">Basics</a>
+              <a href="/collections/only-at-fitkaar">Only At Fitkaar</a>
+            </div>
+            <div class="fk-shop-col">
+              <div class="fk-shop-col-head">Collections</div>
+              <a href="/collections/food-and-drinks">Food &amp; Drinks</a>
+              <a href="/collections/sports-and-fitness">Sports &amp; Fitness</a>
+              <a href="/collections/work-and-hobbies">Work &amp; Hobbies</a>
+              <a href="/collections/pun-intended">Pun Intended</a>
+              <a href="/collections/zodiac-signs">Zodiac Signs</a>
+            </div>
+            <div class="fk-shop-col">
+              <div class="fk-shop-col-head">Fav People</div>
+              <a href="/collections/matching">Matching</a>
+              <a href="/collections/couples">Couples</a>
+              <a href="/pages/bulk-orders" class="fk-shop-col-cta">Bulk Orders</a>
+            </div>
           </div>
         </div>
       </div>
@@ -199,9 +201,14 @@
       box-shadow: 0 18px 40px rgba(0, 12, 91, 0.10);
       padding: 22px 28px;
       display: flex !important;
-      gap: 36px;
+      flex-direction: column;
+      gap: 0;
       min-width: 540px;
       z-index: 100;
+    }
+    .fk-shop-cols {
+      display: flex;
+      gap: 36px;
     }
     .fk-shop-dropdown[style*="display: none"] { display: none !important; }
     .fk-shop-dropdown::before {
@@ -250,12 +257,12 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.07em;
+      white-space: nowrap;
       color: var(--color-primary);
       text-decoration: none;
       padding: 6px 0 10px;
       border-bottom: 1px solid #e8ecf5;
       margin-bottom: 12px;
-      grid-column: 1 / -1;
       transition: opacity 0.15s;
     }
     .fk-shop-all-link:hover { opacity: 0.7; }

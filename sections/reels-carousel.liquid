@@ -24,13 +24,12 @@
           "type": "image_picker",
           "id": "image",
           "label": "Thumbnail / poster image",
-          "info": "Shown before the video plays. Used as the still thumbnail if no video is uploaded."
+          "info": "Shown before the video plays."
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Reel link (optional)",
-          "info": "If set, clicking opens this link (e.g. Instagram reel). Otherwise clicking plays the video inline."
+          "label": "Reel link (optional)"
         }
       ]
     }
@@ -50,79 +49,7 @@
 {% endschema %}
 
 <style>
-.marquee-container {
-  overflow: hidden;
-  position: relative;
-}
-
-.marquee-content {
-  display: flex;
-  animation: marquee 30s linear infinite;
-  width: max-content;
-}
-
-.marquee-content.is-paused {
-  animation-play-state: paused;
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Mobile: switch from marquee to swipeable strip */
-@media (max-width: 768px) {
-  .marquee-container {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .marquee-container::-webkit-scrollbar { display: none; }
-  .marquee-content {
-    /* Mobile: animation OFF so swipe works (#8). User can still re-enable in section CSS. */
-    animation: none;
-    gap: 12px;
-    padding: 0 16px;
-    width: max-content;
-    display: flex;
-  }
-  .reel-item {
-    flex: 0 0 75%;
-    width: 75% !important;
-    height: auto !important;
-    aspect-ratio: 9 / 16;
-    scroll-snap-align: center;
-  }
-}
-
-.reel-item {
-  position: relative;
-}
-
-.reel-item video,
-.reel-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.reel-item video::-webkit-media-controls,
-.reel-item video::-webkit-media-controls-panel,
-.reel-item video::-webkit-media-controls-play-button,
-.reel-item video::-webkit-media-controls-start-playback-button {
-  display: none !important;
-  -webkit-appearance: none !important;
-  opacity: 0 !important;
-}
-
-.reel-item .reel-media {
-  position: absolute;
-  inset: 0;
-}
-
+/* ─── Section wrapper ─────────────────────────────── */
 .reels-section {
   padding: 20px 0 24px;
   background: #fff;
@@ -142,15 +69,130 @@
 }
 @media (max-width: 768px) {
   .reels-section { padding: 14px 0 18px; }
-  .reels-section .reels-heading {
-    margin-bottom: 14px;
-    font-size: 32px;
-    letter-spacing: 1px;
-  }
+  .reels-section .reels-heading { margin-bottom: 14px; font-size: 32px; letter-spacing: 1px; }
 }
 @media (max-width: 480px) {
-  .reels-section .reels-heading {
-    font-size: 24px;
+  .reels-section .reels-heading { font-size: 24px; }
+}
+
+/* ─── Desktop marquee ─────────────────────────────── */
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+}
+.marquee-content {
+  display: flex;
+  animation: marquee 30s linear infinite;
+  width: max-content;
+}
+.marquee-content.is-paused {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Mobile: same CSS marquee, just slower + smaller cards ── */
+@media (max-width: 768px) {
+  .marquee-container {
+    overflow: hidden; /* same as desktop — no scroll, CSS drives motion */
+  }
+  .marquee-content {
+    animation-duration: 40s; /* slower than desktop 30s */
+    gap: 10px;
+    padding: 0;
+  }
+  .reel-item {
+    width: 220px !important;
+    height: 390px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* ─── Reel card ───────────────────────────────────── */
+.reel-item {
+  position: relative;
+  overflow: hidden;
+}
+.reel-item video,
+.reel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.reel-item video::-webkit-media-controls,
+.reel-item video::-webkit-media-controls-panel,
+.reel-item video::-webkit-media-controls-play-button,
+.reel-item video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+}
+.reel-item .reel-media {
+  position: absolute;
+  inset: 0;
+}
+
+/* ─── Skeleton shimmer ────────────────────────────── */
+.reel-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #d0d0d0 0%, #e8e8e8 40%, #d0d0d0 80%);
+  background-size: 200% 100%;
+  animation: reelShimmer 1.5s ease-in-out infinite;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.reel-item.is-loaded::before {
+  opacity: 0;
+}
+@keyframes reelShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Play / pause overlay ───────────────────────── */
+.reel-pp {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.reel-pp-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transform: scale(0.8);
+  transition: transform 0.15s ease;
+}
+.reel-pp.is-visible {
+  opacity: 1;
+}
+.reel-pp.is-visible .reel-pp-icon {
+  transform: scale(1);
+}
+/* Desktop: show on card hover */
+@media (hover: hover) {
+  .reel-item:hover .reel-pp {
+    opacity: 1;
+  }
+  .reel-item:hover .reel-pp .reel-pp-icon {
+    transform: scale(1);
   }
 }
 </style>
@@ -160,9 +202,8 @@
     <h2 class="reels-heading">{{ section.settings.title }}</h2>
   {% endif %}
 
-  <div class="marquee-container w-full">
-    <div class="marquee-content gap-4">
-      <!-- We duplicate blocks 4 times to ensure seamless loop with 3 visible items -->
+  <div class="marquee-container w-full" id="reels-container">
+    <div class="marquee-content gap-4" id="reels-content">
       {% for i in (1..4) %}
         {% for block in section.blocks %}
           {%- assign has_video = false -%}
@@ -180,7 +221,7 @@
                   loop
                   playsinline
                   autoplay
-                  preload="auto"
+                  preload="metadata"
                   disablepictureinpicture
                   controlslist="nodownload nofullscreen noremoteplayback"
                   {% if poster_url != '' %}poster="{{ poster_url }}"{% endif %}
@@ -190,23 +231,29 @@
                   {%- endfor -%}
                 </video>
               {%- elsif poster_url != '' -%}
-                <img src="{{ poster_url }}" alt="Reel" loading="lazy">
+                <img src="{{ poster_url }}" alt="Reel" loading="{% if i == 1 %}eager{% else %}lazy{% endif %}">
               {%- else -%}
                 {{ 'image' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover opacity-50' }}
               {%- endif -%}
+            </div>
+            <!-- Play/pause overlay -->
+            <div class="reel-pp" aria-hidden="true">
+              <div class="reel-pp-icon reel-pp-play">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
             </div>
           {%- endcapture -%}
 
           {%- if block.settings.link != blank -%}
             <a href="{{ block.settings.link }}"
-               class="reel-item block relative overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition-shadow"
-               style="width: 280px; height: 498px; flex-shrink: 0;"
+               class="reel-item block relative rounded-xl border border-gray-200 hover:shadow-lg transition-shadow"
+               style="width:280px;height:498px;flex-shrink:0;"
                data-reel>
               {{ reel_inner }}
             </a>
           {%- else -%}
-            <div class="reel-item block relative overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition-shadow"
-                 style="width: 280px; height: 498px; flex-shrink: 0;"
+            <div class="reel-item block relative rounded-xl border border-gray-200 hover:shadow-lg transition-shadow"
+                 style="width:280px;height:498px;flex-shrink:0;"
                  data-reel>
               {{ reel_inner }}
             </div>
@@ -214,11 +261,10 @@
         {% endfor %}
       {% endfor %}
 
-      <!-- Placeholder if empty -->
       {% if section.blocks.size == 0 %}
-         {% for i in (1..6) %}
-            <div class="reel-item block bg-gray-100 rounded-xl" style="width: 280px; height: 498px; flex-shrink: 0;"></div>
-         {% endfor %}
+        {% for i in (1..6) %}
+          <div class="reel-item is-loaded block bg-gray-100 rounded-xl" style="width:280px;height:498px;flex-shrink:0;"></div>
+        {% endfor %}
       {% endif %}
     </div>
   </div>
@@ -226,26 +272,121 @@
 
 <script>
 (function() {
-  var supportsIO = 'IntersectionObserver' in window;
-  var observer = supportsIO ? new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      var v = entry.target.querySelector('[data-reel-video]');
-      if (!v) return;
-      if (entry.isIntersecting) {
-        v.play().catch(function(){});
+  var container = document.getElementById('reels-container');
+  var content   = document.getElementById('reels-content');
+  if (!container || !content) return;
+
+  var isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+  /* ── Play / pause icon SVGs ──────────────────────────────── */
+  var SVG_PLAY  = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>';
+  var SVG_PAUSE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+  /* ── 1. Skeleton removal ─────────────────────────────────── */
+  document.querySelectorAll('[data-reel]').forEach(function(card) {
+    var v   = card.querySelector('[data-reel-video]');
+    var img = card.querySelector('img');
+
+    function loaded() { card.classList.add('is-loaded'); }
+
+    if (v) {
+      /* Poster is shown by browser immediately once set; remove skeleton once
+         the first frame of real video data arrives */
+      if (v.readyState >= 2) {
+        loaded();
       } else {
-        v.pause();
+        v.addEventListener('loadeddata', loaded, { once: true });
       }
-    });
-  }, { threshold: 0.25 }) : null;
+      /* If poster is set, reveal it quickly — skeleton hides to show poster */
+      if (v.poster) {
+        setTimeout(loaded, 200);
+      }
+      /* Hard fallback */
+      setTimeout(loaded, 5000);
+    } else if (img) {
+      if (img.complete && img.naturalWidth > 0) { loaded(); }
+      else {
+        img.addEventListener('load',  loaded, { once: true });
+        img.addEventListener('error', loaded, { once: true });
+      }
+    } else {
+      loaded();
+    }
+  });
+
+  /* ── 2. Play/pause overlay + tap/click handler ───────────── */
+  var ppTimers = new WeakMap();
+
+  function showPP(card, isPaused) {
+    var pp   = card.querySelector('.reel-pp');
+    var icon = card.querySelector('.reel-pp-icon');
+    if (!pp || !icon) return;
+    icon.innerHTML = isPaused ? SVG_PLAY : SVG_PAUSE;
+    pp.classList.add('is-visible');
+    clearTimeout(ppTimers.get(card));
+    /* Auto-hide after 1.2s on mobile; desktop CSS hover handles visibility */
+    if (isMobile) {
+      ppTimers.set(card, setTimeout(function() {
+        pp.classList.remove('is-visible');
+      }, 1200));
+    }
+  }
 
   document.querySelectorAll('[data-reel]').forEach(function(card) {
-    var v = card.querySelector('[data-reel-video]');
-    if (!v) return;
-    // Force-attempt autoplay on load (muted+playsinline allow it on iOS/Android)
-    var tryPlay = function() { v.play().catch(function(){}); };
-    if (v.readyState >= 2) tryPlay(); else v.addEventListener('loadeddata', tryPlay, { once: true });
-    if (observer) observer.observe(card);
+    card.addEventListener('click', function(e) {
+      var v = card.querySelector('[data-reel-video]');
+      if (!v) return;
+      /* If it's a link card let the browser navigate; only handle video toggle */
+      if (card.tagName === 'A' && !e.defaultPrevented) return;
+      e.preventDefault();
+      if (v.paused) { v.play().catch(function(){}); showPP(card, false); }
+      else          { v.pause();                     showPP(card, true);  }
+    });
+
+    /* Desktop hover: update icon to reflect current state */
+    if (!isMobile) {
+      card.addEventListener('mouseenter', function() {
+        var v = card.querySelector('[data-reel-video]');
+        if (v) showPP(card, v.paused);
+      });
+      card.addEventListener('mouseleave', function() {
+        var pp = card.querySelector('.reel-pp');
+        if (pp) pp.classList.remove('is-visible');
+      });
+    }
   });
+
+  /* ── 3. IntersectionObserver — auto-play visible videos ─── */
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        var v = entry.target.querySelector('[data-reel-video]');
+        if (!v) return;
+        if (entry.isIntersecting) { v.play().catch(function(){}); }
+        else                      { v.pause(); }
+      });
+    }, { threshold: 0.25, rootMargin: '0px 120px 0px 120px' });
+
+    document.querySelectorAll('[data-reel]').forEach(function(card) { io.observe(card); });
+  }
+
+  /* ── 4. Pause marquee on hover (desktop) / touch (mobile) ── */
+  /* Desktop: hover pauses the CSS animation */
+  content.addEventListener('mouseenter', function() { content.classList.add('is-paused'); });
+  content.addEventListener('mouseleave', function() { content.classList.remove('is-paused'); });
+
+  /* Mobile: touchstart pauses the CSS animation; touchend resumes */
+  if (isMobile) {
+    var resumeTimer;
+    container.addEventListener('touchstart', function() {
+      clearTimeout(resumeTimer);
+      content.classList.add('is-paused');
+    }, { passive: true });
+    container.addEventListener('touchend', function() {
+      resumeTimer = setTimeout(function() {
+        content.classList.remove('is-paused');
+      }, 600);
+    }, { passive: true });
+  }
 })();
 </script>

@@ -376,17 +376,11 @@
       <div class="fk-footer__menu-group">
         <h4>Info</h4>
         <ul>
-          {% if linklists[section.settings.m1].links.size > 0 %}
-            {% for link in linklists[section.settings.m1].links %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {% endfor %}
-          {% else %}
-            <li><a href="/pages/contact-us">Contact us</a></li>
+            <li><a href="/pages/contact-us">Contact Us</a></li>
             <li><a href="/pages/faqs">FAQs</a></li>
-            <li><a href="/pages/privacy-policy">Policies</a></li>
-            <li><a href="/pages/terms-conditions">Terms & conditions</a></li>
-            <li><a href="/pages/about-us">About us</a></li>
-          {% endif %}
+            <li><a href="/pages/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/pages/terms-conditions">Terms &amp; Conditions</a></li>
+            <li><a href="/pages/about-us">About Us</a></li>
         </ul>
       </div>
 
@@ -394,19 +388,13 @@
       <div class="fk-footer__menu-group">
         <h4>Shop / Explore</h4>
         <ul>
-          {% if linklists[section.settings.m2].links.size > 0 %}
-            {% for link in linklists[section.settings.m2].links %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {% endfor %}
-          {% else %}
             <li><a href="/">Home</a></li>
             <li><a href="/collections/all">Shop</a></li>
-            <li><a href="/collections/best-sellers">Best sellers</a></li>
-            <li><a href="/pages/process">Custom orders</a></li>
-            <li><a href="/pages/bulk-orders">Bulk orders</a></li>
+            <li><a href="/collections/best-sellers">Best Sellers</a></li>
+            <li><a href="/pages/process">Custom Orders</a></li>
+            <li><a href="/pages/bulk-orders">Bulk Orders</a></li>
             <li><a href="/collections/all">Collections</a></li>
-            <li><a href="/collections/gift-cards">Gift card</a></li>
-          {% endif %}
+            <li><a href="/products/gift-card">Gift Card</a></li>
         </ul>
       </div>
 
@@ -414,16 +402,10 @@
       <div class="fk-footer__menu-group">
         <h4>Profile</h4>
         <ul>
-          {% if linklists[section.settings.m3].links.size > 0 %}
-            {% for link in linklists[section.settings.m3].links %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {% endfor %}
-          {% else %}
-            <li><a href="/account">My account</a></li>
-            <li><a href="/account/login">Login / register</a></li>
-            <li><a href="/account/orders">Order history</a></li>
+            <li><a href="/account">My Account</a></li>
+            <li><a href="/account/login">Login / Register</a></li>
+            <li><a href="/account/orders">Order History</a></li>
             <li><a href="/pages/wishlist">Wishlist</a></li>
-          {% endif %}
         </ul>
       </div>
     </div>
@@ -531,28 +513,6 @@
 {
   "name": "Footer",
   "settings": [
-    {
-      "type": "header",
-      "content": "Menus"
-    },
-    {
-      "type": "link_list",
-      "id": "m1",
-      "label": "Info Menu",
-      "info": "Leave blank to show default items"
-    },
-    {
-      "type": "link_list",
-      "id": "m2",
-      "label": "Shop / Explore Menu",
-      "info": "Leave blank to show default items"
-    },
-    {
-      "type": "link_list",
-      "id": "m3",
-      "label": "Profile Menu",
-      "info": "Leave blank to show default items"
-    },
     {
       "type": "header",
       "content": "Social Media"

@@ -620,7 +620,7 @@
                 </div>
                 <div class="rec-card__info">
                   <div class="rec-card__title" x-text="r.title"></div>
-                  <div class="rec-card__price" x-text="'₹' + Math.round(r.price/100) + '/-'"></div>
+                  <div class="rec-card__price" x-text="'₹' + r.price + '/-'"></div>
                 </div>
               </a>
             </template>
@@ -703,12 +703,20 @@
 
       async fetchRecommendations(productId) {
         const cartIds = new Set(this.items.map(i => i.product_id));
+        const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        const getImg = p => {
+          const s = (p.images && p.images[0] && p.images[0].src) ? p.images[0].src
+            : (typeof p.featured_image === 'string' && p.featured_image) ? p.featured_image
+            : (p.featured_image && p.featured_image.src) ? p.featured_image.src : '';
+          if (!s) return BLANK;
+          return s.startsWith('//') ? 'https:' + s : s;
+        };
         const mapProduct = p => ({
           id: p.id,
           url: '/products/' + p.handle,
           title: p.title,
-          price: (p.variants && p.variants[0]) ? Math.round(parseFloat(p.variants[0].price) * 100) : 0,
-          featured_image: (p.images && p.images[0]) ? p.images[0].src : ''
+          price: (p.variants && p.variants[0]) ? Math.round(parseFloat(p.variants[0].price) / 100) : 0,
+          featured_image: getImg(p)
         });
         const pick = (arr) => arr.filter(p => !cartIds.has(p.id)).slice(0, 6).map(mapProduct);
 

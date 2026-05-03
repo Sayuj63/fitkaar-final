@@ -786,77 +786,6 @@
     font-weight: 600;
   }
 
-  .unit-sizes-panel {
-    margin-top: 14px;
-    padding: 14px 16px;
-    border: 1px solid #e3e6ef;
-    border-radius: 10px;
-    background: #f8f9fc;
-  }
-
-  .unit-sizes-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--color-primary, #000c5b);
-    margin-bottom: 4px;
-  }
-
-  .unit-sizes-subtitle {
-    font-size: 0.78rem;
-    color: #666;
-    margin-bottom: 12px;
-  }
-
-  .unit-sizes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 10px;
-  }
-  @media (max-width: 480px) {
-    .unit-sizes-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .unit-size-row { padding: 6px 8px; }
-    .unit-size-row__label { font-size: 0.7rem; }
-    .unit-size-row select { font-size: 0.8rem; }
-  }
-
-  .unit-size-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #fff;
-    border: 1px solid #e3e6ef;
-    border-radius: 8px;
-    padding: 8px 10px;
-  }
-
-  .unit-size-row__label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--color-primary, #000c5b);
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-  }
-
-  .unit-size-row select {
-    flex: 1;
-    appearance: none;
-    -webkit-appearance: none;
-    background: transparent;
-    border: none;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #111;
-    padding: 4px 18px 4px 4px;
-    cursor: pointer;
-    background-image: linear-gradient(45deg, transparent 50%, #111 50%), linear-gradient(135deg, #111 50%, transparent 50%);
-    background-position: calc(100% - 9px) 55%, calc(100% - 4px) 55%;
-    background-size: 5px 5px, 5px 5px;
-    background-repeat: no-repeat;
-  }
-
   .quantity-input:focus {
     outline: none;
   }
@@ -1351,7 +1280,7 @@
   }
 </style>
 
-<section class="product-page" x-data="productPage()" x-init="initSwipe(); initUnitSizes()">
+<section class="product-page" x-data="productPage()" x-init="initSwipe()">
   <div class="product-container">
     <!-- Left Column: Image Gallery Carousel -->
     <div class="product-gallery">
@@ -1688,26 +1617,6 @@
             <button class="quantity-btn" @click="quantity > 1 ? quantity-- : null">-</button>
             <input type="number" class="quantity-input" x-model.number="quantity" min="1" max="10">
             <button class="quantity-btn" @click="quantity < 10 ? quantity++ : null">+</button>
-          </div>
-        </div>
-
-        <!-- Per-unit sizes (visible only when quantity > 1) -->
-        <div class="unit-sizes-panel" x-show="quantity > 1" x-cloak>
-          <div class="unit-sizes-title">Size for each unit</div>
-          <div class="unit-sizes-subtitle">Pick a size for every piece you're ordering — they can be different.</div>
-          <div class="unit-sizes-grid">
-            <template x-for="(size, idx) in unitSizes" :key="idx">
-              <label class="unit-size-row">
-                <span class="unit-size-row__label" x-text="'Unit ' + (idx + 1)"></span>
-                <select x-model="unitSizes[idx]">
-                  {% if size_opt %}
-                    {% for value in size_opt.values %}
-                      <option value="{{ value | escape }}" :disabled="!isSizeAvailable('{{ value | escape }}')">{{ value | escape }}</option>
-                    {% endfor %}
-                  {% endif %}
-                </select>
-              </label>
-            </template>
           </div>
         </div>
 
@@ -2468,37 +2377,6 @@
       // Quantity
       quantity: 1,
 
-      // Per-unit sizes (one entry per unit when quantity > 1)
-      unitSizes: [],
-
-      initUnitSizes() {
-        this.selectedColor = this.normOpt(this.selectedColor);
-        this.selectedSize = this.normOpt(this.selectedSize);
-        this.selectedType = this.normOpt(this.selectedType);
-        this.unitSizes = [this.selectedSize];
-        this.$watch('quantity', (newQty) => {
-          const qty = Math.max(1, parseInt(newQty, 10) || 1);
-          if (this.unitSizes.length < qty) {
-            while (this.unitSizes.length < qty) this.unitSizes.push(this.selectedSize);
-          } else if (this.unitSizes.length > qty) {
-            this.unitSizes = this.unitSizes.slice(0, qty);
-          }
-        });
-        this.$watch('selectedSize', (newSize, oldSize) => {
-          // If every unit still shows the old main size, mirror the new one across all units.
-          // Otherwise the customer has customised each unit — leave them alone.
-          if (this.unitSizes.every(s => s === oldSize)) {
-            this.unitSizes = this.unitSizes.map(() => newSize);
-          }
-        });
-      },
-
-      setUnitSize(idx, size) {
-        const copy = this.unitSizes.slice();
-        copy[idx] = size;
-        this.unitSizes = copy;
-      },
-
       findVariantIdForSize(size) {
         const want = this.normOpt(size);
         const pick = (availOnly) => this.variants.find(v => {
@@ -2519,16 +2397,7 @@
       },
 
       buildCartItems() {
-        if (this.quantity <= 1) {
-          return [{ id: this.selectedVariantId, quantity: 1 }];
-        }
-        const counts = {};
-        for (let i = 0; i < this.quantity; i++) {
-          const size = this.unitSizes[i] || this.selectedSize;
-          const id = this.findVariantIdForSize(size) || this.selectedVariantId;
-          counts[id] = (counts[id] || 0) + 1;
-        }
-        return Object.keys(counts).map(id => ({ id: parseInt(id, 10), quantity: counts[id] }));
+        return [{ id: this.selectedVariantId, quantity: this.quantity }];
       },
 
       // UI State
@@ -2807,9 +2676,6 @@
             this.selectedSize = this.normOpt(this.availableSizesForType[0]) || this.selectedSize;
           }
           this.updateVariant();
-          if (this.quantity > 1) {
-            this.unitSizes = Array.from({ length: this.quantity }, () => this.selectedSize);
-          }
 
           // Reset to first slide since visibleImages will now show filtered results
           this.currentSlide = 0;
@@ -2859,9 +2725,6 @@
           }
 
           this.updateVariant();
-          if (this.quantity > 1) {
-            this.unitSizes = Array.from({ length: this.quantity }, () => this.selectedSize);
-          }
 
           // Reset to first slide since visibleImages will now show filtered results
           this.currentSlide = 0;

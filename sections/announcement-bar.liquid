@@ -62,12 +62,7 @@
 .announcement-track {
   display: flex;
   width: max-content;
-  animation: announcementScroll {{ section.settings.speed }}s linear infinite;
   will-change: transform;
-}
-
-.announcement-track:hover {
-  animation-play-state: paused;
 }
 
 .announcement-item {
@@ -92,11 +87,6 @@
   color: #fff;
 }
 
-@keyframes announcementScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
 @media (max-width: 768px) {
   .announcement-item {
     gap: 1.75rem;
@@ -118,7 +108,7 @@
 {%- endif -%}
 
 <div class="announcement-bar announcement-bar-gradient" style="position: relative; z-index: 50; padding: 8px 0;">
-  <div class="announcement-marquee">
+  <div class="announcement-marquee" id="announcement-marquee">
     <div class="announcement-track" id="announcement-track">
       {%- for i in (1..8) -%}
         <span class="announcement-item">
@@ -129,4 +119,48 @@
     </div>
   </div>
 </div>
+
+<script>
+(function() {
+  var track = document.getElementById('announcement-track');
+  var marquee = document.getElementById('announcement-marquee');
+  if (!track || !marquee) return;
+
+  var speed = {{ section.settings.speed }}; // seconds to scroll half the track (4 copies)
+  var half = 0;
+  var pos = 0;
+  var lastTs = null;
+  var paused = false;
+
+  function computeHalf() {
+    half = track.scrollWidth / 2;
+  }
+  computeHalf();
+  window.addEventListener('resize', computeHalf);
+
+  /* Pause on hover (desktop) */
+  marquee.addEventListener('mouseenter', function() { paused = true; });
+  marquee.addEventListener('mouseleave', function() { paused = false; });
+
+  /* Pause/resume on tab switch — prevents broken state on return */
+  document.addEventListener('visibilitychange', function() {
+    paused = document.hidden;
+    if (!document.hidden) lastTs = null; /* Reset timestamp so no position jump */
+  });
+
+  function step(ts) {
+    if (!paused) {
+      if (lastTs !== null && half > 0) {
+        pos += (half / (speed * 1000)) * (ts - lastTs);
+        if (pos >= half) pos -= half;
+        track.style.transform = 'translateX(-' + pos.toFixed(3) + 'px)';
+      }
+      lastTs = ts;
+    }
+    requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
+})();
+</script>
 

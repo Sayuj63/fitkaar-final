@@ -51,13 +51,20 @@
     </a>
 
     <!-- DESKTOP NAV (hardcoded order: HOME → CUSTOMISE → SHOP → ABOUT → CONTACT) -->
+    {%- assign _p = request.path -%}
+    {%- if _p == '/' -%}{%- assign _nav = 'home' -%}
+    {%- elsif _p contains '/collections' or _p contains '/products' -%}{%- assign _nav = 'shop' -%}
+    {%- elsif _p == '/pages/process' -%}{%- assign _nav = 'customise' -%}
+    {%- elsif _p == '/pages/about-us' -%}{%- assign _nav = 'about' -%}
+    {%- elsif _p == '/pages/contact-us' -%}{%- assign _nav = 'contact' -%}
+    {%- endif -%}
     <nav class="hidden md:flex gap-8 fk-desktop-nav">
-      <a href="/" class="fk-nav-link">Home</a>
-      <a href="/pages/process" class="fk-nav-link">Customise</a>
+      <a href="/" class="fk-nav-link{% if _nav == 'home' %} fk-nav-link--active{% endif %}">Home</a>
+      <a href="/pages/process" class="fk-nav-link{% if _nav == 'customise' %} fk-nav-link--active{% endif %}">Customise</a>
 
       <!-- #2: SHOP dropdown (hover on desktop) -->
       <div class="fk-shop-trigger" @mouseenter="shopOpen = true" @mouseleave="shopOpen = false">
-        <a href="/collections/all" class="fk-nav-link fk-shop-link">
+        <a href="/collections/all" class="fk-nav-link fk-shop-link{% if _nav == 'shop' %} fk-nav-link--active{% endif %}">
           Shop
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left: 4px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </a>
@@ -89,8 +96,8 @@
         </div>
       </div>
 
-      <a href="/pages/about-us" class="fk-nav-link">About Us</a>
-      <a href="/pages/contact-us" class="fk-nav-link">Contact</a>
+      <a href="/pages/about-us" class="fk-nav-link{% if _nav == 'about' %} fk-nav-link--active{% endif %}">About Us</a>
+      <a href="/pages/contact-us" class="fk-nav-link{% if _nav == 'contact' %} fk-nav-link--active{% endif %}">Contact</a>
     </nav>
 
     <!-- RIGHT: icons (search, login, wishlist, cart) -->
@@ -186,6 +193,11 @@
       align-items: center;
     }
     .fk-nav-link:hover { color: var(--color-secondary, #71b6c8); }
+    .fk-nav-link--active {
+      color: var(--color-primary) !important;
+      border-bottom: 2.5px solid var(--color-primary);
+      padding-bottom: 2px;
+    }
 
     /* #2: Shop hover dropdown (desktop) */
     .fk-shop-trigger { position: relative; }

@@ -62,6 +62,7 @@
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left: 4px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </a>
         <div class="fk-shop-dropdown" x-show="shopOpen" x-transition.opacity.duration.150ms style="display: none;">
+          <a href="/collections/all" class="fk-shop-all-link">Shop All →</a>
           <div class="fk-shop-col">
             <div class="fk-shop-col-head">Essentials</div>
             <a href="/collections/everyday">Everyday</a>
@@ -242,6 +243,22 @@
       margin-top: 4px;
       letter-spacing: 0.04em;
     }
+    .fk-shop-all-link {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--color-primary);
+      text-decoration: none;
+      padding: 6px 0 10px;
+      border-bottom: 1px solid #e8ecf5;
+      margin-bottom: 12px;
+      grid-column: 1 / -1;
+      transition: opacity 0.15s;
+    }
+    .fk-shop-all-link:hover { opacity: 0.7; }
 
     /* Mobile drawer: 50% left overlay + slide panels */
     /* Teleported to body — escapes sticky header stacking; scrim dims full viewport */
@@ -435,6 +452,20 @@
       outline: none;
     }
     .fk-mob-shop-back svg { flex-shrink: 0; }
+    .fk-mob-shop-all {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-primary);
+      text-decoration: none;
+      padding: 10px 0;
+      border-bottom: 1px solid #e8ecf5;
+      margin-bottom: 8px;
+    }
+    .fk-mob-shop-all:active { opacity: 0.7; }
     .fk-mob-shop-head {
       font-family: var(--font-heading);
       font-size: 1.15rem;
@@ -781,6 +812,7 @@
               Back
             </button>
             <div class="fk-mob-shop-head">Shop</div>
+            <a href="/collections/all" class="fk-mob-shop-all" @click="closeMobileMenu()">Shop All →</a>
 
             <div class="fk-mob-acc">
               <button type="button" class="fk-mob-acc-trigger" @click="mobAccE = !mobAccE" :aria-expanded="mobAccE">

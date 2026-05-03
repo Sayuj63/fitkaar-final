@@ -5,7 +5,8 @@
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo"
+      "label": "Logo",
+      "info": "Shown in the header (mobile + desktop). PNG or SVG upload recommended. If empty, the theme falls back to the default asset image."
     },
     {
       "type": "text",
@@ -35,12 +36,20 @@
 
       <!-- Mobile-only: just the circular logo image -->
       <a href="/" class="fk-mobile-logo" aria-label="Fitkaar home">
-        <img src="{{ 'image copy 5.png' | asset_url }}" alt="Fitkaar" style="height: 34px; width: auto; object-fit: contain;">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url: width: 280 }}" alt="{{ shop.name | escape }}" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}" style="height: 34px; width: auto; object-fit: contain;">
+        {% else %}
+          <img src="{{ 'image copy 5.png' | asset_url }}" alt="{{ shop.name | escape }}" style="height: 34px; width: auto; object-fit: contain;">
+        {% endif %}
       </a>
 
       <!-- Desktop-only: image + FITKAAR wordmark -->
       <a href="/" class="hidden md:flex items-center gap-4" style="text-decoration: none;">
-        <img src="{{ 'image copy 5.png' | asset_url }}" alt="Fitkaar Logo" style="height: 50px; width: auto; object-fit: contain;">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name | escape }}" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}" style="height: 50px; width: auto; object-fit: contain;">
+        {% else %}
+          <img src="{{ 'image copy 5.png' | asset_url }}" alt="{{ shop.name | escape }}" style="height: 50px; width: auto; object-fit: contain;">
+        {% endif %}
         <span class="h2" style="font-family: var(--font-heading); font-size: 30px; font-weight: 700; color: var(--color-primary); margin: 0; text-decoration: none;">FITKAAR™</span>
       </a>
     </div>

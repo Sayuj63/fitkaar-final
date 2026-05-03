@@ -595,32 +595,126 @@
   font-size: 0.8rem;
 }
 
-/* Size Chart */
-.size-chart-toggle {
-  color: #000c5b;
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: 0.85rem;
-  margin-top: 6px;
-  display: none; /* shown via JS once an apparel is selected */
+/* Size chart — match product-page sizing guide + modal */
+.process-size-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.process-size-label-row .process-size-label {
+  margin-bottom: 0;
+}
+
+.sizing-guide-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: none;
   border: none;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
   padding: 0;
 }
 
-.size-chart-container {
+.sizing-guide-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.process-sizing-guide {
+  display: none; /* inline-flex when apparel selected + chart exists */
+}
+
+.size-chart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
   display: none;
-  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-.size-chart-container.active {
-  display: block;
+.size-chart-overlay.is-open {
+  display: flex;
 }
 
-.size-chart-img {
-  max-width: 100%;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
+.size-chart-modal {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.size-chart-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.size-chart-modal-header h3 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.size-chart-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #333;
+}
+
+.size-chart-close svg {
+  width: 24px;
+  height: 24px;
+}
+
+.size-chart-modal-body {
+  padding: 24px;
+}
+
+.size-chart-modal-body img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.size-chart-no-image {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .process-size-label-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sizing-guide-link {
+    font-size: 0.72rem;
+  }
 }
 
 /* Products Responsive */
@@ -1056,7 +1150,17 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Size <span class="required">*</span></label>
+            <div class="process-size-label-row">
+              <label class="form-label process-size-label">Size <span class="required">*</span></label>
+              <button type="button" class="sizing-guide-link process-sizing-guide" style="display: none;" onclick="openProcessSizeChart(this)" aria-haspopup="dialog">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="11.73"></line>
+                </svg>
+                Sizing guide
+              </button>
+            </div>
             <select name="contact[product_1_size]" class="form-select" required>
               <option value="" disabled selected>Pick a Size</option>
               <option value="XS">XS</option>
@@ -1066,10 +1170,6 @@
               <option value="XL">XL</option>
               <option value="XXL">XXL</option>
             </select>
-            <button type="button" class="size-chart-toggle" onclick="toggleSizeChart(this)">View Size Chart</button>
-            <div class="size-chart-container">
-              <img class="size-chart-img" src="" alt="Size Chart">
-            </div>
           </div>
         </div>
       </div>
@@ -1259,6 +1359,25 @@
 
       <button type="submit" class="submit-btn">Proceed</button>
     {% endform %}
+  </div>
+
+  <!-- Size chart modal (same pattern as product page) -->
+  <div id="process-size-chart-overlay" class="size-chart-overlay" role="presentation" aria-hidden="true">
+    <div class="size-chart-modal" role="dialog" aria-modal="true" aria-labelledby="process-size-chart-title">
+      <div class="size-chart-modal-header">
+        <h3 id="process-size-chart-title">Sizing Guide — <span id="process-size-chart-apparel"></span></h3>
+        <button type="button" class="size-chart-close" onclick="closeProcessSizeChart()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="size-chart-modal-body">
+        <img id="process-size-chart-img" src="" alt="" style="display: none;">
+        <div id="process-size-chart-empty" class="size-chart-no-image" style="display: none;">No size chart available for this type.</div>
+      </div>
+    </div>
   </div>
 
   <!-- FAQs -->
@@ -1497,6 +1616,19 @@
   // Track selected apparels to show/hide pricing
   const selectedApparels = new Set();
 
+  var PROCESS_SIZE_ROW_HTML =
+    '<div class="process-size-label-row">' +
+      '<label class="form-label process-size-label">Size <span class="required">*</span></label>' +
+      '<button type="button" class="sizing-guide-link process-sizing-guide" style="display:none;" onclick="openProcessSizeChart(this)" aria-haspopup="dialog">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>' +
+          '<polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>' +
+          '<line x1="12" y1="22.08" x2="12" y2="11.73"></line>' +
+        '</svg>' +
+        ' Sizing guide' +
+      '</button>' +
+    '</div>';
+
   /* ── Size chart per apparel type ────────────────────────── */
   var SIZECHART_URLS = {
     'Cropped Tee':   '{{ section.settings.size_chart_cropped_tee | image_url: width: 700 }}',
@@ -1510,16 +1642,49 @@
   function updateSizeChart(block, apparel) {
     if (!block) return;
     var url = SIZECHART_URLS[apparel] || '';
-    var img    = block.querySelector('.size-chart-img');
-    var toggle = block.querySelector('.size-chart-toggle');
-    var cont   = block.querySelector('.size-chart-container');
-    if (img)    img.src = url;
-    if (toggle) toggle.style.display = url ? 'inline-block' : 'none';
-    if (cont)   cont.classList.remove('active');
+    var toggle = block.querySelector('.process-sizing-guide');
+    if (toggle) toggle.style.display = url ? 'inline-flex' : 'none';
   }
 
-  window.toggleSizeChart = function(el) {
-    el.nextElementSibling.classList.toggle('active');
+  window.openProcessSizeChart = function(btn) {
+    var block = btn.closest('.product-block');
+    if (!block) return;
+    var apparel = '';
+    var sel = block.querySelector('.apparel-select');
+    if (sel) apparel = sel.value || '';
+    var url = SIZECHART_URLS[apparel] || '';
+    var overlay = document.getElementById('process-size-chart-overlay');
+    var img = document.getElementById('process-size-chart-img');
+    var empty = document.getElementById('process-size-chart-empty');
+    var titleSpan = document.getElementById('process-size-chart-apparel');
+    if (titleSpan) titleSpan.textContent = apparel;
+    if (img && empty) {
+      if (url) {
+        img.src = url;
+        img.alt = 'Size chart for ' + apparel;
+        img.style.display = '';
+        empty.style.display = 'none';
+      } else {
+        img.removeAttribute('src');
+        img.alt = '';
+        img.style.display = 'none';
+        empty.style.display = 'block';
+      }
+    }
+    if (overlay) {
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  window.closeProcessSizeChart = function() {
+    var overlay = document.getElementById('process-size-chart-overlay');
+    if (overlay) {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+    document.body.style.overflow = '';
   };
 
   // Update price breakdown visibility when apparel changes
@@ -1614,7 +1779,7 @@
         '</select>' +
       '</div>' +
       '<div class="form-group">' +
-        '<label class="form-label">Size <span class="required">*</span></label>' +
+        PROCESS_SIZE_ROW_HTML +
         '<select name="contact[product_' + productCount + '_size]" class="form-select" required>' +
           '<option value="" disabled selected>Pick a Size</option>' +
           '<option value="XS">XS</option>' +
@@ -1624,10 +1789,6 @@
           '<option value="XL">XL</option>' +
           '<option value="XXL">XXL</option>' +
         '</select>' +
-        '<button type="button" class="size-chart-toggle" onclick="toggleSizeChart(this)">View Size Chart</button>' +
-        '<div class="size-chart-container">' +
-          '<img class="size-chart-img" src="" alt="Size Chart">' +
-        '</div>' +
       '</div>';
 
     container.appendChild(block);
@@ -1765,7 +1926,7 @@
           '</select>' +
         '</div>' +
         '<div class="form-group">' +
-          '<label class="form-label">Size <span class="required">*</span></label>' +
+          PROCESS_SIZE_ROW_HTML +
           '<select name="contact[product_' + productCount + '_size]" class="form-select" required>' +
             '<option value="" disabled selected>Pick a Size</option>' +
             '<option value="XS">XS</option>' +
@@ -1775,10 +1936,6 @@
             '<option value="XL">XL</option>' +
             '<option value="XXL">XXL</option>' +
           '</select>' +
-          '<button type="button" class="size-chart-toggle" onclick="toggleSizeChart(this)">View Size Chart</button>' +
-          '<div class="size-chart-container">' +
-            '<img class="size-chart-img" src="" alt="Size Chart">' +
-          '</div>' +
         '</div>';
       container.appendChild(block);
     }
@@ -1797,7 +1954,7 @@
     updateFee();
     updateAddButton();
 
-    // Restore size chart images for each block
+    // Restore sizing guide button visibility per block
     document.querySelectorAll('.product-block').forEach(function(b) {
       var sel = b.querySelector('.apparel-select');
       if (sel && sel.value) updateSizeChart(b, sel.value);
@@ -1822,6 +1979,18 @@
       var banner = document.getElementById('restoreProgressBanner');
       if (banner) banner.classList.add('active');
     }
+
+    var chartOv = document.getElementById('process-size-chart-overlay');
+    if (chartOv) {
+      chartOv.addEventListener('click', function(e) {
+        if (e.target === chartOv) closeProcessSizeChart();
+      });
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key !== 'Escape') return;
+      var o = document.getElementById('process-size-chart-overlay');
+      if (o && o.classList.contains('is-open')) closeProcessSizeChart();
+    });
   });
 
   // Clear saved data on successful submit

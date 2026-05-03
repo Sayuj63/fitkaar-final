@@ -1570,13 +1570,19 @@
             </div>
           </div>
 
-        <!-- Other Options (Generic Buttons) -->
+        <!-- Other Options (Generic Buttons) — e.g. gift card denominations (wired to selectedGeneric) -->
         {% else %}
           <div class="variant-section">
              <div class="variant-label">{{ option.name }}</div>
-             <div class="size-options"> <!-- Using size style for others -->
+             <div class="size-options">
               {% for value in option.values %}
-                <button class="size-btn" style="min-width: unset; padding: 10px 15px;">{{ value }}</button>
+                <button
+                  type="button"
+                  class="size-btn"
+                  style="min-width: unset; padding: 10px 15px;"
+                  :class="{ 'active': genericMatches({{ value | json }}) }"
+                  @click.prevent.stop="selectGeneric({{ value | json }})"
+                >{{ value }}</button>
               {% endfor %}
              </div>
           </div>
@@ -2325,6 +2331,35 @@
         {% endif %}
       {% endfor %}
 
+      {%- comment -%}
+        Gift cards / single-option products whose name is not Color, Size, or Type (e.g. "Denominations"):
+        must drive variant selection explicitly — otherwise variantMatchesSelections matches every variant
+        and the price stays on the first/cheapest variant.
+      {%- endcomment -%}
+      {% assign generic_opt = null %}
+      {% assign _owv_count = product.options_with_values | size %}
+      {% if _owv_count == 1 %}
+        {% assign _only_opt = product.options_with_values | first %}
+        {% assign _only_name = _only_opt.name | downcase %}
+        {% unless _only_name contains 'color' or _only_name contains 'colour' %}
+          {% unless _only_name contains 'size' %}
+            {% unless _only_name contains 'type' %}
+              {% assign generic_opt = _only_opt %}
+            {% endunless %}
+          {% endunless %}
+        {% endunless %}
+      {% endif %}
+      {% comment %} Explicit match for gift cards named "Denominations" etc. {% endcomment %}
+      {% if generic_opt == null %}
+        {% for option in product.options_with_values %}
+          {% assign _gn = option.name | downcase %}
+          {% if _gn contains 'denomination' or _gn contains 'gift card' or _gn contains 'card value' %}
+            {% assign generic_opt = option %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
       {% comment %}
         Pick the cheapest available variant as the default so the product page's
         opening price matches the "from" price shown on the collection card.
@@ -2364,11 +2399,21 @@
           {%- when 3 -%}{%- assign default_type = default_variant.option3 -%}
         {%- endcase -%}
       {%- endif -%}
+      {%- assign default_generic = '' -%}
+      {%- if generic_opt -%}
+        {%- case generic_opt.position -%}
+          {%- when 1 -%}{%- assign default_generic = default_variant.option1 -%}
+          {%- when 2 -%}{%- assign default_generic = default_variant.option2 -%}
+          {%- when 3 -%}{%- assign default_generic = default_variant.option3 -%}
+        {%- endcase -%}
+      {%- endif -%}
 
       sizeOptionName: {% if size_opt %}{{ size_opt.name | json }}{% else %}'Size'{% endif %},
       selectedColor: {{ default_color | default: '' | json }},
       selectedSize: {{ default_size | default: '' | json }},
       selectedType: {{ default_type | default: '' | json }},
+      selectedGeneric: {{ default_generic | default: '' | json }},
+      hasGenericOpt: {% if generic_opt %}true{% else %}false{% endif %},
       selectedVariantId: {{ default_variant.id }},
 
       // Variants JSON
@@ -2644,6 +2689,15 @@
         {% if type_opt %}
         if (this.normOpt(v.option{{ type_opt.position }}) !== this.normOpt(this.selectedType)) return false;
         {% endif %}
+        {% if generic_opt %}
+        if (this.normOpt(v.option{{ generic_opt.position }}) !== this.normOpt(this.selectedGeneric)) return false;
+        {% endif %}
+        {% comment %} JS-only fallback if Liquid missed generic_opt (gift cards): narrow by denomination value {% endcomment %}
+        if (!this.hasGenericOpt && this.selectedGeneric) {
+          const want = this.normOpt(this.selectedGeneric);
+          const opts = [v.option1, v.option2, v.option3].map(o => this.normOpt(o));
+          if (!opts.some(o => o === want)) return false;
+        }
         return true;
       },
 
@@ -2697,6 +2751,15 @@
 
       selectSize(size) {
         this.selectedSize = this.normOpt(size);
+        this.updateVariant();
+      },
+
+      genericMatches(val) {
+        return this.normOpt(this.selectedGeneric) === this.normOpt(val);
+      },
+
+      selectGeneric(val) {
+        this.selectedGeneric = this.normOpt(val);
         this.updateVariant();
       },
 
@@ -2760,6 +2823,9 @@
           {% endif %}
           {% if type_opt %}
           this.selectedType = this.normOpt(variant.option{{ type_opt.position }});
+          {% endif %}
+          {% if generic_opt %}
+          this.selectedGeneric = this.normOpt(variant.option{{ generic_opt.position }});
           {% endif %}
           window.history.replaceState({}, '', `${this.productUrl}?variant=${variant.id}`);
         }

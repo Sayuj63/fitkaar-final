@@ -595,14 +595,17 @@
   font-size: 0.8rem;
 }
 
-/* Size Chart Link */
+/* Size Chart */
 .size-chart-toggle {
   color: #000c5b;
   text-decoration: underline;
   cursor: pointer;
   font-size: 0.85rem;
   margin-top: 6px;
-  display: inline-block;
+  display: none; /* shown via JS once an apparel is selected */
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .size-chart-container {
@@ -612,6 +615,12 @@
 
 .size-chart-container.active {
   display: block;
+}
+
+.size-chart-img {
+  max-width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
 }
 
 /* Products Responsive */
@@ -1057,12 +1066,10 @@
               <option value="XL">XL</option>
               <option value="XXL">XXL</option>
             </select>
-            {% if section.settings.size_chart_image %}
-              <span class="size-chart-toggle" onclick="this.nextElementSibling.classList.toggle('active')">View Size Chart</span>
-              <div class="size-chart-container">
-                <img src="{{ section.settings.size_chart_image | image_url: width: 600 }}" alt="Size Chart" style="max-width: 100%; border: 1px solid #ddd;">
-              </div>
-            {% endif %}
+            <button type="button" class="size-chart-toggle" onclick="toggleSizeChart(this)">View Size Chart</button>
+            <div class="size-chart-container">
+              <img class="size-chart-img" src="" alt="Size Chart">
+            </div>
           </div>
         </div>
       </div>
@@ -1490,11 +1497,37 @@
   // Track selected apparels to show/hide pricing
   const selectedApparels = new Set();
 
+  /* ── Size chart per apparel type ────────────────────────── */
+  var SIZECHART_URLS = {
+    'Cropped Tee':   '{{ section.settings.size_chart_cropped_tee | image_url: width: 700 }}',
+    'Regular Tee':   '{{ section.settings.size_chart_regular_tee | image_url: width: 700 }}',
+    'Oversized Tee': '{{ section.settings.size_chart_oversized_tee | image_url: width: 700 }}',
+    'Boxy Vest':     '{{ section.settings.size_chart_boxy_vest | image_url: width: 700 }}',
+    'Sweatshirt':    '{{ section.settings.size_chart_sweatshirt | image_url: width: 700 }}',
+    'Hoodie':        '{{ section.settings.size_chart_hoodie | image_url: width: 700 }}'
+  };
+
+  function updateSizeChart(block, apparel) {
+    if (!block) return;
+    var url = SIZECHART_URLS[apparel] || '';
+    var img    = block.querySelector('.size-chart-img');
+    var toggle = block.querySelector('.size-chart-toggle');
+    var cont   = block.querySelector('.size-chart-container');
+    if (img)    img.src = url;
+    if (toggle) toggle.style.display = url ? 'inline-block' : 'none';
+    if (cont)   cont.classList.remove('active');
+  }
+
+  window.toggleSizeChart = function(el) {
+    el.nextElementSibling.classList.toggle('active');
+  };
+
   // Update price breakdown visibility when apparel changes
   document.addEventListener('change', function(e) {
     if (e.target.classList.contains('apparel-select')) {
       updatePriceBreakdown();
       updateFee();
+      updateSizeChart(e.target.closest('.product-block'), e.target.value);
     }
   });
 
@@ -1584,18 +1617,17 @@
         '<label class="form-label">Size <span class="required">*</span></label>' +
         '<select name="contact[product_' + productCount + '_size]" class="form-select" required>' +
           '<option value="" disabled selected>Pick a Size</option>' +
+          '<option value="XS">XS</option>' +
           '<option value="S">S</option>' +
           '<option value="M">M</option>' +
           '<option value="L">L</option>' +
           '<option value="XL">XL</option>' +
           '<option value="XXL">XXL</option>' +
         '</select>' +
-        {%- if section.settings.size_chart_image -%}
-        '<span class="size-chart-toggle" onclick="this.nextElementSibling.classList.toggle(\'active\')">View Size Chart</span>' +
+        '<button type="button" class="size-chart-toggle" onclick="toggleSizeChart(this)">View Size Chart</button>' +
         '<div class="size-chart-container">' +
-          '<img src="{{ section.settings.size_chart_image | image_url: width: 600 }}" alt="Size Chart" style="max-width: 100%; border: 1px solid #ddd;">' +
+          '<img class="size-chart-img" src="" alt="Size Chart">' +
         '</div>' +
-        {%- endif -%}
       '</div>';
 
     container.appendChild(block);
@@ -1736,12 +1768,17 @@
           '<label class="form-label">Size <span class="required">*</span></label>' +
           '<select name="contact[product_' + productCount + '_size]" class="form-select" required>' +
             '<option value="" disabled selected>Pick a Size</option>' +
+            '<option value="XS">XS</option>' +
             '<option value="S">S</option>' +
             '<option value="M">M</option>' +
             '<option value="L">L</option>' +
             '<option value="XL">XL</option>' +
             '<option value="XXL">XXL</option>' +
           '</select>' +
+          '<button type="button" class="size-chart-toggle" onclick="toggleSizeChart(this)">View Size Chart</button>' +
+          '<div class="size-chart-container">' +
+            '<img class="size-chart-img" src="" alt="Size Chart">' +
+          '</div>' +
         '</div>';
       container.appendChild(block);
     }
@@ -1759,6 +1796,12 @@
     updatePriceBreakdown();
     updateFee();
     updateAddButton();
+
+    // Restore size chart images for each block
+    document.querySelectorAll('.product-block').forEach(function(b) {
+      var sel = b.querySelector('.apparel-select');
+      if (sel && sel.value) updateSizeChart(b, sel.value);
+    });
 
     var banner = document.getElementById('restoreProgressBanner');
     if (banner) banner.classList.remove('active');
@@ -1840,9 +1883,38 @@
       "default": "Fill out the details below so we can create something unique for you."
     },
     {
+      "type": "header",
+      "content": "Size Charts (per apparel type)"
+    },
+    {
       "type": "image_picker",
-      "id": "size_chart_image",
-      "label": "Size Chart Image"
+      "id": "size_chart_cropped_tee",
+      "label": "Cropped Tee – size chart"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_regular_tee",
+      "label": "Regular Tee – size chart"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_oversized_tee",
+      "label": "Oversized Tee – size chart"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_boxy_vest",
+      "label": "Boxy Vest – size chart"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_sweatshirt",
+      "label": "Sweatshirt – size chart"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_hoodie",
+      "label": "Hoodie – size chart"
     },
     {
       "type": "number",

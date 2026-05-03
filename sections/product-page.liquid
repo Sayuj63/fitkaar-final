@@ -2675,6 +2675,21 @@
         return String(val).trim();
       },
 
+      /**
+       * Gift-card denominations: Liquid buttons and Shopify variant JSON often differ slightly
+       * (₹ vs Rs, thousand separators, unicode spaces). Compare by parsed amount when possible.
+       */
+      normDenomKey(val) {
+        if (val === undefined || val === null) return '';
+        const raw = String(val).trim();
+        const digitsOnly = raw.replace(/[^\d.-]/g, '');
+        if (digitsOnly.length > 0) {
+          const n = parseFloat(digitsOnly);
+          if (Number.isFinite(n)) return 'n:' + n;
+        }
+        return raw.toLowerCase().replace(/\s+/g, ' ').trim();
+      },
+
       sizeMatchesSelected(val) {
         return this.normOpt(this.selectedSize) === this.normOpt(val);
       },
@@ -2690,12 +2705,12 @@
         if (this.normOpt(v.option{{ type_opt.position }}) !== this.normOpt(this.selectedType)) return false;
         {% endif %}
         {% if generic_opt %}
-        if (this.normOpt(v.option{{ generic_opt.position }}) !== this.normOpt(this.selectedGeneric)) return false;
+        if (this.normDenomKey(v.option{{ generic_opt.position }}) !== this.normDenomKey(this.selectedGeneric)) return false;
         {% endif %}
-        {% comment %} JS-only fallback if Liquid missed generic_opt (gift cards): narrow by denomination value {% endcomment %}
+        {% comment %} JS fallback if Liquid missed generic_opt: match any option by denomination key {% endcomment %}
         if (!this.hasGenericOpt && this.selectedGeneric) {
-          const want = this.normOpt(this.selectedGeneric);
-          const opts = [v.option1, v.option2, v.option3].map(o => this.normOpt(o));
+          const want = this.normDenomKey(this.selectedGeneric);
+          const opts = [v.option1, v.option2, v.option3].map(o => this.normDenomKey(o));
           if (!opts.some(o => o === want)) return false;
         }
         return true;
@@ -2755,7 +2770,7 @@
       },
 
       genericMatches(val) {
-        return this.normOpt(this.selectedGeneric) === this.normOpt(val);
+        return this.normDenomKey(this.selectedGeneric) === this.normDenomKey(val);
       },
 
       selectGeneric(val) {
@@ -2810,6 +2825,12 @@
       updateVariant() {
         let variant = this.variants.find(v => this.variantMatchesSelections(v) && v.available)
           || this.variants.find(v => this.variantMatchesSelections(v));
+        if (!variant && this.selectedGeneric) {
+          const want = this.normDenomKey(this.selectedGeneric);
+          variant = this.variants.find(v =>
+            [v.option1, v.option2, v.option3].some(o => this.normDenomKey(o) === want)
+          );
+        }
         if (!variant) {
           variant = this.variants.find(v => v.available);
         }

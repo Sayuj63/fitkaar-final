@@ -1,1 +1,25 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Fitkaar",
+    "theme_author": "Fitkaar",
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://help.shopify.com/manual/online-store/themes"
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Browser tab icon"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Shown in the browser tab next to the page title. Use a square PNG at least 32 × 32 px (many brands use 512 × 512 and let the theme resize)."
+      }
+    ]
+  }
+]

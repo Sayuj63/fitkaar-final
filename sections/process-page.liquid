@@ -1048,46 +1048,11 @@
   </div>
 
   <div class="process-form-container">
-    {% form 'contact' %}
-      {% if form.posted_successfully? %}
-        <!-- #48: Order confirmation block — WhatsApp link + fill-another CTA -->
-        <div class="proceed-confirm">
-          <div class="proceed-confirm__check">
-            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </div>
-          <h3 class="proceed-confirm__title">Order Received!</h3>
-          <p class="proceed-confirm__msg">We share the design drafts via WhatsApp, kindly click the link below!</p>
-          <a href="{{ section.settings.whatsapp_link | default: 'https://wa.me/919354478146' }}" target="_blank" rel="noopener" class="proceed-confirm__wa">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
-              <path d="M20.52 3.449A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.423-8.452zM12.05 21.746h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.825 9.825 0 0 1 6.994 2.898 9.821 9.821 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.888 9.884z"/>
-            </svg>
-            Open WhatsApp Chat
-          </a>
-          <a href="/pages/process" class="proceed-confirm__again">+ Fill another form</a>
-          <p class="proceed-confirm__hint">Your design advance has been received. We'll share the design draft on WhatsApp soon!</p>
-        </div>
-        <script>
-          (function() {
-            if (sessionStorage.getItem('fk:openWA') === '1') {
-              try { sessionStorage.removeItem('fk:openWA'); } catch(e) {}
-              setTimeout(function() {
-                window.open('{{ section.settings.whatsapp_link | default: 'https://wa.me/919354478146' }}', '_blank');
-              }, 800);
-            }
-          })();
-        </script>
-      {% elsif form.errors %}
-        <div style="background: #ffebee; color: #c62828; padding: 15px; margin-bottom: 20px; border: 1px solid #ffcdd2; font-size: 1.05rem;">
-          <strong>Error:</strong> Please check the form and try again.
-        </div>
-      {% endif %}
+    <form id="processForm" novalidate>
 
-      <!-- Hidden Identifiers -->
-      <input type="hidden" name="contact[form_type]" value="custom_order_process">
-      <input type="hidden" name="contact[product_count]" id="productCountField" value="1">
-      <input type="hidden" name="contact[design_fee]" id="designFeeField" value="">
-      <input type="hidden" name="contact[payment_id]" id="rzpPaymentId" value="">
-      <input type="hidden" name="contact[payment_status]" id="rzpPaymentStatus" value="">
+      <!-- Hidden tracking fields -->
+      <input type="hidden" id="productCountField" value="1">
+      <input type="hidden" id="designFeeField" value="">
 
       <!-- Personal Info -->
       <h3 class="section-divider">Contact Details</h3>
@@ -1359,10 +1324,10 @@
       <!-- #61: Pre-Proceed note — once submitted, no edits possible -->
       <p class="proceed-note">Kindly note: once the form is submitted, we won't be able to make any changes or add new details. Please ensure all information is included beforehand.</p>
 
-      <div id="rzpError" style="display:none; background:#ffebee; color:#c62828; padding:14px 16px; margin-bottom:1rem; border:1px solid #ffcdd2; font-size:0.95rem; border-radius:4px;"></div>
+      <div id="proceedError" style="display:none; background:#ffebee; color:#c62828; padding:14px 16px; margin-bottom:1rem; border:1px solid #ffcdd2; font-size:0.95rem; border-radius:4px;"></div>
 
       <button type="submit" class="submit-btn" id="proceedBtn">Proceed &amp; Pay &#8377;<span id="proceedFeeDisplay">400</span> Design Advance</button>
-    {% endform %}
+    </form>
   </div>
 
   <!-- Size chart modal (same pattern as product page) -->
@@ -1553,10 +1518,6 @@
   .process-faq summary { font-size: 0.95rem; }
 }
 </style>
-
-{% if section.settings.razorpay_key != blank %}
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-{% endif %}
 
 <script>
 (function() {
@@ -2003,81 +1964,137 @@
     });
   });
 
-  // Razorpay interception — intercept Proceed, open payment modal, then submit
-  var rzpKey = '{{ section.settings.razorpay_key }}';
-  var formEl = document.querySelector('.process-form-container form');
+  // Cart-based checkout — add Design Advance to cart, then redirect to /checkout
+  var variantId = parseInt('{{ section.settings.design_fee_variant_id }}', 10) || 0;
+  var waLink = '{{ section.settings.whatsapp_link | default: 'https://wa.me/919354478146' }}';
+  var formEl = document.getElementById('processForm');
   var proceedBtn = document.getElementById('proceedBtn');
-  var rzpReady = false; // set true after payment handler fires
 
-  function showRzpError(msg) {
-    var el = document.getElementById('rzpError');
+  function showProceedError(msg) {
+    var el = document.getElementById('proceedError');
     if (!el) return;
     el.textContent = msg;
     el.style.display = 'block';
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  function hideRzpError() {
-    var el = document.getElementById('rzpError');
+  function hideProceedError() {
+    var el = document.getElementById('proceedError');
     if (el) el.style.display = 'none';
   }
 
-  if (formEl && rzpKey) {
-    formEl.addEventListener('submit', function(e) {
-      if (rzpReady) {
-        // Payment done — let the form submit naturally after clearing localStorage
-        try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
-        return;
-      }
+  function setLoading(on) {
+    if (!proceedBtn) return;
+    proceedBtn.disabled = on;
+    if (on) {
+      proceedBtn.innerHTML = 'Redirecting to checkout&#8230;';
+    } else {
+      var fee = document.getElementById('designFeeField').value || DESIGN_FEE;
+      proceedBtn.innerHTML = 'Proceed &amp; Pay &#8377;<span id="proceedFeeDisplay">' + fee + '</span> Design Advance';
+    }
+  }
 
+  if (formEl) {
+    formEl.addEventListener('submit', function(e) {
       e.preventDefault();
-      hideRzpError();
+      hideProceedError();
 
       if (!formEl.checkValidity()) {
         formEl.reportValidity();
         return;
       }
 
+      if (!variantId) {
+        showProceedError('Checkout is not configured yet. Please contact us on WhatsApp.');
+        return;
+      }
+
       var count = document.querySelectorAll('.product-block').length;
       var fee = DESIGN_FEE * count;
 
-      var options = {
-        key: rzpKey,
-        amount: fee * 100,
-        currency: 'INR',
-        name: 'Fitkaar',
-        description: 'Design advance — ' + count + ' product' + (count > 1 ? 's' : ''),
-        prefill: {
-          name: (document.getElementById('ContactFormName') || {}).value || '',
-          email: (document.getElementById('ContactFormEmail') || {}).value || '',
-          contact: (document.getElementById('ContactFormPhone') || {}).value || ''
-        },
-        theme: { color: '#000c5b' },
-        handler: function(response) {
-          document.getElementById('rzpPaymentId').value = response.razorpay_payment_id;
-          document.getElementById('rzpPaymentStatus').value = 'paid';
-          try { sessionStorage.setItem('fk:openWA', '1'); } catch(ex) {}
-          rzpReady = true;
-          try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
-          formEl.submit();
-        },
-        modal: {
-          ondismiss: function() {
-            showRzpError('Payment cancelled. Click Proceed to try again.');
-          }
-        }
-      };
+      // Collect all form values
+      var name    = (document.getElementById('ContactFormName') || {}).value || '';
+      var email   = (document.getElementById('ContactFormEmail') || {}).value || '';
+      var phone   = (document.getElementById('ContactFormPhone') || {}).value || '';
+      var purpose = (document.getElementById('ContactFormPurpose') || {}).value || '';
+      var gender  = (document.getElementById('ContactFormGender') || {}).value || '';
+      var hobbies = (document.getElementById('ContactFormHobbies') || {}).value || '';
+      var food    = (document.getElementById('ContactFormFood') || {}).value || '';
+      var quotes  = (document.getElementById('ContactFormQuotes') || {}).value || '';
+      var jokes   = (document.getElementById('ContactFormJokes') || {}).value || '';
+      var symbols = (document.getElementById('ContactFormSymbols') || {}).value || '';
+      var colour  = (document.getElementById('ContactFormColourPref') || {}).value || '';
+      var other   = (document.getElementById('ContactFormElements') || {}).value || '';
 
-      var rzp = new window.Razorpay(options);
-      rzp.on('payment.failed', function(response) {
-        showRzpError('Payment failed: ' + ((response.error && response.error.description) || 'Please try again.'));
+      var productLines = [];
+      document.querySelectorAll('.product-block').forEach(function(block, i) {
+        var apparel = (block.querySelector('.apparel-select') || {}).value || '';
+        var sizeEl  = block.querySelector('select[name*="_size"]');
+        var size    = sizeEl ? sizeEl.value : '';
+        productLines.push('Product ' + (i + 1) + ': ' + apparel + ' (' + size + ')');
       });
-      rzp.open();
-    });
-  } else if (formEl) {
-    // No Razorpay key set — fall back to plain contact form submit
-    formEl.addEventListener('submit', function() {
-      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+
+      // Build cart note (visible in Shopify admin order)
+      var noteParts = [
+        '=== FITKAAR CUSTOM ORDER ===',
+        'Name: ' + name,
+        'Phone: ' + phone,
+        'Email: ' + email,
+        'Purpose: ' + purpose,
+        gender  ? 'Recipient Gender: ' + gender  : '',
+        '',
+        '--- Products (' + count + ') ---',
+        productLines.join('\n'),
+        '',
+        '--- Design Brief ---',
+        hobbies ? 'Hobbies / Interests: ' + hobbies : '',
+        food    ? 'Favourite Food: '       + food    : '',
+        quotes  ? 'Quotes / Words: '       + quotes  : '',
+        jokes   ? 'Inside Jokes / Traits: '+ jokes   : '',
+        symbols ? 'Symbols / Elements: '   + symbols : '',
+        colour  ? 'Colour Preference: '    + colour  : '',
+        other   ? 'Other Details: '        + other   : '',
+        '',
+        'Design Advance: ₹' + fee + ' (' + count + ' × ₹' + DESIGN_FEE + ')',
+      ].filter(Boolean).join('\n');
+
+      setLoading(true);
+      try { localStorage.removeItem(STORAGE_KEY); } catch (ex) {}
+
+      // Add Design Advance product to cart
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{
+            id: variantId,
+            quantity: count,
+            properties: {
+              'Name':     name,
+              'Phone':    phone,
+              'Products': productLines.join(', ')
+            }
+          }]
+        })
+      })
+      .then(function(r) {
+        if (!r.ok) return r.json().then(function(d) { throw new Error(d.description || 'Cart error'); });
+        // Save note on the cart
+        return fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note: noteParts })
+        });
+      })
+      .then(function() {
+        // Open WhatsApp in new tab, then redirect to checkout in current tab
+        if (waLink) window.open(waLink, '_blank');
+        window.location.href = '/checkout';
+      })
+      .catch(function(err) {
+        setLoading(false);
+        showProceedError((err && err.message) || 'Something went wrong. Please try again or reach us on WhatsApp.');
+      });
     });
   }
 })();
@@ -2213,15 +2230,15 @@
     },
     {
       "type": "text",
-      "id": "razorpay_key",
-      "label": "Razorpay Key ID",
-      "info": "Your live key starting with rzp_live_… — found in Razorpay Dashboard → Settings → API Keys."
+      "id": "design_fee_variant_id",
+      "label": "Design Advance — Variant ID",
+      "info": "Create a product called 'Design Advance' priced at ₹400 (no shipping). Paste its Variant ID here. Find it: Shopify admin → Products → Design Advance → copy the number from the URL."
     },
     {
       "type": "url",
       "id": "whatsapp_link",
       "label": "WhatsApp link (post-submit)",
-      "info": "Used in the order confirmation block to share design drafts."
+      "info": "Used to open WhatsApp after checkout redirect."
     }
   ],
   "presets": [

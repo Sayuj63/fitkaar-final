@@ -16,6 +16,7 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/3_4d37b50c-2732-40e5-99b4-d7d1388b8bf4.png",
+            "image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_1.png",
             "alt": "Fitkaar hero slide",
             "link": ""
           }

@@ -2,7 +2,9 @@
   "sections": {
     "main": {
       "type": "bulk-orders",
-      "settings": {}
+      "settings": {
+        "show_title_overlay": false
+      }
     }
   },
   "order": ["main"]

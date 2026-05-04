@@ -21,6 +21,12 @@
       "default": true
     },
     {
+      "type": "image_picker",
+      "id": "hero_image_mobile",
+      "label": "Hero banner – mobile image",
+      "info": "Shown on screens ≤767 px. Square (1:1) or portrait (4:5) works best. If left empty the desktop/collection image is used on mobile too."
+    },
+    {
       "type": "header",
       "content": "Category Circles (top of page)"
     },
@@ -1100,14 +1106,24 @@
       {%- if section.settings.show_hero and hero_img != blank -%}
         <div class="collection-hero collection-hero--creative{% if collection.image == blank and hero_img != blank %} collection-hero--fallback{% endif %}">
           <h1 class="collection-hero__sr-title">{{ collection.title | default: 'Shop' }}</h1>
-          <img src="{{ hero_img | image_url: width: 1800 }}"
-               srcset="{{ hero_img | image_url: width: 800 }} 800w,
-                       {{ hero_img | image_url: width: 1200 }} 1200w,
-                       {{ hero_img | image_url: width: 1800 }} 1800w"
-               sizes="100vw"
-               alt=""
-               loading="eager"
-               fetchpriority="high">
+          <picture>
+            {%- if section.settings.hero_image_mobile != blank -%}
+              <source
+                media="(max-width: 767px)"
+                srcset="{{ section.settings.hero_image_mobile | image_url: width: 600 }} 600w,
+                        {{ section.settings.hero_image_mobile | image_url: width: 900 }} 900w,
+                        {{ section.settings.hero_image_mobile | image_url: width: 1200 }} 1200w"
+                sizes="100vw">
+            {%- endif -%}
+            <img src="{{ hero_img | image_url: width: 1800 }}"
+                 srcset="{{ hero_img | image_url: width: 800 }} 800w,
+                         {{ hero_img | image_url: width: 1200 }} 1200w,
+                         {{ hero_img | image_url: width: 1800 }} 1800w"
+                 sizes="100vw"
+                 alt=""
+                 loading="eager"
+                 fetchpriority="high">
+          </picture>
         </div>
       {%- else -%}
         <div class="collection-header">

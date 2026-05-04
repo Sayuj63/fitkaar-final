@@ -1516,6 +1516,11 @@
                   {% when 'wine' %}{% assign swatch_color = '#601c34' %}
                   {% when 'cream' %}{% assign swatch_color = '#fffdd0' %}
                   {% when 'off white' %}{% assign swatch_color = '#fffff0' %}
+                  {% when 'mocha' %}{% assign swatch_color = '#80471c' %}
+                  {% when 'powder blue' %}{% assign swatch_color = '#b0e0e6' %}
+                  {% when 'camel brown' %}{% assign swatch_color = '#a08679' %}
+                  {% when 'camel' %}{% assign swatch_color = '#a08679' %}
+                  {% when 'spring green' %}{% assign swatch_color = '#a7f3d0' %}
                   {% else %}
                     {% comment %}Multi-word or unknown colour: strip spaces so CSS doesn't break{% endcomment %}
                     {% assign swatch_color = value_lower | replace: ' ', '' %}

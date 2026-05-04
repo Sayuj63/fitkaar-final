@@ -597,33 +597,85 @@
           if (e.key === 'ArrowUp')   { e.preventDefault(); moveSuggestion(-1); }
         });
 
+        /* ── Collection name → handle map ─────────────────── */
+        var COLLECTION_MAP = {
+          'women': 'women', 'woman': 'women', "women's": 'women',
+          'men': 'men', 'man': 'men', "men's": 'men', 'unisex': 'unisex',
+          'bestseller': 'best-sellers', 'bestsellers': 'best-sellers', 'best seller': 'best-sellers', 'best sellers': 'best-sellers',
+          'new arrivals': 'new-arrivals', 'new arrival': 'new-arrivals', 'new': 'new-arrivals',
+          'premium': 'premium',
+          'hoodie': 'hoodies', 'hoodies': 'hoodies', 'sweatshirt': 'hoodies', 'sweatshirts': 'hoodies',
+          'tee': 'tees', 'tees': 'tees', 't-shirt': 'tees', 't-shirts': 'tees', 'tshirt': 'tees', 'tshirts': 'tees',
+          'crop': 'crop-tops', 'cropped': 'crop-tops', 'crop top': 'crop-tops', 'crop tops': 'crop-tops',
+          'all': 'all'
+        };
+
+        function collectionHandleFor(q) {
+          return COLLECTION_MAP[q.toLowerCase().trim()] || null;
+        }
+
         /* ── Top products (default state) ─────────────────── */
+        var topLoaded = false;
+
         function loadTopProducts() {
-          fetch('/collections/best-sellers/products.json?limit=8')
-            .then(function(r) { return r.ok ? r.json() : { products: [] }; })
+          if (topLoaded) {
+            if (!input.value.trim()) { headingEl.textContent = 'Top Products'; renderCards(TOP_PRODUCTS_FALLBACK, ''); }
+            return;
+          }
+          /* Try best-sellers → all, pick whichever has products */
+          var tried = 0;
+          var endpoints = [
+            '/collections/best-sellers/products.json?limit=8',
+            '/collections/all/products.json?limit=8&sort_by=best-selling'
+          ];
+          function tryNext() {
+            if (tried >= endpoints.length) return;
+            fetch(endpoints[tried++])
+              .then(function(r) { return r.json(); })
+              .then(function(d) {
+                var prods = d.products || [];
+                if (prods.length) {
+                  TOP_PRODUCTS_FALLBACK = prods;
+                  topLoaded = true;
+                  if (!input.value.trim()) { headingEl.textContent = 'Top Products'; renderCards(TOP_PRODUCTS_FALLBACK, ''); }
+                } else {
+                  tryNext();
+                }
+              }).catch(tryNext);
+          }
+          tryNext();
+        }
+
+        /* Pre-fetch top products immediately so the panel opens instantly */
+        setTimeout(loadTopProducts, 800);
+
+        /* ── Collection search ─────────────────────────────── */
+        function searchCollection(handle, q) {
+          fetch('/collections/' + handle + '/products.json?limit=12')
+            .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(d) {
-              TOP_PRODUCTS_FALLBACK = d.products || [];
-              if (!input.value.trim()) { headingEl.textContent = 'Top Products'; renderCards(TOP_PRODUCTS_FALLBACK, ''); }
-            })
-            .catch(function() {
-              fetch('/collections/all/products.json?limit=8')
-                .then(function(r) { return r.ok ? r.json() : { products: [] }; })
-                .then(function(d) {
-                  TOP_PRODUCTS_FALLBACK = d.products || [];
-                  if (!input.value.trim()) renderCards(TOP_PRODUCTS_FALLBACK, '');
-                }).catch(function() {});
-            });
+              if (!d) return;
+              var products = d.products || [];
+              clearSuggestions();
+              headingEl.textContent = products.length
+                ? products.length + ' product' + (products.length > 1 ? 's' : '') + ' in "' + q + '"'
+                : 'No products found in "' + q + '"';
+              renderCards(products, q);
+            }).catch(function() {});
         }
 
         /* ── Predictive search ────────────────────────────── */
-        /* Shopify's predictive search API — we request:
-           • resources[options][fields] = searches titles, tags, product_type, vendor
-             so "food" matches products tagged "food-and-drinks", type "Food", etc.
-           • resources[limit]=12 for more results                                    */
         function predictiveSearch(q) {
+          /* If query exactly matches a collection name, fetch that collection */
+          var colHandle = collectionHandleFor(q);
+          if (colHandle) {
+            searchCollection(colHandle, q);
+            return;
+          }
+
           var url = '/search/suggest.json'
             + '?q=' + encodeURIComponent(q)
-            + '&resources[type]=product'
+            + '&resources[type]=product,collection'
             + '&resources[limit]=12'
             + '&resources[options][fields]=title,product_type,variants.title,tag,vendor'
             + '&resources[options][unavailable_products]=last';
@@ -632,10 +684,18 @@
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(d) {
               if (!d) return;
-              var products = (d.resources && d.resources.results && d.resources.results.products) || [];
-              /* Show suggestions (name list) */
+              var results   = (d.resources && d.resources.results) || {};
+              var products  = results.products || [];
+              var collections = results.collections || [];
+
+              /* If API returns no products but matched a collection, fetch it */
+              if (!products.length && collections.length) {
+                var col = collections[0];
+                var handle = col.handle || (col.url || '').split('/collections/')[1];
+                if (handle) { searchCollection(handle, q); return; }
+              }
+
               renderSuggestions(products, q);
-              /* Show product cards */
               headingEl.textContent = products.length
                 ? products.length + ' result' + (products.length > 1 ? 's' : '') + ' for "' + q + '"'
                 : 'No results for "' + q + '"';
@@ -658,8 +718,9 @@
           }
 
           lastQuery = q;
-          /* Suggestions fire immediately (feel instant like Google) */
-          debounceTimer = setTimeout(function() { predictiveSearch(q); }, 120);
+          /* 80ms feels instant; collection-name matches fire immediately */
+          var delay = collectionHandleFor(q) ? 0 : 80;
+          debounceTimer = setTimeout(function() { predictiveSearch(q); }, delay);
         });
 
         /* Keep input in sync when user clicks a suggestion link */

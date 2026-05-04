@@ -220,8 +220,9 @@
                   muted
                   loop
                   playsinline
+                  webkit-playsinline
                   autoplay
-                  preload="metadata"
+                  preload="auto"
                   disablepictureinpicture
                   controlslist="nodownload nofullscreen noremoteplayback"
                   {% if poster_url != '' %}poster="{{ poster_url }}"{% endif %}
@@ -357,15 +358,39 @@
   });
 
   /* ── 3. IntersectionObserver — auto-play visible videos ─── */
+  /* On iOS Safari, play() from a non-gesture context is blocked.
+     We mark failed plays as pending and retry on first touchstart. */
+  var autoplayUnlocked = !isMobile;
+
+  function tryPlay(v) {
+    var p = v.play();
+    if (p && typeof p.then === 'function') {
+      p.catch(function() {
+        v.setAttribute('data-play-pending', '1');
+      });
+    }
+  }
+
+  function unlockAndPlay() {
+    autoplayUnlocked = true;
+    document.querySelectorAll('[data-reel-video][data-play-pending]').forEach(function(v) {
+      v.removeAttribute('data-play-pending');
+      v.play().catch(function() {});
+    });
+  }
+
+  document.addEventListener('touchstart', unlockAndPlay, { once: true, passive: true });
+  document.addEventListener('click',      unlockAndPlay, { once: true });
+
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         var v = entry.target.querySelector('[data-reel-video]');
         if (!v) return;
-        if (entry.isIntersecting) { v.play().catch(function(){}); }
-        else                      { v.pause(); }
+        if (entry.isIntersecting) { tryPlay(v); }
+        else                      { v.pause(); v.removeAttribute('data-play-pending'); }
       });
-    }, { threshold: 0.25, rootMargin: '0px 120px 0px 120px' });
+    }, { threshold: 0.15, rootMargin: '0px 80px 0px 80px' });
 
     document.querySelectorAll('[data-reel]').forEach(function(card) { io.observe(card); });
   }

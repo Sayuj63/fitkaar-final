@@ -1064,8 +1064,18 @@
             Open WhatsApp Chat
           </a>
           <a href="/pages/process" class="proceed-confirm__again">+ Fill another form</a>
-          <p class="proceed-confirm__hint">Once we have your design draft ready, we'll request the design fee on WhatsApp.</p>
+          <p class="proceed-confirm__hint">Your design advance has been received. We'll share the design draft on WhatsApp soon!</p>
         </div>
+        <script>
+          (function() {
+            if (sessionStorage.getItem('fk:openWA') === '1') {
+              try { sessionStorage.removeItem('fk:openWA'); } catch(e) {}
+              setTimeout(function() {
+                window.open('{{ section.settings.whatsapp_link | default: 'https://wa.me/919354478146' }}', '_blank');
+              }, 800);
+            }
+          })();
+        </script>
       {% elsif form.errors %}
         <div style="background: #ffebee; color: #c62828; padding: 15px; margin-bottom: 20px; border: 1px solid #ffcdd2; font-size: 1.05rem;">
           <strong>Error:</strong> Please check the form and try again.
@@ -1076,6 +1086,8 @@
       <input type="hidden" name="contact[form_type]" value="custom_order_process">
       <input type="hidden" name="contact[product_count]" id="productCountField" value="1">
       <input type="hidden" name="contact[design_fee]" id="designFeeField" value="">
+      <input type="hidden" name="contact[payment_id]" id="rzpPaymentId" value="">
+      <input type="hidden" name="contact[payment_status]" id="rzpPaymentStatus" value="">
 
       <!-- Personal Info -->
       <h3 class="section-divider">Contact Details</h3>
@@ -1347,7 +1359,9 @@
       <!-- #61: Pre-Proceed note — once submitted, no edits possible -->
       <p class="proceed-note">Kindly note: once the form is submitted, we won't be able to make any changes or add new details. Please ensure all information is included beforehand.</p>
 
-      <button type="submit" class="submit-btn">Proceed</button>
+      <div id="rzpError" style="display:none; background:#ffebee; color:#c62828; padding:14px 16px; margin-bottom:1rem; border:1px solid #ffcdd2; font-size:0.95rem; border-radius:4px;"></div>
+
+      <button type="submit" class="submit-btn" id="proceedBtn">Proceed &amp; Pay &#8377;<span id="proceedFeeDisplay">400</span> Design Advance</button>
     {% endform %}
   </div>
 
@@ -1540,6 +1554,10 @@
 }
 </style>
 
+{% if section.settings.razorpay_key != blank %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+{% endif %}
+
 <script>
 (function() {
   // Only one FAQ open at a time
@@ -1599,7 +1617,7 @@
 
   startAutoplay();
 
-  const DESIGN_FEE = {{ section.settings.design_fee_amount | default: 499 }};
+  const DESIGN_FEE = {{ section.settings.design_fee_amount | default: 400 }};
   let productCount = 1;
   const MAX_PRODUCTS = 5;
 
@@ -1823,6 +1841,8 @@
     document.getElementById('productCountField').value = count;
     var totalFee = DESIGN_FEE * count;
     document.getElementById('designFeeField').value = totalFee;
+    var feeDisplay = document.getElementById('proceedFeeDisplay');
+    if (feeDisplay) feeDisplay.textContent = totalFee;
   }
 
   function updateAddButton() {
@@ -1983,9 +2003,79 @@
     });
   });
 
-  // Clear saved data on successful submit
+  // Razorpay interception — intercept Proceed, open payment modal, then submit
+  var rzpKey = '{{ section.settings.razorpay_key }}';
   var formEl = document.querySelector('.process-form-container form');
-  if (formEl) {
+  var proceedBtn = document.getElementById('proceedBtn');
+  var rzpReady = false; // set true after payment handler fires
+
+  function showRzpError(msg) {
+    var el = document.getElementById('rzpError');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function hideRzpError() {
+    var el = document.getElementById('rzpError');
+    if (el) el.style.display = 'none';
+  }
+
+  if (formEl && rzpKey) {
+    formEl.addEventListener('submit', function(e) {
+      if (rzpReady) {
+        // Payment done — let the form submit naturally after clearing localStorage
+        try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
+        return;
+      }
+
+      e.preventDefault();
+      hideRzpError();
+
+      if (!formEl.checkValidity()) {
+        formEl.reportValidity();
+        return;
+      }
+
+      var count = document.querySelectorAll('.product-block').length;
+      var fee = DESIGN_FEE * count;
+
+      var options = {
+        key: rzpKey,
+        amount: fee * 100,
+        currency: 'INR',
+        name: 'Fitkaar',
+        description: 'Design advance — ' + count + ' product' + (count > 1 ? 's' : ''),
+        prefill: {
+          name: (document.getElementById('ContactFormName') || {}).value || '',
+          email: (document.getElementById('ContactFormEmail') || {}).value || '',
+          contact: (document.getElementById('ContactFormPhone') || {}).value || ''
+        },
+        theme: { color: '#000c5b' },
+        handler: function(response) {
+          document.getElementById('rzpPaymentId').value = response.razorpay_payment_id;
+          document.getElementById('rzpPaymentStatus').value = 'paid';
+          try { sessionStorage.setItem('fk:openWA', '1'); } catch(ex) {}
+          rzpReady = true;
+          try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
+          formEl.submit();
+        },
+        modal: {
+          ondismiss: function() {
+            showRzpError('Payment cancelled. Click Proceed to try again.');
+          }
+        }
+      };
+
+      var rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function(response) {
+        showRzpError('Payment failed: ' + ((response.error && response.error.description) || 'Please try again.'));
+      });
+      rzp.open();
+    });
+  } else if (formEl) {
+    // No Razorpay key set — fall back to plain contact form submit
     formEl.addEventListener('submit', function() {
       try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
     });
@@ -2119,7 +2209,13 @@
       "type": "number",
       "id": "design_fee_amount",
       "label": "Design Fee per Product (INR)",
-      "default": 499
+      "default": 400
+    },
+    {
+      "type": "text",
+      "id": "razorpay_key",
+      "label": "Razorpay Key ID",
+      "info": "Your live key starting with rzp_live_… — found in Razorpay Dashboard → Settings → API Keys."
     },
     {
       "type": "url",

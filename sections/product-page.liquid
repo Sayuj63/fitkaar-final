@@ -2951,7 +2951,7 @@
           const city = window.FK_PC[pin];
           const loc  = city ? ' to ' + city.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ') : '';
           this.pincodeStatus  = 'available';
-          this.pincodeMessage = '✓ Delivery available' + loc + ' · Estimated 3–7 business days';
+          this.pincodeMessage = '✓ Delivery available' + loc;
         } else {
           this.pincodeStatus  = 'unavailable';
           this.pincodeMessage = '✗ Sorry, delivery is not available to this pincode yet';

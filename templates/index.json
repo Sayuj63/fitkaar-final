@@ -29,22 +29,6 @@
             "link": ""
           }
         },
-        "image_slide_rJkJzp": {
-          "type": "image_slide",
-          "settings": {
-            "image": "shopify://shop_images/5_9dd24399-934e-4aa1-af87-2ba4bc69c25e.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
-        "image_slide_a8pppd": {
-          "type": "image_slide",
-          "settings": {
-            "image": "shopify://shop_images/4_ea329cee-8b27-4a7d-88ef-eed26b682035.png",
-            "alt": "Fitkaar hero slide",
-            "link": ""
-          }
-        },
         "image_slide_kRjTJX": {
           "type": "image_slide",
           "settings": {
@@ -94,8 +78,6 @@
       "block_order": [
         "image_slide_fVYHkz",
         "image_slide_FATcgp",
-        "image_slide_rJkJzp",
-        "image_slide_a8pppd",
         "image_slide_kRjTJX",
         "image_slide_VAQ3d7",
         "image_slide_Qyqigc",
@@ -103,7 +85,7 @@
         "image_slide_cCwNJw"
       ],
       "settings": {
-        "slide_duration": 3,
+        "slide_duration": 4,
         "desktop_height": 100,
         "mobile_aspect": "1/1"
       }

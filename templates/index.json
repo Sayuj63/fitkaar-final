@@ -12,17 +12,6 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
-        "video_slide_GW7ajb": {
-          "type": "video_slide",
-          "settings": {
-            "video": "shopify://files/videos/video-output-9A70289E-7C2D-41CC-AAC1-90E81AB77B93-1.mov",
-            "video_mobile": "shopify://files/videos/video-output-B2CA9885-E70E-471D-A06F-4CEBD9D91205-1.mov",
-            "autoplay": true,
-            "loop": true,
-            "alt": "Fitkaar hero video",
-            "link": ""
-          }
-        },
         "image_slide_FATcgp": {
           "type": "image_slide",
           "settings": {
@@ -79,7 +68,6 @@
         }
       },
       "block_order": [
-        "video_slide_GW7ajb",
         "image_slide_FATcgp",
         "image_slide_kRjTJX",
         "image_slide_VAQ3d7",

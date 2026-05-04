@@ -382,6 +382,11 @@
     .product-card:hover .pc-img--secondary { opacity: 1; }
   }
 
+  @media (hover: none) {
+    .product-card.pc-scroll-active .pc-img--primary { opacity: 0; }
+    .product-card.pc-scroll-active .pc-img--secondary { opacity: 1; }
+  }
+
   .product-card:hover .product-card-image img {
     transform: scale(1.05);
   }
@@ -1860,5 +1865,40 @@
   }
 
   if (!nextUrl && endMsg) endMsg.style.display = 'block';
+})();
+
+/* ── Mobile: scroll-based secondary image reveal ── */
+(function() {
+  if (!('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(hover: hover)').matches) return;
+
+  var cardIO = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var card = entry.target;
+      var secondary = card.querySelector('.pc-img--secondary');
+      if (!secondary) return;
+      if (entry.isIntersecting) {
+        card.classList.add('pc-scroll-active');
+      } else {
+        card.classList.remove('pc-scroll-active');
+      }
+    });
+  }, { threshold: 0.6 });
+
+  function observeCards() {
+    document.querySelectorAll('.product-card').forEach(function(card) {
+      if (!card.dataset.scrollObserved) {
+        card.dataset.scrollObserved = '1';
+        cardIO.observe(card);
+      }
+    });
+  }
+
+  observeCards();
+
+  /* Re-observe cards added by infinite scroll */
+  var mutObs = new MutationObserver(observeCards);
+  var grid = document.querySelector('.pc-grid');
+  if (grid) mutObs.observe(grid, { childList: true });
 })();
 </script>

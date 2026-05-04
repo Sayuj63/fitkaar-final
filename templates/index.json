@@ -12,6 +12,14 @@
     "slideshow": {
       "type": "hero-slideshow",
       "blocks": {
+        "image_slide_rJkJzp": {
+          "type": "image_slide",
+          "settings": {
+            "image": "shopify://shop_images/5_9dd24399-934e-4aa1-af87-2ba4bc69c25e.png",
+            "alt": "Fitkaar hero slide",
+            "link": ""
+          }
+        },
         "image_slide_a8pppd": {
           "type": "image_slide",
           "settings": {
@@ -84,6 +92,7 @@
         }
       },
       "block_order": [
+        "image_slide_rJkJzp",
         "image_slide_a8pppd",
         "image_slide_FATcgp",
         "image_slide_fVYHkz",

@@ -74,6 +74,34 @@
 }
 {% endschema %}
 
+<style>
+.tb-img-card {
+  background: #dde8ec;
+}
+.tb-img-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #dde8ec 0%, #eef4f6 40%, #dde8ec 80%);
+  background-size: 200% 100%;
+  animation: tb-shimmer 1.4s ease-in-out infinite;
+  z-index: 1;
+  transition: opacity 0.3s;
+}
+.tb-img-card.tb-loaded::before {
+  opacity: 0;
+  pointer-events: none;
+}
+.tb-img {
+  position: relative;
+  z-index: 2;
+}
+@keyframes tb-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+</style>
+
 <section class="py-16" style="background-color: {{ section.settings.bg_color }};">
   <div class="container">
     <h2 class="text-center text-5xl font-black uppercase mb-12 tracking-tight" style="color: var(--color-primary); font-family: var(--font-heading);">{{ section.settings.title }}</h2>
@@ -98,10 +126,10 @@
             </div>
 
           {% when 'review_image' %}
-            <div class="rounded-lg overflow-hidden relative
+            <div class="rounded-lg overflow-hidden relative tb-img-card
                         {% if block.settings.card_size == 'large' %}md:col-span-2 md:row-span-2{% elsif block.settings.card_size == 'medium' %}md:col-span-2 md:row-span-1{% else %}md:col-span-1 md:row-span-1{% endif %}">
               {% if block.settings.image %}
-                <img src="{{ block.settings.image | image_url: width: 600 }}" alt="Testimonial" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                <img src="{{ block.settings.image | image_url: width: 600 }}" alt="Testimonial" loading="eager" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110 tb-img">
               {% else %}
                 {{ 'image' | placeholder_svg_tag: 'placeholder-svg w-full h-full object-cover' }}
               {% endif %}
@@ -112,3 +140,20 @@
     </div>
   </div>
 </section>
+
+<script>
+(function() {
+  document.querySelectorAll('.tb-img').forEach(function(img) {
+    var card = img.closest('.tb-img-card');
+    if (!card) return;
+    function markLoaded() { card.classList.add('tb-loaded'); }
+    if (img.complete && img.naturalWidth > 0) {
+      markLoaded();
+    } else {
+      img.addEventListener('load',  markLoaded, { once: true });
+      img.addEventListener('error', markLoaded, { once: true });
+      setTimeout(markLoaded, 4000);
+    }
+  });
+})();
+</script>

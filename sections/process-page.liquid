@@ -203,12 +203,7 @@
 .no-hidden-charges-track {
   display: flex;
   width: max-content;
-  animation: banner-scroll 40s linear infinite;
   will-change: transform;
-}
-
-.no-hidden-charges-track:hover {
-  animation-play-state: paused;
 }
 
 .no-hidden-charges-item {
@@ -231,11 +226,6 @@
 .no-hidden-charges-item .sep {
   opacity: 0.6;
   font-size: 0.9rem;
-}
-
-@keyframes banner-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
 }
 
 @keyframes banner-gradient-shift {
@@ -1029,9 +1019,9 @@
 
     <!-- No Hidden Charges Banner -->
     <div class="no-hidden-charges-banner">
-      <div class="no-hidden-charges-marquee">
-        <div class="no-hidden-charges-track">
-          {%- for i in (1..2) -%}
+      <div class="no-hidden-charges-marquee" id="nhc-marquee">
+        <div class="no-hidden-charges-track" id="nhc-track">
+          {%- for i in (1..8) -%}
             <span class="no-hidden-charges-item">
               No hidden charges | Same price irrespective of the design!
               <span class="sep" aria-hidden="true">✦</span>
@@ -2000,6 +1990,46 @@
       try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
     });
   }
+})();
+</script>
+
+<script>
+(function() {
+  var track = document.getElementById('nhc-track');
+  var marquee = document.getElementById('nhc-marquee');
+  if (!track || !marquee) return;
+
+  var speed = 40;
+  var half = 0;
+  var pos = 0;
+  var lastTs = null;
+  var paused = false;
+
+  function computeHalf() { half = track.scrollWidth / 2; }
+  computeHalf();
+  window.addEventListener('resize', computeHalf);
+
+  marquee.addEventListener('mouseenter', function() { paused = true; });
+  marquee.addEventListener('mouseleave', function() { paused = false; });
+
+  document.addEventListener('visibilitychange', function() {
+    paused = document.hidden;
+    if (!document.hidden) lastTs = null;
+  });
+
+  function step(ts) {
+    if (!paused) {
+      if (lastTs !== null && half > 0) {
+        pos += (half / (speed * 1000)) * (ts - lastTs);
+        if (pos >= half) pos -= half;
+        track.style.transform = 'translateX(-' + pos.toFixed(3) + 'px)';
+      }
+      lastTs = ts;
+    }
+    requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
 })();
 </script>
 

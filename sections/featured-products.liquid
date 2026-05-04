@@ -202,13 +202,62 @@
 @media (min-width: 1200px) {
   .bestseller-card { flex: 0 0 18%; }   /* 5 cards visible on wide screens */
 }
+
+.bestseller-scroll-wrap {
+  position: relative;
+}
+
+.bestseller-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid #000c5b;
+  background: #fff;
+  color: #000c5b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,12,91,0.14);
+  transition: background 0.18s, color 0.18s, opacity 0.18s;
+  padding: 0;
+}
+
+.bestseller-nav-btn:hover {
+  background: #000c5b;
+  color: #fff;
+}
+
+.bestseller-nav-btn.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bestseller-nav-btn--prev { left: -18px; }
+.bestseller-nav-btn--next { right: -18px; }
+
+@media (max-width: 767px) {
+  .bestseller-nav-btn { display: none; }
+}
 </style>
 
 <section class="py-16 bg-white">
   <div class="container">
     <h2 class="text-center text-4xl font-bold mb-12 uppercase" style="color: var(--color-primary); font-family: var(--font-heading);">{{ section.settings.title }}</h2>
 
-    <div class="bestseller-grid md:grid md:grid-cols-4 md:gap-6">
+    <div class="bestseller-scroll-wrap">
+      <button class="bestseller-nav-btn bestseller-nav-btn--prev" id="bsPrev" aria-label="Scroll left">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="bestseller-nav-btn bestseller-nav-btn--next" id="bsNext" aria-label="Scroll right">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+
+    <div class="bestseller-grid md:grid md:grid-cols-4 md:gap-6" id="bsGrid">
       {% assign collection = section.settings.collection %}
       {% if collection != blank %}
         {% for product in collection.products limit: 8 %}
@@ -349,5 +398,33 @@
         {% endfor %}
       {% endif %}
     </div>
+    </div><!-- /.bestseller-scroll-wrap -->
   </div>
 </section>
+
+<script>
+(function() {
+  var grid = document.getElementById('bsGrid');
+  var prev = document.getElementById('bsPrev');
+  var next = document.getElementById('bsNext');
+  if (!grid || !prev || !next) return;
+
+  var scrollAmount = function() { return grid.clientWidth * 0.8; };
+
+  function update() {
+    prev.classList.toggle('is-hidden', grid.scrollLeft <= 4);
+    next.classList.toggle('is-hidden', grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 4);
+  }
+
+  prev.addEventListener('click', function() {
+    grid.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+  });
+  next.addEventListener('click', function() {
+    grid.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+  });
+
+  grid.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>

@@ -39,8 +39,10 @@
   </head>
 
   <body class="gradient">
-    {% section 'announcement-bar' %}
-    {% section 'header' %}
+    <div style="position: sticky; top: 0; z-index: 100;">
+      {% section 'announcement-bar' %}
+      {% section 'header' %}
+    </div>
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}

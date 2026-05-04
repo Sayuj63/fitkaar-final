@@ -1488,6 +1488,7 @@
                   data-wishlist-url="{{ product.url }}"
                   data-wishlist-title="{{ product.title | escape }}"
                   data-wishlist-price="{{ product.price }}"
+                  data-wishlist-compare="{{ product.compare_at_price | default: 0 }}"
                   data-wishlist-image="{{ product.featured_image | image_url: width: 500 }}"
                   aria-label="Add to wishlist">
                   <svg class="heart-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -1833,8 +1834,9 @@
                 handle: el.getAttribute('data-wishlist-handle') || '',
                 url:    el.getAttribute('data-wishlist-url') || '',
                 title:  el.getAttribute('data-wishlist-title') || '',
-                price:  parseInt(el.getAttribute('data-wishlist-price') || '0', 10) || 0,
-                image:  el.getAttribute('data-wishlist-image') || ''
+                price:   parseInt(el.getAttribute('data-wishlist-price')   || '0', 10) || 0,
+                compare: parseInt(el.getAttribute('data-wishlist-compare') || '0', 10) || 0,
+                image:   el.getAttribute('data-wishlist-image') || ''
               });
               document.querySelectorAll('[data-wishlist-heart]').forEach(function(h) {
                 h.classList.toggle('is-active', window.FkWishlist.has(h.getAttribute('data-wishlist-id')));
@@ -1900,5 +1902,39 @@
   var mutObs = new MutationObserver(observeCards);
   var grid = document.querySelector('.pc-grid');
   if (grid) mutObs.observe(grid, { childList: true });
+})();
+
+/* ── Scroll position: save on click, restore on back ── */
+(function() {
+  var SCROLL_KEY = 'fk:col-scroll:' + window.location.pathname;
+
+  /* Restore scroll position when returning from a product page */
+  var savedY = sessionStorage.getItem(SCROLL_KEY);
+  if (savedY) {
+    sessionStorage.removeItem(SCROLL_KEY);
+    history.scrollRestoration = 'manual';
+    /* requestAnimationFrame gives the browser one paint cycle to lay out the grid */
+    requestAnimationFrame(function() {
+      window.scrollTo({ top: parseInt(savedY, 10), behavior: 'instant' });
+    });
+  }
+
+  /* Save scroll position whenever a product card link is clicked */
+  function bindScrollSave() {
+    document.querySelectorAll('.product-card a.product-card-link:not([data-scroll-bound])').forEach(function(link) {
+      link.setAttribute('data-scroll-bound', '1');
+      link.addEventListener('click', function() {
+        sessionStorage.setItem(SCROLL_KEY, window.scrollY.toString());
+      });
+    });
+  }
+
+  bindScrollSave();
+
+  /* Also bind on infinite-scroll-added cards */
+  var scrollGrid = document.querySelector('.pc-grid');
+  if (scrollGrid) {
+    new MutationObserver(bindScrollSave).observe(scrollGrid, { childList: true });
+  }
 })();
 </script>

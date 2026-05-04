@@ -1079,8 +1079,34 @@
     opacity: 1;
   }
 
+  /* Back button */
+  .pdp-back-bar {
+    padding: 12px 0 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-left: 20px;
+  }
+  .pdp-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 6px 0;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-primary, #000c5b);
+    cursor: pointer;
+    opacity: 0.75;
+    transition: opacity 0.15s;
+  }
+  .pdp-back-btn:hover { opacity: 1; }
+  .pdp-back-btn svg { flex-shrink: 0; }
+
   /* Mobile Adjustments */
   @media (max-width: 767px) {
+    .pdp-back-bar { padding-left: 14px; }
     /* #37a: tighten container so nothing gets clipped on the right */
     .product-page { padding: 24px 0 50px; overflow-x: clip; }
     .product-container { padding: 0 14px; gap: 22px; }
@@ -1279,6 +1305,28 @@
     .dual-vertical-carousel { display: none !important; }
   }
 </style>
+
+<div class="pdp-back-bar">
+  <button class="pdp-back-btn" id="pdpBackBtn" aria-label="Go back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Back
+  </button>
+</div>
+<script>
+(function() {
+  var btn = document.getElementById('pdpBackBtn');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var ref = document.referrer;
+    var isCollection = ref && (ref.indexOf('/collections/') !== -1);
+    if (history.length > 1 && (isCollection || ref)) {
+      history.back();
+    } else {
+      window.location.href = '/collections/all';
+    }
+  });
+})();
+</script>
 
 <section class="product-page" x-data="productPage()" x-init="initSwipe()">
   <div class="product-container">
@@ -1665,6 +1713,7 @@
             data-wishlist-url="{{ product.url }}"
             data-wishlist-title="{{ product.title | escape }}"
             data-wishlist-price="{{ product.price }}"
+            data-wishlist-compare="{{ product.compare_at_price | default: 0 }}"
             data-wishlist-image="{{ product.featured_image | image_url: width: 500 }}">
             <svg class="wl-heart-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>

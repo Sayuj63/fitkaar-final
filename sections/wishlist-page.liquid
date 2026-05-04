@@ -65,15 +65,6 @@
     object-fit: cover;
     display: block;
   }
-  .fk-wl-noimg {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #aaa;
-    font-size: 0.85rem;
-  }
   .fk-wl-card__info { padding: 12px 14px 16px; }
   .fk-wl-card__title {
     font-family: var(--font-heading, 'League Spartan', sans-serif);
@@ -88,6 +79,31 @@
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--color-primary, #000c5b);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .fk-wl-price-sale { color: #000; }
+  .fk-wl-price-compare {
+    text-decoration: line-through;
+    color: #999;
+    font-weight: 400;
+    font-size: 0.82rem;
+  }
+  .fk-wl-price-off {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #dc2626;
+    letter-spacing: 0.02em;
+  }
+  .fk-wl-noimg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
   }
   .fk-wl-card__remove {
     position: absolute;
@@ -141,6 +157,13 @@
     letter-spacing: 0.05em;
   }
 </style>
+
+{% comment %} Server-side product lookup: gives wishlist.js fresh image URLs + compare prices {% endcomment %}
+<script type="application/json" id="FkProductLookup">{
+  {%- for product in collections.all.products limit: 250 -%}
+  {{ product.id | json }}: {"image":{{ product.featured_image | image_url: width: 500 | json }},"price":{{ product.price }},"compare":{{ product.compare_at_price | default: 0 }}}{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+}</script>
 
 <section class="fk-wl-page">
   <header class="fk-wl-page__header">

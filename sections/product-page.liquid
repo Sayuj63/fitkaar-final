@@ -1768,15 +1768,17 @@
           <div class="pincode-input-group">
             <input
               type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
               class="pincode-input"
-              placeholder="Enter pincode"
+              placeholder="Enter 6-digit pincode"
               maxlength="6"
               x-model="pincode"
               @keyup.enter="checkPincode()"
             >
-            <button class="pincode-btn" @click="checkPincode()">Check</button>
+            <button class="pincode-btn" @click="checkPincode()" :disabled="pincodeLoading" x-text="pincodeLoading ? 'Checking…' : 'Check'"></button>
           </div>
-          <div class="pincode-result" :class="{ 'success': pincodeStatus === 'available', 'error': pincodeStatus === 'unavailable' }">
+          <div class="pincode-result" x-show="pincodeStatus !== ''" :class="{ 'success': pincodeStatus === 'available', 'error': pincodeStatus === 'unavailable' || pincodeStatus === 'error' }">
             <span x-text="pincodeMessage"></span>
           </div>
         </div>
@@ -2625,6 +2627,7 @@
       pincode: '',
       pincodeStatus: '',
       pincodeMessage: '',
+      pincodeLoading: false,
 
       // Toast
       toastVisible: false,
@@ -2914,23 +2917,44 @@
         return idx;
       },
 
-      checkPincode() {
-        if (this.pincode.length !== 6 || isNaN(this.pincode)) {
+      async checkPincode() {
+        const pin = String(this.pincode).trim();
+        if (!/^\d{6}$/.test(pin)) {
           this.pincodeStatus = 'error';
           this.pincodeMessage = 'Please enter a valid 6-digit pincode';
           return;
         }
 
-        // Simulate pincode check - In production, integrate with delivery API
-        const serviceable = ['110001', '110002', '110003', '400001', '400002', '560001', '560002', '500001', '600001', '700001'];
+        /* Load pincode data on first use */
+        if (!window.FK_PC) {
+          this.pincodeLoading = true;
+          this.pincodeStatus = '';
+          this.pincodeMessage = '';
+          try {
+            await new Promise(function(resolve, reject) {
+              var s = document.createElement('script');
+              s.src = {{ 'fk-pincodes.js' | asset_url | json }};
+              s.onload  = resolve;
+              s.onerror = reject;
+              document.head.appendChild(s);
+            });
+          } catch(e) {
+            this.pincodeLoading = false;
+            this.pincodeStatus = 'error';
+            this.pincodeMessage = 'Unable to check right now. Please try again.';
+            return;
+          }
+          this.pincodeLoading = false;
+        }
 
-        // For demo: Most pincodes are serviceable
-        if (this.pincode.startsWith('1') || this.pincode.startsWith('4') || this.pincode.startsWith('5') || this.pincode.startsWith('6') || this.pincode.startsWith('7')) {
-          this.pincodeStatus = 'available';
-          this.pincodeMessage = '✓ Delivery available to ' + this.pincode;
+        if (window.FK_PC && window.FK_PC.hasOwnProperty(pin)) {
+          const city = window.FK_PC[pin];
+          const loc  = city ? ' to ' + city.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ') : '';
+          this.pincodeStatus  = 'available';
+          this.pincodeMessage = '✓ Delivery available' + loc + ' · Estimated 3–7 business days';
         } else {
-          this.pincodeStatus = 'unavailable';
-          this.pincodeMessage = '✗ Sorry, delivery is not available to this pincode';
+          this.pincodeStatus  = 'unavailable';
+          this.pincodeMessage = '✗ Sorry, delivery is not available to this pincode yet';
         }
       },
 

@@ -18,7 +18,14 @@
         "banner_image_2_mobile": "shopify://shop_images/heroine_1080_3.png",
         "title": "Custom Order Process",
         "subtitle": "Fill out the details below so we can create something unique for you.",
-        "design_fee_amount": 400
+        "size_chart_cropped_tee": "shopify://shop_images/Cropped_tee.png",
+        "size_chart_regular_tee": "shopify://shop_images/Regular_tshirt.png",
+        "size_chart_oversized_tee": "shopify://shop_images/Oversized_tshirt.png",
+        "size_chart_boxy_vest": "shopify://shop_images/Boxy_vest.png",
+        "size_chart_sweatshirt": "shopify://shop_images/Sweatshirt.png",
+        "size_chart_hoodie": "shopify://shop_images/Hoodie.png",
+        "design_fee_amount": 400,
+        "whatsapp_link": ""
       }
     }
   },

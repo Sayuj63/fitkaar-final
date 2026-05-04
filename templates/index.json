@@ -103,7 +103,7 @@
     "interactive_builder": {
       "type": "interactive-builder",
       "settings": {
-        "title": "Click the elements below!",
+        "title": "Click the elements!",
         "male_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/male_model.png?v=1766327145",
         "female_model": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/female_model.png?v=1766327146",
         "sticker_1": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/football_sticker.png?v=1766327144",
@@ -113,7 +113,10 @@
         "sticker_5": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/quote_sticker.png?v=1766327143",
         "sticker_6": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/camera_sticker.png?v=1766327145",
         "sticker_7": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/guitar_sticker.png?v=1766327143",
-        "sticker_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/pasta_sticker.png?v=1766327145"
+        "sticker_8": "https://cdn.shopify.com/s/files/1/0716/3373/1756/files/pasta_sticker.png?v=1766327145",
+        "cta_subtext": "Like what you see? Make it yours.",
+        "cta_label": "Customise Yours",
+        "cta_url": ""
       }
     },
     "best_sellers": {

@@ -13,7 +13,8 @@
       "type": "collection-products",
       "settings": {
         "show_hero": true,
-        "hero_fallback_first_product": true,
+        "hero_fallback_first_product": false,
+        "hero_image_mobile": "shopify://shop_images/42_5c8f9bb5-0f24-4fa4-8de7-8fa7b1f3b22c.png",
         "show_categories": true,
         "cat_1_image": "shopify://shop_images/55_ccccedb2-ff8a-4cca-83cc-6acf4c57fd46.png",
         "cat_1_name": "Essentials",

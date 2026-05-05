@@ -2711,13 +2711,19 @@
 
       // Computed: Size chart image for the currently selected type
       get sizeChartImage() {
-        if (!this.selectedType) return null;
-        const found = this.allImages.find(img => {
-          if (!img.alt) return false;
-          const alt = img.alt.toLowerCase();
-          return alt.includes('size chart') && alt.includes(this.selectedType.toLowerCase());
-        }) || null;
-        return found;
+        const all = this.allImages;
+        // Products with a Type option: match size chart to the selected type
+        if (this.selectedType) {
+          const byType = all.find(img => {
+            if (!img.alt) return false;
+            const alt = img.alt.toLowerCase();
+            return alt.includes('size chart') && alt.includes(this.selectedType.toLowerCase());
+          });
+          if (byType) return byType;
+        }
+        // No type option (matching/duo products) or no type-specific chart found:
+        // return any image whose alt contains "size chart"
+        return all.find(img => img.alt && img.alt.toLowerCase().includes('size chart')) || null;
       },
 
       // Variants

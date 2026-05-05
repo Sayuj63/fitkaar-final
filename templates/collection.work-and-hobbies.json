@@ -12,7 +12,7 @@
     "main": {
       "type": "collection-products",
       "settings": {
-        "show_hero": false,
+        "show_hero": true,
         "hero_fallback_first_product": false,
         "hero_image_1": "shopify://shop_images/42_a5e9caaf-8507-4238-a8df-0e872043bedd.png",
         "hero_image_mobile": "shopify://shop_images/50_ad44bd2f-b66e-41f1-82aa-2e0693ebfe90.png",

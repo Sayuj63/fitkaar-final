@@ -673,6 +673,22 @@
       color: #374151;
       margin-bottom: 6px;
     }
+    .fk-cart-item-props {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .fk-cart-item-prop {
+      font-size: 0.7rem;
+      color: #555;
+      line-height: 1.4;
+      word-break: break-all;
+    }
+    .fk-cart-prop-key {
+      font-weight: 700;
+      color: var(--color-primary);
+    }
     .fk-cart-item-prices {
       display: flex;
       align-items: center;
@@ -1092,6 +1108,13 @@
                   <span class="fk-cart-item-title" x-text="item.product_title"></span>
                 </a>
                 <span class="fk-cart-item-size" x-show="sizeOnly(item.variant_title)" x-text="sizeOnly(item.variant_title)"></span>
+                <template x-if="item.properties && Object.keys(item.properties).filter(k => !k.startsWith('_')).length > 0">
+                  <div class="fk-cart-item-props">
+                    <template x-for="[k,v] in Object.entries(item.properties).filter(([k]) => !k.startsWith('_'))" :key="k">
+                      <div class="fk-cart-item-prop"><span class="fk-cart-prop-key" x-text="k + ':'"></span> <span class="fk-cart-prop-val" x-text="v"></span></div>
+                    </template>
+                  </div>
+                </template>
                 <div class="fk-cart-item-prices">
                   <span class="fk-cart-item-price" x-text="'₹' + Math.round(item.final_price / 100) + '/-'"></span>
                   <span class="fk-cart-item-mrp" x-show="item.compare_at_price && item.compare_at_price > item.final_price" x-text="'₹' + Math.round(item.compare_at_price / 100)"></span>

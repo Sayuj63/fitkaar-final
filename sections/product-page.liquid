@@ -35,6 +35,91 @@
       "type": "url",
       "id": "customise_url",
       "label": "Customise Page URL"
+    },
+    {
+      "type": "header",
+      "content": "Customisation Fields"
+    },
+    {
+      "type": "checkbox",
+      "id": "customisation_enabled",
+      "label": "Enable customisation fields",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "photo_count",
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "label": "Number of photo link fields",
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "photo_label_1",
+      "label": "Photo field 1 label",
+      "default": "Photo 1 – paste Google Drive / Photos share link"
+    },
+    {
+      "type": "text",
+      "id": "photo_label_2",
+      "label": "Photo field 2 label",
+      "default": "Photo 2 – paste Google Drive / Photos share link"
+    },
+    {
+      "type": "text",
+      "id": "photo_label_3",
+      "label": "Photo field 3 label",
+      "default": "Photo 3 – paste Google Drive / Photos share link"
+    },
+    {
+      "type": "text",
+      "id": "photo_label_4",
+      "label": "Photo field 4 label",
+      "default": "Photo 4 – paste Google Drive / Photos share link"
+    },
+    {
+      "type": "text",
+      "id": "photo_label_5",
+      "label": "Photo field 5 label",
+      "default": "Photo 5 – paste Google Drive / Photos share link"
+    },
+    {
+      "type": "text",
+      "id": "photo_label_6",
+      "label": "Photo field 6 label",
+      "default": "Photo 6 – paste Google Drive / Photos share link"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_1_enabled",
+      "label": "Enable text field 1",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "text_1_label",
+      "label": "Text field 1 label",
+      "default": "Initials"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_2_enabled",
+      "label": "Enable text field 2",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "text_2_label",
+      "label": "Text field 2 label",
+      "default": "Date (DD/MM/YYYY)"
+    },
+    {
+      "type": "textarea",
+      "id": "customisation_instructions",
+      "label": "Instructions shown to customer",
+      "default": "Upload your photos to Google Drive or Google Photos, share the album (set to 'Anyone with the link'), and paste each share link below."
     }
   ]
 }
@@ -735,6 +820,78 @@
     font-size: 0.9rem;
   }
 
+  /* Customisation Fields */
+  .custom-fields-wrap {
+    background: #f8f9ff;
+    border: 1.5px solid #dde1f5;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .custom-fields-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .custom-fields-instructions {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+  .custom-field {
+    margin-bottom: 12px;
+  }
+  .custom-field:last-of-type {
+    margin-bottom: 0;
+  }
+  .custom-field-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  .custom-field-req {
+    color: #dc2626;
+  }
+  .custom-field-input {
+    width: 100%;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 0.88rem;
+    color: #111;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  .custom-field-input:focus {
+    border-color: var(--color-primary);
+  }
+  .custom-field-input--error {
+    border-color: #dc2626;
+  }
+  .custom-fields-note {
+    font-size: 0.82rem;
+    color: #dc2626;
+    margin: 10px 0 0;
+    font-weight: 500;
+  }
+  .btn-add-cart:disabled,
+  .btn-buy-now:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
   /* Action Buttons */
   .actions-section {
     display: flex;
@@ -1328,6 +1485,29 @@
 })();
 </script>
 
+{% comment %}Build initial customFields JSON for Alpine{% endcomment %}
+{% if section.settings.customisation_enabled %}
+  {% assign cf_pairs = '' | split: '' %}
+  {% for i in (1..section.settings.photo_count) %}
+    {% assign lk = 'photo_label_' | append: i %}
+    {% assign default_lbl = 'Photo ' | append: i %}
+    {% assign lbl = section.settings[lk] | default: default_lbl %}
+    {% assign p = lbl | json | append: ':""' %}
+    {% assign cf_pairs = cf_pairs | push: p %}
+  {% endfor %}
+  {% if section.settings.text_1_enabled and section.settings.text_1_label != blank %}
+    {% assign p = section.settings.text_1_label | json | append: ':""' %}
+    {% assign cf_pairs = cf_pairs | push: p %}
+  {% endif %}
+  {% if section.settings.text_2_enabled and section.settings.text_2_label != blank %}
+    {% assign p = section.settings.text_2_label | json | append: ':""' %}
+    {% assign cf_pairs = cf_pairs | push: p %}
+  {% endif %}
+  {% assign custom_fields_json = '{' | append: cf_pairs | join: ',' | append: '}' %}
+{% else %}
+  {% assign custom_fields_json = '{}' %}
+{% endif %}
+
 <section class="product-page" x-data="productPage()" x-init="initSwipe()">
   <div class="product-container">
     <!-- Left Column: Image Gallery Carousel -->
@@ -1696,6 +1876,63 @@
         </div>
       </div>
 
+      {% if section.settings.customisation_enabled %}
+      <!-- Customisation Fields -->
+      <div class="custom-fields-wrap">
+        <h3 class="custom-fields-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Personalise Your Order
+        </h3>
+        {% if section.settings.customisation_instructions != blank %}
+        <p class="custom-fields-instructions">{{ section.settings.customisation_instructions }}</p>
+        {% endif %}
+
+        {% for i in (1..section.settings.photo_count) %}
+          {% assign lk = 'photo_label_' | append: i %}
+          {% assign default_lbl = 'Photo ' | append: i %}
+          {% assign lbl = section.settings[lk] | default: default_lbl %}
+          <div class="custom-field">
+            <label class="custom-field-label">{{ lbl }} <span class="custom-field-req">*</span></label>
+            <input
+              type="text"
+              class="custom-field-input"
+              x-model="customFields[{{ lbl | json }}]"
+              placeholder="Paste Google Drive / Photos share link"
+              :class="{ 'custom-field-input--error': !customFields[{{ lbl | json }}]?.trim() && Object.values(customFields).some(v => v.trim()) }"
+            >
+          </div>
+        {% endfor %}
+
+        {% if section.settings.text_1_enabled and section.settings.text_1_label != blank %}
+        <div class="custom-field">
+          <label class="custom-field-label">{{ section.settings.text_1_label }} <span class="custom-field-req">*</span></label>
+          <input
+            type="text"
+            class="custom-field-input"
+            x-model="customFields[{{ section.settings.text_1_label | json }}]"
+            placeholder="{{ section.settings.text_1_label }}"
+          >
+        </div>
+        {% endif %}
+
+        {% if section.settings.text_2_enabled and section.settings.text_2_label != blank %}
+        <div class="custom-field">
+          <label class="custom-field-label">{{ section.settings.text_2_label }} <span class="custom-field-req">*</span></label>
+          <input
+            type="text"
+            class="custom-field-input"
+            x-model="customFields[{{ section.settings.text_2_label | json }}]"
+            placeholder="{{ section.settings.text_2_label }}"
+          >
+        </div>
+        {% endif %}
+
+        <p class="custom-fields-note" x-show="!customisationValid" x-cloak>
+          ⚠ Please fill in all fields above before adding to cart.
+        </p>
+      </div>
+      {% endif %}
+
       <!-- Action Buttons -->
       <div class="actions-section">
         <!-- Quantity -->
@@ -1714,13 +1951,15 @@
             class="btn-add-cart"
             :class="{ 'btn-loading': isAddingToCart }"
             @click="addToCart()"
-            :disabled="isAddingToCart"
+            :disabled="isAddingToCart || !customisationValid"
+            :title="!customisationValid ? 'Please fill in all customisation fields' : ''"
           >
             Add to Cart
           </button>
           <button
             class="btn-buy-now"
             @click="buyNow()"
+            :disabled="!customisationValid"
           >
             Buy It Now
           </button>
@@ -2543,8 +2782,22 @@
         return hit ? hit.id : null;
       },
 
+      customFields: {{ custom_fields_json }},
+
+      get customisationValid() {
+        const vals = Object.values(this.customFields);
+        if (!vals.length) return true;
+        return vals.every(function(v) { return v && v.trim().length > 0; });
+      },
+
       buildCartItems() {
-        return [{ id: this.selectedVariantId, quantity: this.quantity }];
+        const item = { id: this.selectedVariantId, quantity: this.quantity };
+        const props = {};
+        for (const [k, v] of Object.entries(this.customFields)) {
+          if (v && v.trim()) props[k] = v.trim();
+        }
+        if (Object.keys(props).length) item.properties = props;
+        return [item];
       },
 
       // UI State

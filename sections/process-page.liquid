@@ -382,9 +382,9 @@
   position: absolute;
   inset: 0;
   background: rgba(255,255,255,0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  text-align: center;
+  line-height: 72px;
   font-size: 0.65rem;
   color: #333;
 }
@@ -2076,13 +2076,14 @@
   }
 
   // Build preview thumbs for a file input and upload all files; returns array of URLs
-  async function uploadFilesFromInput(inputEl, statusEl) {
-    if (!inputEl || !inputEl.files || !inputEl.files.length) return [];
-    var files = Array.from(inputEl.files);
-    var thumbEls = files.map(function(file) {
+  // Show local previews immediately when files are chosen
+  function showPreviews(inputEl, statusEl) {
+    if (!statusEl) return;
+    statusEl.innerHTML = '';
+    if (!inputEl || !inputEl.files || !inputEl.files.length) return;
+    Array.from(inputEl.files).forEach(function(file) {
       var thumb = document.createElement('div');
       thumb.className = 'upload-thumb';
-      // show local preview immediately
       var reader = new FileReader();
       reader.onload = function(e) {
         var img = document.createElement('img');
@@ -2091,9 +2092,31 @@
         thumb.appendChild(img);
       };
       reader.readAsDataURL(file);
-      if (statusEl) statusEl.appendChild(thumb);
-      return thumb;
+      statusEl.appendChild(thumb);
     });
+  }
+
+  // Wire up instant previews on file select
+  var photosInput = document.getElementById('processPhotosInput');
+  var photosStatus = document.getElementById('processPhotosStatus');
+  var refsInput = document.getElementById('processRefsInput');
+  var refsStatus = document.getElementById('processRefsStatus');
+
+  if (photosInput) photosInput.addEventListener('change', function() { showPreviews(photosInput, photosStatus); });
+  if (refsInput)   refsInput.addEventListener('change',   function() { showPreviews(refsInput,  refsStatus);  });
+
+  async function uploadFilesFromInput(inputEl, statusEl) {
+    if (!inputEl || !inputEl.files || !inputEl.files.length) return [];
+    var files = Array.from(inputEl.files);
+    // Reuse existing thumbs already rendered by showPreviews
+    var thumbEls = statusEl ? Array.from(statusEl.querySelectorAll('.upload-thumb')) : [];
+    // Pad in case counts differ
+    while (thumbEls.length < files.length) {
+      var t = document.createElement('div');
+      t.className = 'upload-thumb';
+      if (statusEl) statusEl.appendChild(t);
+      thumbEls.push(t);
+    }
     var urls = await Promise.all(files.map(function(file, i) {
       return uploadFileToImgbb(file, thumbEls[i]);
     }));

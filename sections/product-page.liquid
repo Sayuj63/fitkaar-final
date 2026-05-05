@@ -38,88 +38,17 @@
     },
     {
       "type": "header",
-      "content": "Customisation Fields"
+      "content": "Customisation (tag-driven, per-product)"
     },
     {
-      "type": "checkbox",
-      "id": "customisation_enabled",
-      "label": "Enable customisation fields",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "photo_count",
-      "min": 0,
-      "max": 6,
-      "step": 1,
-      "label": "Number of photo link fields",
-      "default": 0
-    },
-    {
-      "type": "text",
-      "id": "photo_label_1",
-      "label": "Photo field 1 label",
-      "default": "Photo 1 – paste Google Drive / Photos share link"
-    },
-    {
-      "type": "text",
-      "id": "photo_label_2",
-      "label": "Photo field 2 label",
-      "default": "Photo 2 – paste Google Drive / Photos share link"
-    },
-    {
-      "type": "text",
-      "id": "photo_label_3",
-      "label": "Photo field 3 label",
-      "default": "Photo 3 – paste Google Drive / Photos share link"
-    },
-    {
-      "type": "text",
-      "id": "photo_label_4",
-      "label": "Photo field 4 label",
-      "default": "Photo 4 – paste Google Drive / Photos share link"
-    },
-    {
-      "type": "text",
-      "id": "photo_label_5",
-      "label": "Photo field 5 label",
-      "default": "Photo 5 – paste Google Drive / Photos share link"
-    },
-    {
-      "type": "text",
-      "id": "photo_label_6",
-      "label": "Photo field 6 label",
-      "default": "Photo 6 – paste Google Drive / Photos share link"
-    },
-    {
-      "type": "checkbox",
-      "id": "text_1_enabled",
-      "label": "Enable text field 1",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "text_1_label",
-      "label": "Text field 1 label",
-      "default": "Initials"
-    },
-    {
-      "type": "checkbox",
-      "id": "text_2_enabled",
-      "label": "Enable text field 2",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "text_2_label",
-      "label": "Text field 2 label",
-      "default": "Date (DD/MM/YYYY)"
+      "type": "paragraph",
+      "content": "Add tags to each product to control its fields. Tag 'customisable' enables the section. Tag 'cf-photos-2' adds 2 photo fields. Tag 'cf-initials' adds an Initials field. Tag 'cf-date' adds a Date field."
     },
     {
       "type": "text",
       "id": "imgbb_api_key",
       "label": "ImgBB API Key (for photo uploads)",
-      "info": "Get a free key at imgbb.com → API. Leave blank to show a link input instead."
+      "info": "Get a free key at imgbb.com → API. Leave blank to show a link paste input instead."
     },
     {
       "type": "textarea",
@@ -1555,28 +1484,36 @@
 })();
 </script>
 
-{% comment %}Build initial customFields JSON for Alpine{% endcomment %}
-{% if section.settings.customisation_enabled %}
-  {% assign cf_pairs = '' | split: '' %}
-  {% for i in (1..section.settings.photo_count) %}
-    {% assign lk = 'photo_label_' | append: i %}
-    {% assign default_lbl = 'Photo ' | append: i %}
-    {% assign lbl = section.settings[lk] | default: default_lbl %}
-    {% assign p = lbl | json | append: ':""' %}
-    {% assign cf_pairs = cf_pairs | push: p %}
-  {% endfor %}
-  {% if section.settings.text_1_enabled and section.settings.text_1_label != blank %}
-    {% assign p = section.settings.text_1_label | json | append: ':""' %}
-    {% assign cf_pairs = cf_pairs | push: p %}
-  {% endif %}
-  {% if section.settings.text_2_enabled and section.settings.text_2_label != blank %}
-    {% assign p = section.settings.text_2_label | json | append: ':""' %}
-    {% assign cf_pairs = cf_pairs | push: p %}
-  {% endif %}
-  {% assign custom_fields_json = '{' | append: cf_pairs | join: ',' | append: '}' %}
-{% else %}
-  {% assign custom_fields_json = '{}' %}
-{% endif %}
+{%- comment -%}Tag-driven customisation — reads product.tags, no customizer settings needed{%- endcomment -%}
+{%- assign _customisable = false -%}
+{%- assign _cf_photos = 0 -%}
+{%- assign _cf_initials = false -%}
+{%- assign _cf_date = false -%}
+{%- for _tag in product.tags -%}
+  {%- assign _tl = _tag | downcase | strip -%}
+  {%- if _tl == 'customisable' or _tl == 'customizable' -%}
+    {%- assign _customisable = true -%}
+  {%- elsif _tl contains 'cf-photos-' -%}
+    {%- assign _cf_photos = _tl | remove: 'cf-photos-' | plus: 0 -%}
+  {%- elsif _tl == 'cf-initials' -%}
+    {%- assign _cf_initials = true -%}
+  {%- elsif _tl == 'cf-date' -%}
+    {%- assign _cf_date = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- comment -%}Build Alpine customFields initial state as valid JSON{%- endcomment -%}
+{%- assign _cf_pairs = '' | split: '' -%}
+{%- if _customisable -%}
+  {%- for i in (1.._cf_photos) -%}
+    {%- assign _pk = 'Photo ' | append: i | json | append: ':""' -%}
+    {%- assign _cf_pairs = _cf_pairs | push: _pk -%}
+  {%- endfor -%}
+  {%- if _cf_initials -%}{%- assign _cf_pairs = _cf_pairs | push: '"Initials":""' -%}{%- endif -%}
+  {%- if _cf_date -%}{%- assign _cf_pairs = _cf_pairs | push: '"Date (DD\/MM\/YYYY)":""' -%}{%- endif -%}
+{%- endif -%}
+{%- assign _cf_joined = _cf_pairs | join: ',' -%}
+{%- assign custom_fields_json = '{' | append: _cf_joined | append: '}' -%}
 
 {%- comment -%}Detect option types early so is_size2 is correct in the HTML rendering loop{%- endcomment -%}
 {%- assign size_opt = null -%}
@@ -1973,8 +1910,8 @@
         </div>
       </div>
 
-      {% if section.settings.customisation_enabled %}
-      <!-- Customisation Fields -->
+      {% if _customisable %}
+      <!-- Customisation Fields (driven by product tags) -->
       <div class="custom-fields-wrap">
         <h3 class="custom-fields-title">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -1984,71 +1921,69 @@
         <p class="custom-fields-instructions">{{ section.settings.customisation_instructions }}</p>
         {% endif %}
 
-        {% for i in (1..section.settings.photo_count) %}
-          {% assign lk = 'photo_label_' | append: i %}
-          {% assign default_lbl = 'Photo ' | append: i %}
-          {% assign lbl = section.settings[lk] | default: default_lbl %}
-          {% assign lbl_json = lbl | json %}
+        {% for i in (1.._cf_photos) %}
+          {% assign _plbl = 'Photo ' | append: i %}
           <div class="custom-field">
-            <label class="custom-field-label">{{ lbl }} <span class="custom-field-req">*</span></label>
+            <label class="custom-field-label">{{ _plbl }} <span class="custom-field-req">*</span></label>
             {% if section.settings.imgbb_api_key != blank %}
             <div class="custom-upload-wrap">
-              <label class="custom-upload-btn" :class='{ "custom-upload-btn--done": customFields[{{ lbl_json }}], "custom-upload-btn--uploading": uploadingFields[{{ lbl_json }}] }'>
-                <input type="file" accept="image/*" style="display:none" @change='uploadPhoto({{ lbl_json }}, $event)' :disabled='uploadingFields[{{ lbl_json }}]'>
-                <template x-if='!uploadingFields[{{ lbl_json }}] && !customFields[{{ lbl_json }}]'>
+              {% assign _pk = _plbl | json %}
+              <label class="custom-upload-btn" :class='{ "custom-upload-btn--done": customFields[{{ _pk }}], "custom-upload-btn--uploading": uploadingFields[{{ _pk }}] }'>
+                <input type="file" accept="image/*" style="display:none" @change='uploadPhoto({{ _pk }}, $event)' :disabled='uploadingFields[{{ _pk }}]'>
+                <template x-if='!uploadingFields[{{ _pk }}] && !customFields[{{ _pk }}]'>
                   <span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
                     Choose Photo
                   </span>
                 </template>
-                <template x-if='uploadingFields[{{ lbl_json }}]'>
+                <template x-if='uploadingFields[{{ _pk }}]'>
                   <span class="custom-upload-spinner">Uploading…</span>
                 </template>
-                <template x-if='!uploadingFields[{{ lbl_json }}] && customFields[{{ lbl_json }}]'>
+                <template x-if='!uploadingFields[{{ _pk }}] && customFields[{{ _pk }}]'>
                   <span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     Uploaded — tap to change
                   </span>
                 </template>
               </label>
-              <template x-if='uploadPreviews[{{ lbl_json }}]'>
-                <img :src='uploadPreviews[{{ lbl_json }}]' class="custom-upload-preview" alt="Preview">
+              <template x-if='uploadPreviews[{{ _pk }}]'>
+                <img :src='uploadPreviews[{{ _pk }}]' class="custom-upload-preview" alt="Preview">
               </template>
-              <template x-if='uploadErrors[{{ lbl_json }}]'>
-                <p class="custom-upload-error" x-text='uploadErrors[{{ lbl_json }}]'></p>
+              <template x-if='uploadErrors[{{ _pk }}]'>
+                <p class="custom-upload-error" x-text='uploadErrors[{{ _pk }}]'></p>
               </template>
             </div>
             {% else %}
             <input
               type="text"
               class="custom-field-input"
-              x-model='customFields[{{ lbl_json }}]'
-              placeholder="Paste Google Drive / Photos share link"
+              x-model='customFields[{{ _pk }}]'
+              placeholder="Paste share link (Google Drive / Photos)"
             >
             {% endif %}
           </div>
         {% endfor %}
 
-        {% if section.settings.text_1_enabled and section.settings.text_1_label != blank %}
+        {% if _cf_initials %}
         <div class="custom-field">
-          <label class="custom-field-label">{{ section.settings.text_1_label }} <span class="custom-field-req">*</span></label>
+          <label class="custom-field-label">Initials <span class="custom-field-req">*</span></label>
           <input
             type="text"
             class="custom-field-input"
-            x-model='customFields[{{ section.settings.text_1_label | json }}]'
-            placeholder="{{ section.settings.text_1_label }}"
+            x-model='customFields["Initials"]'
+            placeholder="e.g. AB"
           >
         </div>
         {% endif %}
 
-        {% if section.settings.text_2_enabled and section.settings.text_2_label != blank %}
+        {% if _cf_date %}
         <div class="custom-field">
-          <label class="custom-field-label">{{ section.settings.text_2_label }} <span class="custom-field-req">*</span></label>
+          <label class="custom-field-label">Date (DD/MM/YYYY) <span class="custom-field-req">*</span></label>
           <input
             type="text"
             class="custom-field-input"
-            x-model='customFields[{{ section.settings.text_2_label | json }}]'
-            placeholder="{{ section.settings.text_2_label }}"
+            x-model='customFields["Date (DD/MM/YYYY)"]'
+            placeholder="e.g. 25/12/2025"
           >
         </div>
         {% endif %}

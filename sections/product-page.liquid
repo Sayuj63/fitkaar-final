@@ -1250,6 +1250,19 @@
     opacity: 1;
   }
 
+  @media (max-width: 768px) {
+    .toast {
+      right: auto;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      white-space: nowrap;
+      max-width: calc(100vw - 32px);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
   /* Back button */
   .pdp-back-bar {
     padding: 12px 0 0;

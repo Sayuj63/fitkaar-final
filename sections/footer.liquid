@@ -170,23 +170,39 @@
   }
 
   /* #17: newsletter post-submit message */
-  .fk-footer__newsletter-msg {
-    width: 100%;
-    flex-basis: 100%;
-    margin-top: 10px;
+  .fk-footer__newsletter-success {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 14px 16px;
+    background: rgba(113, 182, 200, 0.12);
+    border: 1px solid rgba(113, 182, 200, 0.3);
+    border-radius: 10px;
+    max-width: 260px;
+  }
+  .fk-footer__newsletter-success strong {
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 14px;
+    color: var(--color-secondary, #71b6c8);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .fk-footer__newsletter-success span {
+    font-family: var(--font-secondary, 'Raleway', sans-serif);
+    font-size: 12px;
+    color: var(--color-accent, #bfdbe3);
+    line-height: 1.5;
+  }
+  .fk-footer__newsletter-msg--err {
+    margin-top: 8px;
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 12px;
     font-family: var(--font-secondary, 'Raleway', sans-serif);
-    text-align: center;
-  }
-  .fk-footer__newsletter-msg--ok {
-    background: rgba(113, 182, 200, 0.15);
-    color: var(--color-secondary, #71b6c8);
-  }
-  .fk-footer__newsletter-msg--err {
     background: rgba(220, 38, 38, 0.15);
     color: #fecaca;
+    max-width: 260px;
   }
 
   /* Row 2 - Social Icons & Tagline */
@@ -415,26 +431,33 @@
       <h4 class="fk-footer__newsletter-heading">WE'VE GOT YOU COVERED:</h4>
       <p class="fk-footer__newsletter-text">Beyond the Outfit: Be the first to know about new arrivals, sales & exclusive drops.</p>
 
-      {% form 'customer', id: 'footer-newsletter', class: 'fk-footer__form' %}
+      {% form 'customer', id: 'footer-newsletter' %}
         <input type="hidden" name="contact[tags]" value="newsletter">
-        <input
-          type="email"
-          name="contact[email]"
-          placeholder="your email here"
-          required
-          autocomplete="email"
-        >
-        <button type="submit" aria-label="Subscribe">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
 
         {%- if form.posted_successfully? -%}
-          <p class="fk-footer__newsletter-msg fk-footer__newsletter-msg--ok">Thanks! You're on the list ✨</p>
-        {%- elsif form.errors -%}
-          <p class="fk-footer__newsletter-msg fk-footer__newsletter-msg--err">{{ form.errors | default_errors }}</p>
+          <div class="fk-footer__newsletter-success">
+            <strong>You're on the list ✓</strong>
+            <span>Welcome to Fitkaar! Watch your inbox for new drops & exclusive offers.</span>
+          </div>
+        {%- else -%}
+          <div class="fk-footer__form">
+            <input
+              type="email"
+              name="contact[email]"
+              placeholder="your email here"
+              required
+              autocomplete="email"
+            >
+            <button type="submit" aria-label="Subscribe">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+          {%- if form.errors -%}
+            <p class="fk-footer__newsletter-msg--err">{{ form.errors | default_errors }}</p>
+          {%- endif -%}
         {%- endif -%}
       {% endform %}
     </div>

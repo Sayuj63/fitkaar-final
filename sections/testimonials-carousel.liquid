@@ -84,11 +84,12 @@
 
 <style>
 .testimonials-carousel-section {
-  background-color: transparent;
+  background-color: {{ section.settings.bg_color | default: '#f8f8f8' }};
   padding: 16px 0 40px;
   overflow: hidden;
   position: relative;
   z-index: 10;
+  isolation: isolate;
 }
 
 .testimonials-carousel-title {

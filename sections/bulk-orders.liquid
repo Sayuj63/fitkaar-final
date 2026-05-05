@@ -148,6 +148,24 @@
     font-size: 0.88rem;
   }
 
+  /* SECONDARY CREATIVE */
+  .bulk-creative-2 {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    overflow: hidden;
+    margin: 0 0 0;
+  }
+  .bulk-creative-2 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  @media (max-width: 768px) {
+    .bulk-creative-2 { aspect-ratio: 1 / 1; }
+  }
+
   @media (max-width: 480px) {
     .bulk-body { padding: 32px 18px 20px; font-size: 0.98rem; }
     .bulk-body__lead { font-size: 1.02rem; }
@@ -211,6 +229,31 @@
     {%- endif -%}
   </div>
 
+  <!-- SECONDARY CREATIVE (optional second image between body and CTA) -->
+  {%- if section.settings.creative_2 != blank -%}
+  <div class="bulk-creative-2">
+    {%- if section.settings.creative_2_mobile != blank -%}
+      <picture>
+        <source media="(max-width: 768px)"
+                srcset="{{ section.settings.creative_2_mobile | image_url: width: 600 }} 600w,
+                        {{ section.settings.creative_2_mobile | image_url: width: 900 }} 900w"
+                sizes="100vw">
+        <img src="{{ section.settings.creative_2 | image_url: width: 1800 }}"
+             alt="Bulk orders creative"
+             loading="lazy">
+      </picture>
+    {%- else -%}
+      <img src="{{ section.settings.creative_2 | image_url: width: 1800 }}"
+           srcset="{{ section.settings.creative_2 | image_url: width: 800 }} 800w,
+                   {{ section.settings.creative_2 | image_url: width: 1200 }} 1200w,
+                   {{ section.settings.creative_2 | image_url: width: 1800 }} 1800w"
+           sizes="100vw"
+           alt="Bulk orders creative"
+           loading="lazy">
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+
   <!-- CTA -->
   <div class="bulk-cta">
     <a href="{{ section.settings.whatsapp_link | default: 'https://wa.me/919354478146' }}"
@@ -265,6 +308,18 @@
       "id": "title",
       "label": "Title (overlaid on hero)",
       "default": "BULK ORDERS"
+    },
+    {
+      "type": "image_picker",
+      "id": "creative_2",
+      "label": "Creative 2 — desktop",
+      "info": "Second full-width image shown between body text and CTA. Optional."
+    },
+    {
+      "type": "image_picker",
+      "id": "creative_2_mobile",
+      "label": "Creative 2 — mobile",
+      "info": "Optional square version of Creative 2 for mobile. If blank, desktop image is used."
     },
     {
       "type": "header",

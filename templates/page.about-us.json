@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "about": {
@@ -18,19 +9,17 @@
     "testimonials_carousel": {
       "type": "testimonials-carousel",
       "settings": {
-        "title": "Hear it from our customer's",
+        "title": "Hear it from our customers",
         "bg_color": "#f8f8f8",
-        "speed": 50,
-        "image_1": "shopify://shop_images/testimonial-1.png",
-        "image_2": "shopify://shop_images/testimonial-2.png",
-        "image_3": "shopify://shop_images/testimonial-3.png",
-        "image_4": "shopify://shop_images/testimonial-4.png",
-        "image_5": "shopify://shop_images/testimonial-5.png",
-        "image_6": "shopify://shop_images/testimonial-6.png",
-        "image_7": "shopify://shop_images/testimonial-7.png",
-        "image_8": "shopify://shop_images/testimonial-8.png",
-        "image_9": "shopify://shop_images/testimonial-9.png",
-        "image_10": "shopify://shop_images/testimonial-10.png"
+        "speed": 40,
+        "image_1": "shopify://shop_images/Reviews_3.png",
+        "image_2": "shopify://shop_images/Reviews_10.png",
+        "image_3": "shopify://shop_images/Reviews_7.png",
+        "image_4": "shopify://shop_images/Reviews_9.png",
+        "image_5": "shopify://shop_images/Reviews_6.png",
+        "image_6": "shopify://shop_images/Reviews_8.png",
+        "image_7": "shopify://shop_images/Reviews_2.png",
+        "image_8": "shopify://shop_images/Reviews_11.png"
       }
     }
   },

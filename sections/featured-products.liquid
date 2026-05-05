@@ -260,7 +260,7 @@
     <div class="bestseller-grid md:grid md:grid-cols-4 md:gap-6" id="bsGrid">
       {% assign collection = section.settings.collection %}
       {% if collection != blank %}
-        {% for product in collection.products limit: 8 %}
+        {% for product in collection.products limit: 30 %}
           {%- comment -%} #29: collect colours + apparel types from variants {%- endcomment -%}
           {%- assign card_colors = '' -%}
           {%- assign card_types = '' -%}

@@ -1578,6 +1578,33 @@
   {% assign custom_fields_json = '{}' %}
 {% endif %}
 
+{%- comment -%}Detect option types early so is_size2 is correct in the HTML rendering loop{%- endcomment -%}
+{%- assign size_opt = null -%}
+{%- assign size_opt_2 = null -%}
+{%- assign color_opt = null -%}
+{%- assign type_opt = null -%}
+{%- assign generic_opt = null -%}
+{%- for _o in product.options_with_values -%}
+  {%- assign _oname = _o.name | downcase -%}
+  {%- if _oname contains 'color' or _oname contains 'colour' -%}
+    {%- assign color_opt = _o -%}
+  {%- elsif _oname contains 'size' -%}
+    {%- if size_opt == null -%}
+      {%- assign size_opt = _o -%}
+    {%- else -%}
+      {%- assign size_opt_2 = _o -%}
+    {%- endif -%}
+  {%- elsif _oname contains 'type' -%}
+    {%- assign type_opt = _o -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if size_opt == null and color_opt == null and type_opt == null -%}
+  {%- assign _owv_count = product.options_with_values | size -%}
+  {%- if _owv_count == 1 -%}
+    {%- assign generic_opt = product.options_with_values | first -%}
+  {%- endif -%}
+{%- endif -%}
+
 <section class="product-page" x-data="productPage()" x-init="initSwipe()">
   <div class="product-container">
     <!-- Left Column: Image Gallery Carousel -->
@@ -1966,36 +1993,36 @@
             <label class="custom-field-label">{{ lbl }} <span class="custom-field-req">*</span></label>
             {% if section.settings.imgbb_api_key != blank %}
             <div class="custom-upload-wrap">
-              <label class="custom-upload-btn" :class="{ 'custom-upload-btn--done': customFields[{{ lbl_json }}], 'custom-upload-btn--uploading': uploadingFields[{{ lbl_json }}] }">
-                <input type="file" accept="image/*" style="display:none" @change="uploadPhoto({{ lbl_json }}, $event)" :disabled="uploadingFields[{{ lbl_json }}]">
-                <template x-if="!uploadingFields[{{ lbl_json }}] && !customFields[{{ lbl_json }}]">
+              <label class="custom-upload-btn" :class='{ "custom-upload-btn--done": customFields[{{ lbl_json }}], "custom-upload-btn--uploading": uploadingFields[{{ lbl_json }}] }'>
+                <input type="file" accept="image/*" style="display:none" @change='uploadPhoto({{ lbl_json }}, $event)' :disabled='uploadingFields[{{ lbl_json }}]'>
+                <template x-if='!uploadingFields[{{ lbl_json }}] && !customFields[{{ lbl_json }}]'>
                   <span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
                     Choose Photo
                   </span>
                 </template>
-                <template x-if="uploadingFields[{{ lbl_json }}]">
+                <template x-if='uploadingFields[{{ lbl_json }}]'>
                   <span class="custom-upload-spinner">Uploading…</span>
                 </template>
-                <template x-if="!uploadingFields[{{ lbl_json }}] && customFields[{{ lbl_json }}]">
+                <template x-if='!uploadingFields[{{ lbl_json }}] && customFields[{{ lbl_json }}]'>
                   <span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     Uploaded — tap to change
                   </span>
                 </template>
               </label>
-              <template x-if="uploadPreviews[{{ lbl_json }}]">
-                <img :src="uploadPreviews[{{ lbl_json }}]" class="custom-upload-preview" alt="Preview">
+              <template x-if='uploadPreviews[{{ lbl_json }}]'>
+                <img :src='uploadPreviews[{{ lbl_json }}]' class="custom-upload-preview" alt="Preview">
               </template>
-              <template x-if="uploadErrors[{{ lbl_json }}]">
-                <p class="custom-upload-error" x-text="uploadErrors[{{ lbl_json }}]"></p>
+              <template x-if='uploadErrors[{{ lbl_json }}]'>
+                <p class="custom-upload-error" x-text='uploadErrors[{{ lbl_json }}]'></p>
               </template>
             </div>
             {% else %}
             <input
               type="text"
               class="custom-field-input"
-              x-model="customFields[{{ lbl_json }}]"
+              x-model='customFields[{{ lbl_json }}]'
               placeholder="Paste Google Drive / Photos share link"
             >
             {% endif %}
@@ -2008,7 +2035,7 @@
           <input
             type="text"
             class="custom-field-input"
-            x-model="customFields[{{ section.settings.text_1_label | json }}]"
+            x-model='customFields[{{ section.settings.text_1_label | json }}]'
             placeholder="{{ section.settings.text_1_label }}"
           >
         </div>
@@ -2020,7 +2047,7 @@
           <input
             type="text"
             class="custom-field-input"
-            x-model="customFields[{{ section.settings.text_2_label | json }}]"
+            x-model='customFields[{{ section.settings.text_2_label | json }}]'
             placeholder="{{ section.settings.text_2_label }}"
           >
         </div>
@@ -2846,8 +2873,15 @@
         {%- endcase -%}
       {%- endif -%}
 
-      sizeOptionName: {% if size_opt %}{{ size_opt.name | json }}{% else %}'Size'{% endif %},
-      sizeOptionName2: {% if size_opt_2 %}{{ size_opt_2.name | json }}{% else %}'Size 2'{% endif %},
+      {%- if size_opt and size_opt_2 and size_opt.name == size_opt_2.name -%}
+        {%- assign _sz_label_1 = 'Person 1 Size' -%}
+        {%- assign _sz_label_2 = 'Person 2 Size' -%}
+      {%- else -%}
+        {%- assign _sz_label_1 = size_opt.name -%}
+        {%- assign _sz_label_2 = size_opt_2.name -%}
+      {%- endif -%}
+      sizeOptionName: {% if size_opt %}{{ _sz_label_1 | json }}{% else %}'Size'{% endif %},
+      sizeOptionName2: {% if size_opt_2 %}{{ _sz_label_2 | json }}{% else %}'Size 2'{% endif %},
       selectedColor: {{ default_color | default: '' | json }},
       selectedSize: {{ default_size | default: '' | json }},
       selectedSize2: {{ default_size2 | default: '' | json }},

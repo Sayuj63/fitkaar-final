@@ -9,6 +9,7 @@
  */
 {
   "current": {
+    "favicon": "shopify://shop_images/heroine_1080.png",
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
@@ -23,14 +24,13 @@
       },
       "header": {
         "type": "header",
-        "settings": {}
+        "settings": {
+          "free_gift_variant_id": ""
+        }
       },
       "footer": {
         "type": "footer",
         "settings": {
-          "m1": "main-menu",
-          "m2": "",
-          "m3": "",
           "ig": "https://www.instagram.com/fitkaar.clothing?igsh=MWtldTZsbmd3bm5lOA%3D%3D&utm_source=qr",
           "li": "https://www.linkedin.com/company/fitkaar/",
           "yt": "https://youtube.com/@fitkaarclothing?si=-6ORjjTlb-T_dAcx",

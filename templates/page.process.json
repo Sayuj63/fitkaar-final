@@ -25,7 +25,7 @@
         "size_chart_sweatshirt": "shopify://shop_images/Sweatshirt.png",
         "size_chart_hoodie": "shopify://shop_images/Hoodie.png",
         "design_fee_amount": 400,
-        "razorpay_key": "rzp_live_SlPzLg7psazVmQ",
+        "design_fee_variant_id": "",
         "whatsapp_link": "https://wa.me/message/O4GF737LSF3YC1"
       }
     }

@@ -1579,9 +1579,17 @@
 
         <!-- Size Option (Buttons) -->
         {% elsif option_name_lower contains 'size' %}
+          {%- assign is_size2 = false -%}
+          {%- if size_opt_2 and option.position == size_opt_2.position -%}
+            {%- assign is_size2 = true -%}
+          {%- endif -%}
           <div class="variant-section">
             <div class="variant-label size-label-row">
-              <span class="size-heading-text" x-text="sizeOptionName + ': ' + (selectedSize != null && selectedSize !== '' ? selectedSize : '')">{{ option.name }}: {% case option.position %}{% when 1 %}{{ default_variant.option1 }}{% when 2 %}{{ default_variant.option2 }}{% when 3 %}{{ default_variant.option3 }}{% endcase %}</span>
+              {%- if is_size2 -%}
+                <span class="size-heading-text" x-text="sizeOptionName2 + ': ' + (selectedSize2 != null && selectedSize2 !== '' ? selectedSize2 : '')">{{ option.name }}: {% case option.position %}{% when 1 %}{{ default_variant.option1 }}{% when 2 %}{{ default_variant.option2 }}{% when 3 %}{{ default_variant.option3 }}{% endcase %}</span>
+              {%- else -%}
+                <span class="size-heading-text" x-text="sizeOptionName + ': ' + (selectedSize != null && selectedSize !== '' ? selectedSize : '')">{{ option.name }}: {% case option.position %}{% when 1 %}{{ default_variant.option1 }}{% when 2 %}{{ default_variant.option2 }}{% when 3 %}{{ default_variant.option3 }}{% endcase %}</span>
+              {%- endif -%}
               <button type="button" class="sizing-guide-link" @click="sizeChartOpen = true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -1592,18 +1600,27 @@
               </button>
             </div>
             <div class="size-options">
-              {%- comment -%} Display order + XS; any extra sizes (e.g. custom) appended. Availability still from variants (Alpine). {%- endcomment -%}
               {%- assign size_order = 'XS,S,M,L,XL,XXL,XXXL,4XL,5XL,FREE SIZE,FREE' | split: ',' -%}
               {%- for ordered in size_order -%}
                 {%- for value in option.values -%}
                   {%- if value == ordered -%}
-                    <button
-                      type="button"
-                      class="size-btn"
-                      :class="{ 'active': sizeMatchesSelected('{{ value | escape }}') }"
-                      x-show="isSizeAvailable('{{ value | escape }}')"
-                      @click.prevent.stop="selectSize('{{ value | escape }}')"
-                    >{{ value }}</button>
+                    {%- if is_size2 -%}
+                      <button
+                        type="button"
+                        class="size-btn"
+                        :class="{ 'active': sizeMatchesSelected2('{{ value | escape }}') }"
+                        x-show="isSizeAvailable2('{{ value | escape }}')"
+                        @click.prevent.stop="selectSize2('{{ value | escape }}')"
+                      >{{ value }}</button>
+                    {%- else -%}
+                      <button
+                        type="button"
+                        class="size-btn"
+                        :class="{ 'active': sizeMatchesSelected('{{ value | escape }}') }"
+                        x-show="isSizeAvailable('{{ value | escape }}')"
+                        @click.prevent.stop="selectSize('{{ value | escape }}')"
+                      >{{ value }}</button>
+                    {%- endif -%}
                   {%- endif -%}
                 {%- endfor -%}
               {%- endfor -%}
@@ -1613,13 +1630,23 @@
                   {%- if ordered == value -%}{%- assign listed = true -%}{%- endif -%}
                 {%- endfor -%}
                 {%- unless listed -%}
-                  <button
-                    type="button"
-                    class="size-btn"
-                    :class="{ 'active': sizeMatchesSelected('{{ value | escape }}') }"
-                    x-show="isSizeAvailable('{{ value | escape }}')"
-                    @click.prevent.stop="selectSize('{{ value | escape }}')"
-                  >{{ value }}</button>
+                  {%- if is_size2 -%}
+                    <button
+                      type="button"
+                      class="size-btn"
+                      :class="{ 'active': sizeMatchesSelected2('{{ value | escape }}') }"
+                      x-show="isSizeAvailable2('{{ value | escape }}')"
+                      @click.prevent.stop="selectSize2('{{ value | escape }}')"
+                    >{{ value }}</button>
+                  {%- else -%}
+                    <button
+                      type="button"
+                      class="size-btn"
+                      :class="{ 'active': sizeMatchesSelected('{{ value | escape }}') }"
+                      x-show="isSizeAvailable('{{ value | escape }}')"
+                      @click.prevent.stop="selectSize('{{ value | escape }}')"
+                    >{{ value }}</button>
+                  {%- endif -%}
                 {%- endunless -%}
               {%- endfor -%}
             </div>
@@ -2379,13 +2406,18 @@
       // Variants - Dynamic Initialization
       {% assign color_opt = null %}
       {% assign size_opt = null %}
+      {% assign size_opt_2 = null %}
       {% assign type_opt = null %}
       {% for option in product.options_with_values %}
         {% assign opt_name = option.name | downcase %}
         {% if opt_name contains 'color' or opt_name contains 'colour' %}
           {% assign color_opt = option %}
         {% elsif opt_name contains 'size' %}
-          {% assign size_opt = option %}
+          {% if size_opt == null %}
+            {% assign size_opt = option %}
+          {% else %}
+            {% assign size_opt_2 = option %}
+          {% endif %}
         {% elsif opt_name contains 'type' %}
           {% assign type_opt = option %}
         {% endif %}
@@ -2452,6 +2484,14 @@
           {%- when 3 -%}{%- assign default_size = default_variant.option3 -%}
         {%- endcase -%}
       {%- endif -%}
+      {%- assign default_size2 = '' -%}
+      {%- if size_opt_2 -%}
+        {%- case size_opt_2.position -%}
+          {%- when 1 -%}{%- assign default_size2 = default_variant.option1 -%}
+          {%- when 2 -%}{%- assign default_size2 = default_variant.option2 -%}
+          {%- when 3 -%}{%- assign default_size2 = default_variant.option3 -%}
+        {%- endcase -%}
+      {%- endif -%}
       {%- if type_opt -%}
         {%- case type_opt.position -%}
           {%- when 1 -%}{%- assign default_type = default_variant.option1 -%}
@@ -2469,8 +2509,10 @@
       {%- endif -%}
 
       sizeOptionName: {% if size_opt %}{{ size_opt.name | json }}{% else %}'Size'{% endif %},
+      sizeOptionName2: {% if size_opt_2 %}{{ size_opt_2.name | json }}{% else %}'Size 2'{% endif %},
       selectedColor: {{ default_color | default: '' | json }},
       selectedSize: {{ default_size | default: '' | json }},
+      selectedSize2: {{ default_size2 | default: '' | json }},
       selectedType: {{ default_type | default: '' | json }},
       selectedGeneric: {{ default_generic | default: '' | json }},
       hasGenericOpt: {% if generic_opt %}true{% else %}false{% endif %},
@@ -2730,6 +2772,31 @@
         return this.availableSizesForType.some(s => this.normOpt(s) === n);
       },
 
+      get availableSizesForType2() {
+        {% if size_opt_2 %}
+        const sizes = new Set();
+        this.variants.forEach(v => {
+          if (!v.available) return;
+          {% if type_opt %}
+          if (this.normOpt(v.option{{ type_opt.position }}) !== this.normOpt(this.selectedType)) return;
+          {% endif %}
+          {% if color_opt %}
+          if (this.normOpt(v.option{{ color_opt.position }}) !== this.normOpt(this.selectedColor)) return;
+          {% endif %}
+          const sz = v.option{{ size_opt_2.position }};
+          if (sz) sizes.add(sz);
+        });
+        return Array.from(sizes);
+        {% else %}
+        return [];
+        {% endif %}
+      },
+
+      isSizeAvailable2(size) {
+        const n = this.normOpt(size);
+        return this.availableSizesForType2.some(s => this.normOpt(s) === n);
+      },
+
       /** Trim / normalize option strings so "XL " === "XL" and clicks match Shopify JSON */
       normOpt(val) {
         if (val === undefined || val === null) return '';
@@ -2755,12 +2822,19 @@
         return this.normOpt(this.selectedSize) === this.normOpt(val);
       },
 
+      sizeMatchesSelected2(val) {
+        return this.normOpt(this.selectedSize2) === this.normOpt(val);
+      },
+
       variantMatchesSelections(v) {
         {% if color_opt %}
         if (this.normOpt(v.option{{ color_opt.position }}) !== this.normOpt(this.selectedColor)) return false;
         {% endif %}
         {% if size_opt %}
         if (this.normOpt(v.option{{ size_opt.position }}) !== this.normOpt(this.selectedSize)) return false;
+        {% endif %}
+        {% if size_opt_2 %}
+        if (this.normOpt(v.option{{ size_opt_2.position }}) !== this.normOpt(this.selectedSize2)) return false;
         {% endif %}
         {% if type_opt %}
         if (this.normOpt(v.option{{ type_opt.position }}) !== this.normOpt(this.selectedType)) return false;
@@ -2805,6 +2879,11 @@
           if (!this.availableSizesForType.some(s => this.normOpt(s) === this.normOpt(this.selectedSize))) {
             this.selectedSize = this.normOpt(this.availableSizesForType[0]) || this.selectedSize;
           }
+          {% if size_opt_2 %}
+          if (!this.availableSizesForType2.some(s => this.normOpt(s) === this.normOpt(this.selectedSize2))) {
+            this.selectedSize2 = this.normOpt(this.availableSizesForType2[0]) || this.selectedSize2;
+          }
+          {% endif %}
           this.updateVariant();
 
           // Reset to first slide since visibleImages will now show filtered results
@@ -2827,6 +2906,11 @@
 
       selectSize(size) {
         this.selectedSize = this.normOpt(size);
+        this.updateVariant();
+      },
+
+      selectSize2(size) {
+        this.selectedSize2 = this.normOpt(size);
         this.updateVariant();
       },
 
@@ -2862,6 +2946,11 @@
           if (!this.availableSizesForType.some(s => this.normOpt(s) === this.normOpt(this.selectedSize))) {
             this.selectedSize = this.normOpt(this.availableSizesForType[0]) || this.selectedSize;
           }
+          {% if size_opt_2 %}
+          if (!this.availableSizesForType2.some(s => this.normOpt(s) === this.normOpt(this.selectedSize2))) {
+            this.selectedSize2 = this.normOpt(this.availableSizesForType2[0]) || this.selectedSize2;
+          }
+          {% endif %}
 
           this.updateVariant();
 
@@ -2902,6 +2991,9 @@
           {% endif %}
           {% if size_opt %}
           this.selectedSize = this.normOpt(variant.option{{ size_opt.position }});
+          {% endif %}
+          {% if size_opt_2 %}
+          this.selectedSize2 = this.normOpt(variant.option{{ size_opt_2.position }});
           {% endif %}
           {% if type_opt %}
           this.selectedType = this.normOpt(variant.option{{ type_opt.position }});

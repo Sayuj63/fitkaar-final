@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-products",
+      "settings": {
+        "show_hero": true,
+        "hero_fallback_first_product": false,
+        "show_categories": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

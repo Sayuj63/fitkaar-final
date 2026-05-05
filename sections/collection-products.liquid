@@ -22,9 +22,31 @@
     },
     {
       "type": "image_picker",
+      "id": "hero_image_1",
+      "label": "Slide 1 – desktop creative",
+      "info": "Upload your designed desktop banner. Overrides the collection image from Shopify Admin. Leave empty to use the collection image."
+    },
+    {
+      "type": "image_picker",
       "id": "hero_image_mobile",
-      "label": "Hero banner – mobile image",
-      "info": "Shown on screens ≤767 px. Square (1:1) or portrait (4:5) works best. If left empty the desktop/collection image is used on mobile too."
+      "label": "Slide 1 – mobile creative",
+      "info": "Shown on screens ≤767 px. Square (1:1) or portrait (4:5) works best. If empty, the desktop image is used on mobile too."
+    },
+    {
+      "type": "header",
+      "content": "Hero – Slide 2 (Slideshow)"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_2",
+      "label": "Slide 2 – desktop creative",
+      "info": "Optional second slide. When set, the hero becomes a 2-image auto-slideshow cycling every 5 seconds."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_2_mobile",
+      "label": "Slide 2 – mobile creative",
+      "info": "Mobile version of slide 2. If empty, desktop slide 2 is used on mobile."
     },
     {
       "type": "header",
@@ -299,6 +321,64 @@
     }
   }
 
+  /* Hero slideshow wrapper — used when slide 2 is configured */
+  .collection-hero-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 5;
+    margin: 0 0 40px;
+    overflow: hidden;
+    background: var(--color-primary, #000c5b);
+  }
+  .collection-hero-wrap .collection-hero {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    aspect-ratio: unset;
+    border-radius: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    background: transparent;
+  }
+  .collection-hero-wrap .collection-hero.is-active {
+    opacity: 1;
+  }
+  .hero-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+  .hero-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .hero-dot.is-active {
+    background: #fff;
+  }
+  @media (max-width: 768px) {
+    .collection-hero-wrap {
+      aspect-ratio: 1 / 1;
+      margin: 0 -20px 30px;
+      width: calc(100% + 40px);
+    }
+    .collection-hero-wrap .collection-hero--creative img {
+      object-fit: contain;
+      object-position: center;
+    }
+  }
+
   .products-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -380,11 +460,6 @@
   @media (hover: hover) {
     .product-card:hover .pc-img--primary { opacity: 0; }
     .product-card:hover .pc-img--secondary { opacity: 1; }
-  }
-
-  @media (hover: none) {
-    .product-card.pc-scroll-active .pc-img--primary { opacity: 0; }
-    .product-card.pc-scroll-active .pc-img--secondary { opacity: 1; }
   }
 
   .product-card:hover .product-card-image img {
@@ -1108,28 +1183,92 @@
     -%}
     {%- comment -%} Hero: hidden on /collections/all (category circles lead instead) {%- endcomment -%}
     {%- if collection.handle != 'all' -%}
-      {%- if section.settings.show_hero and hero_img != blank -%}
-        <div class="collection-hero collection-hero--creative{% if collection.image == blank and hero_img != blank %} collection-hero--fallback{% endif %}">
-          <h1 class="collection-hero__sr-title">{{ collection.title | default: 'Shop' }}</h1>
-          <picture>
-            {%- if section.settings.hero_image_mobile != blank -%}
-              <source
-                media="(max-width: 767px)"
-                srcset="{{ section.settings.hero_image_mobile | image_url: width: 600 }} 600w,
-                        {{ section.settings.hero_image_mobile | image_url: width: 900 }} 900w,
-                        {{ section.settings.hero_image_mobile | image_url: width: 1200 }} 1200w"
-                sizes="100vw">
-            {%- endif -%}
-            <img src="{{ hero_img | image_url: width: 1800 }}"
-                 srcset="{{ hero_img | image_url: width: 800 }} 800w,
-                         {{ hero_img | image_url: width: 1200 }} 1200w,
-                         {{ hero_img | image_url: width: 1800 }} 1800w"
-                 sizes="100vw"
-                 alt=""
-                 loading="eager"
-                 fetchpriority="high">
-          </picture>
-        </div>
+      {%- liquid
+        assign slide1_desktop = hero_img
+        if section.settings.hero_image_1 != blank
+          assign slide1_desktop = section.settings.hero_image_1
+        endif
+        assign slide1_mobile = section.settings.hero_image_mobile
+        assign slide2_desktop = section.settings.hero_image_2
+        assign slide2_mobile = section.settings.hero_image_2_mobile
+        assign has_slide2 = false
+        if slide2_desktop != blank or slide2_mobile != blank
+          assign has_slide2 = true
+        endif
+      -%}
+      {%- if section.settings.show_hero and slide1_desktop != blank -%}
+        {%- if has_slide2 -%}
+          <div class="collection-hero-wrap" data-hero-wrap>
+            <h1 class="collection-hero__sr-title">{{ collection.title | default: 'Shop' }}</h1>
+            <div class="collection-hero collection-hero--creative is-active" data-slide>
+              <picture>
+                {%- if slide1_mobile != blank -%}
+                  <source media="(max-width: 767px)"
+                    srcset="{{ slide1_mobile | image_url: width: 600 }} 600w,
+                            {{ slide1_mobile | image_url: width: 900 }} 900w,
+                            {{ slide1_mobile | image_url: width: 1200 }} 1200w"
+                    sizes="100vw">
+                {%- endif -%}
+                <img src="{{ slide1_desktop | image_url: width: 1800 }}"
+                     srcset="{{ slide1_desktop | image_url: width: 800 }} 800w,
+                             {{ slide1_desktop | image_url: width: 1200 }} 1200w,
+                             {{ slide1_desktop | image_url: width: 1800 }} 1800w"
+                     sizes="100vw"
+                     alt="{{ collection.title | escape }}"
+                     loading="eager"
+                     fetchpriority="high">
+              </picture>
+            </div>
+            {%- assign s2_desk = slide2_desktop -%}
+            {%- if s2_desk == blank -%}{%- assign s2_desk = slide1_desktop -%}{%- endif -%}
+            {%- assign s2_mob = slide2_mobile -%}
+            {%- if s2_mob == blank -%}{%- assign s2_mob = slide1_mobile -%}{%- endif -%}
+            <div class="collection-hero collection-hero--creative" data-slide>
+              <picture>
+                {%- if s2_mob != blank -%}
+                  <source media="(max-width: 767px)"
+                    srcset="{{ s2_mob | image_url: width: 600 }} 600w,
+                            {{ s2_mob | image_url: width: 900 }} 900w,
+                            {{ s2_mob | image_url: width: 1200 }} 1200w"
+                    sizes="100vw">
+                {%- endif -%}
+                <img src="{{ s2_desk | image_url: width: 1800 }}"
+                     srcset="{{ s2_desk | image_url: width: 800 }} 800w,
+                             {{ s2_desk | image_url: width: 1200 }} 1200w,
+                             {{ s2_desk | image_url: width: 1800 }} 1800w"
+                     sizes="100vw"
+                     alt="{{ collection.title | escape }}"
+                     loading="lazy">
+              </picture>
+            </div>
+            <div class="hero-dots">
+              <button class="hero-dot is-active" data-dot aria-label="Slide 1"></button>
+              <button class="hero-dot" data-dot aria-label="Slide 2"></button>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="collection-hero collection-hero--creative">
+            <h1 class="collection-hero__sr-title">{{ collection.title | default: 'Shop' }}</h1>
+            <picture>
+              {%- if slide1_mobile != blank -%}
+                <source
+                  media="(max-width: 767px)"
+                  srcset="{{ slide1_mobile | image_url: width: 600 }} 600w,
+                          {{ slide1_mobile | image_url: width: 900 }} 900w,
+                          {{ slide1_mobile | image_url: width: 1200 }} 1200w"
+                  sizes="100vw">
+              {%- endif -%}
+              <img src="{{ slide1_desktop | image_url: width: 1800 }}"
+                   srcset="{{ slide1_desktop | image_url: width: 800 }} 800w,
+                           {{ slide1_desktop | image_url: width: 1200 }} 1200w,
+                           {{ slide1_desktop | image_url: width: 1800 }} 1800w"
+                   sizes="100vw"
+                   alt="{{ collection.title | escape }}"
+                   loading="eager"
+                   fetchpriority="high">
+            </picture>
+          </div>
+        {%- endif -%}
       {%- else -%}
         <div class="collection-header">
           <h1 class="collection-title">{{ collection.title | default: 'All Products' }}</h1>
@@ -1637,14 +1776,27 @@
                           {%- when 'sky blue', 'light blue', 'baby blue' -%}{% assign swatch = '#7dd3fc' %}
                           {%- when 'teal' -%}{% assign swatch = '#0f766e' %}
                           {%- when 'mint', 'mint green' -%}{% assign swatch = '#a7f3d0' %}
+                          {%- when 'sage green', 'sage' -%}{% assign swatch = '#9DC183' %}
+                          {%- when 'spring green' -%}{% assign swatch = '#a7f3d0' %}
+                          {%- when 'powder blue' -%}{% assign swatch = '#b0e0e6' %}
+                          {%- when 'mocha' -%}{% assign swatch = '#80471c' %}
+                          {%- when 'camel brown', 'camel' -%}{% assign swatch = '#a08679' %}
+                          {%- when 'multi', 'multicolor', 'multicolour' -%}{% assign swatch = 'multi' %}
                           {%- else -%}{% assign swatch = '#c8c8c8' %}
                         {%- endcase -%}
                         {%- assign hide_mobile = '' -%}
                         {%- if pcidx >= mobile_budget -%}{%- assign hide_mobile = ' pc-hide-mobile' -%}{%- endif -%}
-                        <span class="color-dot{{ hide_mobile }}"
-                              title="{{ color | escape }}"
-                              aria-label="{{ color | escape }}"
-                              style="background-color:{{ swatch }};{% if color_lower == 'white' or color_lower == 'off white' or color_lower == 'cream' %}border-color:#aaa;{% endif %}"></span>
+                        {%- if swatch == 'multi' -%}
+                          <span class="color-dot{{ hide_mobile }}"
+                                title="{{ color | escape }}"
+                                aria-label="{{ color | escape }}"
+                                style="background:conic-gradient(#dc2626 0deg 60deg,#f97316 60deg 120deg,#facc15 120deg 180deg,#16a34a 180deg 240deg,#2563eb 240deg 300deg,#7c3aed 300deg 360deg);"></span>
+                        {%- else -%}
+                          <span class="color-dot{{ hide_mobile }}"
+                                title="{{ color | escape }}"
+                                aria-label="{{ color | escape }}"
+                                style="background-color:{{ swatch }};{% if color_lower == 'white' or color_lower == 'off white' or color_lower == 'cream' %}border-color:#aaa;{% endif %}"></span>
+                        {%- endif -%}
                         {%- assign pcidx = pcidx | plus: 1 -%}
                       {% endfor %}
                     </div>
@@ -1872,38 +2024,30 @@
   if (!nextUrl && endMsg) endMsg.style.display = 'block';
 })();
 
-/* ── Mobile: scroll-based secondary image reveal ── */
+/* ── Hero slideshow (auto-cycles every 5 s; dots for manual control) ── */
 (function() {
-  if (!('IntersectionObserver' in window)) return;
-  if (window.matchMedia('(hover: hover)').matches) return;
-
-  var cardIO = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      var card = entry.target;
-      var secondary = card.querySelector('.pc-img--secondary');
-      if (!secondary) return;
-      if (entry.isIntersecting) {
-        card.classList.add('pc-scroll-active');
-      } else {
-        card.classList.remove('pc-scroll-active');
-      }
+  document.querySelectorAll('[data-hero-wrap]').forEach(function(wrap) {
+    var slides = wrap.querySelectorAll('[data-slide]');
+    var dots   = wrap.querySelectorAll('[data-dot]');
+    if (slides.length < 2) return;
+    var current = 0;
+    function goTo(idx) {
+      slides[current].classList.remove('is-active');
+      if (dots[current]) dots[current].classList.remove('is-active');
+      current = idx;
+      slides[current].classList.add('is-active');
+      if (dots[current]) dots[current].classList.add('is-active');
+    }
+    function advance() { goTo((current + 1) % slides.length); }
+    var timer = setInterval(advance, 5000);
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() {
+        goTo(i);
+        clearInterval(timer);
+        timer = setInterval(advance, 5000);
+      });
     });
-  }, { threshold: 0.6 });
-
-  function observeCards() {
-    document.querySelectorAll('.product-card').forEach(function(card) {
-      if (!card.dataset.scrollObserved) {
-        card.dataset.scrollObserved = '1';
-        cardIO.observe(card);
-      }
-    });
-  }
-
-  observeCards();
-
-  /* Re-observe cards added by infinite scroll */
-  var mutObs = new MutationObserver(observeCards);
-  var grid = document.querySelector('.pc-grid');
-  if (grid) mutObs.observe(grid, { childList: true });
+  });
 })();
+
 </script>

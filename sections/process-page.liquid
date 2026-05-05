@@ -982,35 +982,40 @@
         <div class="product-box-image">
           <img src="{{ 'IMG_2767.PNG' | asset_url }}" alt="Regular Tee" class="product-image">
         </div>
-        <div class="product-box-price">999/-</div>
+        <div class="product-box-name">Regular Tee</div>
+        <div class="product-box-price">₹999/-</div>
       </div>
 
       <div class="product-box">
         <div class="product-box-image">
           <img src="{{ 'IMG_2768.PNG' | asset_url }}" alt="Cropped Tee" class="product-image">
         </div>
-        <div class="product-box-price">699/-</div>
+        <div class="product-box-name">Cropped Tee</div>
+        <div class="product-box-price">₹699/-</div>
       </div>
 
       <div class="product-box">
         <div class="product-box-image">
           <img src="{{ 'IMG_2769.PNG' | asset_url }}" alt="Boxy Vest" class="product-image">
         </div>
-        <div class="product-box-price">1099/-</div>
+        <div class="product-box-name">Boxy Vest</div>
+        <div class="product-box-price">₹1099/-</div>
       </div>
 
       <div class="product-box">
         <div class="product-box-image">
           <img src="{{ 'IMG_2770.PNG' | asset_url }}" alt="Sweatshirt" class="product-image">
         </div>
-        <div class="product-box-price">1499/-</div>
+        <div class="product-box-name">Sweatshirt</div>
+        <div class="product-box-price">₹1499/-</div>
       </div>
 
       <div class="product-box">
         <div class="product-box-image">
           <img src="{{ 'IMG_2771.PNG' | asset_url }}" alt="Hoodie" class="product-image">
         </div>
-        <div class="product-box-price">1699/-</div>
+        <div class="product-box-name">Hoodie</div>
+        <div class="product-box-price">₹1699/-</div>
       </div>
     </div>
 
@@ -1328,6 +1333,30 @@
 
       <button type="submit" class="submit-btn" id="proceedBtn">Proceed &amp; Pay &#8377;<span id="proceedFeeDisplay">400</span> Design Advance</button>
     </form>
+
+    <!-- Shown after cart add succeeds — replaces the form -->
+    <div class="proceed-confirm" id="proceedConfirm" style="display:none;" aria-live="polite">
+      <div class="proceed-confirm__check">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2 class="proceed-confirm__title">Your brief is saved!</h2>
+      <p class="proceed-confirm__msg">
+        Before completing payment, please share your reference photos &amp; design inspirations with us on WhatsApp — our designer needs them to get started.
+      </p>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:16px;">
+        <a id="proceedWaBtn" href="{{ section.settings.whatsapp_link | default: 'https://wa.me/message/O4GF737LSF3YC1' }}" target="_blank" rel="noopener" class="proceed-confirm__wa">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Step 1 — Share Photos on WhatsApp
+        </a>
+        <a href="/checkout" class="proceed-confirm__wa" style="background:#000c5b;text-decoration:none;">
+          Step 2 — Complete Payment ₹<span class="js-confirm-fee">400</span> →
+        </a>
+      </div>
+      <a href="/pages/process" class="proceed-confirm__again" onclick="window.location.reload();return false;">Place another order</a>
+      <p class="proceed-confirm__hint">The ₹<span class="js-confirm-fee">400</span> design advance is adjusted against your final product price — it's not an extra charge. You pay the balance only after the design is approved.</p>
+    </div>
   </div>
 
   <!-- Size chart modal (same pattern as product page) -->
@@ -1966,7 +1995,7 @@
 
   // Cart-based checkout — add Design Advance to cart, then redirect to /checkout
   var variantId = parseInt('{{ section.settings.design_fee_variant_id }}', 10) || 0;
-  var waLink = '{{ section.settings.whatsapp_link | default: 'https://wa.me/919354478146' }}';
+  var waLink = {{ section.settings.whatsapp_link | default: 'https://wa.me/message/O4GF737LSF3YC1' | json }};
   var formEl = document.getElementById('processForm');
   var proceedBtn = document.getElementById('proceedBtn');
 
@@ -2059,7 +2088,6 @@
       ].filter(Boolean).join('\n');
 
       setLoading(true);
-      try { localStorage.removeItem(STORAGE_KEY); } catch (ex) {}
 
       // Add Design Advance product to cart
       fetch('/cart/add.js', {
@@ -2079,7 +2107,7 @@
       })
       .then(function(r) {
         if (!r.ok) return r.json().then(function(d) { throw new Error(d.description || 'Cart error'); });
-        // Save note on the cart
+        // Attach order brief as cart note (visible in Shopify admin)
         return fetch('/cart/update.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -2087,9 +2115,27 @@
         });
       })
       .then(function() {
-        // Open WhatsApp in new tab, then redirect to checkout in current tab
-        if (waLink) window.open(waLink, '_blank');
-        window.location.href = '/checkout';
+        // Clear saved progress now that submission succeeded
+        try { localStorage.removeItem(STORAGE_KEY); } catch (ex) {}
+
+        // Update WA button href with order context (pre-filled message)
+        var waBtn = document.getElementById('proceedWaBtn');
+        if (waBtn) {
+          var waMsg = encodeURIComponent('Hi! I just submitted my custom order form at Fitkaar.\nName: ' + name + '\nPhone: ' + phone + '\nProducts: ' + productLines.join(', ') + '\nSharing photos below!');
+          var baseWa = waLink.split('?')[0];
+          waBtn.href = baseWa + '?text=' + waMsg;
+        }
+
+        // Update fee amounts in success screen
+        document.querySelectorAll('.js-confirm-fee').forEach(function(el) { el.textContent = fee; });
+
+        // Hide form, show success screen
+        if (formEl) formEl.style.display = 'none';
+        var confirmEl = document.getElementById('proceedConfirm');
+        if (confirmEl) {
+          confirmEl.style.display = 'block';
+          confirmEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       })
       .catch(function(err) {
         setLoading(false);

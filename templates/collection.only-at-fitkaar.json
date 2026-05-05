@@ -10,11 +10,9 @@
 {
   "sections": {
     "main": {
-      "type": "collection-products",
+      "type": "redirect-page",
       "settings": {
-        "show_hero": true,
-        "hero_fallback_first_product": false,
-        "show_categories": false
+        "redirect_url": "/pages/process"
       }
     }
   },

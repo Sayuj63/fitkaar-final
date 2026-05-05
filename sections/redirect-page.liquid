@@ -1,0 +1,17 @@
+<script>
+  window.location.replace({{ section.settings.redirect_url | json }});
+</script>
+
+{% schema %}
+{
+  "name": "Redirect",
+  "settings": [
+    {
+      "type": "text",
+      "id": "redirect_url",
+      "label": "Redirect URL",
+      "default": "/pages/process"
+    }
+  ]
+}
+{% endschema %}

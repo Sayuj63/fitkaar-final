@@ -351,6 +351,50 @@
   border: 1px dashed #ccc;
   cursor: pointer;
 }
+.upload-status-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.upload-thumb {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  background: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #666;
+  text-align: center;
+}
+.upload-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.upload-thumb--uploading::after {
+  content: 'Uploading…';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: #333;
+}
+.upload-thumb--error {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+.upload-thumb--done {
+  border-color: #22c55e;
+}
 
 .section-divider {
   margin: 2rem 0 1.5rem;
@@ -1195,14 +1239,16 @@
 
       <div class="form-group">
         <label class="form-label">Photos to Include</label>
-        <input type="file" name="contact[photos]" class="form-file-input" multiple accept="image/*">
-        <small class="form-hint">For high-quality images or if upload fails, you can also WhatsApp them to us after submitting the form</strong></small>
+        <input type="file" id="processPhotosInput" name="contact[photos]" class="form-file-input" multiple accept="image/*">
+        <div id="processPhotosStatus" class="upload-status-wrap"></div>
+        <small class="form-hint">Photos will be uploaded automatically when you submit. For very large files, WhatsApp them to us after submitting.</small>
       </div>
 
       <div class="form-group">
         <label class="form-label">Design References</label>
-        <input type="file" name="contact[references]" class="form-file-input" multiple accept="image/*">
-        <small class="form-hint">You can also send references via WhatsApp after submitting the form</strong></small>
+        <input type="file" id="processRefsInput" name="contact[references]" class="form-file-input" multiple accept="image/*">
+        <div id="processRefsStatus" class="upload-status-wrap"></div>
+        <small class="form-hint">References will be uploaded automatically when you submit. You can also send them via WhatsApp after submitting.</small>
       </div>
 
       <!-- Design Fee Information Section - Purple (Moved to Bottom) -->
@@ -1996,8 +2042,63 @@
   // Cart-based checkout — add Design Advance to cart, then redirect to /checkout
   var variantId = parseInt('{{ section.settings.design_fee_variant_id }}', 10) || 0;
   var waLink = {{ section.settings.whatsapp_link | default: 'https://wa.me/message/O4GF737LSF3YC1' | json }};
+  var IMGBB_KEY = {{ section.settings.imgbb_api_key | default: '' | json }};
   var formEl = document.getElementById('processForm');
   var proceedBtn = document.getElementById('proceedBtn');
+
+  // Upload a single File to imgbb; returns the public URL or null on failure
+  async function uploadFileToImgbb(file, thumbEl) {
+    if (!IMGBB_KEY) return null;
+    if (thumbEl) thumbEl.classList.add('upload-thumb--uploading');
+    try {
+      var fd = new FormData();
+      fd.append('image', file);
+      var res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_KEY, { method: 'POST', body: fd });
+      var json = await res.json();
+      if (json.success) {
+        if (thumbEl) {
+          thumbEl.classList.remove('upload-thumb--uploading');
+          thumbEl.classList.add('upload-thumb--done');
+          var img = document.createElement('img');
+          img.src = json.data.thumb ? json.data.thumb.url : json.data.url;
+          thumbEl.innerHTML = '';
+          thumbEl.appendChild(img);
+        }
+        return json.data.url;
+      }
+    } catch (err) {}
+    if (thumbEl) {
+      thumbEl.classList.remove('upload-thumb--uploading');
+      thumbEl.classList.add('upload-thumb--error');
+      thumbEl.textContent = 'Failed';
+    }
+    return null;
+  }
+
+  // Build preview thumbs for a file input and upload all files; returns array of URLs
+  async function uploadFilesFromInput(inputEl, statusEl) {
+    if (!inputEl || !inputEl.files || !inputEl.files.length) return [];
+    var files = Array.from(inputEl.files);
+    var thumbEls = files.map(function(file) {
+      var thumb = document.createElement('div');
+      thumb.className = 'upload-thumb';
+      // show local preview immediately
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = document.createElement('img');
+        img.src = e.target.result;
+        thumb.innerHTML = '';
+        thumb.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+      if (statusEl) statusEl.appendChild(thumb);
+      return thumb;
+    });
+    var urls = await Promise.all(files.map(function(file, i) {
+      return uploadFileToImgbb(file, thumbEls[i]);
+    }));
+    return urls.filter(Boolean);
+  }
 
   function showProceedError(msg) {
     var el = document.getElementById('proceedError');
@@ -2024,7 +2125,7 @@
   }
 
   if (formEl) {
-    formEl.addEventListener('submit', function(e) {
+    formEl.addEventListener('submit', async function(e) {
       e.preventDefault();
       hideProceedError();
 
@@ -2063,6 +2164,21 @@
         productLines.push('Product ' + (i + 1) + ': ' + apparel + ' (' + size + ')');
       });
 
+      // Upload photos to imgbb before submitting
+      setLoading(true);
+      if (proceedBtn) proceedBtn.innerHTML = 'Uploading photos&#8230;';
+
+      var photoUrls = await uploadFilesFromInput(
+        document.getElementById('processPhotosInput'),
+        document.getElementById('processPhotosStatus')
+      );
+      var refUrls = await uploadFilesFromInput(
+        document.getElementById('processRefsInput'),
+        document.getElementById('processRefsStatus')
+      );
+
+      if (proceedBtn) proceedBtn.innerHTML = 'Redirecting to checkout&#8230;';
+
       // Build cart note (visible in Shopify admin order)
       var noteParts = [
         '=== FITKAAR CUSTOM ORDER ===',
@@ -2084,10 +2200,12 @@
         colour  ? 'Colour Preference: '    + colour  : '',
         other   ? 'Other Details: '        + other   : '',
         '',
+        '--- Uploads ---',
+        photoUrls.length ? 'Photos:\n' + photoUrls.join('\n') : 'Photos: (none uploaded — customer will WhatsApp)',
+        refUrls.length   ? 'References:\n' + refUrls.join('\n') : 'References: (none uploaded)',
+        '',
         'Design Advance: ₹' + fee + ' (' + count + ' × ₹' + DESIGN_FEE + ')',
       ].filter(Boolean).join('\n');
-
-      setLoading(true);
 
       // Add Design Advance product to cart
       fetch('/cart/add.js', {
@@ -2268,6 +2386,12 @@
       "id": "whatsapp_link",
       "label": "WhatsApp link (post-submit)",
       "info": "Used to open WhatsApp after checkout redirect."
+    },
+    {
+      "type": "text",
+      "id": "imgbb_api_key",
+      "label": "imgbb API key",
+      "info": "Get a free key at imgbb.com → API. Used to upload customer photos and store links in the order note."
     }
   ],
   "presets": [

@@ -1232,7 +1232,8 @@
   .toast {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
     background: var(--color-primary);
     color: #fff;
     padding: 16px 24px;
@@ -1240,27 +1241,15 @@
     font-size: 0.9rem;
     font-weight: 600;
     z-index: 9999;
-    transform: translateY(100px);
+    white-space: nowrap;
+    max-width: calc(100vw - 32px);
     opacity: 0;
     transition: all 0.3s ease;
   }
 
   .toast.show {
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
     opacity: 1;
-  }
-
-  @media (max-width: 768px) {
-    .toast {
-      right: auto;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      white-space: nowrap;
-      max-width: calc(100vw - 32px);
-    }
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
   }
 
   /* Back button */

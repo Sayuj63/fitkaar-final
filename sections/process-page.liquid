@@ -2117,25 +2117,8 @@
       .then(function() {
         // Clear saved progress now that submission succeeded
         try { localStorage.removeItem(STORAGE_KEY); } catch (ex) {}
-
-        // Update WA button href with order context (pre-filled message)
-        var waBtn = document.getElementById('proceedWaBtn');
-        if (waBtn) {
-          var waMsg = encodeURIComponent('Hi! I just submitted my custom order form at Fitkaar.\nName: ' + name + '\nPhone: ' + phone + '\nProducts: ' + productLines.join(', ') + '\nSharing photos below!');
-          var baseWa = waLink.split('?')[0];
-          waBtn.href = baseWa + '?text=' + waMsg;
-        }
-
-        // Update fee amounts in success screen
-        document.querySelectorAll('.js-confirm-fee').forEach(function(el) { el.textContent = fee; });
-
-        // Hide form, show success screen
-        if (formEl) formEl.style.display = 'none';
-        var confirmEl = document.getElementById('proceedConfirm');
-        if (confirmEl) {
-          confirmEl.style.display = 'block';
-          confirmEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        // Go straight to checkout — WhatsApp prompt appears on the thank you page after payment
+        window.location.href = '/checkout';
       })
       .catch(function(err) {
         setLoading(false);

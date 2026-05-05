@@ -1110,6 +1110,27 @@
     font-size: 0.78rem;
     color: #9ca3af;
   }
+  .filter-apply-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 22px;
+    background: var(--color-primary, #000c5b);
+    color: #fff;
+    font-family: var(--font-heading, 'League Spartan', sans-serif);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.15s ease;
+  }
+  .filter-apply-btn:hover {
+    background: #000a42;
+    transform: translateY(-1px);
+  }
 
   /* Filter button badge */
   .filter-btn-badge {
@@ -1546,7 +1567,7 @@
 
           <div class="filter-panel__footer">
             <a href="{{ collection.url }}" class="filter-clear-btn">Clear all filters</a>
-            <span class="filter-results-note">{{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}</span>
+            <button type="submit" class="filter-apply-btn">Done ✓</button>
           </div>
         </div>
       {%- endif -%}
@@ -1853,10 +1874,7 @@
   var sort = form.querySelector('[data-sort-select]');
   if (sort) sort.addEventListener('change', function() { form.submit(); });
 
-  /* ── Checkboxes: auto-submit ──────────────────── */
-  form.querySelectorAll('[data-filter-auto-submit]').forEach(function(cb) {
-    cb.addEventListener('change', function() { form.submit(); });
-  });
+  /* Checkboxes: no auto-submit — user clicks "Done" to apply */
 
   /* ── Category search: filter visible options ──── */
   form.querySelectorAll('[data-filter-search]').forEach(function(input) {
@@ -1910,9 +1928,7 @@
       paint(lo, hi);
     });
 
-    /* Release handle → submit */
-    rMin.addEventListener('change', function() { form.submit(); });
-    rMax.addEventListener('change', function() { form.submit(); });
+    /* Release handle → no auto-submit; user clicks "Done" to apply */
 
     /* Number inputs → sync sliders */
     if (nMin) {

@@ -12,9 +12,10 @@
     "main": {
       "type": "collection-products",
       "settings": {
-        "show_hero": true,
+        "show_hero": false,
         "hero_fallback_first_product": false,
-        "hero_image_mobile": "shopify://shop_images/52_b29b5d7f-d3ea-40c7-8265-c6c263319290.png",
+        "hero_image_1": "shopify://shop_images/42_a5e9caaf-8507-4238-a8df-0e872043bedd.png",
+        "hero_image_mobile": "shopify://shop_images/50_ad44bd2f-b66e-41f1-82aa-2e0693ebfe90.png",
         "show_categories": false,
         "cat_1_name": "Essentials",
         "cat_1_link": "",

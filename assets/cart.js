@@ -226,13 +226,24 @@ class FitkaarCart {
           opacity: 1;
         }
         @keyframes slideIn {
-          from {
-            transform: translateX(100px);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
+          from { transform: translateX(100px); opacity: 0; }
+          to   { transform: translateX(0);    opacity: 1; }
+        }
+        @keyframes slideInCenter {
+          from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+          to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+        }
+        @media (max-width: 600px) {
+          .cart-notification {
+            left: 50%;
+            right: auto;
+            bottom: 24px;
+            transform: translateX(-50%);
+            width: calc(100vw - 40px);
+            max-width: 340px;
+            justify-content: center;
+            text-align: center;
+            animation: slideInCenter 0.3s ease;
           }
         }
       `;

@@ -14,7 +14,8 @@
       "settings": {
         "show_hero": true,
         "hero_fallback_first_product": false,
-        "hero_image_mobile": "shopify://shop_images/50_ad44bd2f-b66e-41f1-82aa-2e0693ebfe90.png",
+        "hero_image_1": "shopify://shop_images/41_5f48a804-d974-4b21-b048-b664305fc1ee.png",
+        "hero_image_mobile": "shopify://shop_images/49_72c40d30-e930-4637-8fc9-c67b0145ac55.png",
         "show_categories": false,
         "cat_1_name": "Essentials",
         "cat_1_link": "",

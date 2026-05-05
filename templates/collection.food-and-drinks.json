@@ -14,7 +14,6 @@
       "settings": {
         "show_hero": true,
         "hero_fallback_first_product": false,
-        "hero_image_1": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_1_2de6e08b-9c28-4eae-902a-672c8bd0c1ca.png",
         "hero_image_mobile": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_1_2de6e08b-9c28-4eae-902a-672c8bd0c1ca.png",
         "show_categories": false,
         "cat_1_name": "Essentials",

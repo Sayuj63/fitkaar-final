@@ -195,8 +195,9 @@ class FitkaarCart {
       styles.textContent = `
         .cart-notification {
           position: fixed;
-          bottom: 20px;
-          right: 20px;
+          bottom: 24px;
+          left: 50%;
+          transform: translateX(-50%);
           padding: 16px 24px;
           border-radius: 8px;
           color: #fff;
@@ -205,8 +206,12 @@ class FitkaarCart {
           z-index: 9999;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 12px;
-          animation: slideIn 0.3s ease;
+          width: max-content;
+          max-width: calc(100vw - 40px);
+          text-align: center;
+          animation: slideInCenter 0.3s ease;
         }
         .cart-notification--success {
           background: #000c5b;
@@ -225,26 +230,9 @@ class FitkaarCart {
         .cart-notification__close:hover {
           opacity: 1;
         }
-        @keyframes slideIn {
-          from { transform: translateX(100px); opacity: 0; }
-          to   { transform: translateX(0);    opacity: 1; }
-        }
         @keyframes slideInCenter {
           from { transform: translateX(-50%) translateY(20px); opacity: 0; }
           to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
-        }
-        @media (max-width: 600px) {
-          .cart-notification {
-            left: 50%;
-            right: auto;
-            bottom: 24px;
-            transform: translateX(-50%);
-            width: calc(100vw - 40px);
-            max-width: 340px;
-            justify-content: center;
-            text-align: center;
-            animation: slideInCenter 0.3s ease;
-          }
         }
       `;
       document.head.appendChild(styles);

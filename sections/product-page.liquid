@@ -3133,9 +3133,12 @@
         try {
           const response = await fetch('/cart.js');
           const cart = await response.json();
-          const cartCount = document.querySelector('.cart-count');
-          if (cartCount) {
-            cartCount.textContent = cart.item_count;
+          document.querySelectorAll('.cart-count').forEach(el => {
+            el.textContent = cart.item_count;
+            el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+          });
+          if (window.fitkaarCart) {
+            window.fitkaarCart.cart = cart;
           }
         } catch (e) {
           console.error('Failed to update cart count');

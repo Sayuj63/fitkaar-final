@@ -116,10 +116,16 @@
       "default": "Date (DD/MM/YYYY)"
     },
     {
+      "type": "text",
+      "id": "imgbb_api_key",
+      "label": "ImgBB API Key (for photo uploads)",
+      "info": "Get a free key at imgbb.com → API. Leave blank to show a link input instead."
+    },
+    {
       "type": "textarea",
       "id": "customisation_instructions",
       "label": "Instructions shown to customer",
-      "default": "Upload your photos to Google Drive or Google Photos, share the album (set to 'Anyone with the link'), and paste each share link below."
+      "default": "Select and upload each photo directly from your device. All fields are required before adding to cart."
     }
   ]
 }
@@ -885,6 +891,70 @@
     color: #dc2626;
     margin: 10px 0 0;
     font-weight: 500;
+  }
+  .custom-upload-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .custom-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border: 1.5px dashed #a0a8d4;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: #f4f5ff;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    user-select: none;
+  }
+  .custom-upload-btn:hover {
+    background: #eaecff;
+    border-color: var(--color-primary);
+  }
+  .custom-upload-btn--done {
+    border-style: solid;
+    border-color: #16a34a;
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+  .custom-upload-btn--uploading {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  .custom-upload-spinner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .custom-upload-spinner::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid #a0a8d4;
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .custom-upload-preview {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #16a34a;
+  }
+  .custom-upload-error {
+    font-size: 0.78rem;
+    color: #dc2626;
+    margin: 4px 0 0;
+    width: 100%;
   }
   .btn-add-cart:disabled,
   .btn-buy-now:disabled {
@@ -1891,15 +1961,44 @@
           {% assign lk = 'photo_label_' | append: i %}
           {% assign default_lbl = 'Photo ' | append: i %}
           {% assign lbl = section.settings[lk] | default: default_lbl %}
+          {% assign lbl_json = lbl | json %}
           <div class="custom-field">
             <label class="custom-field-label">{{ lbl }} <span class="custom-field-req">*</span></label>
+            {% if section.settings.imgbb_api_key != blank %}
+            <div class="custom-upload-wrap">
+              <label class="custom-upload-btn" :class="{ 'custom-upload-btn--done': customFields[{{ lbl_json }}], 'custom-upload-btn--uploading': uploadingFields[{{ lbl_json }}] }">
+                <input type="file" accept="image/*" style="display:none" @change="uploadPhoto({{ lbl_json }}, $event)" :disabled="uploadingFields[{{ lbl_json }}]">
+                <template x-if="!uploadingFields[{{ lbl_json }}] && !customFields[{{ lbl_json }}]">
+                  <span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                    Choose Photo
+                  </span>
+                </template>
+                <template x-if="uploadingFields[{{ lbl_json }}]">
+                  <span class="custom-upload-spinner">Uploading…</span>
+                </template>
+                <template x-if="!uploadingFields[{{ lbl_json }}] && customFields[{{ lbl_json }}]">
+                  <span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Uploaded — tap to change
+                  </span>
+                </template>
+              </label>
+              <template x-if="uploadPreviews[{{ lbl_json }}]">
+                <img :src="uploadPreviews[{{ lbl_json }}]" class="custom-upload-preview" alt="Preview">
+              </template>
+              <template x-if="uploadErrors[{{ lbl_json }}]">
+                <p class="custom-upload-error" x-text="uploadErrors[{{ lbl_json }}]"></p>
+              </template>
+            </div>
+            {% else %}
             <input
               type="text"
               class="custom-field-input"
-              x-model="customFields[{{ lbl | json }}]"
+              x-model="customFields[{{ lbl_json }}]"
               placeholder="Paste Google Drive / Photos share link"
-              :class="{ 'custom-field-input--error': !customFields[{{ lbl | json }}]?.trim() && Object.values(customFields).some(v => v.trim()) }"
             >
+            {% endif %}
           </div>
         {% endfor %}
 
@@ -2783,11 +2882,48 @@
       },
 
       customFields: {{ custom_fields_json }},
+      uploadingFields: {},
+      uploadPreviews: {},
+      uploadErrors: {},
 
       get customisationValid() {
         const vals = Object.values(this.customFields);
         if (!vals.length) return true;
         return vals.every(function(v) { return v && v.trim().length > 0; });
+      },
+
+      async uploadPhoto(label, event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          this.uploadErrors[label] = 'Please select an image file.';
+          return;
+        }
+        const apiKey = {{ section.settings.imgbb_api_key | default: '' | json }};
+        if (!apiKey) {
+          this.uploadErrors[label] = 'Upload not configured — please contact the store.';
+          return;
+        }
+        this.uploadErrors[label] = '';
+        this.uploadingFields[label] = true;
+        this.customFields[label] = '';
+        this.uploadPreviews[label] = '';
+        try {
+          const fd = new FormData();
+          fd.append('image', file);
+          const res = await fetch('https://api.imgbb.com/1/upload?key=' + apiKey, { method: 'POST', body: fd });
+          const json = await res.json();
+          if (json.success) {
+            this.customFields[label] = json.data.url;
+            this.uploadPreviews[label] = json.data.thumb ? json.data.thumb.url : json.data.url;
+          } else {
+            this.uploadErrors[label] = 'Upload failed — please try again.';
+          }
+        } catch(e) {
+          this.uploadErrors[label] = 'Upload failed — check your connection.';
+        } finally {
+          this.uploadingFields[label] = false;
+        }
       },
 
       buildCartItems() {

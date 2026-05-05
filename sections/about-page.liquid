@@ -663,11 +663,16 @@
     text-align: center;
   }
 
-  /* Mobile: 2-column layout — story flow + sticky image */
+  /* Mobile: single-column layout, center image hidden */
   .scrapbook-layout {
-    grid-template-columns: 1fr 140px;
+    grid-template-columns: 1fr;
     gap: 1rem;
     padding: 1rem 3%;
+  }
+
+  /* Hide the center sticky image on mobile */
+  .story-column-center {
+    display: none;
   }
 
   /* Hide the desktop left/right columns on mobile */
@@ -679,30 +684,6 @@
   /* Show the mobile flow container */
   .scrapbook-layout.mobile-active .story-flow-mobile {
     display: flex;
-  }
-
-  /* Center column stays in place */
-  .story-column-center {
-    order: 2;
-  }
-
-  .scrapbook-sticky {
-    top: 80px;
-  }
-
-  .center-image-wrapper {
-    max-width: 140px;
-    min-width: auto;
-  }
-
-  .center-image {
-    border-radius: 8px;
-  }
-
-  .center-image-wrapper::before,
-  .center-image-wrapper::after {
-    width: 40px;
-    height: 16px;
   }
 
   .story-column-left,
@@ -794,17 +775,8 @@
   }
 
   .scrapbook-layout {
-    grid-template-columns: 1fr 110px;
     gap: 0.7rem;
     padding: 0.8rem 2%;
-  }
-
-  .center-image-wrapper {
-    max-width: 110px;
-  }
-
-  .scrapbook-sticky {
-    top: 70px;
   }
 
   .card-inner {
@@ -969,25 +941,6 @@
           </div>
         </div>
 
-        <div class="story-group" data-order="9">
-          <div class="photos-row">
-            <div class="scrapbook-photo">
-              <div class="photo-wrapper">
-                <img loading="lazy" src="{{ '8.2.jpg' | asset_url }}" alt="Beginning">
-              </div>
-            </div>
-            <div class="scrapbook-photo">
-              <div class="photo-wrapper">
-                <img loading="lazy" src="{{ '8.3.JPG' | asset_url }}" alt="Fitkaar start">
-              </div>
-            </div>
-          </div>
-          <div class="scrapbook-photo">
-            <div class="photo-wrapper">
-              <img loading="lazy" src="{{ '8.4.JPG' | asset_url }}" alt="Team">
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- CENTER COLUMN: Sticky parallax image -->
@@ -1040,6 +993,26 @@
               <div class="card-images large-images">
                 <img loading="lazy" src="{{ 'IMG_2374.PNG' | asset_url }}" alt="Planning">
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-group" data-order="9">
+          <div class="photos-row">
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '8.2.jpg' | asset_url }}" alt="Beginning">
+              </div>
+            </div>
+            <div class="scrapbook-photo">
+              <div class="photo-wrapper">
+                <img loading="lazy" src="{{ '8.3.JPG' | asset_url }}" alt="Fitkaar start">
+              </div>
+            </div>
+          </div>
+          <div class="scrapbook-photo">
+            <div class="photo-wrapper">
+              <img loading="lazy" src="{{ '8.4.JPG' | asset_url }}" alt="Team">
             </div>
           </div>
         </div>

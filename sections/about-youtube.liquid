@@ -1,0 +1,203 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+.youtube-section {
+  padding: 5rem 5% 6rem;
+  background-color: #faf9f7;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+}
+
+.youtube-section h2 {
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  color: #333;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.macos-window {
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 20px 50px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.macos-window:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 30px 60px rgba(0, 0, 0, 0.2);
+}
+
+.window-titlebar {
+  background: linear-gradient(180deg, #e8e8e8 0%, #d8d8d8 100%);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #c0c0c0;
+}
+
+.traffic-lights {
+  display: flex;
+  gap: 8px;
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.traffic-light.close {
+  background: linear-gradient(180deg, #ed6a5f 0%, #e24b41 100%);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+}
+
+.traffic-light.minimize {
+  background: linear-gradient(180deg, #f6be50 0%, #e1a73e 100%);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+}
+
+.traffic-light.maximize {
+  background: linear-gradient(180deg, #61c555 0%, #2dac2f 100%);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+}
+
+.window-title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  color: #4a4a4a;
+  font-weight: 500;
+  margin-right: 52px;
+}
+
+.window-content {
+  position: relative;
+  background: #000;
+  aspect-ratio: 16/9;
+}
+
+.window-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.play-button::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 20px solid #333;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  margin-left: 4px;
+}
+
+.macos-window:hover .play-button {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+@media screen and (max-width: 480px) {
+  .youtube-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .macos-window {
+    border-radius: 8px;
+  }
+
+  .window-titlebar {
+    padding: 8px 10px;
+  }
+
+  .traffic-light {
+    width: 10px;
+    height: 10px;
+  }
+
+  .traffic-lights {
+    gap: 6px;
+  }
+
+  .window-title {
+    font-size: 11px;
+    margin-right: 40px;
+  }
+
+  .play-button {
+    width: 55px;
+    height: 55px;
+  }
+
+  .play-button::after {
+    border-left-width: 16px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+  }
+}
+</style>
+
+<section class="youtube-section">
+  <h2>A deeper glimpse into our journey</h2>
+  <a href="{{ section.settings.youtube_link }}" target="_blank" class="macos-window">
+    <div class="window-titlebar">
+      <div class="traffic-lights">
+        <span class="traffic-light close"></span>
+        <span class="traffic-light minimize"></span>
+        <span class="traffic-light maximize"></span>
+      </div>
+      <span class="window-title">Our story</span>
+    </div>
+    <div class="window-content">
+      <img src="{{ 'yt_thumbnail.PNG' | asset_url }}" alt="Fitkaar Journey on Youtube">
+      <div class="play-button"></div>
+    </div>
+  </a>
+</section>
+
+{% schema %}
+{
+  "name": "About YouTube",
+  "settings": [
+    {
+      "type": "url",
+      "id": "youtube_link",
+      "label": "YouTube Video Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About YouTube"
+    }
+  ]
+}
+{% endschema %}

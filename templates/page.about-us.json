@@ -30,10 +30,17 @@
         "image_7": "shopify://shop_images/Reviews_2.png",
         "image_8": "shopify://shop_images/Reviews_11.png"
       }
+    },
+    "about_youtube": {
+      "type": "about-youtube",
+      "settings": {
+        "youtube_link": ""
+      }
     }
   },
   "order": [
     "about",
-    "testimonials_carousel"
+    "testimonials_carousel",
+    "about_youtube"
   ]
 }

@@ -11,9 +11,7 @@
   "sections": {
     "about": {
       "type": "about-page",
-      "settings": {
-        "youtube_link": ""
-      }
+      "settings": {}
     },
     "testimonials_carousel": {
       "type": "testimonials-carousel",
@@ -34,7 +32,7 @@
     "about_youtube": {
       "type": "about-youtube",
       "settings": {
-        "youtube_link": ""
+        "youtube_link": "https://youtu.be/81JemwaMaA0?si=pgdk1qkV5EipAlzY"
       }
     }
   },

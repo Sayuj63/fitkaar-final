@@ -16,7 +16,7 @@
         "first_order_discount": "10",
         "model_size": "M",
         "support_email": "fitkaarclothing@gmail.com",
-        "returns_policy_url": "",
+        "returns_policy_url": "shopify://pages/terms-conditions",
         "customise_url": "",
         "imgbb_api_key": "cb4516b66b7da4090eb8e12b1d793d86",
         "customisation_instructions": "Upload your photos directly from your device. All fields are required before adding to cart."

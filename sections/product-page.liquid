@@ -83,6 +83,25 @@
     }
   }
 
+  /* Tablet (769-991): stay single-column but cap width so gallery doesn't dominate */
+  @media (min-width: 769px) and (max-width: 991px) {
+    .product-page { padding: 28px 0 60px; }
+    .product-container {
+      max-width: 620px;
+      padding: 0 24px;
+      gap: 28px;
+    }
+  }
+
+  /* Small desktop / large tablet (992-1199): use 2-col but tighter */
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .product-container {
+      max-width: 1100px;
+      gap: 32px;
+      padding: 0 24px;
+    }
+  }
+
   /* Image Gallery Carousel */
   .product-gallery {
     align-self: start;

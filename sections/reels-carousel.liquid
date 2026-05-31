@@ -110,6 +110,17 @@
   }
 }
 
+/* Tablet (769-1023): scale cards between mobile and desktop sizes */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .reels-section .reels-heading { font-size: 36px; }
+  .marquee-content { animation-duration: 35s; gap: 16px; }
+  .reel-item {
+    width: 250px !important;
+    height: 444px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
 /* ─── Reel card ───────────────────────────────────── */
 .reel-item {
   position: relative;

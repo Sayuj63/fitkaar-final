@@ -191,6 +191,22 @@
       .fk-header-center { display: none; }
     }
 
+    /* Tablet layout (768-1023): keep desktop structure but tighten sizes */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .fk-header-row { gap: 8px; }
+      .fk-header-left a.md\:flex { gap: 10px !important; }
+      .fk-header-left a.md\:flex img { height: 38px !important; }
+      .fk-header-left a.md\:flex .h2 { font-size: 22px !important; }
+      .fk-desktop-nav { gap: 18px !important; }
+      .fk-nav-link { font-size: 0.82rem; }
+      .header-icons.fk-header-right { gap: 12px; }
+      .header-icons a svg { width: 20px; height: 20px; }
+      .fk-shop-dropdown { min-width: 460px; padding: 18px 20px; }
+      .fk-shop-cols { gap: 22px; }
+      .fk-shop-col { min-width: 120px; }
+      .fk-shop-col a { font-size: 0.82rem; }
+    }
+
     /* #2: Shared nav-link styling */
     .fk-nav-link {
       font-family: var(--font-heading);

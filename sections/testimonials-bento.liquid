@@ -100,6 +100,16 @@
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* Tablet (769-1023): drop bento from 4 to 2 cols so cards stay readable */
+@media (min-width: 769px) and (max-width: 1023px) {
+  section .grid.md\:grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-rows: 220px !important;
+  }
+  section .grid.md\:grid-cols-4 > .md\:col-span-2 { grid-column: span 2 / span 2; }
+  section .grid.md\:grid-cols-4 > .md\:col-span-1 { grid-column: span 1 / span 1; }
+}
 </style>
 
 <section class="py-16" style="background-color: {{ section.settings.bg_color }};">

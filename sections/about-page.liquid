@@ -504,6 +504,20 @@
   }
 }
 
+/* Tablet (769-1023): keep 3-col but tighten typography and hero */
+@media screen and (min-width: 769px) and (max-width: 1023px) {
+  .about-header { padding: 4rem 1.5rem 2.5rem; }
+  .about-brand-title { font-size: 3.4rem; }
+  .about-tagline { font-size: 1.15rem; }
+  .intro-content { gap: 2rem; padding: 0 1rem; }
+  .founder-image-container { flex: 0 0 380px; }
+  .intro-text-container { max-width: 480px; }
+  .intro-heading { font-size: 1.35rem; }
+  .intro-paragraph { font-size: 1rem; }
+  .center-image-wrapper { max-width: 260px; }
+  .scrapbook-card { font-size: 0.95rem; }
+}
+
 @media screen and (max-width: 768px) {
   .about-header {
     padding: 3rem 1rem 2rem;

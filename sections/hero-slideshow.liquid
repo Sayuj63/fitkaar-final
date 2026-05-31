@@ -264,6 +264,23 @@
     height: 8px;
   }
 }
+
+/* Tablet (769-1023): cap height so a portrait iPad doesn't get a full-viewport hero */
+@media (min-width: 769px) and (max-width: 1023px) {
+  #HeroSlideshow-{{ section.id }} {
+    height: auto;
+    min-height: 0;
+    max-height: 720px;
+    aspect-ratio: 4 / 3;
+  }
+  #HeroSlideshow-{{ section.id }} .hero-slide picture,
+  #HeroSlideshow-{{ section.id }} .hero-slide img,
+  #HeroSlideshow-{{ section.id }} .hero-slide video {
+    object-position: center center;
+  }
+  #HeroSlideshow-{{ section.id }} .hero-dots { bottom: 22px; gap: 10px; }
+  #HeroSlideshow-{{ section.id }} .hero-dot { width: 10px; height: 10px; }
+}
 </style>
 
 <div class="hero-slideshow hero-fade-slideshow" id="HeroSlideshow-{{ section.id }}">

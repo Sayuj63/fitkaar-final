@@ -1322,6 +1322,12 @@
 
       {%- if has_any_circle -%}
         <div class="category-circles">
+          <a href="/collections/pride-month-collection" class="category-circle" aria-label="Pride Month Collection">
+            <div class="category-circle-image">
+              <img src="{{ 'IMG_4931.PNG' | asset_url }}" alt="Pride Month Collection" loading="lazy">
+            </div>
+            <div class="category-circle-name">Pride Month</div>
+          </a>
           {%- for i in (1..9) -%}
             {%- assign img_key  = 'cat_' | append: i | append: '_image' -%}
             {%- assign name_key = 'cat_' | append: i | append: '_name' -%}

@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "list-collections",
+      "settings": {
+        "eyebrow": "Shop",
+        "title": "All Collections",
+        "subtitle": "Explore our full range — every collection, hand-picked and 100% customisable.",
+        "sort_by": "manual"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

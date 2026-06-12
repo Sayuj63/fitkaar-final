@@ -239,6 +239,29 @@
       "id": "cat_9_link",
       "label": "Link"
     }
+  ],
+  "blocks": [
+    {
+      "type": "category_circle",
+      "name": "Category Circle",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Circle image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Circle name"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL"
+        }
+      ]
+    }
   ]
 }
 {% endschema %}
@@ -1309,44 +1332,24 @@
 
     {%- comment -%} Category circles: only on All products — not on /collections/basics etc. {%- endcomment -%}
     {%- if section.settings.show_categories and collection.handle == 'all' -%}
-      {%- assign has_any_circle = false -%}
-      {%- for i in (1..9) -%}
-        {%- assign img_key  = 'cat_' | append: i | append: '_image' -%}
-        {%- assign name_key = 'cat_' | append: i | append: '_name' -%}
-        {%- assign img  = section.settings[img_key] -%}
-        {%- assign name = section.settings[name_key] -%}
-        {%- if img != blank or name != blank -%}
-          {%- assign has_any_circle = true -%}
-        {%- endif -%}
-      {%- endfor -%}
-
-      {%- if has_any_circle -%}
+      {%- assign circle_blocks = section.blocks | where: 'type', 'category_circle' -%}
+      {%- if circle_blocks.size > 0 -%}
         <div class="category-circles">
-          <a href="/collections/pride-month-collection" class="category-circle" aria-label="Pride Month Collection">
-            <div class="category-circle-image">
-              <img src="{{ 'IMG_4931.PNG' | asset_url }}" alt="Pride Month Collection" loading="lazy">
-            </div>
-            <div class="category-circle-name">Pride Month</div>
-          </a>
-          {%- for i in (1..9) -%}
-            {%- assign img_key  = 'cat_' | append: i | append: '_image' -%}
-            {%- assign name_key = 'cat_' | append: i | append: '_name' -%}
-            {%- assign link_key = 'cat_' | append: i | append: '_link' -%}
-            {%- assign img  = section.settings[img_key] -%}
-            {%- assign name = section.settings[name_key] -%}
-            {%- assign link = section.settings[link_key] -%}
-            {%- if img == blank and name == blank -%}{%- continue -%}{%- endif -%}
-
-            <a href="{{ link | default: '#' }}" class="category-circle" aria-label="{{ name | escape }}">
+          {%- for block in circle_blocks -%}
+            {%- assign cb_img  = block.settings.image -%}
+            {%- assign cb_name = block.settings.name -%}
+            {%- assign cb_link = block.settings.link | default: '#' -%}
+            {%- if cb_img == blank and cb_name == blank -%}{%- continue -%}{%- endif -%}
+            <a href="{{ cb_link }}" class="category-circle" aria-label="{{ cb_name | escape }}" {{ block.shopify_attributes }}>
               <div class="category-circle-image">
-                {%- if img != blank -%}
-                  <img src="{{ img | image_url: width: 400 }}" alt="{{ name | escape }}" loading="lazy">
+                {%- if cb_img != blank -%}
+                  <img src="{{ cb_img | image_url: width: 400 }}" alt="{{ cb_name | escape }}" loading="lazy">
                 {%- else -%}
                   {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
                 {%- endif -%}
               </div>
-              {%- if name != blank -%}
-                <div class="category-circle-name">{{ name }}</div>
+              {%- if cb_name != blank -%}
+                <div class="category-circle-name">{{ cb_name }}</div>
               {%- endif -%}
             </a>
           {%- endfor -%}

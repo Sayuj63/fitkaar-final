@@ -14,29 +14,95 @@
   "sections": {
     "main": {
       "type": "collection-products",
+      "blocks": {
+        "circle_pride": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Pride Month",
+            "link": "shopify://collections/pride-month-collection"
+          }
+        },
+        "circle_1": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_52b9b010-2989-4bf4-8842-535bb6fe3b37.png",
+            "name": "Essentials",
+            "link": "shopify://collections/everyday"
+          }
+        },
+        "circle_2": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Only at Fitkaar",
+            "link": "shopify://collections/only-at-fitkaar"
+          }
+        },
+        "circle_3": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Food & Drinks",
+            "link": "shopify://collections/food-and-drinks"
+          }
+        },
+        "circle_4": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Sports & Fitness",
+            "link": "shopify://collections/sports-and-fitness"
+          }
+        },
+        "circle_5": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Work & Hobbies",
+            "link": "shopify://collections/work-and-hobbies"
+          }
+        },
+        "circle_6": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Couples",
+            "link": "shopify://collections/couples"
+          }
+        },
+        "circle_7": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Matching",
+            "link": "shopify://collections/matching"
+          }
+        },
+        "circle_8": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Pun Intended",
+            "link": "shopify://collections/pun-intended"
+          }
+        },
+        "circle_9": {
+          "type": "category_circle",
+          "settings": {
+            "name": "Zodiac Signs",
+            "link": "shopify://collections/zodiac-signs"
+          }
+        }
+      },
+      "block_order": [
+        "circle_pride",
+        "circle_1",
+        "circle_2",
+        "circle_3",
+        "circle_4",
+        "circle_5",
+        "circle_6",
+        "circle_7",
+        "circle_8",
+        "circle_9"
+      ],
       "settings": {
         "show_hero": false,
         "hero_fallback_first_product": false,
-        "show_categories": true,
-        "cat_1_image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_52b9b010-2989-4bf4-8842-535bb6fe3b37.png",
-        "cat_1_name": "Essentials",
-        "cat_1_link": "shopify://collections/everyday",
-        "cat_2_name": "Only at Fitkaar",
-        "cat_2_link": "shopify://collections/only-at-fitkaar",
-        "cat_3_name": "Food & Drinks",
-        "cat_3_link": "shopify://collections/food-and-drinks",
-        "cat_4_name": "Sports & Fitness",
-        "cat_4_link": "shopify://collections/sports-and-fitness",
-        "cat_5_name": "Work & Hobbies",
-        "cat_5_link": "shopify://collections/work-and-hobbies",
-        "cat_6_name": "Couples",
-        "cat_6_link": "shopify://collections/couples",
-        "cat_7_name": "Matching",
-        "cat_7_link": "shopify://collections/matching",
-        "cat_8_name": "Pun Intended",
-        "cat_8_link": "shopify://collections/pun-intended",
-        "cat_9_name": "Zodiac Signs",
-        "cat_9_link": "shopify://collections/zodiac-signs"
+        "show_categories": true
       }
     }
   },

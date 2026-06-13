@@ -8,9 +8,41 @@
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 
-    <!-- Google Fonts Preconnect for Performance -->
+    <!-- Preconnect for third-party origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+    <!-- Google Fonts — non-blocking (print→all swap trick eliminates render-blocking CSS chain) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=League+Spartan:wght@400;500;600;700;800;900&family=Permanent+Marker&family=Raleway:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=League+Spartan:wght@400;500;600;700;800;900&family=Permanent+Marker&family=Raleway:wght@300;400;500;600;700&display=swap"></noscript>
+
+    <!-- LCP preload: first hero slide image (index page only) -->
+    {%- if template.name == 'index' -%}
+      {%- assign _lcp_section = sections['slideshow'] -%}
+      {%- if _lcp_section != blank -%}
+        {%- assign _first_block_id = _lcp_section.block_order | first -%}
+        {%- assign _first_block = _lcp_section.blocks[_first_block_id] -%}
+        {%- if _first_block.type == 'image_slide' -%}
+          {%- assign _lcp_desktop = _first_block.settings.image | default: _first_block.settings.image_mobile -%}
+          {%- assign _lcp_mobile = _first_block.settings.image_mobile | default: _first_block.settings.image -%}
+          {%- if _lcp_desktop != blank -%}
+            <link rel="preload" as="image"
+              media="(min-width: 769px)"
+              imagesrcset="{{ _lcp_desktop | image_url: width: 800 }} 800w, {{ _lcp_desktop | image_url: width: 1200 }} 1200w, {{ _lcp_desktop | image_url: width: 1600 }} 1600w, {{ _lcp_desktop | image_url: width: 2000 }} 2000w"
+              imagesizes="100vw"
+              fetchpriority="high">
+          {%- endif -%}
+          {%- if _lcp_mobile != blank -%}
+            <link rel="preload" as="image"
+              media="(max-width: 768px)"
+              imagesrcset="{{ _lcp_mobile | image_url: width: 600 }} 600w, {{ _lcp_mobile | image_url: width: 900 }} 900w, {{ _lcp_mobile | image_url: width: 1200 }} 1200w"
+              imagesizes="100vw"
+              fetchpriority="high">
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
 
     {%- comment -%}
       SEO title overrides — improves how Google labels key pages in sitelinks.

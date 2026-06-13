@@ -439,6 +439,13 @@
 .ib-cta-btn:hover svg {
   transform: translateX(4px);
 }
+
+/* Pause all animations when section is off-screen (saves mobile CPU/GPU) */
+.interactive-builder.ib-offscreen .ib-particle,
+.interactive-builder.ib-offscreen .ib-sticker,
+.interactive-builder.ib-offscreen .ib-skeleton {
+  animation-play-state: paused;
+}
 </style>
 
 <section class="interactive-builder" id="interactiveBuilder">
@@ -464,7 +471,7 @@
         <div class="ib-tshirt-wrapper">
           <div class="ib-image-loading" id="ibImageLoading">
             <div class="ib-skeleton"></div>
-            <img src="{{ section.settings.male_model }}" alt="Model" class="ib-tshirt-bg" id="ibModelImage">
+            <img src="{{ section.settings.male_model }}" alt="Model" class="ib-tshirt-bg" id="ibModelImage" loading="lazy">
           </div>
           <div class="ib-design-area" id="ibDesignArea"></div>
         </div>
@@ -480,49 +487,49 @@
     <!-- Scattered Stickers -->
     {% if section.settings.sticker_1 %}
     <div class="ib-sticker" data-name="football" data-src="{{ section.settings.sticker_1 }}" style="top: 15%; left: 25%;">
-      <img src="{{ section.settings.sticker_1 }}" alt="Football">
+      <img src="{{ section.settings.sticker_1 }}" alt="Football" loading="lazy">
     </div>
     {% endif %}
 
     {% if section.settings.sticker_2 %}
     <div class="ib-sticker" data-name="chai" data-src="{{ section.settings.sticker_2 }}" style="top: 15%; right: 25%; left: auto;">
-      <img src="{{ section.settings.sticker_2 }}" alt="Chai">
+      <img src="{{ section.settings.sticker_2 }}" alt="Chai" loading="lazy">
     </div>
     {% endif %}
 
     {% if section.settings.sticker_3 %}
     <div class="ib-sticker" data-name="mountain" data-src="{{ section.settings.sticker_3 }}" style="top: 35%; right: 20%; left: auto;">
-      <img src="{{ section.settings.sticker_3 }}" alt="Mountain">
+      <img src="{{ section.settings.sticker_3 }}" alt="Mountain" loading="lazy">
     </div>
     {% endif %}
 
     {% if section.settings.sticker_4 %}
     <div class="ib-sticker" data-name="ticket" data-src="{{ section.settings.sticker_4 }}" style="top: 40%; left: 20%;">
-      <img src="{{ section.settings.sticker_4 }}" alt="Ticket">
+      <img src="{{ section.settings.sticker_4 }}" alt="Ticket" loading="lazy">
     </div>
     {% endif %}
 
     {% if section.settings.sticker_5 %}
     <div class="ib-sticker" data-name="quote" data-src="{{ section.settings.sticker_5 }}" style="top: 65%; left: 22%;">
-      <img src="{{ section.settings.sticker_5 }}" alt="Quote">
+      <img src="{{ section.settings.sticker_5 }}" alt="Quote" loading="lazy">
     </div>
     {% endif %}
 
     {% if section.settings.sticker_6 %}
     <div class="ib-sticker" data-name="camera" data-src="{{ section.settings.sticker_6 }}" style="top: 80%; left: 30%;">
-      <img src="{{ section.settings.sticker_6 }}" alt="Camera">
+      <img src="{{ section.settings.sticker_6 }}" alt="Camera" loading="lazy">
     </div>
     {% endif %}
 
     {% if section.settings.sticker_7 %}
     <div class="ib-sticker" data-name="guitar" data-src="{{ section.settings.sticker_7 }}" style="top: 55%; right: 20%; left: auto;">
-      <img src="{{ section.settings.sticker_7 }}" alt="Guitar">
+      <img src="{{ section.settings.sticker_7 }}" alt="Guitar" loading="lazy">
     </div>
     {% endif %}
 
     {% if section.settings.sticker_8 %}
     <div class="ib-sticker" data-name="pasta" data-src="{{ section.settings.sticker_8 }}" style="top: 80%; right: 30%; left: auto;">
-      <img src="{{ section.settings.sticker_8 }}" alt="Pasta">
+      <img src="{{ section.settings.sticker_8 }}" alt="Pasta" loading="lazy">
     </div>
     {% endif %}
   </div>
@@ -542,6 +549,13 @@
 document.addEventListener('DOMContentLoaded', () => {
   const builderSection = document.getElementById('interactiveBuilder');
   if (!builderSection) return;
+
+  /* Pause animations when section is off-screen to save mobile CPU */
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function(entries) {
+      builderSection.classList.toggle('ib-offscreen', !entries[0].isIntersecting);
+    }, { threshold: 0.01 }).observe(builderSection);
+  }
 
   const models = [
     '{{ section.settings.male_model }}',

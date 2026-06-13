@@ -215,7 +215,7 @@
 
   <div class="marquee-container w-full" id="reels-container">
     <div class="marquee-content gap-4" id="reels-content">
-      {% for i in (1..4) %}
+      {% for i in (1..2) %}
         {% for block in section.blocks %}
           {%- assign has_video = false -%}
           {%- if block.settings.video != blank -%}{%- assign has_video = true -%}{%- endif -%}

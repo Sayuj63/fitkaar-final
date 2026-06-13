@@ -471,7 +471,7 @@
     ]</script>
 
     <script>
-      (function() {
+      setTimeout(function() {
         var overlay    = document.getElementById('fkSearchOverlay');
         var panel      = overlay && overlay.querySelector('.fk-search-panel');
         var input      = document.getElementById('fkSearchInput');
@@ -788,7 +788,7 @@
         suggestEl && suggestEl.addEventListener('click', function() {
           clearSuggestions();
         });
-      })();
+      }, 0);
     </script>
 
     <!-- WhatsApp floating button (#46) — hidden on cart page -->
@@ -938,7 +938,7 @@
     </style>
 
     <script>
-      (function() {
+      setTimeout(function() {
         var overlay = document.getElementById('fkPopupOverlay');
         var content = document.getElementById('fkPopupContent');
         if (!overlay || !content) return;
@@ -1062,7 +1062,7 @@
             if (!e.relatedTarget && e.clientY <= 0) popupCartAbandon();
           });
         }
-      })();
+      }, 0);
     </script>
 
     <style>

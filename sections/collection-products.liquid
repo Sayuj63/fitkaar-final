@@ -4,49 +4,49 @@
   "settings": [
     {
       "type": "header",
-      "content": "Hero Banner (#4)"
+      "content": "Hero Creative — Slide 1"
     },
     {
       "type": "checkbox",
       "id": "show_hero",
-      "label": "Show collection hero banner",
-      "info": "Upload an image in Shopify Admin: Products → Collections → open this collection → Image (sidebar). Mobile 1:1 fit; desktop wide banner.",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "hero_fallback_first_product",
-      "label": "Hero: use first product image if collection has no image",
-      "info": "When the collection has no Image set, uses the first product’s featured image so a hero still appears. Turn off to show only the text title until you upload a collection image.",
+      "label": "Show hero creative on this collection",
+      "info": "Upload the desktop and mobile images below. If you leave both blank, the Shopify Admin → Collection Image is used as a fallback.",
       "default": true
     },
     {
       "type": "image_picker",
       "id": "hero_image_1",
-      "label": "Slide 1 – desktop creative",
-      "info": "Upload your designed desktop banner. Overrides the collection image from Shopify Admin. Leave empty to use the collection image."
+      "label": "Desktop creative (Slide 1)",
+      "info": "Wide landscape banner shown on laptop/desktop. If left blank, the mobile creative (or Shopify collection image) is used."
     },
     {
       "type": "image_picker",
       "id": "hero_image_mobile",
-      "label": "Slide 1 – mobile creative",
-      "info": "Shown on screens ≤767 px. Square (1:1) or portrait (4:5) works best. If empty, the desktop image is used on mobile too."
+      "label": "Mobile creative (Slide 1)",
+      "info": "Square (1:1) or portrait image shown on phones (≤767 px). If left blank, the desktop creative is used on mobile too."
+    },
+    {
+      "type": "checkbox",
+      "id": "hero_fallback_first_product",
+      "label": "Use first product image if neither hero creative is set",
+      "info": "Turn off to show only the collection title until you upload a hero creative.",
+      "default": true
     },
     {
       "type": "header",
-      "content": "Hero – Slide 2 (Slideshow)"
+      "content": "Hero Creative — Slide 2 (optional)"
     },
     {
       "type": "image_picker",
       "id": "hero_image_2",
-      "label": "Slide 2 – desktop creative",
-      "info": "Optional second slide. When set, the hero becomes a 2-image auto-slideshow cycling every 5 seconds."
+      "label": "Desktop creative (Slide 2)",
+      "info": "Optional second slide. When set, the hero auto-slideshows every 5 seconds."
     },
     {
       "type": "image_picker",
       "id": "hero_image_2_mobile",
-      "label": "Slide 2 – mobile creative",
-      "info": "Mobile version of slide 2. If empty, desktop slide 2 is used on mobile."
+      "label": "Mobile creative (Slide 2)",
+      "info": "Mobile version of slide 2. If left blank, the desktop slide 2 is used on mobile."
     },
     {
       "type": "header",
@@ -1235,15 +1235,30 @@
     {%- comment -%} Hero: hidden on /collections/all (category circles lead instead) {%- endcomment -%}
     {%- if collection.handle != 'all' -%}
       {%- liquid
-        assign slide1_desktop = hero_img
-        if section.settings.hero_image_1 != blank
-          assign slide1_desktop = section.settings.hero_image_1
+        assign slide1_desktop = section.settings.hero_image_1
+        if slide1_desktop == blank
+          assign slide1_desktop = hero_img
+        endif
+        if slide1_desktop == blank
+          assign slide1_desktop = section.settings.hero_image_mobile
         endif
         assign slide1_mobile = section.settings.hero_image_mobile
+        if slide1_mobile == blank
+          assign slide1_mobile = section.settings.hero_image_1
+        endif
+        if slide1_mobile == blank
+          assign slide1_mobile = hero_img
+        endif
         assign slide2_desktop = section.settings.hero_image_2
+        if slide2_desktop == blank and section.settings.hero_image_2_mobile != blank
+          assign slide2_desktop = section.settings.hero_image_2_mobile
+        endif
         assign slide2_mobile = section.settings.hero_image_2_mobile
+        if slide2_mobile == blank and section.settings.hero_image_2 != blank
+          assign slide2_mobile = section.settings.hero_image_2
+        endif
         assign has_slide2 = false
-        if slide2_desktop != blank or slide2_mobile != blank
+        if section.settings.hero_image_2 != blank or section.settings.hero_image_2_mobile != blank
           assign has_slide2 = true
         endif
       -%}
@@ -1354,6 +1369,42 @@
             </a>
           {%- endfor -%}
         </div>
+      {%- else -%}
+        {%- comment -%} Fallback: render from legacy cat_1..9 settings if no blocks configured {%- endcomment -%}
+        {%- assign legacy_has_any = false -%}
+        {%- for i in (1..9) -%}
+          {%- assign img_key = 'cat_' | append: i | append: '_image' -%}
+          {%- assign name_key = 'cat_' | append: i | append: '_name' -%}
+          {%- if section.settings[img_key] != blank or section.settings[name_key] != blank -%}
+            {%- assign legacy_has_any = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if legacy_has_any -%}
+          <div class="category-circles">
+            {%- for i in (1..9) -%}
+              {%- assign img_key  = 'cat_' | append: i | append: '_image' -%}
+              {%- assign name_key = 'cat_' | append: i | append: '_name' -%}
+              {%- assign link_key = 'cat_' | append: i | append: '_link' -%}
+              {%- assign cb_img  = section.settings[img_key] -%}
+              {%- assign cb_name = section.settings[name_key] -%}
+              {%- assign cb_link = section.settings[link_key] | default: '#' -%}
+              {%- if cb_img == blank and cb_name == blank -%}{%- continue -%}{%- endif -%}
+              <a href="{{ cb_link }}" class="category-circle" aria-label="{{ cb_name | escape }}">
+                <div class="category-circle-image">
+                  {%- if cb_img != blank -%}
+                    <img src="{{ cb_img | image_url: width: 400 }}" alt="{{ cb_name | escape }}" loading="lazy">
+                  {%- else -%}
+                    {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+                {%- if cb_name != blank -%}
+                  <div class="category-circle-name">{{ cb_name }}</div>
+                {%- endif -%}
+              </a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       {%- endif -%}
     {%- endif -%}
 

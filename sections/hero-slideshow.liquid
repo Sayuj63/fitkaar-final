@@ -173,11 +173,13 @@
   position: absolute;
   inset: 0;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 1s ease-in-out;
 }
 
 #HeroSlideshow-{{ section.id }} .hero-slide.active {
   opacity: 1;
+  pointer-events: auto;
 }
 
 #HeroSlideshow-{{ section.id }} .hero-slide picture,

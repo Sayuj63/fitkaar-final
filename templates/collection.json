@@ -11,6 +11,109 @@
   "sections": {
     "main": {
       "type": "collection-products",
+      "blocks": {
+        "category_circle_b3ci63": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/89_00303b99-5819-46ce-a71d-b870044ea04b.png",
+            "name": "ESSENTIALS",
+            "link": "shopify://collections/everyday-copy"
+          }
+        },
+        "category_circle_CQWaGP": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/93_5eccdc36-7721-479b-8528-ebc47ffa2714.png",
+            "name": "Only at fitkaar",
+            "link": "shopify://pages/process"
+          }
+        },
+        "category_circle_CxJBF9": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_10.png",
+            "name": "Fitkaar x unfold",
+            "link": "shopify://collections/unfold-x-fitkaar"
+          }
+        },
+        "category_circle_gbUJ4t": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/84_32776cda-fd6a-4353-97d0-14bf33c40152.png",
+            "name": "Food & Drinks",
+            "link": "shopify://collections/food-and-drinks"
+          }
+        },
+        "category_circle_Ftzb7k": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/85_aa421f14-f097-49bf-82df-f247b27759f8.png",
+            "name": "sports & fitness",
+            "link": "shopify://collections/sports-and-fitness"
+          }
+        },
+        "category_circle_EB3KAx": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/88_16ecc64b-03ef-4c9f-98a7-89967896fdbe.png",
+            "name": "Work & hobbies",
+            "link": "shopify://collections/work-and-hobbies"
+          }
+        },
+        "category_circle_4YiwGg": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/87_a1610c00-e691-4276-a895-f08753166248.png",
+            "name": "Pun Intended",
+            "link": "shopify://collections/pun-intended"
+          }
+        },
+        "category_circle_mX4FqP": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/90_13990e15-8bfa-4d27-b8ea-84e4d8f62dbd.png",
+            "name": "zodiac signs",
+            "link": "shopify://collections/zodiac-signs"
+          }
+        },
+        "category_circle_jGkwaW": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/94_a8f14926-47e9-4075-87aa-d4b6f0c75a80.png",
+            "name": "Pride collection",
+            "link": "shopify://collections/pride-month-collection"
+          }
+        },
+        "category_circle_xhcVGk": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/91_6a0f68d7-40e8-482c-b358-a1900c67ac4d.png",
+            "name": "matching",
+            "link": "shopify://collections/matching"
+          }
+        },
+        "category_circle_DYJyKb": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/92_d1807a3f-6e88-4d02-8559-7b308fb11a19.png",
+            "name": "Couples",
+            "link": "shopify://collections/couples"
+          }
+        }
+      },
+      "block_order": [
+        "category_circle_b3ci63",
+        "category_circle_CQWaGP",
+        "category_circle_CxJBF9",
+        "category_circle_gbUJ4t",
+        "category_circle_Ftzb7k",
+        "category_circle_EB3KAx",
+        "category_circle_4YiwGg",
+        "category_circle_mX4FqP",
+        "category_circle_jGkwaW",
+        "category_circle_xhcVGk",
+        "category_circle_DYJyKb"
+      ],
       "settings": {
         "show_hero": true,
         "hero_image_1": "shopify://shop_images/Heroine_Creatives_20.png",

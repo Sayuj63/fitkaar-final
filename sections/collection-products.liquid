@@ -10,20 +10,20 @@
       "type": "checkbox",
       "id": "show_hero",
       "label": "Show hero creative on this collection",
-      "info": "Upload the desktop and mobile images below. If you leave both blank, the Shopify Admin → Collection Image is used as a fallback.",
+      "info": "IMPORTANT: These image pickers apply to EVERY collection that shares this template (site-wide default). To upload a hero that shows on ONE collection only, use either (a) Shopify Admin → Products → Collections → [collection] → Image field, or (b) collection metafields custom.hero_desktop / custom.hero_mobile (and optional custom.hero_desktop_2 / custom.hero_mobile_2 for slide 2). Priority: metafield → collection image → the pickers below.",
       "default": true
     },
     {
       "type": "image_picker",
       "id": "hero_image_1",
-      "label": "Desktop creative (Slide 1)",
-      "info": "Wide landscape banner shown on laptop/desktop. If left blank, the mobile creative (or Shopify collection image) is used."
+      "label": "Desktop creative (Slide 1) — site-wide fallback",
+      "info": "Used on ALL collections that don't have their own hero via metafield or Collection Image. Leave blank if you want per-collection heroes only."
     },
     {
       "type": "image_picker",
       "id": "hero_image_mobile",
-      "label": "Mobile creative (Slide 1)",
-      "info": "Square (1:1) or portrait image shown on phones (≤767 px). If left blank, the desktop creative is used on mobile too."
+      "label": "Mobile creative (Slide 1) — site-wide fallback",
+      "info": "Site-wide mobile fallback. Per-collection mobile hero: set collection metafield custom.hero_mobile."
     },
     {
       "type": "checkbox",
@@ -1055,30 +1055,73 @@
     {%- comment -%} Hero: hidden on /collections/all (category circles lead instead) {%- endcomment -%}
     {%- if collection.handle != 'all' -%}
       {%- liquid
-        assign slide1_desktop = section.settings.hero_image_1
+        # Per-collection sources (highest priority): collection metafields, then native collection.image.
+        # Section settings are a theme-wide fallback only — they apply to every collection that shares
+        # this template, so they must not override per-collection uploads.
+        assign mf_desk_1 = collection.metafields.custom.hero_desktop
+        assign mf_mob_1  = collection.metafields.custom.hero_mobile
+        assign mf_desk_2 = collection.metafields.custom.hero_desktop_2
+        assign mf_mob_2  = collection.metafields.custom.hero_mobile_2
+
+        assign slide1_desktop = mf_desk_1
+        if slide1_desktop == blank
+          assign slide1_desktop = collection.image
+        endif
+        if slide1_desktop == blank
+          assign slide1_desktop = section.settings.hero_image_1
+        endif
         if slide1_desktop == blank
           assign slide1_desktop = hero_img
         endif
         if slide1_desktop == blank
+          assign slide1_desktop = mf_mob_1
+        endif
+        if slide1_desktop == blank
           assign slide1_desktop = section.settings.hero_image_mobile
         endif
-        assign slide1_mobile = section.settings.hero_image_mobile
+
+        assign slide1_mobile = mf_mob_1
+        if slide1_mobile == blank
+          assign slide1_mobile = mf_desk_1
+        endif
+        if slide1_mobile == blank
+          assign slide1_mobile = collection.image
+        endif
+        if slide1_mobile == blank
+          assign slide1_mobile = section.settings.hero_image_mobile
+        endif
         if slide1_mobile == blank
           assign slide1_mobile = section.settings.hero_image_1
         endif
         if slide1_mobile == blank
           assign slide1_mobile = hero_img
         endif
-        assign slide2_desktop = section.settings.hero_image_2
+
+        assign slide2_desktop = mf_desk_2
+        if slide2_desktop == blank
+          assign slide2_desktop = mf_mob_2
+        endif
+        if slide2_desktop == blank
+          assign slide2_desktop = section.settings.hero_image_2
+        endif
         if slide2_desktop == blank and section.settings.hero_image_2_mobile != blank
           assign slide2_desktop = section.settings.hero_image_2_mobile
         endif
-        assign slide2_mobile = section.settings.hero_image_2_mobile
+
+        assign slide2_mobile = mf_mob_2
+        if slide2_mobile == blank
+          assign slide2_mobile = mf_desk_2
+        endif
+        if slide2_mobile == blank
+          assign slide2_mobile = section.settings.hero_image_2_mobile
+        endif
         if slide2_mobile == blank and section.settings.hero_image_2 != blank
           assign slide2_mobile = section.settings.hero_image_2
         endif
+
+        # Slide 2 only exists when the merchant explicitly set one for this collection or theme-wide.
         assign has_slide2 = false
-        if section.settings.hero_image_2 != blank or section.settings.hero_image_2_mobile != blank
+        if mf_desk_2 != blank or mf_mob_2 != blank or section.settings.hero_image_2 != blank or section.settings.hero_image_2_mobile != blank
           assign has_slide2 = true
         endif
       -%}

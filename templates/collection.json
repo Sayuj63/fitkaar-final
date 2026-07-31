@@ -76,14 +76,6 @@
             "link": "shopify://collections/zodiac-signs"
           }
         },
-        "category_circle_jGkwaW": {
-          "type": "category_circle",
-          "settings": {
-            "image": "shopify://shop_images/94_a8f14926-47e9-4075-87aa-d4b6f0c75a80.png",
-            "name": "Pride collection",
-            "link": "shopify://collections/pride-month-collection"
-          }
-        },
         "category_circle_xhcVGk": {
           "type": "category_circle",
           "settings": {
@@ -110,7 +102,6 @@
         "category_circle_EB3KAx",
         "category_circle_4YiwGg",
         "category_circle_mX4FqP",
-        "category_circle_jGkwaW",
         "category_circle_xhcVGk",
         "category_circle_DYJyKb"
       ],

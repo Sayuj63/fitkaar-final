@@ -14,7 +14,7 @@
       "announcement-bar": {
         "type": "announcement-bar",
         "settings": {
-          "text": "Free Shipping On All Orders!",
+          "text": "Birthday sale is live!",
           "highlight_text": "",
           "separator": "✦",
           "speed": 40,

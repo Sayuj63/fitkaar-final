@@ -28,14 +28,6 @@
             "link": "shopify://pages/process"
           }
         },
-        "category_circle_CxJBF9": {
-          "type": "category_circle",
-          "settings": {
-            "image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_10.png",
-            "name": "Fitkaar x unfold",
-            "link": "shopify://collections/unfold-x-fitkaar"
-          }
-        },
         "category_circle_gbUJ4t": {
           "type": "category_circle",
           "settings": {
@@ -96,7 +88,6 @@
       "block_order": [
         "category_circle_b3ci63",
         "category_circle_CQWaGP",
-        "category_circle_CxJBF9",
         "category_circle_gbUJ4t",
         "category_circle_Ftzb7k",
         "category_circle_EB3KAx",

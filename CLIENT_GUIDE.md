@@ -478,6 +478,97 @@ For technical help or to request features, contact your developer.
 
 ---
 
+## Product Customisation Fields (Tag-Driven, Future-Proof)
+
+Every product can show a "Personalise Your Order" section on its PDP with any combination of **text fields**, **description (multi-line) fields**, and **photo upload fields**. Everything is controlled by **product tags** — no code or theme edits needed. Add as many fields as you want, name them whatever you want.
+
+### Step 1 — Enable customisation on the product
+
+1. Go to **Products** → open the product → **Tags** box (right sidebar).
+2. Add the tag: `customisable`
+3. Save.
+
+Without this tag, no personalisation section appears. Once added, the section shows and every field tag you add becomes a required input on the PDP.
+
+### Step 2 — Add fields using tags
+
+Add one tag per field. Use **underscores (`_`) for spaces** in the label.
+
+| You want… | Add this tag | Shows up as |
+|---|---|---|
+| Single-line text input | `cf-text:Pet_Name` | Text box labelled "Pet Name" |
+| Multi-line description | `cf-textarea:Special_Message` | Big text area labelled "Special Message" |
+| Photo upload | `cf-photo:Reference_Photo` | Upload button labelled "Reference Photo" |
+
+**You can mix and add as many as you like.** Examples:
+
+- Pet portrait hoodie → `customisable`, `cf-text:Pet_Name`, `cf-photo:Pet_Photo`, `cf-textarea:Any_Special_Instructions`
+- Anniversary tee → `customisable`, `cf-text:Names`, `cf-text:Date`, `cf-photo:Couple_Photo`
+- Baby shower gift → `customisable`, `cf-text:Baby_Name`, `cf-text:Date_of_Birth`, `cf-photo:Reference_1`, `cf-photo:Reference_2`
+
+### Step 3 — Control the order fields appear in
+
+Shopify orders tags alphabetically. To force a specific display order, prefix labels with numbers:
+
+- `cf-text:01_Pet_Name`
+- `cf-photo:02_Pet_Photo`
+- `cf-textarea:03_Notes`
+
+(If you don't care, skip this — labels just show as-is.)
+
+### Photo uploads — one-time setup
+
+Photo fields upload directly from the customer's phone/computer to a hosted image URL that arrives with the order.
+
+1. Go to **imgbb.com** → sign up (free) → **About → API** → copy your API key.
+2. In Shopify: **Customize theme** → open any product page → **Product Page** section → **ImgBB API Key** → paste the key → **Save**.
+
+Done — it applies to every product with a `cf-photo:` tag.
+
+> If you leave the ImgBB key blank, photo fields fall back to a "paste share link" text input (customer pastes a Google Drive / Photos link). Uploads are the smoother experience — use them.
+
+### Legacy tags (still work)
+
+Older products may already use these — they continue to work, no need to change:
+
+- `cf-photos-2` → adds "Photo 1" and "Photo 2" upload fields
+- `cf-initials` → adds an "Initials" text field
+- `cf-date` → adds a "Date (DD/MM/YYYY)" text field
+
+### Where the customer's inputs show up
+
+Every filled field is attached to the cart line item as an order property. On the **Order details** page in Shopify admin (and in the order confirmation email), you'll see them listed under the product, e.g.:
+
+```
+Fitkaar Pet Portrait Hoodie
+  Pet Name: Bruno
+  Pet Photo: https://i.ibb.co/xxxxx/bruno.jpg
+  Special Instructions: Please make the background pink
+```
+
+Uploaded photos are clickable URLs — open them to download the full-resolution image.
+
+### Rules & tips
+
+- All fields are **required** — the "Add to Cart" button stays disabled until every field is filled.
+- Field labels are shown to the customer exactly as you type them (with underscores turned into spaces). Keep them clear and short.
+- Don't use commas in labels (Shopify tags don't support commas). Use dashes or slashes instead: `cf-text:Size_S-M-L`.
+- To remove a field, delete the tag. To rename, delete the old tag and add a new one.
+- Changes take effect immediately — no theme republish needed.
+
+### Quick reference card
+
+```
+customisable                     ← turn ON personalisation
+cf-text:Label                    ← single-line text
+cf-textarea:Label                ← multi-line description
+cf-photo:Label                   ← image upload
+```
+
+Use `_` for spaces. Prefix `01_`, `02_` for ordering. That's it.
+
+---
+
 **Last Updated**: April 2026  
 **Theme Version**: Fitkaar Final v2  
 **Shopify Store**: nca4r0-at.myshopify.com

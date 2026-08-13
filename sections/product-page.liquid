@@ -42,7 +42,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Add tags to each product to control its fields. Tag 'customisable' enables the section. Tag 'cf-photos-2' adds 2 photo fields. Tag 'cf-initials' adds an Initials field. Tag 'cf-date' adds a Date field."
+      "content": "Add tags to each product to control its fields. Tag 'customisable' enables the section. Add ANY number of fields via labelled tags: 'cf-text:Pet_Name' (single-line), 'cf-textarea:Message' (multi-line), 'cf-photo:Reference_Photo' (image upload). Use underscores for spaces. Fields appear in alphabetical tag order — prefix labels with 01_, 02_ to control order. Legacy tags still work: 'cf-photos-2', 'cf-initials', 'cf-date'."
     },
     {
       "type": "text",
@@ -828,6 +828,11 @@
     font-family: inherit;
     box-sizing: border-box;
   }
+  .custom-field-textarea {
+    resize: vertical;
+    min-height: 72px;
+    font-family: inherit;
+  }
   .custom-field-input:focus {
     border-color: var(--color-primary);
   }
@@ -1520,33 +1525,51 @@
 })();
 </script>
 
-{%- comment -%}Tag-driven customisation — reads product.tags, no customizer settings needed{%- endcomment -%}
+{%- comment -%}Tag-driven customisation — reads product.tags, no customizer settings needed.
+  Field format in _cf_fields: "type|label" where type is photo|text|textarea.
+  Supports new labelled tags (cf-text:Label, cf-textarea:Label, cf-photo:Label)
+  AND legacy tags (cf-photos-N, cf-initials, cf-date).{%- endcomment -%}
 {%- assign _customisable = false -%}
-{%- assign _cf_photos = 0 -%}
-{%- assign _cf_initials = false -%}
-{%- assign _cf_date = false -%}
+{%- assign _cf_fields = '' | split: '' -%}
 {%- for _tag in product.tags -%}
-  {%- assign _tl = _tag | downcase | strip -%}
+  {%- assign _orig = _tag | strip -%}
+  {%- assign _tl = _orig | downcase -%}
   {%- if _tl == 'customisable' or _tl == 'customizable' -%}
     {%- assign _customisable = true -%}
   {%- elsif _tl contains 'cf-photos-' -%}
-    {%- assign _cf_photos = _tl | remove: 'cf-photos-' | plus: 0 -%}
+    {%- assign _n = _tl | remove: 'cf-photos-' | plus: 0 -%}
+    {%- for i in (1.._n) -%}
+      {%- assign _entry = 'photo|Photo ' | append: i -%}
+      {%- assign _cf_fields = _cf_fields | push: _entry -%}
+    {%- endfor -%}
   {%- elsif _tl == 'cf-initials' -%}
-    {%- assign _cf_initials = true -%}
+    {%- assign _cf_fields = _cf_fields | push: 'text|Initials' -%}
   {%- elsif _tl == 'cf-date' -%}
-    {%- assign _cf_date = true -%}
+    {%- assign _cf_fields = _cf_fields | push: 'text|Date (DD/MM/YYYY)' -%}
+  {%- elsif _tl contains 'cf-textarea:' -%}
+    {%- assign _lbl = _orig | slice: 12, 200 | replace: '_', ' ' | strip -%}
+    {%- assign _entry = 'textarea|' | append: _lbl -%}
+    {%- assign _cf_fields = _cf_fields | push: _entry -%}
+  {%- elsif _tl contains 'cf-photo:' -%}
+    {%- assign _lbl = _orig | slice: 9, 200 | replace: '_', ' ' | strip -%}
+    {%- assign _entry = 'photo|' | append: _lbl -%}
+    {%- assign _cf_fields = _cf_fields | push: _entry -%}
+  {%- elsif _tl contains 'cf-text:' -%}
+    {%- assign _lbl = _orig | slice: 8, 200 | replace: '_', ' ' | strip -%}
+    {%- assign _entry = 'text|' | append: _lbl -%}
+    {%- assign _cf_fields = _cf_fields | push: _entry -%}
   {%- endif -%}
 {%- endfor -%}
 
 {%- comment -%}Build Alpine customFields initial state as valid JSON{%- endcomment -%}
 {%- assign _cf_pairs = '' | split: '' -%}
 {%- if _customisable -%}
-  {%- for i in (1.._cf_photos) -%}
-    {%- assign _pk = 'Photo ' | append: i | json | append: ':""' -%}
-    {%- assign _cf_pairs = _cf_pairs | push: _pk -%}
+  {%- for _f in _cf_fields -%}
+    {%- assign _parts = _f | split: '|' -%}
+    {%- assign _lbl = _parts[1] -%}
+    {%- assign _kv = _lbl | json | append: ':""' -%}
+    {%- assign _cf_pairs = _cf_pairs | push: _kv -%}
   {%- endfor -%}
-  {%- if _cf_initials -%}{%- assign _cf_pairs = _cf_pairs | push: '"Initials":""' -%}{%- endif -%}
-  {%- if _cf_date -%}{%- assign _cf_pairs = _cf_pairs | push: '"Date (DD\/MM\/YYYY)":""' -%}{%- endif -%}
 {%- endif -%}
 {%- assign _cf_joined = _cf_pairs | join: ',' -%}
 {%- assign custom_fields_json = '{' | append: _cf_joined | append: '}' -%}
@@ -1957,72 +1980,51 @@
         <p class="custom-fields-instructions">{{ section.settings.customisation_instructions }}</p>
         {% endif %}
 
-        {% for i in (1.._cf_photos) %}
-          {% assign _plbl = 'Photo ' | append: i %}
+        {% for _f in _cf_fields %}
+          {% assign _parts = _f | split: '|' %}
+          {% assign _ftype = _parts[0] %}
+          {% assign _flabel = _parts[1] %}
+          {% assign _pk = _flabel | json %}
           <div class="custom-field">
-            <label class="custom-field-label">{{ _plbl }} <span class="custom-field-req">*</span></label>
-            {% if section.settings.imgbb_api_key != blank %}
-            <div class="custom-upload-wrap">
-              {% assign _pk = _plbl | json %}
-              <label class="custom-upload-btn" :class='{ "custom-upload-btn--done": customFields[{{ _pk }}], "custom-upload-btn--uploading": uploadingFields[{{ _pk }}] }'>
-                <input type="file" accept="image/*" style="display:none" @change='uploadPhoto({{ _pk }}, $event)' :disabled='uploadingFields[{{ _pk }}]'>
-                <template x-if='!uploadingFields[{{ _pk }}] && !customFields[{{ _pk }}]'>
-                  <span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-                    Choose Photo
-                  </span>
+            <label class="custom-field-label">{{ _flabel }} <span class="custom-field-req">*</span></label>
+            {% if _ftype == 'photo' %}
+              {% if section.settings.imgbb_api_key != blank %}
+              <div class="custom-upload-wrap">
+                <label class="custom-upload-btn" :class='{ "custom-upload-btn--done": customFields[{{ _pk }}], "custom-upload-btn--uploading": uploadingFields[{{ _pk }}] }'>
+                  <input type="file" accept="image/*" style="display:none" @change='uploadPhoto({{ _pk }}, $event)' :disabled='uploadingFields[{{ _pk }}]'>
+                  <template x-if='!uploadingFields[{{ _pk }}] && !customFields[{{ _pk }}]'>
+                    <span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                      Choose Photo
+                    </span>
+                  </template>
+                  <template x-if='uploadingFields[{{ _pk }}]'>
+                    <span class="custom-upload-spinner">Uploading…</span>
+                  </template>
+                  <template x-if='!uploadingFields[{{ _pk }}] && customFields[{{ _pk }}]'>
+                    <span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      Uploaded — tap to change
+                    </span>
+                  </template>
+                </label>
+                <template x-if='uploadPreviews[{{ _pk }}]'>
+                  <img :src='uploadPreviews[{{ _pk }}]' class="custom-upload-preview" alt="Preview">
                 </template>
-                <template x-if='uploadingFields[{{ _pk }}]'>
-                  <span class="custom-upload-spinner">Uploading…</span>
+                <template x-if='uploadErrors[{{ _pk }}]'>
+                  <p class="custom-upload-error" x-text='uploadErrors[{{ _pk }}]'></p>
                 </template>
-                <template x-if='!uploadingFields[{{ _pk }}] && customFields[{{ _pk }}]'>
-                  <span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    Uploaded — tap to change
-                  </span>
-                </template>
-              </label>
-              <template x-if='uploadPreviews[{{ _pk }}]'>
-                <img :src='uploadPreviews[{{ _pk }}]' class="custom-upload-preview" alt="Preview">
-              </template>
-              <template x-if='uploadErrors[{{ _pk }}]'>
-                <p class="custom-upload-error" x-text='uploadErrors[{{ _pk }}]'></p>
-              </template>
-            </div>
+              </div>
+              {% else %}
+              <input type="text" class="custom-field-input" x-model='customFields[{{ _pk }}]' placeholder="Paste share link (Google Drive / Photos)">
+              {% endif %}
+            {% elsif _ftype == 'textarea' %}
+              <textarea class="custom-field-input custom-field-textarea" rows="3" x-model='customFields[{{ _pk }}]' placeholder="{{ _flabel | escape }}"></textarea>
             {% else %}
-            <input
-              type="text"
-              class="custom-field-input"
-              x-model='customFields[{{ _pk }}]'
-              placeholder="Paste share link (Google Drive / Photos)"
-            >
+              <input type="text" class="custom-field-input" x-model='customFields[{{ _pk }}]' placeholder="{{ _flabel | escape }}">
             {% endif %}
           </div>
         {% endfor %}
-
-        {% if _cf_initials %}
-        <div class="custom-field">
-          <label class="custom-field-label">Initials <span class="custom-field-req">*</span></label>
-          <input
-            type="text"
-            class="custom-field-input"
-            x-model='customFields["Initials"]'
-            placeholder="e.g. AB"
-          >
-        </div>
-        {% endif %}
-
-        {% if _cf_date %}
-        <div class="custom-field">
-          <label class="custom-field-label">Date (DD/MM/YYYY) <span class="custom-field-req">*</span></label>
-          <input
-            type="text"
-            class="custom-field-input"
-            x-model='customFields["Date (DD/MM/YYYY)"]'
-            placeholder="e.g. 25/12/2025"
-          >
-        </div>
-        {% endif %}
 
         <p class="custom-fields-note" x-show="!customisationValid" x-cloak>
           ⚠ Please fill in all fields above before adding to cart.

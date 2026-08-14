@@ -189,16 +189,10 @@
         "image_7": "shopify://shop_images/Reviews_2.png",
         "image_8": "shopify://shop_images/Reviews_11.png"
       }
-    },
-    "rakhi_tie_section_fiieXJ": {
-      "type": "rakhi-tie-section",
-      "name": "Rakhi Tie Animation",
-      "settings": {}
     }
   },
   "order": [
     "slideshow",
-    "rakhi_tie_section_fiieXJ",
     "cta_double",
     "interactive_builder",
     "best_sellers",

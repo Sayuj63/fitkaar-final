@@ -2,66 +2,88 @@
   <p class="rakhi-tie-label">this rakhi</p>
   <h2 class="rakhi-tie-heading">tie one for them</h2>
 
-  <svg width="240" height="260" viewBox="0 0 240 260" class="rakhi-tie-svg">
-    <path d="M90 40 C85 20 95 10 110 10 C125 10 130 25 128 45 L128 90 L92 90 Z" fill="none" stroke="#0A1F44" stroke-width="2"/>
-    <ellipse cx="110" cy="150" rx="50" ry="65" fill="none" stroke="#0A1F44" stroke-width="2"/>
-    <circle id="rakhiThread" cx="110" cy="140" r="46" fill="none" stroke="#B8202E" stroke-width="10" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="289"/>
-    <g id="rakhiBow" style="opacity:0;">
-      <circle cx="90" cy="134" r="14" fill="#E7B10A"/>
-      <circle cx="130" cy="134" r="14" fill="#E7B10A"/>
-      <circle cx="110" cy="134" r="8" fill="#8A1C1C"/>
-    </g>
-  </svg>
+  <div class="rakhi-scene">
+    <img src="{{ 'rakhi-wrist.png' | asset_url }}" alt="Wrist" class="rakhi-wrist-img">
+    <img id="rakhiThreadImg" src="{{ 'rakhi-thread.png' | asset_url }}" alt="Rakhi" class="rakhi-thread-img">
+  </div>
 
   <button id="rakhiTieBtn" class="rakhi-tie-btn">Tie the rakhi</button>
   <p id="rakhiMsg" class="rakhi-tie-msg">This Rakhi, gift something they'll actually wear.</p>
 </div>
 
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600&family=Raleway:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
 .rakhi-tie-wrap {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 1.5rem 1rem;
   background: #FAF6EE;
+  max-width: 420px;
+  margin: 0 auto;
 }
 .rakhi-tie-label {
+  font-family: 'Raleway', sans-serif;
   font-size: 13px;
   letter-spacing: 0.5px;
   color: #5F5E5A;
-  margin: 0 0 4px;
+  margin: 0 0 2px;
 }
 .rakhi-tie-heading {
-  font-size: 26px;
-  font-weight: 500;
+  font-family: 'League Spartan', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
   color: #0A1F44;
-  margin: 0 0 1.5rem;
+  margin: 0 0 1rem;
 }
-.rakhi-tie-svg { margin: 0 auto; display: block; }
-#rakhiThread { transition: stroke-dashoffset 1.6s ease; }
-#rakhiBow { transition: opacity 0.4s ease 1.3s; }
+.rakhi-scene {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.rakhi-wrist-img {
+  width: 100%;
+  display: block;
+}
+.rakhi-thread-img {
+  position: absolute;
+  width: 25%;
+  top: 40%;
+  left: 45%;
+  opacity: 0;
+  transform: scale(0.4) rotate(-15deg);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rakhi-thread-img.tied {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
 .rakhi-tie-btn {
-  margin-top: 1.5rem;
-  padding: 10px 24px;
+  margin-top: 1rem;
+  padding: 8px 20px;
   background: #0A1F44;
   color: #fff;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px;
   cursor: pointer;
 }
 .rakhi-tie-msg {
+  font-family: 'Raleway', sans-serif;
   opacity: 0;
-  transition: opacity 0.5s ease 1.6s;
-  font-size: 15px;
+  transition: opacity 0.5s ease 0.6s;
+  font-size: 14px;
   color: #5F5E5A;
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
+.rakhi-tie-msg.show { opacity: 1; }
 </style>
 
 <script>
 document.getElementById('rakhiTieBtn').addEventListener('click', function() {
-  document.getElementById('rakhiThread').style.strokeDashoffset = '0';
-  document.getElementById('rakhiBow').style.opacity = '1';
-  document.getElementById('rakhiMsg').style.opacity = '1';
+  document.getElementById('rakhiThreadImg').classList.add('tied');
+  document.getElementById('rakhiMsg').classList.add('show');
   this.disabled = true;
 });
 </script>
@@ -70,10 +92,6 @@ document.getElementById('rakhiTieBtn').addEventListener('click', function() {
 {
   "name": "Rakhi Tie Animation",
   "settings": [],
-  "presets": [
-    {
-      "name": "Rakhi Tie Animation"
-    }
-  ]
+  "presets": [{ "name": "Rakhi Tie Animation" }]
 }
 {% endschema %}

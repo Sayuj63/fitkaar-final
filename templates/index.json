@@ -189,6 +189,11 @@
         "image_7": "shopify://shop_images/Reviews_2.png",
         "image_8": "shopify://shop_images/Reviews_11.png"
       }
+    },
+    "rakhi_tie_section_GfhVgJ": {
+      "type": "rakhi-tie-section",
+      "name": "Rakhi Tie Animation",
+      "settings": {}
     }
   },
   "order": [
@@ -197,6 +202,7 @@
     "interactive_builder",
     "best_sellers",
     "reels",
-    "testimonials_carousel_Lx9p4g"
+    "testimonials_carousel_Lx9p4g",
+    "rakhi_tie_section_GfhVgJ"
   ]
 }

@@ -1362,7 +1362,7 @@
               </button>
               <div class="fk-mob-acc-panel" x-show="mobAccT" x-transition.opacity.duration.220ms style="display: none;">
                 <div class="fk-mob-acc-panel-inner">
-                  {%- if section.settings.col2_l1_label != blank -%}<a href="{{ section.settings.col2_l1_url | default: '/collections/pride-month-collection' }}" @click="closeMobileMenu()">{{ section.settings.col2_l1_label }}</a>{%- endif -%}
+                  {%- if section.settings.col2_l1_label != blank -%}<a href="{{ section.settings.col2_l1_url | default: '/collections/pride-month-collection' }}" class="fk-highlight-link" @click="closeMobileMenu()">{{ section.settings.col2_l1_label }}</a>{%- endif -%}
                   {%- if section.settings.col2_l2_label != blank -%}<a href="{{ section.settings.col2_l2_url | default: '/collections/food-and-drinks' }}" @click="closeMobileMenu()">{{ section.settings.col2_l2_label }}</a>{%- endif -%}
                   {%- if section.settings.col2_l3_label != blank -%}<a href="{{ section.settings.col2_l3_url | default: '/collections/sports-and-fitness' }}" @click="closeMobileMenu()">{{ section.settings.col2_l3_label }}</a>{%- endif -%}
                   {%- if section.settings.col2_l4_label != blank -%}<a href="{{ section.settings.col2_l4_url | default: '/collections/work-and-hobbies' }}" @click="closeMobileMenu()">{{ section.settings.col2_l4_label }}</a>{%- endif -%}

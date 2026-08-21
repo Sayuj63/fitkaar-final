@@ -13,27 +13,9 @@
       "type": "collection-products",
       "settings": {
         "show_hero": true,
-        "hero_fallback_first_product": false,
         "hero_image_mobile": "shopify://shop_images/46_e5931eee-f209-4f9f-9a7e-6904ec2cc832.png",
-        "show_categories": false,
-        "cat_1_name": "Essentials",
-        "cat_1_link": "",
-        "cat_2_name": "Only at Fitkaar",
-        "cat_2_link": "",
-        "cat_3_name": "Food & Drinks",
-        "cat_3_link": "",
-        "cat_4_name": "Sports & Fitness",
-        "cat_4_link": "",
-        "cat_5_name": "Work & Hobbies",
-        "cat_5_link": "",
-        "cat_6_name": "Couples",
-        "cat_6_link": "",
-        "cat_7_name": "Matching",
-        "cat_7_link": "",
-        "cat_8_name": "Pun Intended",
-        "cat_8_link": "",
-        "cat_9_name": "Zodiac Signs",
-        "cat_9_link": ""
+        "hero_fallback_first_product": false,
+        "show_categories": false
       }
     }
   },

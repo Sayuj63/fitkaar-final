@@ -1530,7 +1530,7 @@
   Supports new labelled tags (cf-text:Label, cf-textarea:Label, cf-photo:Label)
   AND legacy tags (cf-photos-N, cf-initials, cf-date).{%- endcomment -%}
 {%- assign _customisable = false -%}
-{%- assign _cf_fields = '' | split: '' -%}
+{%- assign _cf_raw = '' -%}
 {%- for _tag in product.tags -%}
   {%- assign _orig = _tag | strip -%}
   {%- assign _tl = _orig | downcase -%}
@@ -1539,40 +1539,45 @@
   {%- elsif _tl contains 'cf-photos-' -%}
     {%- assign _n = _tl | remove: 'cf-photos-' | plus: 0 -%}
     {%- for i in (1.._n) -%}
-      {%- assign _entry = 'photo|Photo ' | append: i -%}
-      {%- assign _cf_fields = _cf_fields | push: _entry -%}
+      {%- assign _cf_raw = _cf_raw | append: 'photo|Photo ' | append: i | append: '~~' -%}
     {%- endfor -%}
   {%- elsif _tl == 'cf-initials' -%}
-    {%- assign _cf_fields = _cf_fields | push: 'text|Initials' -%}
+    {%- assign _cf_raw = _cf_raw | append: 'text|Initials~~' -%}
   {%- elsif _tl == 'cf-date' -%}
-    {%- assign _cf_fields = _cf_fields | push: 'text|Date (DD/MM/YYYY)' -%}
+    {%- assign _cf_raw = _cf_raw | append: 'text|Date (DD/MM/YYYY)~~' -%}
   {%- elsif _tl contains 'cf-textarea:' -%}
     {%- assign _lbl = _orig | slice: 12, 200 | replace: '_', ' ' | strip -%}
-    {%- assign _entry = 'textarea|' | append: _lbl -%}
-    {%- assign _cf_fields = _cf_fields | push: _entry -%}
+    {%- assign _cf_raw = _cf_raw | append: 'textarea|' | append: _lbl | append: '~~' -%}
   {%- elsif _tl contains 'cf-photo:' -%}
     {%- assign _lbl = _orig | slice: 9, 200 | replace: '_', ' ' | strip -%}
-    {%- assign _entry = 'photo|' | append: _lbl -%}
-    {%- assign _cf_fields = _cf_fields | push: _entry -%}
+    {%- assign _cf_raw = _cf_raw | append: 'photo|' | append: _lbl | append: '~~' -%}
   {%- elsif _tl contains 'cf-text:' -%}
     {%- assign _lbl = _orig | slice: 8, 200 | replace: '_', ' ' | strip -%}
-    {%- assign _entry = 'text|' | append: _lbl -%}
-    {%- assign _cf_fields = _cf_fields | push: _entry -%}
+    {%- assign _cf_raw = _cf_raw | append: 'text|' | append: _lbl | append: '~~' -%}
   {%- endif -%}
 {%- endfor -%}
+{%- assign _cf_trim = _cf_raw | remove_last: '~~' -%}
+{%- if _cf_trim != blank -%}
+  {%- assign _cf_fields = _cf_trim | split: '~~' -%}
+{%- else -%}
+  {%- assign _cf_fields = '' | split: ',' -%}
+{%- endif -%}
 
 {%- comment -%}Build Alpine customFields initial state as valid JSON{%- endcomment -%}
-{%- assign _cf_pairs = '' | split: '' -%}
+{%- assign _cf_pairs_str = '' -%}
 {%- if _customisable -%}
   {%- for _f in _cf_fields -%}
     {%- assign _parts = _f | split: '|' -%}
     {%- assign _lbl = _parts[1] -%}
     {%- assign _kv = _lbl | json | append: ':""' -%}
-    {%- assign _cf_pairs = _cf_pairs | push: _kv -%}
+    {%- if forloop.first -%}
+      {%- assign _cf_pairs_str = _kv -%}
+    {%- else -%}
+      {%- assign _cf_pairs_str = _cf_pairs_str | append: ',' | append: _kv -%}
+    {%- endif -%}
   {%- endfor -%}
 {%- endif -%}
-{%- assign _cf_joined = _cf_pairs | join: ',' -%}
-{%- assign custom_fields_json = '{' | append: _cf_joined | append: '}' -%}
+{%- assign custom_fields_json = '{' | append: _cf_pairs_str | append: '}' -%}
 
 {%- comment -%}Detect option types early so is_size2 is correct in the HTML rendering loop{%- endcomment -%}
 {%- assign size_opt = null -%}

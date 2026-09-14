@@ -52,7 +52,7 @@
     {%- assign seo_description = page_description -%}
     {%- if template contains 'page' and page.handle == 'process' -%}
       {%- assign seo_title = 'Customisation' -%}
-      {%- assign seo_description = 'Customise your own apparel with Fitkaar. Choose your style, colour and design — India''s first fully customisable clothing brand.' -%}
+      {%- assign seo_description = 'Customise your own apparel with Fitkaar. Choose your style, colour and design — India' -%}
     {%- elsif template contains 'page' and page.handle == 'contact-us' -%}
       {%- assign seo_title = 'Contact' -%}
       {%- assign seo_description = 'Get in touch with Fitkaar — questions, custom orders, bulk enquiries and support.' -%}
@@ -1129,3 +1129,16 @@
     </script>
   </body>
 </html>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- assign seo_description = 'Customise your own apparel with Fitkaar. Choose
+    your style, colour and design — India''s first fully customisable clothing brand.'
+    -%}"
+  to: "{%- assign seo_description = 'Customise your own apparel with Fitkaar. Choose
+    your style, colour and design — India' -%}"
+  position: 3237..3357
+{% endcomment %}

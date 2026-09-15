@@ -1861,6 +1861,59 @@
           {%- if size_opt_2 and option.position == size_opt_2.position -%}
             {%- assign is_size2 = true -%}
           {%- endif -%}
+          <style>
+  .fk-banner{border:1.5px solid #111111;border-radius:2px;padding:16px 18px;display:flex;align-items:center;gap:14px;background:#ffffff;position:relative;flex-wrap:wrap;margin-bottom:20px;}
+  .fk-banner::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#111111;}
+  .fk-banner-icon{font-size:22px;line-height:1;flex-shrink:0;}
+  .fk-banner-text{flex:1;min-width:200px;}
+  .fk-banner-title{font-size:14.5px;font-weight:700;margin:0 0 6px;}
+  .fk-banner-sub{font-size:12.5px;color:#6b6b6b;margin:0;}
+  .fk-banner .fk-countdown{display:flex;align-items:center;gap:5px;}
+  .fk-banner .fk-countdown .box{background:#f0f0f0;color:#111111;border-radius:3px;padding:3px 7px;min-width:30px;text-align:center;font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;transition:transform .15s ease, background .15s ease;}
+  .fk-banner .fk-countdown .box.pulse{background:#e5e5e5;transform:scale(1.08);}
+  .fk-banner .fk-countdown .sep{font-size:14px;font-weight:800;opacity:.7;margin:0 -1px;}
+  .fk-banner .fk-countdown .lbl{font-size:9px;text-transform:lowercase;opacity:.85;display:block;margin-top:1px;font-weight:600;}
+</style>
+<div class="fk-banner">
+  <div class="fk-banner-icon">🎁</div>
+  <div class="fk-banner-text">
+    <p class="fk-banner-title">Boyfriend's Day is coming up, surprise him!</p>
+    <p class="fk-banner-sub">Order in time so it lands before the day.</p>
+  </div>
+  <span class="fk-countdown" id="product-clock">
+    <span class="box"><span id="p-d">00</span><span class="lbl">days</span></span>
+    <span class="sep">:</span>
+    <span class="box"><span id="p-h">00</span><span class="lbl">hrs</span></span>
+    <span class="sep">:</span>
+    <span class="box"><span id="p-m">00</span><span class="lbl">min</span></span>
+    <span class="sep">:</span>
+    <span class="box"><span id="p-s">00</span><span class="lbl">sec</span></span>
+  </span>
+</div>
+<script>
+  (function(){
+    const fkTarget = new Date("2026-10-03T00:00:00+05:30").getTime();
+    function fkPad(n){ return String(n).padStart(2,'0'); }
+    function fkSetSeg(id, value){
+      const el = document.getElementById(id);
+      if (el && el.textContent !== value){
+        el.textContent = value;
+        const box = el.closest('.box');
+        box.classList.add('pulse');
+        setTimeout(() => box.classList.remove('pulse'), 150);
+      }
+    }
+    function fkTick(){
+      const diff = Math.max(0, fkTarget - Date.now());
+      fkSetSeg('p-d', fkPad(Math.floor(diff / 86400000)));
+      fkSetSeg('p-h', fkPad(Math.floor((diff % 86400000) / 3600000)));
+      fkSetSeg('p-m', fkPad(Math.floor((diff % 3600000) / 60000)));
+      fkSetSeg('p-s', fkPad(Math.floor((diff % 60000) / 1000)));
+    }
+    fkTick();
+    setInterval(fkTick, 1000);
+  })();
+</script>
           <div class="variant-section">
             <div class="variant-label size-label-row">
               {%- if is_size2 -%}

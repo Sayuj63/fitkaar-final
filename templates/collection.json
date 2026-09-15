@@ -83,6 +83,14 @@
             "name": "Couples",
             "link": "shopify://collections/couples"
           }
+        },
+        "category_circle_UnnVJn": {
+          "type": "category_circle",
+          "settings": {
+            "image": "shopify://shop_images/Heroine_Creatives_1080_x_1080_px_14.png",
+            "name": "Family",
+            "link": "shopify://collections/family"
+          }
         }
       },
       "block_order": [
@@ -94,7 +102,8 @@
         "category_circle_4YiwGg",
         "category_circle_mX4FqP",
         "category_circle_xhcVGk",
-        "category_circle_DYJyKb"
+        "category_circle_DYJyKb",
+        "category_circle_UnnVJn"
       ],
       "settings": {
         "show_hero": true,

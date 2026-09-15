@@ -110,16 +110,17 @@
 }
 
 .products-grid {
-  display: flex;            /* #41+42: flex so the last row centers when count isn't 5 */
-  flex-wrap: wrap;
+  display: flex;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 1.25rem 1.5rem;
-  margin-bottom: 1rem;       /* #41+42: was 2rem */
+  gap: 1rem;
+  margin-bottom: 1rem;
+  overflow-x: auto;
 }
 .products-grid .product-box {
-  flex: 0 0 calc((100% - 4 * 1.5rem) / 5); /* 5 per row on desktop */
+  flex: 0 0 calc((100% - 5 * 1rem) / 6); /* 6 per row, single line */
+  min-width: 90px;
 }
-
 /* Product Box */
 .product-box {
   display: flex;

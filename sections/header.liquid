@@ -430,6 +430,7 @@
               <div class="fk-shop-col-head">{{ section.settings.col3_title | default: 'Fav People' }}</div>
               {%- if section.settings.col3_l1_label != blank -%}<a href="{{ section.settings.col3_l1_url | default: '/collections/matching' }}">{{ section.settings.col3_l1_label }}</a>{%- endif -%}
               {%- if section.settings.col3_l2_label != blank -%}<a href="{{ section.settings.col3_l2_url | default: '/collections/couples' }}">{{ section.settings.col3_l2_label }}</a>{%- endif -%}
+              {%- if section.settings.col3_l3_label != blank -%}<a href="{{ section.settings.col3_l3_url | default: '/collections/family' }}">{{ section.settings.col3_l3_label }}</a>{%- endif -%}
               {%- if section.settings.col3_cta1_label != blank -%}<a href="{{ section.settings.col3_cta1_url | default: '/pages/bulk-orders' }}" class="fk-shop-col-cta">{{ section.settings.col3_cta1_label }}</a>{%- endif -%}
               {%- if section.settings.col3_cta2_label != blank -%}<a href="{{ section.settings.col3_cta2_url | default: '/products/gift-card' }}" class="fk-shop-col-cta">{{ section.settings.col3_cta2_label }}</a>{%- endif -%}
             </div>

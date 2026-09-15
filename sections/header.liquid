@@ -1385,6 +1385,9 @@
               </div>
             </div>
 
+            <a href="/pages/bulk-orders" class="fk-nav-link" @click="closeMobileNav">Bulk Orders</a>
+<a href="/products/gift-card" class="fk-nav-link" @click="closeMobileNav">Gift Card</a>
+
             <div class="fk-mob-acc">
               <button type="button" class="fk-mob-acc-trigger" @click="mobAccV = !mobAccV" :aria-expanded="mobAccV">
                 <span>{{ section.settings.col3_title | default: 'Fav People' }}</span>
@@ -1394,9 +1397,7 @@
                 <div class="fk-mob-acc-panel-inner">
                   {%- if section.settings.col3_l1_label != blank -%}<a href="{{ section.settings.col3_l1_url | default: '/collections/matching' }}" @click="closeMobileMenu()">{{ section.settings.col3_l1_label }}</a>{%- endif -%}
                   {%- if section.settings.col3_l2_label != blank -%}<a href="{{ section.settings.col3_l2_url | default: '/collections/couples' }}" @click="closeMobileMenu()">{{ section.settings.col3_l2_label }}</a>{%- endif -%}
-                  {%- if section.settings.col3_cta1_label != blank -%}<a href="{{ section.settings.col3_cta1_url | default: '/pages/bulk-orders' }}" class="fk-mob-bulk" @click="closeMobileMenu()">{{ section.settings.col3_cta1_label }}</a>{%- endif -%}
-                  {%- if section.settings.col3_cta2_label != blank -%}<a href="{{ section.settings.col3_cta2_url | default: '/products/gift-card' }}" class="fk-mob-bulk" @click="closeMobileMenu()">{{ section.settings.col3_cta2_label }}</a>{%- endif -%}
-                </div>
+                  
               </div>
             </div>
           </div>

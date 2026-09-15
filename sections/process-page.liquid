@@ -2319,6 +2319,51 @@
   requestAnimationFrame(step);
 })();
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Map circle labels to the exact dropdown option values
+    var labelToValue = {
+      'T-shirts': 'Regular Tee',
+      'Cropped Tee': 'Cropped Tee',
+      'Boxy Vest': 'Boxy Vest',
+      'Sweatshirt': 'Sweatshirt',
+      'Hoodie': 'Hoodie'
+    };
+
+    var boxes = document.querySelectorAll('.product-box');
+
+    boxes.forEach(function (box) {
+      box.style.cursor = 'pointer';
+      box.addEventListener('click', function () {
+        var nameEl = box.querySelector('.product-box-name');
+        if (!nameEl) return;
+
+        var label = nameEl.textContent.trim();
+        var value = labelToValue[label];
+        if (!value) return;
+
+        // Always targets the first product's apparel dropdown
+        var select = document.querySelector('select[name="contact[product_1_apparel]"]');
+        if (!select) return;
+
+        select.value = value;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+
+        // Smooth scroll to the form and briefly highlight the field
+        var formGroup = select.closest('.form-group');
+        if (formGroup) {
+          formGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          select.style.transition = 'box-shadow 0.3s ease';
+          select.style.boxShadow = '0 0 0 3px rgba(230, 57, 80, 0.5)';
+          setTimeout(function () {
+            select.style.boxShadow = 'none';
+          }, 1200);
+        }
+      });
+    });
+  });
+</script>
+
 
 {% schema %}
 {

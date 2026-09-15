@@ -2376,6 +2376,57 @@ flex: 1 1 calc((100% - 5 * 1.5rem) / 6);}
   });
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var apparelSizeMap = {
+      'Regular Tee': ['S', 'M', 'L', 'XL'],
+      'Oversized Tee': ['S', 'M', 'L', 'XL'],
+      'Cropped Tee': ['XS', 'S', 'M', 'L', 'XL'],
+      'Sweatshirt': ['XS', 'S', 'M', 'L'],
+      'Hoodie': ['S', 'M', 'L', 'XL'],
+      'Boxy Vest': ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+    };
+
+    var container = document.getElementById('productBlocksContainer');
+    if (!container) return;
+
+    function updateSizeSelect(apparelSelect) {
+      var block = apparelSelect.closest('.product-block');
+      if (!block) return;
+      var sizeSelect = block.querySelector('select[name*="_size"]');
+      if (!sizeSelect) return;
+
+      var allowedSizes = apparelSizeMap[apparelSelect.value] || ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+      var previousValue = sizeSelect.value;
+
+      sizeSelect.innerHTML = '';
+      var placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Pick a Size';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      sizeSelect.appendChild(placeholder);
+
+      allowedSizes.forEach(function (size) {
+        var opt = document.createElement('option');
+        opt.value = size;
+        opt.textContent = size;
+        sizeSelect.appendChild(opt);
+      });
+
+      if (allowedSizes.indexOf(previousValue) !== -1) {
+        sizeSelect.value = previousValue;
+      }
+    }
+
+    container.addEventListener('change', function (e) {
+      if (e.target.classList.contains('apparel-select')) {
+        updateSizeSelect(e.target);
+      }
+    });
+  });
+</script>
+
 
 {% schema %}
 {

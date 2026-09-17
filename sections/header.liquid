@@ -1396,6 +1396,7 @@
                 <div class="fk-mob-acc-panel-inner">
                   {%- if section.settings.col3_l1_label != blank -%}<a href="{{ section.settings.col3_l1_url | default: '/collections/matching' }}" @click="closeMobileMenu()">{{ section.settings.col3_l1_label }}</a>{%- endif -%}
                   {%- if section.settings.col3_l2_label != blank -%}<a href="{{ section.settings.col3_l2_url | default: '/collections/couples' }}" @click="closeMobileMenu()">{{ section.settings.col3_l2_label }}</a>{%- endif -%}
+                  {%- if section.settings.col3_l3_label != blank -%}<a href="{{ section.settings.col3_l3_url | default: '/collections/family' }}">{{ section.settings.col3_l3_label }}</a>{%- endif -%}
                   
               </div>
             </div>

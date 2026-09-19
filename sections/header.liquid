@@ -262,6 +262,17 @@
   "id": "col3_l3_url",
   "label": "Link 3 URL"
 },
+{
+  "type": "text",
+  "id": "col3_l4_label",
+  "label": "Link 4 label",
+  "default": "Furry Friends"
+},
+{
+  "type": "url",
+  "id": "col3_l4_url",
+  "label": "Link 4 URL"
+},
     {
       "type": "text",
       "id": "col3_cta1_label",
@@ -431,6 +442,7 @@
               {%- if section.settings.col3_l1_label != blank -%}<a href="{{ section.settings.col3_l1_url | default: '/collections/matching' }}">{{ section.settings.col3_l1_label }}</a>{%- endif -%}
               {%- if section.settings.col3_l2_label != blank -%}<a href="{{ section.settings.col3_l2_url | default: '/collections/couples' }}">{{ section.settings.col3_l2_label }}</a>{%- endif -%}
               {%- if section.settings.col3_l3_label != blank -%}<a href="{{ section.settings.col3_l3_url | default: '/collections/family' }}">{{ section.settings.col3_l3_label }}</a>{%- endif -%}
+              {%- if section.settings.col3_l4_label != blank -%}<a href="{{ section.settings.col3_l4_url | default: '/collections/furry-friends' }}">{{ section.settings.col3_l4_label }}</a>{%- endif -%}
               {%- if section.settings.col3_cta1_label != blank -%}<a href="{{ section.settings.col3_cta1_url | default: '/pages/bulk-orders' }}" class="fk-shop-col-cta">{{ section.settings.col3_cta1_label }}</a>{%- endif -%}
               {%- if section.settings.col3_cta2_label != blank -%}<a href="{{ section.settings.col3_cta2_url | default: '/products/gift-card' }}" class="fk-shop-col-cta">{{ section.settings.col3_cta2_label }}</a>{%- endif -%}
             </div>
@@ -1397,6 +1409,7 @@
                   {%- if section.settings.col3_l1_label != blank -%}<a href="{{ section.settings.col3_l1_url | default: '/collections/matching' }}" @click="closeMobileMenu()">{{ section.settings.col3_l1_label }}</a>{%- endif -%}
                   {%- if section.settings.col3_l2_label != blank -%}<a href="{{ section.settings.col3_l2_url | default: '/collections/couples' }}" @click="closeMobileMenu()">{{ section.settings.col3_l2_label }}</a>{%- endif -%}
                   {%- if section.settings.col3_l3_label != blank -%}<a href="{{ section.settings.col3_l3_url | default: '/collections/family' }}">{{ section.settings.col3_l3_label }}</a>{%- endif -%}
+                  {%- if section.settings.col3_l4_label != blank -%}<a href="{{ section.settings.col3_l4_url | default: '/collections/furry-friends' }}">{{ section.settings.col3_l4_label }}</a>{%- endif -%}
                   
               </div>
             </div>

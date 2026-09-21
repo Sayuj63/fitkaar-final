@@ -2195,6 +2195,9 @@
               <p style="margin-top: 8px;">Our gift cards are delivered via email and come with a unique code to use at checkout.</p>
               <p style="margin-top: 8px;"><strong>Kindly note that this is a digital gift card.</strong></p>
             {%- else -%}
+              {%- if product.description != blank -%}
+  <div style="margin-bottom: 16px;">{{ product.description }}</div>
+{%- endif -%}
               <ul>
                 <template x-for="item in descriptionLines" :key="item.label + item.value">
                   <li>

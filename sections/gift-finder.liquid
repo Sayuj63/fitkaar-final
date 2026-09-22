@@ -279,7 +279,16 @@
   var ticketFill = document.getElementById('fk-ticketFill');
   var ticketCount = document.getElementById('fk-ticketCount');
 
-  function updateTicket(n, total){
+  var firstRender = true;
+function scrollWidgetIntoView(){
+if (firstRender){ firstRender = false; return; }
+var container = (screen.closest && screen.closest('.stage')) || screen;
+if (container && container.scrollIntoView){
+container.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+}
+function updateTicket(n, total){
+    scrollWidgetIntoView();
     if (n === null){ ticket.style.display='none'; return; }
     total = total || currentSteps().length;
     ticket.style.display='flex';

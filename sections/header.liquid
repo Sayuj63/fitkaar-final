@@ -450,6 +450,7 @@
         </div>
       </div>
 
+      <a href="/pages/gift-finder" class="fk-nav-link">Gift Guide</a>
       <a href="{{ _nav_about_url }}" class="fk-nav-link{% if _nav == 'about' %} fk-nav-link--active{% endif %}">{{ section.settings.nav_about_label | default: 'About Us' }}</a>
       <a href="{{ _nav_contact_url }}" class="fk-nav-link{% if _nav == 'contact' %} fk-nav-link--active{% endif %}">{{ section.settings.nav_contact_label | default: 'Contact' }}</a>
     </nav>
@@ -1313,6 +1314,7 @@
               </svg>
             </button>
 
+            <a href="/pages/gift-finder" class="fk-mob-nav-link" @click="closeMobileMenu()">Gift Guide</a>
             <a href="{{ _nav_about_url }}" class="fk-mob-nav-link" @click="closeMobileMenu()">{{ section.settings.nav_about_label | default: 'About Us' }}</a>
             <a href="{{ _nav_contact_url }}" class="fk-mob-nav-link" @click="closeMobileMenu()">{{ section.settings.nav_contact_label | default: 'Contact' }}</a>
           </nav>

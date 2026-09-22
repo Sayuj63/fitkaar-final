@@ -1,20 +1,94 @@
 {% comment %}
   Gift Finder — interactive gift-recommendation quiz.
-  Self-contained widget: styles + markup + JS, scoped under #fk-gift-finder.
+  Self-contained widget: styles + markup + JS, scoped under #fk-gift-finder. Product images included.
 {% endcomment %}
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Raleway:wght@400;500;600;700&display=swap');
-#fk-gift-finder {
+  #fk-gift-finder {
     --bg: #FFFFFF;
     --blue: #16204A;
     --blue-light: #7FB3E8;
     --paper: #EAF3FC;
     --border: #16204A;
-  }#fk-gift-finder * { box-sizing: border-box; }#fk-gift-finder { margin:0; padding:0; }#fk-gift-finder { display:flex; justify-content:center; align-items:center; min-height:100vh; padding:32px 16px 64px; position:relative; overflow:hidden; background:var(--bg); font-family:'Raleway', Helvetica, sans-serif; color:var(--blue); }#fk-gift-finder::before, #fk-gift-finder::after { content:""; position:absolute; width:360px; height:360px; border-radius:50%; background:var(--blue-light); opacity:0.28; filter:blur(70px); z-index:0; pointer-events:none; }#fk-gift-finder::before { top:-140px; left:-140px; }#fk-gift-finder::after { bottom:-160px; right:-160px; }#fk-gift-finder .stage { width:100%; max-width:560px; position:relative; z-index:1; }#fk-gift-finder h1, #fk-gift-finder h2, #fk-gift-finder h3, #fk-gift-finder .display { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; line-height:1.1; margin:0; text-transform:uppercase; color:var(--blue); }#fk-gift-finder .ticket { background:var(--paper); border:1px solid var(--blue-light); border-radius:8px; padding:12px 16px; margin-bottom:24px; display:flex; align-items:center; gap:14px; }#fk-gift-finder .ticket-label { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.66rem; letter-spacing:0.04em; color:var(--blue); white-space:nowrap; text-transform:uppercase; }#fk-gift-finder .ticket-track { flex:1; height:4px; background:#fff; border-radius:4px; overflow:hidden; }#fk-gift-finder .ticket-fill { height:100%; background:var(--blue); width:0%; transition:width .35s ease; }#fk-gift-finder .ticket-count { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.8rem; min-width:36px; text-align:right; }#fk-gift-finder .card { background:#fff; border:1px solid var(--blue-light); border-radius:10px; padding:28px 24px; }#fk-gift-finder .eyebrow { display:inline-block; text-align:center; color:var(--blue); font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.66rem; letter-spacing:0.08em; padding-bottom:4px; margin-bottom:14px; text-transform:uppercase; border-bottom:2px solid var(--blue-light); }#fk-gift-finder .intro { text-align:center; }#fk-gift-finder .brand-logo { height:40px; margin-bottom:14px; }#fk-gift-finder .intro h1 { font-size:1.9rem; margin-bottom:6px; }#fk-gift-finder .intro h1 .h1-accent { display:block; color:var(--blue-light); }#fk-gift-finder .intro-sub { color:var(--blue); opacity:0.7; font-size:1rem; margin-bottom:22px; text-transform:none; font-weight:600; }#fk-gift-finder .intro p { color:var(--blue); opacity:0.7; font-size:1rem; line-height:1.5; margin-bottom:26px; text-transform:none; }#fk-gift-finder .btn { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.92rem; letter-spacing:0.02em; text-transform:uppercase; text-align:center; color:#fff; background:var(--blue); border:1px solid var(--blue); border-radius:6px; padding:14px 22px; cursor:pointer; transition:opacity .12s ease; width:100%; }#fk-gift-finder .btn:hover { opacity:0.85; }#fk-gift-finder .btn:active { opacity:0.7; }#fk-gift-finder .btn:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }#fk-gift-finder .q-tag { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.66rem; letter-spacing:0.06em; color:var(--blue); margin-bottom:10px; text-transform:uppercase; text-align:center; }#fk-gift-finder .q-prompt { font-size:1.3rem; margin-bottom:20px; text-transform:none; text-align:center; }#fk-gift-finder .options { display:flex; flex-direction:column; gap:10px; }#fk-gift-finder .option { font-family:'Raleway', Helvetica, sans-serif; font-weight:600; font-size:0.95rem; text-align:center; background:var(--paper); color:var(--blue); border:1px solid var(--blue-light); border-radius:6px; padding:13px 16px; cursor:pointer; transition:background .12s ease, color .12s ease; }#fk-gift-finder .option:hover { background:var(--blue); border-color:var(--blue); color:#fff; }#fk-gift-finder .option:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }#fk-gift-finder .option.ghost { background:transparent; border:1px dashed var(--blue-light); color:var(--blue); opacity:0.65; }#fk-gift-finder .option.ghost:hover { background:var(--paper); color:var(--blue); opacity:1; }#fk-gift-finder .zodiac-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }#fk-gift-finder .zodiac-grid .option { text-align:center; padding:12px 6px; font-size:0.85rem; }#fk-gift-finder .type-row { display:flex; gap:8px; margin-top:14px; }#fk-gift-finder .type-input { flex:1; font-family:'Raleway', Helvetica, sans-serif; font-size:0.95rem; padding:11px 14px; border:1px solid var(--blue-light); border-radius:6px; background:#fff; color:var(--blue); }#fk-gift-finder .type-input:focus { outline:2px solid var(--blue); outline-offset:1px; }#fk-gift-finder .type-go { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:0.03em; text-transform:uppercase; background:var(--blue); color:#fff; border:1px solid var(--blue); border-radius:6px; padding:0 16px; cursor:pointer; }#fk-gift-finder .type-go:hover { opacity:0.85; }#fk-gift-finder .type-hint { font-size:0.78rem; color:var(--blue); opacity:0.65; margin-top:8px; text-align:center; }#fk-gift-finder .nav-row { display:flex; justify-content:center; margin-top:20px; align-items:center; }#fk-gift-finder .link-back { font-family:'Raleway', Helvetica, sans-serif; font-weight:600; font-size:0.85rem; color:var(--blue); opacity:0.65; background:none; border:none; cursor:pointer; text-decoration:underline; padding:6px 0; text-align:center; }#fk-gift-finder .result-eyebrow { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.66rem; letter-spacing:0.06em; color:var(--blue); margin-bottom:8px; text-transform:uppercase; }#fk-gift-finder .result-eyebrow, #fk-gift-finder .result-title, #fk-gift-finder .result-sub { text-align:center; }#fk-gift-finder .result-title { font-size:1.6rem; margin-bottom:6px; }#fk-gift-finder .result-sub { color:var(--blue); opacity:0.7; font-size:0.9rem; margin-bottom:22px; text-transform:none; }#fk-gift-finder .pick-group { margin-bottom:18px; }#fk-gift-finder .pick-group-label { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.68rem; letter-spacing:0.05em; color:var(--blue); margin-bottom:8px; text-transform:uppercase; text-align:center; }#fk-gift-finder .pick-list { display:flex; flex-direction:column; gap:8px; }#fk-gift-finder .pick { display:flex; flex-direction:row; align-items:center; gap:12px; text-decoration:none; color:var(--blue); background:var(--paper); border:1px solid var(--blue-light); border-radius:8px; padding:12px 14px; transition:border-color .12s ease, background .12s ease; }#fk-gift-finder .pick:hover { border-color:var(--blue); background:#fff; }#fk-gift-finder .pick-body { flex:1; min-width:0; text-align:left; }#fk-gift-finder .pick-top { display:flex; flex-direction:column; align-items:flex-start; gap:4px; }#fk-gift-finder .pick-name { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.86rem; text-transform:uppercase; }#fk-gift-finder .pick-price { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.86rem; color:var(--blue); white-space:nowrap; }#fk-gift-finder .pick-was { font-size:0.76rem; color:var(--blue); opacity:0.55; text-decoration:line-through; margin-right:6px; }#fk-gift-finder .pick-off { display:inline-block; margin-top:6px; font-size:0.66rem; font-weight:700; letter-spacing:0.02em; color:#fff; background:var(--blue); padding:2px 6px; border-radius:3px; text-transform:uppercase; }#fk-gift-finder .pick-fallback-note { font-size:0.82rem; color:var(--blue); opacity:0.65; margin-top:8px; text-transform:none; text-align:center; }#fk-gift-finder .pick-thumb { flex-shrink:0; width:52px; height:52px; border:1px solid var(--blue-light); border-radius:6px; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; font-size:1.3rem; }#fk-gift-finder .pick-thumb img { width:100%; height:100%; object-fit:cover; display:block; }#fk-gift-finder .restart-row { text-align:center; margin-top:10px; }#fk-gift-finder canvas#fk-burst { position:fixed; inset:0; pointer-events:none; z-index:5; }
-@media (max-width:400px){ #fk-gift-finder .card { padding:22px 18px; }#fk-gift-finder .intro h1 { font-size:1.5rem; }#fk-gift-finder .result-title { font-size:1.3rem; } }
+  }
+#fk-gift-finder * { box-sizing: border-box; }
+  #fk-gift-finder { margin:0; padding:0; }
+  #fk-gift-finder { display:flex; justify-content:center; align-items:center; min-height:100vh; padding:32px 16px 64px; position:relative; overflow:hidden; background:var(--bg); font-family:'Raleway', Helvetica, sans-serif; color:var(--blue); }
+  #fk-gift-finder::before, #fk-gift-finder::after { content:""; position:absolute; width:360px; height:360px; border-radius:50%; background:var(--blue-light); opacity:0.28; filter:blur(70px); z-index:0; pointer-events:none; }
+  #fk-gift-finder::before { top:-140px; left:-140px; }
+  #fk-gift-finder::after { bottom:-160px; right:-160px; }
+#fk-gift-finder .stage { width:100%; max-width:560px; position:relative; z-index:1; }
+#fk-gift-finder h1, #fk-gift-finder h2, #fk-gift-finder h3, #fk-gift-finder .display { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; line-height:1.1; margin:0; text-transform:uppercase; color:var(--blue); }
 
+#fk-gift-finder .ticket { background:var(--paper); border:1px solid var(--blue-light); border-radius:8px; padding:12px 16px; margin-bottom:24px; display:flex; align-items:center; gap:14px; }
+#fk-gift-finder .ticket-label { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.66rem; letter-spacing:0.04em; color:var(--blue); white-space:nowrap; text-transform:uppercase; }
+#fk-gift-finder .ticket-track { flex:1; height:4px; background:#fff; border-radius:4px; overflow:hidden; }
+#fk-gift-finder .ticket-fill { height:100%; background:var(--blue); width:0%; transition:width .35s ease; }
+#fk-gift-finder .ticket-count { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.8rem; min-width:36px; text-align:right; }
+
+#fk-gift-finder .card { background:#fff; border:1px solid var(--blue-light); border-radius:10px; padding:28px 24px; }
+
+#fk-gift-finder .eyebrow { display:inline-block; text-align:center; color:var(--blue); font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.66rem; letter-spacing:0.08em; padding-bottom:4px; margin-bottom:14px; text-transform:uppercase; border-bottom:2px solid var(--blue-light); }
+#fk-gift-finder .intro { text-align:center; }
+#fk-gift-finder .brand-logo { height:40px; margin-bottom:14px; }
+#fk-gift-finder .intro h1 { font-size:1.9rem; margin-bottom:6px; }
+#fk-gift-finder .intro h1 .h1-accent { display:block; color:var(--blue-light); }
+#fk-gift-finder .intro-sub { color:var(--blue); opacity:0.7; font-size:1rem; margin-bottom:22px; text-transform:none; font-weight:600; }
+#fk-gift-finder .intro p { color:var(--blue); opacity:0.7; font-size:1rem; line-height:1.5; margin-bottom:26px; text-transform:none; }
+
+#fk-gift-finder .btn { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.92rem; letter-spacing:0.02em; text-transform:uppercase; text-align:center; color:#fff; background:var(--blue); border:1px solid var(--blue); border-radius:6px; padding:14px 22px; cursor:pointer; transition:opacity .12s ease; width:100%; }
+#fk-gift-finder .btn:hover { opacity:0.85; }
+#fk-gift-finder .btn:active { opacity:0.7; }
+#fk-gift-finder .btn:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+
+#fk-gift-finder .q-tag { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.66rem; letter-spacing:0.06em; color:var(--blue); margin-bottom:10px; text-transform:uppercase; text-align:center; }
+#fk-gift-finder .q-prompt { font-size:1.3rem; margin-bottom:20px; text-transform:none; text-align:center; }
+#fk-gift-finder .options { display:flex; flex-direction:column; gap:10px; }
+#fk-gift-finder .option { font-family:'Raleway', Helvetica, sans-serif; font-weight:600; font-size:0.95rem; text-align:center; background:var(--paper); color:var(--blue); border:1px solid var(--blue-light); border-radius:6px; padding:13px 16px; cursor:pointer; transition:background .12s ease, color .12s ease; }
+#fk-gift-finder .option:hover { background:var(--blue); border-color:var(--blue); color:#fff; }
+#fk-gift-finder .option:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+#fk-gift-finder .option.ghost { background:transparent; border:1px dashed var(--blue-light); color:var(--blue); opacity:0.65; }
+#fk-gift-finder .option.ghost:hover { background:var(--paper); color:var(--blue); opacity:1; }
+
+#fk-gift-finder .zodiac-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+#fk-gift-finder .zodiac-grid .option { text-align:center; padding:12px 6px; font-size:0.85rem; }
+
+#fk-gift-finder .type-row { display:flex; gap:8px; margin-top:14px; }
+#fk-gift-finder .type-input { flex:1; font-family:'Raleway', Helvetica, sans-serif; font-size:0.95rem; padding:11px 14px; border:1px solid var(--blue-light); border-radius:6px; background:#fff; color:var(--blue); }
+#fk-gift-finder .type-input:focus { outline:2px solid var(--blue); outline-offset:1px; }
+#fk-gift-finder .type-go { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:0.03em; text-transform:uppercase; background:var(--blue); color:#fff; border:1px solid var(--blue); border-radius:6px; padding:0 16px; cursor:pointer; }
+#fk-gift-finder .type-go:hover { opacity:0.85; }
+#fk-gift-finder .type-hint { font-size:0.78rem; color:var(--blue); opacity:0.65; margin-top:8px; text-align:center; }
+
+#fk-gift-finder .nav-row { display:flex; justify-content:center; margin-top:20px; align-items:center; }
+#fk-gift-finder .link-back { font-family:'Raleway', Helvetica, sans-serif; font-weight:600; font-size:0.85rem; color:var(--blue); opacity:0.65; background:none; border:none; cursor:pointer; text-decoration:underline; padding:6px 0; text-align:center; }
+
+#fk-gift-finder .result-eyebrow { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.66rem; letter-spacing:0.06em; color:var(--blue); margin-bottom:8px; text-transform:uppercase; }
+#fk-gift-finder .result-eyebrow, #fk-gift-finder .result-title, #fk-gift-finder .result-sub { text-align:center; }
+#fk-gift-finder .result-title { font-size:1.6rem; margin-bottom:6px; }
+#fk-gift-finder .result-sub { color:var(--blue); opacity:0.7; font-size:0.9rem; margin-bottom:22px; text-transform:none; }
+
+#fk-gift-finder .pick-group { margin-bottom:18px; }
+#fk-gift-finder .pick-group-label { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.68rem; letter-spacing:0.05em; color:var(--blue); margin-bottom:8px; text-transform:uppercase; text-align:center; }
+#fk-gift-finder .pick-list { display:flex; flex-direction:column; gap:8px; }
+#fk-gift-finder .pick { display:flex; flex-direction:row; align-items:center; gap:12px; text-decoration:none; color:var(--blue); background:var(--paper); border:1px solid var(--blue-light); border-radius:8px; padding:12px 14px; transition:border-color .12s ease, background .12s ease; }
+#fk-gift-finder .pick:hover { border-color:var(--blue); background:#fff; }
+#fk-gift-finder .pick-body { flex:1; min-width:0; text-align:left; }
+#fk-gift-finder .pick-top { display:flex; flex-direction:column; align-items:flex-start; gap:4px; }
+#fk-gift-finder .pick-name { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.86rem; text-transform:uppercase; }
+#fk-gift-finder .pick-price { font-family:'League Spartan', Helvetica, sans-serif; font-weight:700; font-size:0.86rem; color:var(--blue); white-space:nowrap; }
+#fk-gift-finder .pick-was { font-size:0.76rem; color:var(--blue); opacity:0.55; text-decoration:line-through; margin-right:6px; }
+#fk-gift-finder .pick-off { display:inline-block; margin-top:6px; font-size:0.66rem; font-weight:700; letter-spacing:0.02em; color:#fff; background:var(--blue); padding:2px 6px; border-radius:3px; text-transform:uppercase; }
+#fk-gift-finder .pick-fallback-note { font-size:0.82rem; color:var(--blue); opacity:0.65; margin-top:8px; text-transform:none; text-align:center; }
+#fk-gift-finder .pick-thumb { flex-shrink:0; width:52px; height:52px; border:1px solid var(--blue-light); border-radius:6px; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; font-size:1.3rem; }
+#fk-gift-finder .pick-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+
+#fk-gift-finder .restart-row { text-align:center; margin-top:10px; }
+#fk-gift-finder canvas#fk-burst { position:fixed; inset:0; pointer-events:none; z-index:5; }
 </style>
+</head>
+<body>
 <div id="fk-gift-finder">
 <canvas id="fk-burst"></canvas>
 <div class="stage">
@@ -27,132 +101,131 @@
 </div>
 </div>
 <script>
-
 (function(){
 
   // ---------------- Catalog: grouped so overlap surfaces together ----------------
   // Each item: group id, keys (free-text triggers), name, price, url
   var FOOD_CATALOG = [
-    { group:"pasta", keys:["pasta","spaghetti","penne","macaroni","mac and cheese","italian food"], name:"Pasta Supremacy | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/pasta-supremacy-unisex" },
-    { group:"sushi", keys:["sushi","sashimi","nigiri","maki"], name:"Sushi Lover Club | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/sushi-lover-club-unisex" },
-    { group:"ramen", keys:["ramen","noodles","maggi","instant noodles","chowmein"], name:"Ramen Core | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/ramen-core-unisex" },
-    { group:"pizza", keys:["pizza","margherita","cheese pizza","slice of pizza"], name:"Pizza Mood Always | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/pizza-mood-always-unisex" },
-    { group:"burger", keys:["burger","burgers","cheeseburger","hamburger","patty"], name:"Burger Lover | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/burger-lover-unisex" },
-    { group:"burger", keys:["burger cropped"], name:"Burger Lover Cropped Tee", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/burger-lover-cropped-tee" },
-    { group:"fries", keys:["fries","french fries","chips","wedges"], name:"Time Fries | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/time-fries-unisex" },
-    { group:"coffee_tea", keys:["coffee","caffeine","espresso","cappuccino","latte","cold coffee","filter coffee"], name:"The Coffee Club | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/the-coffee-club-unisex" },
-    { group:"coffee_tea", keys:["matcha","green tea","matcha latte"], name:"Matcha Lover | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/matcha-lover-unisex-tee" },
-    { group:"coffee_tea", keys:["chai","tea","cutting chai","adrak chai","masala chai","sukoon"], name:"Chai Sukoon | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/chai-sukoon-unisex" },
-    { group:"alcohol", keys:["beer","brew","cold beer"], name:"Chilled Beer Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/chilled-beer-club-unisex" },
-    { group:"alcohol", keys:["vitamin beer"], name:"Vitamin Beer | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/vitamin-beer-unisex" },
-    { group:"alcohol", keys:["wine","red wine","white wine","champagne"], name:"Fine Wine | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/fine-wine-unisex" },
-    { group:"alcohol", keys:["margarita","tequila"], name:"Margarita Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/margarita-club-unisex" },
-    { group:"alcohol", keys:["martini","cocktail","cocktails","gin"], name:"Martini Cropped Tee", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/martini-cropped-tee" },
-    { group:"alcohol", keys:["drinks","let's drink","lets drink","happy hour","bar"], name:"Let's Get Drinks | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/lets-get-drinks-unisex" },
-    { group:"alcohol", keys:["hangover","sober","tipsy","drunk","hungover"], name:"Sotally Tober Cropped Tee", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/sotally-tober-cropped-tee" },
-    { group:"dessert", keys:["dessert","sweets","sweet tooth","cake","mithai","pastry","chocolate"], name:"Desserts Always | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/desserts-always-unisex" },
-    { group:"dessert", keys:["ice cream","icecream","gelato","kulfi","scoop"], name:"Ice Scream | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/ice-scream-unisex" },
-    { group:"dessert", keys:["baking","baker","cupcake","cookies","chef","cook","cooking"], name:"Baking Crew | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/baking-crew-unisex" },
-    { group:"breakfast", keys:["breakfast","brunch"], name:"Breakfast Spread | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/breakfast-spread-unisex" },
-    { group:"breakfast", keys:["picnic"], name:"Picnic Perfect | Women's", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/picnic" },
-    { group:"indian_snacks", keys:["samosa","evening snack"], name:"Chai Samosa Together | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/chai-samosa-together-unisex" },
-    { group:"indian_snacks", keys:["chole bhature","chole","bhature","chana bhatura"], name:"Sunday Ritual Chole Bhature | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/sunday-ritual-chole-bhature-unisex" },
-    { group:"indian_snacks", keys:["roti","bread","indian food","chapati","flatbread","biryani","curry","paneer","rice","sabzi"], name:"Mai Toh Roti Hu | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/mai-toh-roti-hu-unisex" },
-    { group:"asian", keys:["dim sum","dumpling","dumplings","momo","momos","gyoza","mandu"], name:"You Dim Sum | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/you-dim-sum-unisex" },
-    { group:"pbj", keys:["peanut butter","pbj","jam","pb&j","peanut butter jelly"], name:"PB&J | Duo", price:"\u20b91398/-", was:"\u20b92598/-", off:"46% OFF", url:"https://fitkaarclothing.com/products/pbj-duo" },
-    { group:"avocado", keys:["avocado","avo","guac","guacamole"], name:"Avo Cant-Do | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/avo-cant-do-unisex" }
+    { group:"pasta", keys:["pasta","spaghetti","penne","macaroni","mac and cheese","italian food"], name:"Pasta Supremacy | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/pasta-supremacy-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/sweatshirt_white_4_4d211dea-c867-4ef3-bc2e-9b3994055596.png?v=1776846243" },
+    { group:"sushi", keys:["sushi","sashimi","nigiri","maki"], name:"Sushi Lover Club | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/sushi-lover-club-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/292.png?v=1776697659" },
+    { group:"ramen", keys:["ramen","noodles","maggi","instant noodles","chowmein"], name:"Ramen Core | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/ramen-core-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/39.png?v=1776603267" },
+    { group:"pizza", keys:["pizza","margherita","cheese pizza","slice of pizza"], name:"Pizza Mood Always | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/pizza-mood-always-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/25_e9294b76-9004-4e45-90a3-aa69624cd3db.png?v=1776601428" },
+    { group:"burger", keys:["burger","burgers","cheeseburger","hamburger","patty"], name:"Burger Lover | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/burger-lover-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/177_d1d419ee-f308-41ad-90d4-1ece3390142f.png?v=1776670410" },
+    { group:"burger", keys:["burger cropped"], name:"Burger Lover Cropped Tee", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/burger-lover-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/177.png?v=1776667132" },
+    { group:"fries", keys:["fries","french fries","chips","wedges"], name:"Time Fries | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/time-fries-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/FOOD_COLLECTION_34_2_4478d9b9-5f0e-4856-bf4c-aba96063702a.png?v=1778062116" },
+    { group:"coffee_tea", keys:["coffee","caffeine","espresso","cappuccino","latte","cold coffee","filter coffee"], name:"The Coffee Club | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/the-coffee-club-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/49.png?v=1776608977" },
+    { group:"coffee_tea", keys:["matcha","green tea","matcha latte"], name:"Matcha Lover | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/matcha-lover-unisex-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/FOOD_COLLECTION_34_15.png?v=1776703890" },
+    { group:"coffee_tea", keys:["chai","tea","cutting chai","adrak chai","masala chai","sukoon"], name:"Chai Sukoon | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/chai-sukoon-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/FOOD_COLLECTION_34_317762dd-4ed6-4482-8570-a45d664ea7cd.png?v=1778061616" },
+    { group:"alcohol", keys:["beer","brew","cold beer"], name:"Chilled Beer Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/chilled-beer-club-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/FOODCOLLECTION_34_10.png?v=1776692958" },
+    { group:"alcohol", keys:["vitamin beer"], name:"Vitamin Beer | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/vitamin-beer-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/276.png?v=1776695521" },
+    { group:"alcohol", keys:["wine","red wine","white wine","champagne"], name:"Fine Wine | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/fine-wine-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/219.png?v=1776679261" },
+    { group:"alcohol", keys:["margarita","tequila"], name:"Margarita Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/margarita-club-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/204.png?v=1776677361" },
+    { group:"alcohol", keys:["martini","cocktail","cocktails","gin"], name:"Martini Cropped Tee", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/martini-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/288.png?v=1776696227" },
+    { group:"alcohol", keys:["drinks","let's drink","lets drink","happy hour","bar"], name:"Let's Get Drinks | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/lets-get-drinks-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/244_31134bc0-474d-4397-97e8-49634d51ba07.png?v=1776683578" },
+    { group:"alcohol", keys:["hangover","sober","tipsy","drunk","hungover"], name:"Sotally Tober Cropped Tee", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/sotally-tober-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/193.png?v=1776673611" },
+    { group:"dessert", keys:["dessert","sweets","sweet tooth","cake","mithai","pastry","chocolate"], name:"Desserts Always | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/desserts-always-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/165.png?v=1776666155" },
+    { group:"dessert", keys:["ice cream","icecream","gelato","kulfi","scoop"], name:"Ice Scream | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/ice-scream-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/46_e4ec830e-2784-4a7e-bf43-df6d909298f8.png?v=1776879443" },
+    { group:"dessert", keys:["baking","baker","cupcake","cookies","chef","cook","cooking"], name:"Baking Crew | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/baking-crew-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/247_ec0ee1de-e7f8-4161-a5be-e03b205c5d36.png?v=1777096910" },
+    { group:"breakfast", keys:["breakfast","brunch"], name:"Breakfast Spread | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/breakfast-spread-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/43_7e916861-f400-432e-923f-404905aa9fd8.png?v=1776767353" },
+    { group:"breakfast", keys:["picnic"], name:"Picnic Perfect | Women's", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/picnic", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/62_1b28309e-83e0-4955-a04a-712af45771b2.png?v=1776769482" },
+    { group:"indian_snacks", keys:["samosa","evening snack"], name:"Chai Samosa Together | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/chai-samosa-together-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/101.png?v=1776622785" },
+    { group:"indian_snacks", keys:["chole bhature","chole","bhature","chana bhatura"], name:"Sunday Ritual Chole Bhature | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/sunday-ritual-chole-bhature-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/111.png?v=1776624487" },
+    { group:"indian_snacks", keys:["roti","bread","indian food","chapati","flatbread","biryani","curry","paneer","rice","sabzi"], name:"Mai Toh Roti Hu | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/mai-toh-roti-hu-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/69_538a319b-7600-4f88-9a32-fcbb0838f811.png?v=1776838953" },
+    { group:"asian", keys:["dim sum","dumpling","dumplings","momo","momos","gyoza","mandu"], name:"You Dim Sum | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/you-dim-sum-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/9_28809c0b-dc45-4aaf-a6b9-f23401bd03c1.png?v=1776490851" },
+    { group:"pbj", keys:["peanut butter","pbj","jam","pb&j","peanut butter jelly"], name:"PB&J | Duo", price:"\u20b91398/-", was:"\u20b92598/-", off:"46% OFF", url:"https://fitkaarclothing.com/products/pbj-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/107_2e64e94a-8ffe-447f-b226-0763f122b768.png?v=1777925722" },
+    { group:"avocado", keys:["avocado","avo","guac","guacamole"], name:"Avo Cant-Do | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/avo-cant-do-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/PUNS_34_2.png?v=1776775792" }
   ];
 
   var SPORT_CATALOG = [
-    { group:"gym", keys:["gym","lifting","leg day","weights","workout","boxing","mma","martial arts","crossfit"], name:"Never Skip Leg Day | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/never-skip-leg-day-unisex" },
-    { group:"gym", keys:["gym brat"], name:"Gym Brat | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/gym-brat-unisex" },
-    { group:"gym", keys:["gym brat cropped"], name:"Gym Brat Cropped Tee", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/gym-brat-cropped-tee" },
-    { group:"gym", keys:["goals","chase goals"], name:"Chase Your Goals | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/chase-your-goals-unisex" },
-    { group:"running", keys:["running","run","marathon","jogging"], name:"Run Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/run-club-unisex" },
-    { group:"running", keys:["walk","walking"], name:"Walk With Me | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/walk-with-me-womens" },
-    { group:"basketball", keys:["basketball","hoops","dribble"], name:"Basketball | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/basketball-unisex" },
-    { group:"basketball", keys:["i know ball","football","soccer","volleyball"], name:"I Know Ball | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/i-know-ball-unisex" },
-    { group:"cricket", keys:["cricket"], name:"Cricket Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/cricket-club-unisex" },
-    { group:"badminton_pickle", keys:["badminton","tennis","squash"], name:"Badminton Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/badminton-club-unisex" },
-    { group:"badminton_pickle", keys:["pickleball","pickle ball"], name:"Pickle Ball | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/pickle-ball-unisex" },
-    { group:"cycling", keys:["cycling","bike","biking","cyclist","hiking","trekking","trek"], name:"Peddling Through | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/peddling-through-unisex" },
-    { group:"girls_fitness", keys:["pilates","yoga"], name:"Hot Girls Do Pilates | Cropped Tee", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/hot-girls-do-pilates-cropped-tee" },
-    { group:"girls_fitness", keys:["dance","dancing"], name:"Dance It Out | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/dance-it-out-unisex" },
-    { group:"girls_fitness", keys:["strong girl","gym girl"], name:"Strong Girls Club | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/strong-girls-club-womens" },
-    { group:"gaming", keys:["gaming","video games","esports","gamer","chess","board games"], name:"Gamer Guy | Men's", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/gamer-guy-mens" },
-    { group:"gaming", keys:["gamer girl"], name:"Gamer Girl | Women's", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/gamer-girl-womens" }
+    { group:"gym", keys:["gym","lifting","leg day","weights","workout","boxing","mma","martial arts","crossfit"], name:"Never Skip Leg Day | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/never-skip-leg-day-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/92.png?v=1776615848" },
+    { group:"gym", keys:["gym brat"], name:"Gym Brat | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/gym-brat-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/217_fe61e61e-945b-43aa-b295-9e15fd82912d.png?v=1776770101" },
+    { group:"gym", keys:["gym brat cropped"], name:"Gym Brat Cropped Tee", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/gym-brat-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/256_ff5483ee-f885-4e8b-a720-2cefd8eab2bd.png?v=1776772331" },
+    { group:"gym", keys:["goals","chase goals"], name:"Chase Your Goals | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/chase-your-goals-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/114_f9470752-ac1a-44ca-8fa9-ba49412d44a8.png?v=1776686122" },
+    { group:"running", keys:["running","run","marathon","jogging"], name:"Run Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/run-club-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/160.png?v=1776702647" },
+    { group:"running", keys:["walk","walking"], name:"Walk With Me | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/walk-with-me-womens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/186_d33a8972-e7a9-4d37-9729-b1c6abd6c754.png?v=1776710705" },
+    { group:"basketball", keys:["basketball","hoops","dribble"], name:"Basketball | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/basketball-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/137.png?v=1776689025" },
+    { group:"basketball", keys:["i know ball","football","soccer","volleyball"], name:"I Know Ball | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/i-know-ball-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/104_ea03e334-d9e7-41d7-99df-6716fbd667ee.png?v=1776682511" },
+    { group:"cricket", keys:["cricket"], name:"Cricket Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/cricket-club-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/81_99686c9e-26b0-4420-8bd2-d3c730db1da4.png?v=1776677495" },
+    { group:"badminton_pickle", keys:["badminton","tennis","squash"], name:"Badminton Club | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/badminton-club-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/SPORTS_AND_FITNESS_1.png?v=1776772623" },
+    { group:"badminton_pickle", keys:["pickleball","pickle ball"], name:"Pickle Ball | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/pickle-ball-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/62_a01a3a11-53ce-455a-8ca0-15ced6876bb0.png?v=1776667524" },
+    { group:"cycling", keys:["cycling","bike","biking","cyclist","hiking","trekking","trek"], name:"Peddling Through | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/peddling-through-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/194_4ab3c6e9-ec56-458b-8516-84d6c2a96a32.png?v=1776714131" },
+    { group:"girls_fitness", keys:["pilates","yoga"], name:"Hot Girls Do Pilates | Cropped Tee", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/hot-girls-do-pilates-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/29_32d469a7-6168-4b1e-ab3a-73b099f89df0.png?v=1776609961" },
+    { group:"girls_fitness", keys:["dance","dancing"], name:"Dance It Out | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/dance-it-out-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/116_58d35828-9398-4d9b-ab7e-cb4e5ba83930.png?v=1777004723" },
+    { group:"girls_fitness", keys:["strong girl","gym girl"], name:"Strong Girls Club | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/strong-girls-club-womens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/24_05ffb1d9-8296-41f6-a0bf-00c877321b29.png?v=1776606823" },
+    { group:"gaming", keys:["gaming","video games","esports","gamer","chess","board games"], name:"Gamer Guy | Men's", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/gamer-guy-mens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/2_354c67a0-e392-4eb6-bf41-b3fc8e1fe3ed.png?v=1776512379" },
+    { group:"gaming", keys:["gamer girl"], name:"Gamer Girl | Women's", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/gamer-girl-womens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/12_b894c9e6-65d3-437d-88b0-63c05caa3ad3.png?v=1776601629" }
   ];
 
   var PROFESSION_CATALOG = [
-    { group:"finance", keys:["finance","accountant","banker","investment","banking","ca","chartered accountant"], name:"Talk Finance To Me | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/talk-finance-to-me-unisex" },
-    { group:"finance", keys:["assets","liabilities"], name:"Assets > Liabilities | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/assets-liabilities-unisex" },
-    { group:"psychology", keys:["psychology","therapy","therapist","psychologist","counselor","counselling"], name:"The Psychologist Club | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/the-psychologist-club-womens" },
-    { group:"psychology", keys:["sends to therapy"], name:"Sends You To Therapy | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/sends-you-to-therapy-unisex" },
-    { group:"doctor", keys:["doctor","physician","medico","medicine","nurse","nursing"], name:"Doctor | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/doctor-womens" },
-    { group:"corporate", keys:["corporate","9 to 5","9-5","office job","desk job","it job","engineer","engineering","software engineer","developer","coder","programmer","hr","marketing","sales","consultant"], name:"Log In-Log Out | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/log-in-log-out-unisex" },
-    { group:"corporate", keys:["overworked","burnout","overthinking"], name:"Overworked Obsessive & Overthinking | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/overworked-obsessive-overthinking-womens" },
-    { group:"corporate", keys:["brain washed","corporate slave"], name:"Brain Washed | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/brain-washed-unisex" },
-    { group:"small_business", keys:["small business","entrepreneur","startup","business owner"], name:"Minding My Small Business | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/minding-my-small-business-unisex" },
-    { group:"small_business", keys:["small business cropped"], name:"Minding My Small Business Cropped Tee", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/minding-my-small-business-cropped-tee" },
-    { group:"creative", keys:["creative","designer","artist","art","photographer","photography","writer","author","influencer","content creator"], name:"Creative Block | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/creative-block-unisex" },
-    { group:"creative", keys:["creative cropped"], name:"Creative Block | Cropped Tee", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/creative-block-cropped-tee" },
-    { group:"academic", keys:["teacher","professor","academic","academia","student"], name:"Cool Teachers Club | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/cool-teachers-club-unisex" },
-    { group:"academic", keys:["teacher cropped"], name:"Cool Teachers Club Cropped Tee", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/cool-teachers-club-cropped-tee" },
-    { group:"academic", keys:["quack","phd","research"], name:"Quackademics | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/quackademics-unisex" },
-    { group:"musician", keys:["musician","music"], name:"Life's Better With Music | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/lifes-better-with-music" }
+    { group:"finance", keys:["finance","accountant","banker","investment","banking","ca","chartered accountant"], name:"Talk Finance To Me | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/talk-finance-to-me-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/1_a13527d0-7571-4d7f-a04c-f6161450101f.png?v=1776966672" },
+    { group:"finance", keys:["assets","liabilities"], name:"Assets > Liabilities | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/assets-liabilities-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/28_a6b22cee-a289-4e24-8c87-2558a5b87cac.png?v=1777100657" },
+    { group:"psychology", keys:["psychology","therapy","therapist","psychologist","counselor","counselling"], name:"The Psychologist Club | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/the-psychologist-club-womens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/42_48222d89-def4-4933-8125-64ab8d543e16.png?v=1776964676" },
+    { group:"psychology", keys:["sends to therapy"], name:"Sends You To Therapy | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/sends-you-to-therapy-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/52_3c8c5e2c-f9e0-4d38-b5e3-c65d411eaf96.png?v=1776967703" },
+    { group:"doctor", keys:["doctor","physician","medico","medicine","nurse","nursing"], name:"Doctor | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/doctor-womens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/68_612b65ea-c946-4fa0-abd6-18f2301b8a94.png?v=1777004490" },
+    { group:"corporate", keys:["corporate","9 to 5","9-5","office job","desk job","it job","engineer","engineering","software engineer","developer","coder","programmer","hr","marketing","sales","consultant"], name:"Log In-Log Out | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/log-in-log-out-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/104_ff78d689-b033-4ff7-9d9a-fd0a51d07242.png?v=1776851875" },
+    { group:"corporate", keys:["overworked","burnout","overthinking"], name:"Overworked Obsessive & Overthinking | Women's", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/overworked-obsessive-overthinking-womens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/198_71fb2262-db5a-462c-9ea4-c40ee60afd87.png?v=1777731551" },
+    { group:"corporate", keys:["brain washed","corporate slave"], name:"Brain Washed | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/brain-washed-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/55_f6ab4feb-9818-47f6-83d4-247ce3ba27c5.png?v=1776836722" },
+    { group:"small_business", keys:["small business","entrepreneur","startup","business owner"], name:"Minding My Small Business | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/minding-my-small-business-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_hobbyprof.png?v=1778060808" },
+    { group:"small_business", keys:["small business cropped"], name:"Minding My Small Business Cropped Tee", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/minding-my-small-business-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/168_63e545d5-2d86-435a-bd35-f2be6bcf04f7.png?v=1776970327" },
+    { group:"creative", keys:["creative","designer","artist","art","photographer","photography","writer","author","influencer","content creator"], name:"Creative Block | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/creative-block-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_hobbyprof_1.png?v=1778062987" },
+    { group:"creative", keys:["creative cropped"], name:"Creative Block | Cropped Tee", price:"\u20b9699/-", was:"\u20b9999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/creative-block-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/193_5a09a5ce-f574-41fc-91b7-3675d3c16891.png?v=1777014184" },
+    { group:"academic", keys:["teacher","professor","academic","academia","student"], name:"Cool Teachers Club | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/cool-teachers-club-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/99_353e2206-0b2c-4290-bd53-01fe35aa6976.png?v=1777096047" },
+    { group:"academic", keys:["teacher cropped"], name:"Cool Teachers Club Cropped Tee", price:"From \u20b9699/-", url:"https://fitkaarclothing.com/products/cool-teachers-club-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/108_b5b88d9a-6341-4d7b-9a9d-5d0744c9d6d7.png?v=1777096264" },
+    { group:"academic", keys:["quack","phd","research"], name:"Quackademics | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/quackademics-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/90_e05bd2a9-a370-4bc5-93eb-102051762c4a.png?v=1776968363" },
+    { group:"musician", keys:["musician","music"], name:"Life's Better With Music | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/lifes-better-with-music", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/221_e23c355d-56fe-424c-8d38-5b1e612c1e6e.png?v=1776971766" }
   ];
 
   var ZODIAC_CATALOG = {
-    "Aries":{ name:"Aries | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/aries-unisex" },
-    "Taurus":{ name:"Taurus | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/taurus-unisex" },
-    "Gemini":{ name:"That's So Gemini | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/thats-so-gemini-unisex" },
-    "Cancer":{ name:"Cancer | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/cancer-unisex" },
-    "Leo":{ name:"Leo | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/leo-unisex" },
-    "Virgo":{ name:"Virgo | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/virgo-unisex" },
-    "Libra":{ name:"Libra | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/libra-unisex" },
-    "Scorpio":{ name:"Scorpio | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/scorpio-unisex" },
-    "Sagittarius":{ name:"Sagittarius | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/sagittarius-unisex" },
-    "Capricorn":{ name:"Capricorn | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/capricorn-unisex" },
-    "Aquarius":{ name:"Aquarius | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/aquarius-unisex" },
-    "Pisces":{ name:"Pisces | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/pisces-unisex" }
+    "Aries":{ name:"Aries | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/aries-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_zodiac_5_11ac6077-6ccf-41a0-a0e8-45fc483a139c.png?v=1777557534" },
+    "Taurus":{ name:"Taurus | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/taurus-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/54_fe039395-6af7-4241-9ed1-78329eaffae7.png?v=1776945723" },
+    "Gemini":{ name:"That's So Gemini | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/thats-so-gemini-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_zodiac_2_a35f643f-1e23-4880-a068-c013ed7ecd49.png?v=1777466902" },
+    "Cancer":{ name:"Cancer | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/cancer-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_zodiac_4_0272fd6f-9390-4094-8ab4-fd7fb4ee34be.png?v=1777557535" },
+    "Leo":{ name:"Leo | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/leo-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_zodiac_1_36c15fa2-1396-4700-8d2d-2ea594456b4e.png?v=1777466903" },
+    "Virgo":{ name:"Virgo | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/virgo-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_zodiac_3_7609ee12-7852-4dc7-9ac4-8ba3bee1cd14.png?v=1777466894" },
+    "Libra":{ name:"Libra | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/libra-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_zodiac_1_32c5ecb3-fcd2-4a96-b2b6-faf4ee216f21.png?v=1776966151" },
+    "Scorpio":{ name:"Scorpio | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/scorpio-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_zodiac_c24bc9d8-de50-4039-bc82-43a258011585.png?v=1777466902" },
+    "Sagittarius":{ name:"Sagittarius | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/sagittarius-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/154_23c77e43-b469-4989-a53e-75d01279edb9.png?v=1776965765" },
+    "Capricorn":{ name:"Capricorn | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/capricorn-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/12_46382147-5a56-4076-875d-480bbf25eaf5.png?v=1776950412" },
+    "Aquarius":{ name:"Aquarius | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/aquarius-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/34_zodiac_10.png?v=1776968272" },
+    "Pisces":{ name:"Pisces | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/pisces-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/38_279e1711-c9e2-42f5-8c88-c9ae9a15f5a8.png?v=1776947302" }
   };
 
   var COUPLE_HARD_LAUNCH = [
-    { name:"All I See Is You | Unisex", price:"\u20b91099/-", was:"\u20b91399/-", off:"21% OFF", url:"https://fitkaarclothing.com/products/only-you-unisex" },
-    { name:"Oh Boy | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/oh-boy-unisex" },
-    { name:"Stay Away I Have A GF | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/stay-away-i-have-a-gf-unisex" },
-    { name:"Stay Away I Have A BF | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/stay-away-i-have-a-bf-unisex" },
-    { name:"I Love My GF | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/i-love-my-gf-unisex" },
-    { name:"I Love My BF | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/i-love-my-bf-unisex" },
-    { name:"Off The Market | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/off-the-market-unisex" },
-    { name:"Oh Girl | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/oh-girl-unisex" }
+    { name:"All I See Is You | Unisex", price:"\u20b91099/-", was:"\u20b91399/-", off:"21% OFF", url:"https://fitkaarclothing.com/products/only-you-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/31_4078d143-3845-4106-a7b7-88a8c7092707.png?v=1783855515" },
+    { name:"Oh Boy | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/oh-boy-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/Couples_34.png?v=1777903155" },
+    { name:"Stay Away I Have A GF | Unisex", price:"\u20b9999/-", was:"\u20b91299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/stay-away-i-have-a-gf-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/8_66558898-7b5c-4ac5-8402-a3a631d801ae.png?v=1777899404" },
+    { name:"Stay Away I Have A BF | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/stay-away-i-have-a-bf-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/5_81453d5c-291f-459b-9049-b77f75a62d0d.png?v=1777899589" },
+    { name:"I Love My GF | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/i-love-my-gf-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/50_3b485e4a-3237-4bbe-b674-72b636b0ba51.png?v=1777905174" },
+    { name:"I Love My BF | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/i-love-my-bf-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/46_053d2812-733b-484d-a53a-8f06399100ab.png?v=1777905643" },
+    { name:"Off The Market | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/off-the-market-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/1_5cbc6b9d-1724-4f7b-a0d4-b3b9d8d3129b.png?v=1777898025" },
+    { name:"Oh Girl | Unisex", price:"From \u20b9999/-", url:"https://fitkaarclothing.com/products/oh-girl-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/14_6d3b4a29-d2e5-4738-8342-c3927ae48325.png?v=1777902620" }
   ];
 
   var COUPLE_MATCHING = [
-    { name:"Better Together | Duo", price:"\u20b91299/-", was:"\u20b92598/-", off:"50% OFF", url:"https://fitkaarclothing.com/products/better-together-duo" },
-    { name:"I Get Us Into/Out Of Trouble | Duo", price:"\u20b91398/-", was:"\u20b92398/-", off:"41% OFF", url:"https://fitkaarclothing.com/products/i-get-us-intoout-of-trouble-duo" },
-    { name:"Yapper-Listener Brown | Duo", price:"\u20b91398/-", was:"\u20b92598/-", off:"46% OFF", url:"https://fitkaarclothing.com/products/yapper-listener-brown-duo" },
-    { name:"I Am-I Got Him Tipsy | Duo", price:"\u20b91398/-", was:"\u20b92598/-", off:"46% OFF", url:"https://fitkaarclothing.com/products/i-am-i-got-him-tipsy-duo" },
-    { name:"Calm-Chaotic | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/calm-chaotic-duo" },
-    { name:"Calm Down-Don't Tell Me | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/calm-down-dont-tell-me-duo" },
-    { name:"Queen-King | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/queen-king-duo" },
-    { name:"Mr Right-Ms Always Right | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/mr-right-ms-always-right-duo" },
-    { name:"I Love/Hate Olives | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/i-lovehate-olives-duo" },
-    { name:"It's Giving Bride/Groom | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/its-giving-bridegroom-duo" }
+    { name:"Better Together | Duo", price:"\u20b91299/-", was:"\u20b92598/-", off:"50% OFF", url:"https://fitkaarclothing.com/products/better-together-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/95_e40cdf53-92e8-4cc8-8378-095aa429ee29.png?v=1777971384" },
+    { name:"I Get Us Into/Out Of Trouble | Duo", price:"\u20b91398/-", was:"\u20b92398/-", off:"41% OFF", url:"https://fitkaarclothing.com/products/i-get-us-intoout-of-trouble-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/12_2346d911-c5cd-4ed2-8ec7-7ba2fa6e4178.png?v=1777930311" },
+    { name:"Yapper-Listener Brown | Duo", price:"\u20b91398/-", was:"\u20b92598/-", off:"46% OFF", url:"https://fitkaarclothing.com/products/yapper-listener-brown-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/115_d5aa727a-fe0a-4f12-bfb6-36b832944ade.png?v=1777924255" },
+    { name:"I Am-I Got Him Tipsy | Duo", price:"\u20b91398/-", was:"\u20b92598/-", off:"46% OFF", url:"https://fitkaarclothing.com/products/i-am-i-got-him-tipsy-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/102_7a6786a7-28da-4d72-b5bd-23dba990bb94.png?v=1777929555" },
+    { name:"Calm-Chaotic | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/calm-chaotic-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/93_d1a35b13-191a-48bc-8c93-c0a08be43584.png?v=1777934387" },
+    { name:"Calm Down-Don't Tell Me | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/calm-down-dont-tell-me-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/3_d445784c-60ce-4afd-96cb-c37a3c28485e.png?v=1777756169" },
+    { name:"Queen-King | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/queen-king-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/93_62c9f99c-42ca-4378-b83c-0cf7f3996b45.png?v=1777974855" },
+    { name:"Mr Right-Ms Always Right | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/mr-right-ms-always-right-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/135_02592263-bdce-4e1d-a6c9-b0871a53bbd4.png?v=1777925883" },
+    { name:"I Love/Hate Olives | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/i-lovehate-olives-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/20_f8a11160-9286-41be-acaa-0143bdb96b91.png?v=1777935885" },
+    { name:"It's Giving Bride/Groom | Duo", price:"See price on page", url:"https://fitkaarclothing.com/products/its-giving-bridegroom-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/matching_FINAL_1080_x_1440_px_5.png?v=1777972693" }
   ];
 
   // ---- Family collection (real products, fitkaarclothing.com/collections/family + /furry-friends) ----
-  var IVE_GOT_YOUR_BACK = { name:"I've Got Your Back | Unisex", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/ive-got-your-back-unisex" };
-  var RAKHI_TEE = { name:"Customisable Rakhi Tee | Unisex", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/customisable-rakhi-tee-unisex" };
-  var COOL_SISTER = { name:"Cool Sister Shirt | Women's", price:"From ₹699/-", url:"https://fitkaarclothing.com/products/cool-sister-shirt-womens" };
-  var COOL_BROTHER = { name:"Cool Brother Shirt | Men's", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/cool-brother-shirt-mens" };
-  var BROTHER_SISTER_DUO = { name:"Brother Sister Duo | Unisex", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/brother-sister-duo-unisex" };
-  var BIG_SIS = { name:"Big Sis | Women's", price:"From ₹699/-", url:"https://fitkaarclothing.com/products/big-sis-womens" };
-  var BIG_BRO = { name:"Big Bro | Men's", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/big-bro-mens" };
-  var SIBLING_DUO = { name:"Sibling | Duo", price:"₹1398/-", was:"₹2598/-", off:"46% OFF", url:"https://fitkaarclothing.com/products/sibling-duo" };
-  var PERSONALISED_TEE = { name:"Personalised Tee | Name + Photo | Unisex", price:"₹999/-", url:"https://fitkaarclothing.com/products/personalised-tee-name-photo-unisex" };
-  var PETS_HUMAN = { name:"Pet's Human | Unisex", price:"From ₹999/-", url:"https://fitkaarclothing.com/products/pets-human-unisex" };
-  var PETS_HUMAN_CROPPED = { name:"Pet's Human | Cropped Tee", price:"₹699/-", was:"₹999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/pets-human-cropped-tee" };
+  var IVE_GOT_YOUR_BACK = { name:"I've Got Your Back | Unisex", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/ive-got-your-back-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/2_a24a9a2a-fc50-4ad4-8530-a314cf80a29b.png?v=1786537596" };
+  var RAKHI_TEE = { name:"Customisable Rakhi Tee | Unisex", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/customisable-rakhi-tee-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/37_357f2198-5b03-46a2-aa1c-799f46288de6.png?v=1786548725" };
+  var COOL_SISTER = { name:"Cool Sister Shirt | Women's", price:"From ₹699/-", url:"https://fitkaarclothing.com/products/cool-sister-shirt-womens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/28_4981b450-b03f-4d2d-9aaf-1316bed707b0.png?v=1786548953" };
+  var COOL_BROTHER = { name:"Cool Brother Shirt | Men's", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/cool-brother-shirt-mens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/33_35b0fd89-87f8-4b55-bd09-b53b7afdc2eb.png?v=1786549114" };
+  var BROTHER_SISTER_DUO = { name:"Brother Sister Duo | Unisex", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/brother-sister-duo-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/12_f5c15a2b-89f2-4b58-bc78-81a2887d8b9f.png?v=1786538678" };
+  var BIG_SIS = { name:"Big Sis | Women's", price:"From ₹699/-", url:"https://fitkaarclothing.com/products/big-sis-womens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/22_6a2e06f1-4385-4859-adb1-012a394c093d.png?v=1786548311" };
+  var BIG_BRO = { name:"Big Bro | Men's", price:"₹999/-", was:"₹1299/-", off:"23% OFF", url:"https://fitkaarclothing.com/products/big-bro-mens", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/19_b192312f-018d-4205-9087-7436aaeb74ba.png?v=1786542242" };
+  var SIBLING_DUO = { name:"Sibling | Duo", price:"₹1398/-", was:"₹2598/-", off:"46% OFF", url:"https://fitkaarclothing.com/products/sibling-duo", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/51_e9894a1e-e5e8-4e06-a206-d0a63bf51386.png?v=1777935015" };
+  var PERSONALISED_TEE = { name:"Personalised Tee | Name + Photo | Unisex", price:"₹999/-", url:"https://fitkaarclothing.com/products/personalised-tee-name-photo-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/rakhimocks_2.png?v=1786611107" };
+  var PETS_HUMAN = { name:"Pet's Human | Unisex", price:"From ₹999/-", url:"https://fitkaarclothing.com/products/pets-human-unisex", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/42_8f7a3993-311d-4e51-bd67-1186d1123ca7.png?v=1789661665" };
+  var PETS_HUMAN_CROPPED = { name:"Pet's Human | Cropped Tee", price:"₹699/-", was:"₹999/-", off:"30% OFF", url:"https://fitkaarclothing.com/products/pets-human-cropped-tee", image:"https://cdn.shopify.com/s/files/1/0716/3373/1756/files/2_c8932947-8b0b-452b-88fc-dd30ea5cd457.png?v=1789652099" };
   var FAMILY_URL = "https://fitkaarclothing.com/collections/family";
 
   var COUPLES_URL = "https://fitkaarclothing.com/collections/couples";
@@ -651,9 +724,7 @@
 
   renderIntro();
 })();
-
 </script>
-
 
 {% schema %}
 {
